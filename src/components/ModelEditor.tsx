@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { FrameModel, FrameNode, Member, Load, Support, Material } from '@/lib/types';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface Props {
   model: FrameModel;
@@ -21,7 +22,11 @@ function Cell({ children, className = '' }: { children: React.ReactNode; classNa
 }
 
 function Th({ children }: { children: React.ReactNode }) {
-  return <th className="px-2 py-1 text-left text-xs font-semibold text-stone-500 bg-stone-50">{children}</th>;
+  return (
+    <th className="px-2 py-1 text-left text-xs font-semibold text-stone-500 dark:text-stone-400 bg-stone-50 dark:bg-stone-800">
+      {children}
+    </th>
+  );
 }
 
 function NumInput({ value, onChange, min, step = 0.01, className = '' }: {
@@ -29,12 +34,17 @@ function NumInput({ value, onChange, min, step = 0.01, className = '' }: {
 }) {
   return (
     <input type="number" value={value} step={step} min={min}
-      className={`w-full text-xs font-mono border border-stone-200 rounded px-1 py-0.5 ${className}`}
+      className={`w-full text-xs font-mono border border-stone-200 dark:border-stone-600 rounded px-1 py-0.5 bg-white dark:bg-stone-800 text-stone-800 dark:text-stone-200 ${className}`}
       onChange={(e) => onChange(parseFloat(e.target.value) || 0)} />
   );
 }
 
+const selectCls = "text-xs border border-stone-200 dark:border-stone-600 rounded px-1 py-0.5 bg-white dark:bg-stone-800 text-stone-800 dark:text-stone-200";
+const addBtnCls = "mt-2 px-2 py-1 text-xs bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 rounded border border-stone-200 dark:border-stone-600 text-stone-700 dark:text-stone-300";
+const idInputCls = "font-mono border border-stone-200 dark:border-stone-600 rounded px-1 py-0.5 text-xs bg-white dark:bg-stone-800 text-stone-800 dark:text-stone-200";
+
 export default function ModelEditor({ model, onChange }: Props) {
+  const { t } = useLanguage();
   const [tab, setTab] = useState<Tab>('nodes');
 
   const setNodes = (nodes: FrameNode[]) => onChange({ ...model, nodes });
@@ -42,19 +52,26 @@ export default function ModelEditor({ model, onChange }: Props) {
   const setLoads = (loads: Load[]) => onChange({ ...model, loads });
   const setMaterial = (material: Material) => onChange({ ...model, material });
 
+  const TAB_KEYS: Record<Tab, 'editor.tab.nodes' | 'editor.tab.members' | 'editor.tab.loads' | 'editor.tab.material'> = {
+    nodes: 'editor.tab.nodes',
+    members: 'editor.tab.members',
+    loads: 'editor.tab.loads',
+    material: 'editor.tab.material',
+  };
+
   return (
-    <div className="flex flex-col h-full text-sm text-stone-800">
+    <div className="flex flex-col h-full text-sm text-stone-800 dark:text-stone-200">
       {/* Tab bar */}
-      <div className="flex border-b border-stone-200">
-        {(['nodes', 'members', 'loads', 'material'] as Tab[]).map((t) => (
-          <button key={t}
-            onClick={() => setTab(t)}
+      <div className="flex border-b border-stone-200 dark:border-stone-700">
+        {(['nodes', 'members', 'loads', 'material'] as Tab[]).map((tabKey) => (
+          <button key={tabKey}
+            onClick={() => setTab(tabKey)}
             className={`px-3 py-2 text-xs font-medium capitalize transition-colors ${
-              tab === t
-                ? 'border-b-2 border-stone-700 text-stone-900'
-                : 'text-stone-500 hover:text-stone-700'
+              tab === tabKey
+                ? 'border-b-2 border-stone-700 dark:border-stone-300 text-stone-900 dark:text-stone-100'
+                : 'text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200'
             }`}>
-            {t}
+            {t(TAB_KEYS[tabKey])}
           </button>
         ))}
       </div>
@@ -80,6 +97,7 @@ export default function ModelEditor({ model, onChange }: Props) {
 
 // ─── Nodes panel ─────────────────────────────────────────────────────────────
 function NodesPanel({ nodes, onChange }: { nodes: FrameNode[]; onChange: (n: FrameNode[]) => void }) {
+  const { t } = useLanguage();
   const update = (i: number, patch: Partial<FrameNode>) =>
     onChange(nodes.map((n, idx) => idx === i ? { ...n, ...patch } : n));
   const remove = (i: number) => onChange(nodes.filter((_, idx) => idx !== i));
@@ -90,14 +108,18 @@ function NodesPanel({ nodes, onChange }: { nodes: FrameNode[]; onChange: (n: Fra
       <table className="w-full border-collapse text-xs">
         <thead>
           <tr>
-            <Th>ID</Th><Th>x</Th><Th>y</Th><Th>Support</Th><th />
+            <Th>{t('editor.nodes.id')}</Th>
+            <Th>{t('editor.nodes.x')}</Th>
+            <Th>{t('editor.nodes.y')}</Th>
+            <Th>{t('editor.nodes.support')}</Th>
+            <th />
           </tr>
         </thead>
         <tbody>
           {nodes.map((n, i) => (
-            <tr key={n.id} className="border-t border-stone-100">
+            <tr key={n.id} className="border-t border-stone-100 dark:border-stone-700">
               <Cell>
-                <input value={n.id} className="w-12 font-mono border border-stone-200 rounded px-1 py-0.5 text-xs"
+                <input value={n.id} className={`w-12 ${idInputCls}`}
                   onChange={(e) => update(i, { id: e.target.value })} />
               </Cell>
               <Cell>
@@ -107,8 +129,7 @@ function NodesPanel({ nodes, onChange }: { nodes: FrameNode[]; onChange: (n: Fra
                 <NumInput value={n.y} onChange={(v) => update(i, { y: v })} step={0.25} />
               </Cell>
               <Cell>
-                <select value={n.support}
-                  className="text-xs border border-stone-200 rounded px-1 py-0.5"
+                <select value={n.support} className={selectCls}
                   onChange={(e) => update(i, { support: e.target.value as Support })}>
                   {SUPPORTS.map((s) => <option key={s} value={s}>{s}</option>)}
                 </select>
@@ -121,9 +142,8 @@ function NodesPanel({ nodes, onChange }: { nodes: FrameNode[]; onChange: (n: Fra
           ))}
         </tbody>
       </table>
-      <button onClick={add}
-        className="mt-2 px-2 py-1 text-xs bg-stone-100 hover:bg-stone-200 rounded border border-stone-200">
-        + Add node
+      <button onClick={add} className={addBtnCls}>
+        {t('editor.nodes.add')}
       </button>
     </div>
   );
@@ -133,6 +153,7 @@ function NodesPanel({ nodes, onChange }: { nodes: FrameNode[]; onChange: (n: Fra
 function MembersPanel({ members, nodes, onChange }: {
   members: Member[]; nodes: FrameNode[]; onChange: (m: Member[]) => void;
 }) {
+  const { t } = useLanguage();
   const nodeIds = nodes.map((n) => n.id);
   const update = (i: number, patch: Partial<Member>) =>
     onChange(members.map((m, idx) => idx === i ? { ...m, ...patch } : m));
@@ -147,26 +168,29 @@ function MembersPanel({ members, nodes, onChange }: {
       <table className="w-full border-collapse text-xs">
         <thead>
           <tr>
-            <Th>ID</Th><Th>From</Th><Th>To</Th><Th>Hinge i</Th><Th>Hinge j</Th><th />
+            <Th>{t('editor.members.id')}</Th>
+            <Th>{t('editor.members.from')}</Th>
+            <Th>{t('editor.members.to')}</Th>
+            <Th>{t('editor.members.hinge_i')}</Th>
+            <Th>{t('editor.members.hinge_j')}</Th>
+            <th />
           </tr>
         </thead>
         <tbody>
           {members.map((m, i) => (
-            <tr key={m.id} className="border-t border-stone-100">
+            <tr key={m.id} className="border-t border-stone-100 dark:border-stone-700">
               <Cell>
-                <input value={m.id} className="w-14 font-mono border border-stone-200 rounded px-1 py-0.5 text-xs"
+                <input value={m.id} className={`w-14 ${idInputCls}`}
                   onChange={(e) => update(i, { id: e.target.value })} />
               </Cell>
               <Cell>
-                <select value={m.n1}
-                  className="text-xs border border-stone-200 rounded px-1 py-0.5"
+                <select value={m.n1} className={selectCls}
                   onChange={(e) => update(i, { n1: e.target.value })}>
                   {nodeIds.map((id) => <option key={id} value={id}>{id}</option>)}
                 </select>
               </Cell>
               <Cell>
-                <select value={m.n2}
-                  className="text-xs border border-stone-200 rounded px-1 py-0.5"
+                <select value={m.n2} className={selectCls}
                   onChange={(e) => update(i, { n2: e.target.value })}>
                   {nodeIds.map((id) => <option key={id} value={id}>{id}</option>)}
                 </select>
@@ -187,9 +211,8 @@ function MembersPanel({ members, nodes, onChange }: {
           ))}
         </tbody>
       </table>
-      <button onClick={add}
-        className="mt-2 px-2 py-1 text-xs bg-stone-100 hover:bg-stone-200 rounded border border-stone-200">
-        + Add member
+      <button onClick={add} className={addBtnCls}>
+        {t('editor.members.add')}
       </button>
     </div>
   );
@@ -201,6 +224,7 @@ function LoadsPanel({ loads, nodes, members, onChange, unit, onUnitChange }: {
   onChange: (l: Load[]) => void;
   unit: string; onUnitChange: (u: string) => void;
 }) {
+  const { t } = useLanguage();
   const nodeIds = nodes.map((n) => n.id);
   const memberIds = members.map((m) => m.id);
 
@@ -215,50 +239,50 @@ function LoadsPanel({ loads, nodes, members, onChange, unit, onUnitChange }: {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2">
-        <span className="text-xs text-stone-500">Force unit:</span>
+        <span className="text-xs text-stone-500 dark:text-stone-400">{t('editor.loads.force_unit')}</span>
         <input value={unit} onChange={(e) => onUnitChange(e.target.value)}
-          className="w-16 border border-stone-200 rounded px-1 py-0.5 text-xs font-mono" />
+          className={`w-16 ${idInputCls}`} />
       </div>
 
       {loads.map((load, i) => (
-        <div key={load.id} className="bg-stone-50 border border-stone-200 rounded p-2 space-y-1">
+        <div key={load.id} className="bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded p-2 space-y-1">
           <div className="flex items-center justify-between">
-            <select value={load.type}
-              className="text-xs border border-stone-200 rounded px-1 py-0.5"
+            <select value={load.type} className={selectCls}
               onChange={(e) => {
-                const t = e.target.value as Load['type'];
-                if (t === 'nodal') update(i, { type: 'nodal', node: nodeIds[0] ?? '', fx: 0, fy: -10, m: 0 } as Partial<Load>);
-                else if (t === 'mpoint') update(i, { type: 'mpoint', member: memberIds[0] ?? '', dist: 0, gx: 0, gy: -10 } as Partial<Load>);
+                const tp = e.target.value as Load['type'];
+                if (tp === 'nodal') update(i, { type: 'nodal', node: nodeIds[0] ?? '', fx: 0, fy: -10, m: 0 } as Partial<Load>);
+                else if (tp === 'mpoint') update(i, { type: 'mpoint', member: memberIds[0] ?? '', dist: 0, gx: 0, gy: -10 } as Partial<Load>);
                 else update(i, { type: 'mudl', member: memberIds[0] ?? '', gx: 0, gy: -10 } as Partial<Load>);
               }}>
-              <option value="nodal">Nodal</option>
-              <option value="mpoint">Member point</option>
-              <option value="mudl">Member UDL</option>
+              <option value="nodal">{t('editor.loads.type_nodal')}</option>
+              <option value="mpoint">{t('editor.loads.type_mpoint')}</option>
+              <option value="mudl">{t('editor.loads.type_mudl')}</option>
             </select>
             <button onClick={() => remove(i)}
-              className="text-red-400 hover:text-red-600 text-xs">✕ remove</button>
+              className="text-red-400 hover:text-red-600 dark:text-red-500 dark:hover:text-red-400 text-xs">
+              {t('editor.loads.remove')}
+            </button>
           </div>
 
           {load.type === 'nodal' && (
             <div className="grid grid-cols-2 gap-1">
               <div>
-                <span className="text-xs text-stone-400">Node</span>
-                <select value={load.node}
-                  className="w-full text-xs border border-stone-200 rounded px-1 py-0.5"
+                <span className="text-xs text-stone-400 dark:text-stone-500">{t('editor.loads.node')}</span>
+                <select value={load.node} className={`w-full ${selectCls}`}
                   onChange={(e) => update(i, { node: e.target.value } as Partial<Load>)}>
                   {nodeIds.map((id) => <option key={id} value={id}>{id}</option>)}
                 </select>
               </div>
               <div>
-                <span className="text-xs text-stone-400">fx</span>
+                <span className="text-xs text-stone-400 dark:text-stone-500">{t('editor.loads.fx')}</span>
                 <NumInput value={load.fx} onChange={(v) => update(i, { fx: v } as Partial<Load>)} />
               </div>
               <div>
-                <span className="text-xs text-stone-400">fy</span>
+                <span className="text-xs text-stone-400 dark:text-stone-500">{t('editor.loads.fy')}</span>
                 <NumInput value={load.fy} onChange={(v) => update(i, { fy: v } as Partial<Load>)} />
               </div>
               <div>
-                <span className="text-xs text-stone-400">m (moment)</span>
+                <span className="text-xs text-stone-400 dark:text-stone-500">{t('editor.loads.moment')}</span>
                 <NumInput value={load.m} onChange={(v) => update(i, { m: v } as Partial<Load>)} />
               </div>
             </div>
@@ -267,23 +291,22 @@ function LoadsPanel({ loads, nodes, members, onChange, unit, onUnitChange }: {
           {load.type === 'mpoint' && (
             <div className="grid grid-cols-2 gap-1">
               <div>
-                <span className="text-xs text-stone-400">Member</span>
-                <select value={load.member}
-                  className="w-full text-xs border border-stone-200 rounded px-1 py-0.5"
+                <span className="text-xs text-stone-400 dark:text-stone-500">{t('editor.loads.member')}</span>
+                <select value={load.member} className={`w-full ${selectCls}`}
                   onChange={(e) => update(i, { member: e.target.value } as Partial<Load>)}>
                   {memberIds.map((id) => <option key={id} value={id}>{id}</option>)}
                 </select>
               </div>
               <div>
-                <span className="text-xs text-stone-400">dist (from n1)</span>
+                <span className="text-xs text-stone-400 dark:text-stone-500">{t('editor.loads.dist')}</span>
                 <NumInput value={load.dist} onChange={(v) => update(i, { dist: v } as Partial<Load>)} min={0} />
               </div>
               <div>
-                <span className="text-xs text-stone-400">gx (global)</span>
+                <span className="text-xs text-stone-400 dark:text-stone-500">{t('editor.loads.gx')}</span>
                 <NumInput value={load.gx} onChange={(v) => update(i, { gx: v } as Partial<Load>)} />
               </div>
               <div>
-                <span className="text-xs text-stone-400">gy (global)</span>
+                <span className="text-xs text-stone-400 dark:text-stone-500">{t('editor.loads.gy')}</span>
                 <NumInput value={load.gy} onChange={(v) => update(i, { gy: v } as Partial<Load>)} />
               </div>
             </div>
@@ -292,19 +315,18 @@ function LoadsPanel({ loads, nodes, members, onChange, unit, onUnitChange }: {
           {load.type === 'mudl' && (
             <div className="grid grid-cols-2 gap-1">
               <div>
-                <span className="text-xs text-stone-400">Member</span>
-                <select value={load.member}
-                  className="w-full text-xs border border-stone-200 rounded px-1 py-0.5"
+                <span className="text-xs text-stone-400 dark:text-stone-500">{t('editor.loads.member')}</span>
+                <select value={load.member} className={`w-full ${selectCls}`}
                   onChange={(e) => update(i, { member: e.target.value } as Partial<Load>)}>
                   {memberIds.map((id) => <option key={id} value={id}>{id}</option>)}
                 </select>
               </div>
               <div>
-                <span className="text-xs text-stone-400">gx (global)</span>
+                <span className="text-xs text-stone-400 dark:text-stone-500">{t('editor.loads.gx')}</span>
                 <NumInput value={load.gx} onChange={(v) => update(i, { gx: v } as Partial<Load>)} />
               </div>
               <div>
-                <span className="text-xs text-stone-400">gy (global)</span>
+                <span className="text-xs text-stone-400 dark:text-stone-500">{t('editor.loads.gy')}</span>
                 <NumInput value={load.gy} onChange={(v) => update(i, { gy: v } as Partial<Load>)} />
               </div>
             </div>
@@ -313,8 +335,8 @@ function LoadsPanel({ loads, nodes, members, onChange, unit, onUnitChange }: {
       ))}
 
       <button onClick={add}
-        className="px-2 py-1 text-xs bg-stone-100 hover:bg-stone-200 rounded border border-stone-200">
-        + Add load
+        className="px-2 py-1 text-xs bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 rounded border border-stone-200 dark:border-stone-600 text-stone-700 dark:text-stone-300">
+        {t('editor.loads.add')}
       </button>
     </div>
   );
@@ -322,15 +344,15 @@ function LoadsPanel({ loads, nodes, members, onChange, unit, onUnitChange }: {
 
 // ─── Material panel ──────────────────────────────────────────────────────────
 function MaterialPanel({ material, onChange }: { material: Material; onChange: (m: Material) => void }) {
+  const { t } = useLanguage();
   return (
     <div className="space-y-3">
-      <p className="text-xs text-stone-400 italic">
-        Material properties only affect <strong>indeterminate</strong> frames.
-        For determinate structures the results are independent of E, A, I.
+      <p className="text-xs text-stone-400 dark:text-stone-500 italic">
+        {t('editor.material.note')}
       </p>
       {(['E', 'A', 'I'] as const).map((k) => (
         <div key={k}>
-          <label className="text-xs text-stone-500 font-mono">{k}</label>
+          <label className="text-xs text-stone-500 dark:text-stone-400 font-mono">{k}</label>
           <NumInput value={material[k]} step={k === 'E' ? 1e6 : 0.001}
             min={1e-12}
             onChange={(v) => onChange({ ...material, [k]: Math.max(v, 1e-12) })} />
