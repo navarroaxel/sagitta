@@ -7,6 +7,8 @@ import { useLanguage } from '@/contexts/LanguageContext';
 interface Props {
   model: FrameModel;
   onChange: (model: FrameModel) => void;
+  highlightedLoadId?: string | null;
+  onHighlightLoad?: (id: string | null) => void;
 }
 
 type Tab = 'nodes' | 'members' | 'loads' | 'material';
@@ -43,7 +45,7 @@ const selectCls = "text-xs border border-stone-200 dark:border-stone-600 rounded
 const addBtnCls = "mt-2 px-2 py-1 text-xs bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 rounded border border-stone-200 dark:border-stone-600 text-stone-700 dark:text-stone-300";
 const idInputCls = "font-mono border border-stone-200 dark:border-stone-600 rounded px-1 py-0.5 text-xs bg-white dark:bg-stone-800 text-stone-800 dark:text-stone-200";
 
-export default function ModelEditor({ model, onChange }: Props) {
+export default function ModelEditor({ model, onChange, highlightedLoadId, onHighlightLoad }: Props) {
   const { t } = useLanguage();
   const [tab, setTab] = useState<Tab>('nodes');
 
@@ -85,7 +87,9 @@ export default function ModelEditor({ model, onChange }: Props) {
         )}
         {tab === 'loads' && (
           <LoadsPanel loads={model.loads} nodes={model.nodes} members={model.members} onChange={setLoads} unit={model.unit}
-            onUnitChange={(u) => onChange({ ...model, unit: u })} />
+            onUnitChange={(u) => onChange({ ...model, unit: u })}
+            highlightedLoadId={highlightedLoadId}
+            onHighlightLoad={onHighlightLoad} />
         )}
         {tab === 'material' && (
           <MaterialPanel material={model.material} onChange={setMaterial} />
@@ -223,10 +227,12 @@ function MembersPanel({ members, nodes, onChange }: {
 }
 
 // ─── Loads panel ─────────────────────────────────────────────────────────────
-function LoadsPanel({ loads, nodes, members, onChange, unit, onUnitChange }: {
+function LoadsPanel({ loads, nodes, members, onChange, unit, onUnitChange, highlightedLoadId, onHighlightLoad }: {
   loads: Load[]; nodes: FrameNode[]; members: Member[];
   onChange: (l: Load[]) => void;
   unit: string; onUnitChange: (u: string) => void;
+  highlightedLoadId?: string | null;
+  onHighlightLoad?: (id: string | null) => void;
 }) {
   const { t } = useLanguage();
   const nodeIds = nodes.map((n) => n.id);
@@ -234,7 +240,10 @@ function LoadsPanel({ loads, nodes, members, onChange, unit, onUnitChange }: {
 
   const update = (i: number, patch: Partial<Load>) =>
     onChange(loads.map((l, idx) => idx === i ? { ...l, ...patch } as Load : l));
-  const remove = (i: number) => onChange(loads.filter((_, idx) => idx !== i));
+  const remove = (i: number) => {
+    if (loads[i]?.id === highlightedLoadId) onHighlightLoad?.(null);
+    onChange(loads.filter((_, idx) => idx !== i));
+  };
   const add = () => {
     const node = nodeIds[0] ?? '';
     onChange([...loads, { id: uid(), type: 'nodal', node, fx: 0, fy: -10, m: 0 }]);
@@ -248,8 +257,16 @@ function LoadsPanel({ loads, nodes, members, onChange, unit, onUnitChange }: {
           className={`w-16 ${idInputCls}`} />
       </div>
 
-      {loads.map((load, i) => (
-        <div key={load.id} className="bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded p-2 space-y-1">
+      {loads.map((load, i) => {
+        const isHL = load.id === highlightedLoadId;
+        return (
+        <div key={load.id}
+          onClick={() => onHighlightLoad?.(isHL ? null : load.id)}
+          className={`rounded p-2 space-y-1 cursor-pointer transition-colors ${
+            isHL
+              ? 'bg-orange-50 dark:bg-orange-950 border-2 border-orange-500 dark:border-orange-400'
+              : 'bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 hover:border-stone-400 dark:hover:border-stone-500'
+          }`}>
           <div className="flex items-center justify-between">
             <select value={load.type} className={selectCls}
               onChange={(e) => {
@@ -336,7 +353,8 @@ function LoadsPanel({ loads, nodes, members, onChange, unit, onUnitChange }: {
             </div>
           )}
         </div>
-      ))}
+        );
+      })}
 
       <button onClick={add}
         className="px-2 py-1 text-xs bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 rounded border border-stone-200 dark:border-stone-600 text-stone-700 dark:text-stone-300">

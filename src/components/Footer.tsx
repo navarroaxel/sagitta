@@ -22,19 +22,10 @@ export function Footer() {
 
   return (
     <footer className="flex flex-wrap items-center gap-x-4 gap-y-1.5 border-t border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 px-4 py-2 text-xs text-stone-500 dark:text-stone-400 shrink-0">
-      {/* Description */}
       <span className="shrink-0">{t("footer.description")}</span>
-
-      {/* Divider */}
-      <span className="hidden sm:inline text-stone-300 dark:text-stone-600" aria-hidden>
-        ·
-      </span>
-
-      {/* Related links */}
       <span className="shrink-0 font-medium text-stone-400 dark:text-stone-500">
         {t("footer.also")}
       </span>
-
       <div className="flex flex-wrap gap-2">
         {RELATED.map(({ href, teaserKey }) => (
           <a

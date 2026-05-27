@@ -33,6 +33,7 @@ export default function Home() {
   const [model, setModel] = useState<FrameModel>(DEFAULT_MODEL);
   const [viewOpts, setViewOpts] = useState<ViewOptions>(DEFAULT_VIEW);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [highlightedLoadId, setHighlightedLoadId] = useState<string | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
 
   const solved = useMemo<SolveOutput | null>(() => {
@@ -141,7 +142,9 @@ export default function Home() {
           }`}
         >
           <div className="w-[345px] h-full overflow-auto">
-            <ModelEditor model={model} onChange={setModel} />
+            <ModelEditor model={model} onChange={setModel}
+              highlightedLoadId={highlightedLoadId}
+              onHighlightLoad={setHighlightedLoadId} />
           </div>
         </aside>
 
@@ -154,6 +157,7 @@ export default function Home() {
               viewOpts={viewOpts}
               onNodeMove={handleNodeMove}
               svgRef={svgRef}
+              highlightedLoadId={highlightedLoadId}
             />
           </div>
         </main>
