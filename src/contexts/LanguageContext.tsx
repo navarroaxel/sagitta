@@ -46,6 +46,11 @@ const EN = {
   "editor.nodes.x": "x",
   "editor.nodes.y": "y",
   "editor.nodes.support": "Support",
+  "editor.nodes.support_free": "Free",
+  "editor.nodes.support_pinned": "Pinned",
+  "editor.nodes.support_fixed": "Fixed",
+  "editor.nodes.support_roller_v": "Roller (V)",
+  "editor.nodes.support_roller_h": "Roller (H)",
   "editor.nodes.add": "+ Add node",
 
   "editor.members.id": "ID",
@@ -74,6 +79,13 @@ const EN = {
     "Material properties only affect indeterminate frames. For determinate structures the results are independent of E, A, I.",
 
   "theme.label": "Theme:",
+  "github.aria": "View source on GitHub",
+
+  "footer.description": "An interactive simulator built as a teaching aid for the Stability course at UTN – FRBA.",
+  "footer.also": "Explore more:",
+  "footer.relax_teaser": "Electric field & relaxation method",
+  "footer.kinelab_teaser": "Circular motion kinematics & dynamics",
+  "footer.resonara_teaser": "RLC circuits in AC",
 } as const;
 
 export type TranslationKey = keyof typeof EN;
@@ -111,6 +123,11 @@ const ES: Record<TranslationKey, string> = {
   "editor.nodes.x": "x",
   "editor.nodes.y": "y",
   "editor.nodes.support": "Vínculo",
+  "editor.nodes.support_free": "Libre",
+  "editor.nodes.support_pinned": "Articulado",
+  "editor.nodes.support_fixed": "Empotrado",
+  "editor.nodes.support_roller_v": "Apoyo simple (V)",
+  "editor.nodes.support_roller_h": "Apoyo simple (H)",
   "editor.nodes.add": "+ Agregar nodo",
 
   "editor.members.id": "ID",
@@ -139,6 +156,13 @@ const ES: Record<TranslationKey, string> = {
     "Las propiedades del material solo afectan a las estructuras hiperestáticas. Para estructuras isostáticas, los resultados son independientes de E, A, I.",
 
   "theme.label": "Tema:",
+  "github.aria": "Ver código fuente en GitHub",
+
+  "footer.description": "Simulador interactivo desarrollado como apoyo didáctico en el marco de la cátedra de Estabilidad de la UTN – FRBA.",
+  "footer.also": "Ver también:",
+  "footer.relax_teaser": "Teoría de Campos",
+  "footer.kinelab_teaser": "Mecánica Técnica",
+  "footer.resonara_teaser": "Electrotécnica I",
 };
 
 const translations: Record<Language, Record<TranslationKey, string>> = {

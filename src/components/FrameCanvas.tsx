@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useCallback, useRef } from 'react';
+import React, { useMemo, useCallback, useRef, useState, useEffect } from 'react';
 import { FrameModel, FrameNode } from '@/lib/types';
 import { SolveOutput } from '@/lib/solve';
 import { makeTransform, Transform } from '@/lib/geometry';
@@ -45,6 +45,8 @@ interface Props {
 const SVG_W = 900;
 const SVG_H = 600;
 const SNAP = 0.25;
+const ZOOM_MIN = 0.15;
+const ZOOM_MAX = 10;
 
 // ─── Support symbols ────────────────────────────────────────────────────────
 function SupportSymbol({ node, tr }: { node: FrameNode; tr: Transform }) {
@@ -161,10 +163,52 @@ export default function FrameCanvas({ model, solved, viewOpts, onNodeMove, svgRe
   const internalRef = useRef<SVGSVGElement>(null);
   const ref = svgRef ?? internalRef;
 
+  // ── Zoom / pan state ────────────────────────────────────────────────────
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+
+  // Refs to access latest values without stale closures in event handlers
+  const zoomRef = useRef(1);
+  const panRef = useRef({ x: 0, y: 0 });
+  // Sync inside an effect — refs must not be written during render
+  useEffect(() => {
+    zoomRef.current = zoom;
+    panRef.current = pan;
+  }, [zoom, pan]);
+
+  // Drag node state
+  const dragging = useRef<{ id: string; ox: number; oy: number; sx: number; sy: number } | null>(null);
+  // Pan state
+  const panning = useRef<{ startX: number; startY: number; startPanX: number; startPanY: number } | null>(null);
+
   const tr = useMemo(
     () => makeTransform(model.nodes, SVG_W, SVG_H, Math.max(viewOpts.scaleN, viewOpts.scaleQ, viewOpts.scaleM)),
     [model.nodes, viewOpts.scaleN, viewOpts.scaleQ, viewOpts.scaleM],
   );
+
+  // ── Non-passive wheel listener for zoom (prevents page scroll) ──────────
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const handler = (e: WheelEvent) => {
+      e.preventDefault();
+      const factor = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+      const rect = el.getBoundingClientRect();
+      const cx = e.clientX - rect.left;
+      const cy = e.clientY - rect.top;
+      setZoom((prevZoom) => {
+        const newZoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, prevZoom * factor));
+        const ratio = newZoom / prevZoom;
+        setPan((p) => ({
+          x: cx - (cx - p.x) * ratio,
+          y: cy - (cy - p.y) * ratio,
+        }));
+        return newZoom;
+      });
+    };
+    el.addEventListener('wheel', handler, { passive: false });
+    return () => el.removeEventListener('wheel', handler);
+  }, [ref]);
 
   // Compute diagram polygons if solved
   const diagrams = useMemo(() => {
@@ -210,10 +254,9 @@ export default function FrameCanvas({ model, solved, viewOpts, onNodeMove, svgRe
     return diags;
   }, [solved, tr, model.members, model.nodes, viewOpts.scaleN, viewOpts.scaleQ, viewOpts.scaleM]);
 
-  // Drag handling
-  const dragging = useRef<{ id: string; ox: number; oy: number; sx: number; sy: number } | null>(null);
-
-  const onMouseDown = useCallback((e: React.MouseEvent, nodeId: string) => {
+  // ── Node drag handling ──────────────────────────────────────────────────
+  // (no useCallback — handlers access ref.current; React Compiler auto-memoizes)
+  const onNodeMouseDown = (e: React.MouseEvent, nodeId: string) => {
     e.preventDefault();
     const svgEl = ref.current;
     if (!svgEl) return;
@@ -225,120 +268,213 @@ export default function FrameCanvas({ model, solved, viewOpts, onNodeMove, svgRe
       sx: e.clientX,
       sy: e.clientY,
     };
-  }, [ref]);
+  };
 
-  const onMouseMove = useCallback((e: React.MouseEvent) => {
+  // ── Pan handling (left-click drag on empty canvas) ──────────────────────
+  const onSvgMouseDown = (e: React.MouseEvent) => {
+    // Only start panning if a node drag isn't already active
+    if (dragging.current) return;
+    panning.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      startPanX: panRef.current.x,
+      startPanY: panRef.current.y,
+    };
+    if (ref.current) ref.current.style.cursor = 'grabbing';
+  };
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    // Handle pan
+    if (panning.current) {
+      const dx = e.clientX - panning.current.startX;
+      const dy = e.clientY - panning.current.startY;
+      setPan({
+        x: panning.current.startPanX + dx,
+        y: panning.current.startPanY + dy,
+      });
+      return;
+    }
+    // Handle node drag
     if (!dragging.current) return;
     const svgEl = ref.current;
     if (!svgEl) return;
     const rect = svgEl.getBoundingClientRect();
     const px = e.clientX - rect.left;
     const py = e.clientY - rect.top;
-    // Convert screen → world
-    let wx = (px - tr.ox) / tr.k;
-    let wy = (tr.oy - py) / tr.k;
-    // snap to 0.25m grid
+    // Undo pan+zoom to get SVG content coordinates, then undo makeTransform
+    const contentX = (px - panRef.current.x) / zoomRef.current;
+    const contentY = (py - panRef.current.y) / zoomRef.current;
+    let wx = (contentX - tr.ox) / tr.k;
+    let wy = (tr.oy - contentY) / tr.k;
+    // Snap to 0.25m grid
     wx = Math.round(wx / SNAP) * SNAP;
     wy = Math.round(wy / SNAP) * SNAP;
     onNodeMove(dragging.current.id, wx, wy);
-  }, [tr, onNodeMove, ref]);
+  };
 
-  const onMouseUp = useCallback(() => { dragging.current = null; }, []);
+  const onMouseUp = () => {
+    dragging.current = null;
+    panning.current = null;
+    if (ref.current) ref.current.style.cursor = 'crosshair';
+  };
+
+  // ── Zoom button handlers ────────────────────────────────────────────────
+  const handleZoomBtn = useCallback((factor: number) => {
+    setZoom((z) => {
+      const newZ = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, z * factor));
+      const ratio = newZ / z;
+      const cx = SVG_W / 2;
+      const cy = SVG_H / 2;
+      setPan((p) => ({
+        x: cx - (cx - p.x) * ratio,
+        y: cy - (cy - p.y) * ratio,
+      }));
+      return newZ;
+    });
+  }, []);
+
+  const resetView = useCallback(() => {
+    setZoom(1);
+    setPan({ x: 0, y: 0 });
+  }, []);
 
   const stable = solved?.result.stable ?? true;
 
+  const btnCls =
+    'w-7 h-7 flex items-center justify-center text-sm font-bold ' +
+    'bg-white/90 dark:bg-stone-800/90 backdrop-blur-sm ' +
+    'border border-stone-200 dark:border-stone-600 rounded shadow-sm ' +
+    'hover:bg-stone-50 dark:hover:bg-stone-700 ' +
+    'text-stone-600 dark:text-stone-300 ' +
+    'transition-colors select-none';
+
   return (
-    <svg
-      ref={ref}
-      width={SVG_W}
-      height={SVG_H}
-      viewBox={`0 0 ${SVG_W} ${SVG_H}`}
-      style={{ background: C.paper, userSelect: 'none', cursor: 'crosshair' }}
-      onMouseMove={onMouseMove}
-      onMouseUp={onMouseUp}
-      onMouseLeave={onMouseUp}
-    >
-      {/* Grid */}
-      {viewOpts.showGrid && <GridLayer tr={tr} />}
+    <div className="relative" style={{ display: 'inline-block' }}>
+      <svg
+        ref={ref}
+        width={SVG_W}
+        height={SVG_H}
+        viewBox={`0 0 ${SVG_W} ${SVG_H}`}
+        style={{ background: C.paper, userSelect: 'none', cursor: 'crosshair', display: 'block' }}
+        onMouseDown={onSvgMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        onMouseLeave={onMouseUp}
+      >
+        {/* All content inside pan+zoom group */}
+        <g transform={`translate(${pan.x},${pan.y}) scale(${zoom})`}>
+          {/* Grid */}
+          {viewOpts.showGrid && <GridLayer tr={tr} />}
 
-      {/* Unstable overlay */}
-      {solved && !stable && (
-        <text x={SVG_W / 2} y={SVG_H / 2}
-          textAnchor="middle" fontSize={18} fill="#ef4444" fontFamily="monospace">
-          Unstable / singular model
-        </text>
-      )}
+          {/* Unstable overlay */}
+          {solved && !stable && (
+            <text x={SVG_W / 2} y={SVG_H / 2}
+              textAnchor="middle" fontSize={18} fill="#ef4444" fontFamily="monospace">
+              Unstable / singular model
+            </text>
+          )}
 
-      {/* Diagram fills */}
-      {diagrams && stable && (
-        <>
-          {viewOpts.showN && diagrams.N.map((d, e) => (
-            <DiagramLayer key={`N-${e}`} diag={d} type="N" unit={model.unit} showValues={viewOpts.showValues} />
+          {/* Diagram fills */}
+          {diagrams && stable && (
+            <>
+              {viewOpts.showN && diagrams.N.map((d, e) => (
+                <DiagramLayer key={`N-${e}`} diag={d} type="N" unit={model.unit} showValues={viewOpts.showValues} />
+              ))}
+              {viewOpts.showQ && diagrams.Q.map((d, e) => (
+                <DiagramLayer key={`Q-${e}`} diag={d} type="Q" unit={model.unit} showValues={viewOpts.showValues} />
+              ))}
+              {viewOpts.showM && diagrams.M.map((d, e) => (
+                <DiagramLayer key={`M-${e}`} diag={d} type="M" unit={model.unit} showValues={viewOpts.showValues} />
+              ))}
+            </>
+          )}
+
+          {/* Members */}
+          {model.members.map((mem) => {
+            const ni = model.nodes.find((n) => n.id === mem.n1)!;
+            const nj = model.nodes.find((n) => n.id === mem.n2)!;
+            if (!ni || !nj) return null;
+            return (
+              <line key={mem.id}
+                x1={tr.toSX(ni.x)} y1={tr.toSY(ni.y)}
+                x2={tr.toSX(nj.x)} y2={tr.toSY(nj.y)}
+                stroke={stable ? C.member : '#a8a29e'}
+                strokeWidth={2.5} strokeLinecap="round" />
+            );
+          })}
+
+          {/* Hinges */}
+          {model.members.map((mem) => {
+            const ni = model.nodes.find((n) => n.id === mem.n1)!;
+            const nj = model.nodes.find((n) => n.id === mem.n2)!;
+            if (!ni || !nj) return null;
+            return (
+              <React.Fragment key={`h-${mem.id}`}>
+                {mem.relI && (
+                  <circle cx={tr.toSX(ni.x)} cy={tr.toSY(ni.y)} r={5}
+                    fill={C.paper} stroke={C.member} strokeWidth={1.5} />
+                )}
+                {mem.relJ && (
+                  <circle cx={tr.toSX(nj.x)} cy={tr.toSY(nj.y)} r={5}
+                    fill={C.paper} stroke={C.member} strokeWidth={1.5} />
+                )}
+              </React.Fragment>
+            );
+          })}
+
+          {/* Supports */}
+          {model.nodes.filter((n) => n.support !== 'free').map((n) => (
+            <SupportSymbol key={`sup-${n.id}`} node={n} tr={tr} />
           ))}
-          {viewOpts.showQ && diagrams.Q.map((d, e) => (
-            <DiagramLayer key={`Q-${e}`} diag={d} type="Q" unit={model.unit} showValues={viewOpts.showValues} />
+
+          {/* Loads */}
+          {viewOpts.showLoads && <LoadsLayer model={model} tr={tr} />}
+
+          {/* Reactions */}
+          {viewOpts.showReactions && solved && stable && (
+            <ReactionsLayer model={model} solved={solved} tr={tr} unit={model.unit} />
+          )}
+
+          {/* Nodes (draggable) */}
+          {model.nodes.map((n) => (
+            <circle key={n.id}
+              cx={tr.toSX(n.x)} cy={tr.toSY(n.y)} r={5}
+              fill={stable ? C.node : '#a8a29e'} stroke={C.paper} strokeWidth={1.5}
+              style={{ cursor: 'grab' }}
+              onMouseDown={(e) => onNodeMouseDown(e, n.id)} />
           ))}
-          {viewOpts.showM && diagrams.M.map((d, e) => (
-            <DiagramLayer key={`M-${e}`} diag={d} type="M" unit={model.unit} showValues={viewOpts.showValues} />
-          ))}
-        </>
+        </g>
+      </svg>
+
+      {/* ── Zoom controls overlay ─────────────────────────────────────────── */}
+      <div className="absolute bottom-2 right-2 flex flex-col gap-1 pointer-events-auto">
+        <button
+          onClick={() => handleZoomBtn(1.25)}
+          title="Zoom in"
+          className={btnCls}>
+          +
+        </button>
+        <button
+          onClick={() => handleZoomBtn(1 / 1.25)}
+          title="Zoom out"
+          className={btnCls}>
+          −
+        </button>
+        <button
+          onClick={resetView}
+          title="Reset view"
+          className={`${btnCls} text-xs`}>
+          ⊙
+        </button>
+      </div>
+
+      {/* ── Zoom level indicator ──────────────────────────────────────────── */}
+      {zoom !== 1 && (
+        <div className="absolute bottom-2 left-2 text-xs font-mono text-stone-400 dark:text-stone-500 pointer-events-none select-none">
+          {Math.round(zoom * 100)}%
+        </div>
       )}
-
-      {/* Members */}
-      {model.members.map((mem) => {
-        const ni = model.nodes.find((n) => n.id === mem.n1)!;
-        const nj = model.nodes.find((n) => n.id === mem.n2)!;
-        if (!ni || !nj) return null;
-        return (
-          <line key={mem.id}
-            x1={tr.toSX(ni.x)} y1={tr.toSY(ni.y)}
-            x2={tr.toSX(nj.x)} y2={tr.toSY(nj.y)}
-            stroke={stable ? C.member : '#a8a29e'}
-            strokeWidth={2.5} strokeLinecap="round" />
-        );
-      })}
-
-      {/* Hinges */}
-      {model.members.map((mem) => {
-        const ni = model.nodes.find((n) => n.id === mem.n1)!;
-        const nj = model.nodes.find((n) => n.id === mem.n2)!;
-        if (!ni || !nj) return null;
-        return (
-          <React.Fragment key={`h-${mem.id}`}>
-            {mem.relI && (
-              <circle cx={tr.toSX(ni.x)} cy={tr.toSY(ni.y)} r={5}
-                fill={C.paper} stroke={C.member} strokeWidth={1.5} />
-            )}
-            {mem.relJ && (
-              <circle cx={tr.toSX(nj.x)} cy={tr.toSY(nj.y)} r={5}
-                fill={C.paper} stroke={C.member} strokeWidth={1.5} />
-            )}
-          </React.Fragment>
-        );
-      })}
-
-      {/* Supports */}
-      {model.nodes.filter((n) => n.support !== 'free').map((n) => (
-        <SupportSymbol key={`sup-${n.id}`} node={n} tr={tr} />
-      ))}
-
-      {/* Loads */}
-      {viewOpts.showLoads && <LoadsLayer model={model} tr={tr} />}
-
-      {/* Reactions */}
-      {viewOpts.showReactions && solved && stable && (
-        <ReactionsLayer model={model} solved={solved} tr={tr} unit={model.unit} />
-      )}
-
-      {/* Nodes (draggable) */}
-      {model.nodes.map((n) => (
-        <circle key={n.id}
-          cx={tr.toSX(n.x)} cy={tr.toSY(n.y)} r={5}
-          fill={stable ? C.node : '#a8a29e'} stroke={C.paper} strokeWidth={1.5}
-          style={{ cursor: 'grab' }}
-          onMouseDown={(e) => onMouseDown(e, n.id)} />
-      ))}
-    </svg>
+    </div>
   );
 }
 
