@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frame Diagram Simulator
 
-## Getting Started
+Interactive 2D plane frame simulator that computes and renders the three characteristic internal force diagrams — **N** (normal/axial), **Q** (shear), **M** (bending moment) — for statically determinate and indeterminate frames.
 
-First, run the development server:
+## Features
+
+- Define frames via an editable table: nodes (x, y, support type), members (with optional end hinges), and loads (nodal, member point, UDL)
+- Solves determinate **and** indeterminate frames using the direct stiffness method
+- Renders N, Q, M as filled polygons along/perpendicular to each member with correct sign conventions:
+  - N two-tone: tension (`+`) in teal, compression (`−`) in red
+  - Q shows jumps at point loads automatically
+  - M drawn on the tension-fibre side; parabolic under UDL
+- Drag nodes to reshape the structure — diagrams recompute live
+- Per-diagram scale sliders and on/off toggles
+- Reactions, load arrows, support symbols, and internal hinge markers
+- Export current view as SVG or PNG
+- Five built-in example presets
+
+## Tech stack
+
+| Concern    | Choice                               |
+|------------|--------------------------------------|
+| Framework  | Next.js 16 (App Router), TypeScript  |
+| Rendering  | Inline SVG                           |
+| Styling    | Tailwind CSS v4                      |
+| State      | React `useState` / `useMemo`         |
+| Tests      | Jest + ts-jest                       |
+
+The entire interactive surface is a client component (`'use client'`). No API routes, no server state.
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
+npm test           # solver test suite (33 checks)
+npm run build      # production build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+src/
+  app/
+    layout.tsx          # root layout + metadata
+    page.tsx            # 'use client' — hosts the whole simulator
+    globals.css
+  components/
+    FrameCanvas.tsx     # SVG scene: structure, supports, loads, N/Q/M diagrams
+    ModelEditor.tsx     # tabbed editor for nodes, members, loads, material
+    DiagramControls.tsx # diagram toggles + per-diagram scale sliders
+    PresetMenu.tsx      # dropdown to load example structures
+  lib/
+    types.ts            # FrameModel, FrameNode, Member, Load, Material
+    solver.ts           # direct stiffness solver (solveFrame) — do not edit math
+    sampling.ts         # internal force sampling (sampleMember) — do not edit math
+    solve.ts            # adapter: id-based FrameModel → solver index-based input
+    geometry.ts         # world↔screen transform + bounds
+    diagram.ts          # polygon builder for N/Q/M diagrams
+    presets.ts          # five example structures
+    __tests__/
+      solver.test.ts    # 33 acceptance checks
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Sign conventions
 
-## Learn More
+| Diagram | Convention |
+|---------|-----------|
+| **N** | `> 0` tension, `< 0` compression |
+| **Q** | Standard beam convention from the i-end free body |
+| **M** | `> 0` sagging; diagram drawn on the tension-fibre side (positive M on a horizontal beam appears below the beam) |
 
-To learn more about Next.js, take a look at the following resources:
+## Load types
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Type | Fields | Notes |
+|------|--------|-------|
+| `nodal` | `node`, `fx`, `fy`, `m` | Force/moment at a node; global components |
+| `mpoint` | `member`, `dist`, `gx`, `gy` | Point load on member at `dist` from n1; global components |
+| `mudl` | `member`, `gx`, `gy` | Uniformly distributed load over full member length; global components |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Supports
 
-## Deploy on Vercel
+`free` · `pinned` · `fixed` · `roller-v` (vertical reaction only) · `roller-h` (horizontal reaction only)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Material properties
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Exposed as `E`, `A`, `I` on the model with engineering defaults (`E = 2.1×10⁸`, `A = 0.01`, `I = 8.3×10⁻⁵`). For **determinate** frames the diagrams are independent of these values; they only matter for **indeterminate** frames.
+
+## Presets
+
+1. Simply supported beam — UDL, mid-span parabolic M
+2. Cantilever — point load at tip
+3. Portal frame (fixed bases) — indeterminate, lateral load + UDL
+4. Three-hinged frame — determinate arch
+5. Two-bay portal — compound indeterminate frame (the solver acceptance test)
