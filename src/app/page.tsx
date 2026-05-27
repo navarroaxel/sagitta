@@ -6,6 +6,8 @@ import ModelEditor from '@/components/ModelEditor';
 import DiagramControls from '@/components/DiagramControls';
 import PresetMenu from '@/components/PresetMenu';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { GitHubLink } from '@/components/GitHubLink';
+import { Footer } from '@/components/Footer';
 import { FrameModel } from '@/lib/types';
 import { solveModel, SolveOutput } from '@/lib/solve';
 import { PRESETS } from '@/lib/presets';
@@ -30,6 +32,7 @@ export default function Home() {
   const { t, toggle, language } = useLanguage();
   const [model, setModel] = useState<FrameModel>(DEFAULT_MODEL);
   const [viewOpts, setViewOpts] = useState<ViewOptions>(DEFAULT_VIEW);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const svgRef = useRef<SVGSVGElement>(null);
 
   const solved = useMemo<SolveOutput | null>(() => {
@@ -115,6 +118,7 @@ export default function Home() {
           className="px-2 py-1 text-xs font-mono bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 rounded border border-stone-200 dark:border-stone-600 text-stone-700 dark:text-stone-200 transition-colors uppercase tracking-wide">
           {language === 'en' ? 'ES' : 'EN'}
         </button>
+        <GitHubLink />
         <ThemeToggle />
       </header>
 
@@ -131,8 +135,14 @@ export default function Home() {
       {/* Main area */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left: editor panel */}
-        <aside className="w-72 flex-shrink-0 border-r border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 overflow-auto">
-          <ModelEditor model={model} onChange={setModel} />
+        <aside
+          className={`flex-shrink-0 border-r border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 overflow-hidden transition-[width] duration-200 ${
+            sidebarOpen ? 'w-[345px]' : 'w-0 border-r-transparent'
+          }`}
+        >
+          <div className="w-[345px] h-full overflow-auto">
+            <ModelEditor model={model} onChange={setModel} />
+          </div>
         </aside>
 
         {/* Right: canvas */}
@@ -148,6 +158,18 @@ export default function Home() {
           </div>
         </main>
       </div>
+
+      <Footer />
+
+      {/* Sidebar toggle — fixed, slides with the panel */}
+      <button
+        onClick={() => setSidebarOpen((v) => !v)}
+        title={sidebarOpen ? 'Collapse panel' : 'Expand panel'}
+        style={{ left: sidebarOpen ? 345 : 0 }}
+        className="fixed top-1/2 -translate-y-1/2 z-50 flex items-center justify-center w-4 h-12 bg-white dark:bg-stone-900 border border-l-0 border-stone-200 dark:border-stone-700 rounded-r shadow-md text-stone-400 dark:text-stone-500 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-50 dark:hover:bg-stone-800 transition-[left] duration-200 text-xs select-none"
+      >
+        {sidebarOpen ? '‹' : '›'}
+      </button>
     </div>
   );
 }

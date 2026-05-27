@@ -131,7 +131,11 @@ function NodesPanel({ nodes, onChange }: { nodes: FrameNode[]; onChange: (n: Fra
               <Cell>
                 <select value={n.support} className={selectCls}
                   onChange={(e) => update(i, { support: e.target.value as Support })}>
-                  {SUPPORTS.map((s) => <option key={s} value={s}>{s}</option>)}
+                  {SUPPORTS.map((s) => (
+                    <option key={s} value={s}>
+                      {t(`editor.nodes.support_${s.replace('-', '_')}` as Parameters<typeof t>[0])}
+                    </option>
+                  ))}
                 </select>
               </Cell>
               <Cell>
