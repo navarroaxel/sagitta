@@ -170,8 +170,11 @@ export default function FrameCanvas({ model, solved, viewOpts, onNodeMove, svgRe
   // Refs to access latest values without stale closures in event handlers
   const zoomRef = useRef(1);
   const panRef = useRef({ x: 0, y: 0 });
-  zoomRef.current = zoom;
-  panRef.current = pan;
+  // Sync inside an effect — refs must not be written during render
+  useEffect(() => {
+    zoomRef.current = zoom;
+    panRef.current = pan;
+  }, [zoom, pan]);
 
   // Drag node state
   const dragging = useRef<{ id: string; ox: number; oy: number; sx: number; sy: number } | null>(null);
@@ -252,7 +255,8 @@ export default function FrameCanvas({ model, solved, viewOpts, onNodeMove, svgRe
   }, [solved, tr, model.members, model.nodes, viewOpts.scaleN, viewOpts.scaleQ, viewOpts.scaleM]);
 
   // ── Node drag handling ──────────────────────────────────────────────────
-  const onNodeMouseDown = useCallback((e: React.MouseEvent, nodeId: string) => {
+  // (no useCallback — handlers access ref.current; React Compiler auto-memoizes)
+  const onNodeMouseDown = (e: React.MouseEvent, nodeId: string) => {
     e.preventDefault();
     const svgEl = ref.current;
     if (!svgEl) return;
@@ -264,10 +268,10 @@ export default function FrameCanvas({ model, solved, viewOpts, onNodeMove, svgRe
       sx: e.clientX,
       sy: e.clientY,
     };
-  }, [ref]);
+  };
 
   // ── Pan handling (left-click drag on empty canvas) ──────────────────────
-  const onSvgMouseDown = useCallback((e: React.MouseEvent) => {
+  const onSvgMouseDown = (e: React.MouseEvent) => {
     // Only start panning if a node drag isn't already active
     if (dragging.current) return;
     panning.current = {
@@ -277,9 +281,9 @@ export default function FrameCanvas({ model, solved, viewOpts, onNodeMove, svgRe
       startPanY: panRef.current.y,
     };
     if (ref.current) ref.current.style.cursor = 'grabbing';
-  }, [ref]);
+  };
 
-  const onMouseMove = useCallback((e: React.MouseEvent) => {
+  const onMouseMove = (e: React.MouseEvent) => {
     // Handle pan
     if (panning.current) {
       const dx = e.clientX - panning.current.startX;
@@ -306,13 +310,13 @@ export default function FrameCanvas({ model, solved, viewOpts, onNodeMove, svgRe
     wx = Math.round(wx / SNAP) * SNAP;
     wy = Math.round(wy / SNAP) * SNAP;
     onNodeMove(dragging.current.id, wx, wy);
-  }, [tr, onNodeMove, ref]);
+  };
 
-  const onMouseUp = useCallback(() => {
+  const onMouseUp = () => {
     dragging.current = null;
     panning.current = null;
     if (ref.current) ref.current.style.cursor = 'crosshair';
-  }, [ref]);
+  };
 
   // ── Zoom button handlers ────────────────────────────────────────────────
   const handleZoomBtn = useCallback((factor: number) => {
