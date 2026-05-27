@@ -40,6 +40,7 @@ interface Props {
   viewOpts: ViewOptions;
   onNodeMove: (id: string, x: number, y: number) => void;
   svgRef?: React.RefObject<SVGSVGElement | null>;
+  highlightedLoadId?: string | null;
 }
 
 const SVG_W = 900;
@@ -117,26 +118,32 @@ function SupportSymbol({ node, tr }: { node: FrameNode; tr: Transform }) {
 }
 
 // ─── Load arrows ────────────────────────────────────────────────────────────
-function ArrowHead({ x, y, angle }: { x: number; y: number; angle: number }) {
+function ArrowHead({ x, y, angle, fill = C.loads }: { x: number; y: number; angle: number; fill?: string }) {
   const len = 8, wid = 4;
   const cos = Math.cos(angle), sin = Math.sin(angle);
   const p1 = `${x},${y}`;
   const p2 = `${x - len * cos + wid * sin},${y - len * sin - wid * cos}`;
   const p3 = `${x - len * cos - wid * sin},${y - len * sin + wid * cos}`;
-  return <polygon points={`${p1} ${p2} ${p3}`} fill={C.loads} />;
+  return <polygon points={`${p1} ${p2} ${p3}`} fill={fill} />;
 }
 
 function LoadArrow({
-  x1, y1, x2, y2, label,
-}: { x1: number; y1: number; x2: number; y2: number; label?: string }) {
+  x1, y1, x2, y2, label, highlighted,
+}: { x1: number; y1: number; x2: number; y2: number; label?: string; highlighted?: boolean }) {
   const angle = Math.atan2(y2 - y1, x2 - x1);
+  const color = highlighted ? '#ea580c' : C.loads;
+  const sw = highlighted ? 2.5 : 1.5;
   return (
     <g>
-      <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={C.loads} strokeWidth={1.5} />
-      <ArrowHead x={x2} y={y2} angle={angle} />
+      {highlighted && (
+        <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth={9} opacity={0.18} strokeLinecap="round" />
+      )}
+      <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth={sw} />
+      <ArrowHead x={x2} y={y2} angle={angle} fill={color} />
       {label && (
         <text x={(x1 + x2) / 2 + 6} y={(y1 + y2) / 2}
-          fontSize={9} fontFamily="monospace" fill={C.loads}
+          fontSize={highlighted ? 10 : 9} fontFamily="monospace" fill={color}
+          fontWeight={highlighted ? 'bold' : 'normal'}
           style={{ paintOrder: 'stroke', stroke: '#fff', strokeWidth: 2 }}>
           {label}
         </text>
@@ -159,7 +166,7 @@ function ValLabel({ x, y, v, unit }: { x: number; y: number; v: number; unit: st
 }
 
 // ─── Main component ──────────────────────────────────────────────────────────
-export default function FrameCanvas({ model, solved, viewOpts, onNodeMove, svgRef }: Props) {
+export default function FrameCanvas({ model, solved, viewOpts, onNodeMove, svgRef, highlightedLoadId }: Props) {
   const internalRef = useRef<SVGSVGElement>(null);
   const ref = svgRef ?? internalRef;
 
@@ -428,7 +435,7 @@ export default function FrameCanvas({ model, solved, viewOpts, onNodeMove, svgRe
           ))}
 
           {/* Loads */}
-          {viewOpts.showLoads && <LoadsLayer model={model} tr={tr} />}
+          {viewOpts.showLoads && <LoadsLayer model={model} tr={tr} highlightedLoadId={highlightedLoadId} />}
 
           {/* Reactions */}
           {viewOpts.showReactions && solved && stable && (
@@ -543,7 +550,9 @@ function DiagramLayer({
   );
 }
 
-function LoadsLayer({ model, tr }: { model: FrameModel; tr: Transform }) {
+function LoadsLayer({ model, tr, highlightedLoadId }: {
+  model: FrameModel; tr: Transform; highlightedLoadId?: string | null;
+}) {
   const ARROW_BASE = 40; // px for a "unit" force arrow
   // Find max magnitude for scaling
   let maxF = 0;
@@ -553,10 +562,14 @@ function LoadsLayer({ model, tr }: { model: FrameModel; tr: Transform }) {
     if (l.type === 'mudl') maxF = Math.max(maxF, Math.hypot(l.gx, l.gy));
   });
   const k = maxF > 0 ? ARROW_BASE / maxF : 1;
+  const anyHighlighted = highlightedLoadId != null;
 
   return (
     <g>
       {model.loads.map((load) => {
+        const isHL = load.id === highlightedLoadId;
+        const opacity = anyHighlighted && !isHL ? 0.25 : 1;
+
         if (load.type === 'nodal') {
           const nd = model.nodes.find((n) => n.id === load.node);
           if (!nd) return null;
@@ -566,11 +579,14 @@ function LoadsLayer({ model, tr }: { model: FrameModel; tr: Transform }) {
           const len = mag * k;
           const angle = Math.atan2(-load.fy, load.fx); // screen y is flipped
           return (
-            <LoadArrow key={load.id}
-              x1={sx - Math.cos(angle) * len}
-              y1={sy - Math.sin(angle) * len}
-              x2={sx} y2={sy}
-              label={`${mag.toFixed(0)}`} />
+            <g key={load.id} opacity={opacity}>
+              <LoadArrow
+                x1={sx - Math.cos(angle) * len}
+                y1={sy - Math.sin(angle) * len}
+                x2={sx} y2={sy}
+                label={`${mag.toFixed(0)}`}
+                highlighted={isHL} />
+            </g>
           );
         }
         if (load.type === 'mpoint') {
@@ -589,11 +605,14 @@ function LoadsLayer({ model, tr }: { model: FrameModel; tr: Transform }) {
           const len = mag * k;
           const angle = Math.atan2(-load.gy, load.gx);
           return (
-            <LoadArrow key={load.id}
-              x1={sx - Math.cos(angle) * len}
-              y1={sy - Math.sin(angle) * len}
-              x2={sx} y2={sy}
-              label={`${mag.toFixed(0)}`} />
+            <g key={load.id} opacity={opacity}>
+              <LoadArrow
+                x1={sx - Math.cos(angle) * len}
+                y1={sy - Math.sin(angle) * len}
+                x2={sx} y2={sy}
+                label={`${mag.toFixed(0)}`}
+                highlighted={isHL} />
+            </g>
           );
         }
         if (load.type === 'mudl') {
@@ -608,7 +627,7 @@ function LoadsLayer({ model, tr }: { model: FrameModel; tr: Transform }) {
           const len = mag * k * 0.6;
           const nArrows = 5;
           return (
-            <g key={load.id}>
+            <g key={load.id} opacity={opacity}>
               {Array.from({ length: nArrows }).map((_, i) => {
                 const t = i / (nArrows - 1);
                 const wx = ni.x + (nj.x - ni.x) * t;
@@ -619,7 +638,8 @@ function LoadsLayer({ model, tr }: { model: FrameModel; tr: Transform }) {
                     x1={sx - Math.cos(angle) * len}
                     y1={sy - Math.sin(angle) * len}
                     x2={sx} y2={sy}
-                    label={i === 2 ? `${mag.toFixed(0)}/m` : undefined} />
+                    label={i === 2 ? `${mag.toFixed(0)}/m` : undefined}
+                    highlighted={isHL} />
                 );
               })}
             </g>
