@@ -21,9 +21,7 @@ function readStoredMode(): ThemeMode {
 
 function applyMode(mode: ThemeMode): void {
   if (typeof window === "undefined") return;
-  const systemDark = window.matchMedia(
-    "(prefers-color-scheme: dark)",
-  ).matches;
+  const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
   const useDark = mode === "dark" || (mode === "auto" && systemDark);
   document.documentElement.classList.toggle("dark", useDark);
   if (mode === "auto") {

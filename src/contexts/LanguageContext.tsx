@@ -81,7 +81,8 @@ const EN = {
   "theme.label": "Theme:",
   "github.aria": "View source on GitHub",
 
-  "footer.description": "An interactive simulator built as a teaching aid for the Stability course at UTN – FRBA.",
+  "footer.description":
+    "An interactive simulator built as a teaching aid for the Stability course at UTN – FRBA.",
   "footer.also": "Explore more:",
   "footer.relax_teaser": "Electric field & relaxation method",
   "footer.kinelab_teaser": "Circular motion kinematics & dynamics",
@@ -158,7 +159,8 @@ const ES: Record<TranslationKey, string> = {
   "theme.label": "Tema:",
   "github.aria": "Ver código fuente en GitHub",
 
-  "footer.description": "Simulador interactivo desarrollado como apoyo didáctico en el marco de la cátedra de Estabilidad de la UTN – FRBA.",
+  "footer.description":
+    "Simulador interactivo desarrollado como apoyo didáctico en el marco de la cátedra de Estabilidad de la UTN – FRBA.",
   "footer.also": "Ver también:",
   "footer.relax_teaser": "Teoría de Campos",
   "footer.kinelab_teaser": "Mecánica Técnica",

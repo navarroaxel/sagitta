@@ -1,4 +1,4 @@
-export type Support = 'free' | 'pinned' | 'fixed' | 'roller-v' | 'roller-h';
+export type Support = "free" | "pinned" | "fixed" | "roller-v" | "roller-h";
 
 export interface FrameNode {
   id: string;
@@ -16,9 +16,23 @@ export interface Member {
 }
 
 export type Load =
-  | { id: string; type: 'nodal'; node: string; fx: number; fy: number; m: number }
-  | { id: string; type: 'mpoint'; member: string; dist: number; gx: number; gy: number }
-  | { id: string; type: 'mudl'; member: string; gx: number; gy: number };
+  | {
+      id: string;
+      type: "nodal";
+      node: string;
+      fx: number;
+      fy: number;
+      m: number;
+    }
+  | {
+      id: string;
+      type: "mpoint";
+      member: string;
+      dist: number;
+      gx: number;
+      gy: number;
+    }
+  | { id: string; type: "mudl"; member: string; gx: number; gy: number };
 
 export interface Material {
   E: number;

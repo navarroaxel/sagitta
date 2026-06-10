@@ -1,15 +1,17 @@
-import { FrameNode } from './types';
+import { FrameNode } from "./types";
 
 export interface WorldBox {
-  minX: number; maxX: number;
-  minY: number; maxY: number;
+  minX: number;
+  maxX: number;
+  minY: number;
+  maxY: number;
   diagLen: number;
 }
 
 export interface Transform {
   toSX: (x: number) => number;
   toSY: (y: number) => number;
-  k: number;       // pixels per metre
+  k: number; // pixels per metre
   ox: number;
   oy: number;
   box: WorldBox;
@@ -17,11 +19,14 @@ export interface Transform {
 
 /** Compute the bounding box of the structure in world coords. */
 export function worldBounds(nodes: FrameNode[]): WorldBox {
-  if (nodes.length === 0) return { minX: 0, maxX: 10, minY: 0, maxY: 5, diagLen: 11 };
+  if (nodes.length === 0)
+    return { minX: 0, maxX: 10, minY: 0, maxY: 5, diagLen: 11 };
   const xs = nodes.map((n) => n.x);
   const ys = nodes.map((n) => n.y);
-  const minX = Math.min(...xs), maxX = Math.max(...xs);
-  const minY = Math.min(...ys), maxY = Math.max(...ys);
+  const minX = Math.min(...xs),
+    maxX = Math.max(...xs);
+  const minY = Math.min(...ys),
+    maxY = Math.max(...ys);
   const diagLen = Math.hypot(maxX - minX || 1, maxY - minY || 1);
   return { minX, maxX, minY, maxY, diagLen };
 }
@@ -60,7 +65,7 @@ export function makeTransform(
 
   return {
     toSX: (x) => ox + x * k,
-    toSY: (y) => oy - y * k,   // y-up → y-down
+    toSY: (y) => oy - y * k, // y-up → y-down
     k,
     ox,
     oy,
