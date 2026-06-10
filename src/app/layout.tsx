@@ -16,7 +16,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Frame Diagram Simulator",
-  description: "Interactive 2D frame internal force diagram simulator (N, Q, M)",
+  description:
+    "Interactive 2D frame internal force diagram simulator (N, Q, M)",
 };
 
 // Runs before React hydrates so the page paints with the right theme on
@@ -46,7 +47,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className="min-h-full flex flex-col bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100">
+      <body className="flex min-h-full flex-col bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100">
         <LanguageProvider>{children}</LanguageProvider>
         <Analytics />
       </body>

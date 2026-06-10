@@ -1,7 +1,7 @@
 // Adapter: maps id-based FrameModel -> index-based SolverModel, calls solveFrame.
-import { FrameModel } from './types';
-import { solveFrame, SolverModel, SolverResult } from './solver';
-import { sampleMember, Station } from './sampling';
+import { FrameModel } from "./types";
+import { solveFrame, SolverModel, SolverResult } from "./solver";
+import { sampleMember, Station } from "./sampling";
 
 export interface SolveOutput {
   result: SolverResult;
@@ -11,8 +11,12 @@ export interface SolveOutput {
 }
 
 export function solveModel(model: FrameModel): SolveOutput {
-  const nodeIndex = new Map<string, number>(model.nodes.map((n, i) => [n.id, i]));
-  const memberIndex = new Map<string, number>(model.members.map((m, i) => [m.id, i]));
+  const nodeIndex = new Map<string, number>(
+    model.nodes.map((n, i) => [n.id, i]),
+  );
+  const memberIndex = new Map<string, number>(
+    model.members.map((m, i) => [m.id, i]),
+  );
 
   const solverModel: SolverModel = {
     nodes: model.nodes.map((n) => ({ x: n.x, y: n.y, support: n.support })),
@@ -26,17 +30,17 @@ export function solveModel(model: FrameModel): SolveOutput {
       relJ: m.relJ,
     })),
     loads: model.loads.map((load) => {
-      if (load.type === 'nodal') {
+      if (load.type === "nodal") {
         return {
-          type: 'nodal' as const,
+          type: "nodal" as const,
           node: nodeIndex.get(load.node)!,
           fx: load.fx,
           fy: load.fy,
           m: load.m,
         };
-      } else if (load.type === 'mpoint') {
+      } else if (load.type === "mpoint") {
         return {
-          type: 'mpoint' as const,
+          type: "mpoint" as const,
           member: memberIndex.get(load.member)!,
           dist: load.dist,
           gx: load.gx,
@@ -44,7 +48,7 @@ export function solveModel(model: FrameModel): SolveOutput {
         };
       } else {
         return {
-          type: 'mudl' as const,
+          type: "mudl" as const,
           member: memberIndex.get(load.member)!,
           gx: load.gx,
           gy: load.gy,
@@ -54,7 +58,9 @@ export function solveModel(model: FrameModel): SolveOutput {
   };
 
   const result = solveFrame(solverModel);
-  const stations = model.members.map((_, e) => sampleMember(solverModel, result, e, 64));
+  const stations = model.members.map((_, e) =>
+    sampleMember(solverModel, result, e, 64),
+  );
 
   return { result, stations, nodeIndex, memberIndex };
 }
