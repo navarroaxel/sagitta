@@ -1,5 +1,12 @@
 import { FrameModel } from "@/lib/types";
 import { Transform } from "@/lib/geometry";
+import {
+  pointLoadPos,
+  pointAlongMember,
+  udlArrowFractions,
+  UDL_ARROW_COUNT,
+  UDL_LABEL_INDEX,
+} from "@/lib/loadProjection";
 import { LoadArrow, MomentMarker } from "./loads";
 
 export function LoadsLayer({
@@ -72,11 +79,7 @@ export function LoadsLayer({
           const ni = model.nodes.find((n) => n.id === mem.n1)!;
           const nj = model.nodes.find((n) => n.id === mem.n2)!;
           if (!ni || !nj) return null;
-          const L = Math.hypot(nj.x - ni.x, nj.y - ni.y);
-          const ax = (nj.x - ni.x) / L,
-            ay = (nj.y - ni.y) / L;
-          const wx = ni.x + ax * load.dist;
-          const wy = ni.y + ay * load.dist;
+          const { x: wx, y: wy } = pointLoadPos(ni, nj, load.dist);
           const sx = tr.toSX(wx),
             sy = tr.toSY(wy);
           const mag = Math.hypot(load.gx, load.gy);
@@ -106,13 +109,10 @@ export function LoadsLayer({
           if (mag < 1e-10) return null;
           const angle = Math.atan2(-load.gy, load.gx);
           const len = mag * k * 0.6;
-          const nArrows = 5;
           return (
             <g key={load.id} opacity={opacity}>
-              {Array.from({ length: nArrows }).map((_, i) => {
-                const t = i / (nArrows - 1);
-                const wx = ni.x + (nj.x - ni.x) * t;
-                const wy = ni.y + (nj.y - ni.y) * t;
+              {udlArrowFractions(UDL_ARROW_COUNT).map((t, i) => {
+                const { x: wx, y: wy } = pointAlongMember(ni, nj, t);
                 const sx = tr.toSX(wx),
                   sy = tr.toSY(wy);
                 return (
@@ -122,7 +122,7 @@ export function LoadsLayer({
                     y1={sy - Math.sin(angle) * len}
                     x2={sx}
                     y2={sy}
-                    label={i === 2 ? `${mag.toFixed(0)}/m` : undefined}
+                    label={i === UDL_LABEL_INDEX ? `${mag.toFixed(0)}/m` : undefined}
                     highlighted={isHL}
                   />
                 );
