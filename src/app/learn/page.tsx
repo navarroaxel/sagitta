@@ -353,7 +353,7 @@ function ConstructionOverlay({
 
 export default function LearnPage() {
   const { t, toggle, language } = useLanguage();
-  const [presetIdx, setPresetIdx] = useState<(typeof PRESET_INDICES)[number]>(4);
+  const [presetIdx, setPresetIdx] = useState<(typeof PRESET_INDICES)[number]>(PRESET_INDICES[0]);
   const [step, setStep] = useState(0);
 
   const model = useMemo(() => PRESETS[presetIdx].model, [presetIdx]);
