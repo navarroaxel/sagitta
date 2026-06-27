@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useRef, useCallback } from "react";
+import Link from "next/link";
 import FrameCanvas, { ViewOptions } from "@/components/FrameCanvas";
 import ModelEditor from "@/components/ModelEditor";
 import DiagramControls from "@/components/DiagramControls";
@@ -102,6 +103,12 @@ export default function Home() {
         <h1 className="text-base font-semibold tracking-tight text-stone-800 dark:text-stone-100">
           {t("app.title")}
         </h1>
+        <Link
+          href="/learn"
+          className="text-xs text-stone-400 transition-colors hover:text-stone-600 dark:text-stone-500 dark:hover:text-stone-300"
+        >
+          {t("learn.link")}
+        </Link>
         <div className="flex-1" />
         <PresetMenu
           onLoad={(m) => {
