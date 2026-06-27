@@ -317,7 +317,7 @@ export default function ResultsPanel({ model, solved }: Props) {
               return (
                 <tr key={r.label} className={rowCls}>
                   <td className={idCell}>{r.label}</td>
-                  <td className={numCell}>{clean(r.value).toFixed(2)}</td>
+                  <td className={numCell}>{r.value.toExponential(2)}</td>
                   <td
                     className={`px-2 py-1 text-right font-medium ${
                       ok
