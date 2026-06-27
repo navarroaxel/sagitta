@@ -107,7 +107,7 @@ const twoBayPortal: FrameModel = {
 const r1: FrameModel = {
   nodes: [
     { id: "A", x: 0, y: 0, support: "pinned" },
-    { id: "P", x: 0, y: 4, support: "free" }, // punto de aplicacion del momento (0,4)
+    { id: "M", x: 0, y: 4, support: "free" }, // punto de aplicacion del momento (0,4)
     { id: "T", x: 0, y: 8, support: "free" }, // encuentro pilar/techo
     { id: "L", x: -2, y: 8, support: "free" }, // punta del voladizo
     { id: "A12", x: 5, y: 8, support: "free" }, // articulacion portico <-> reticulado
@@ -121,9 +121,11 @@ const r1: FrameModel = {
   members: [
     // portico de alma llena (nudos rigidos). El pilar es UNO solo (A->T), partido
     // en P=(0,4) solo para poder aplicar ahi el momento (metodo de rigidez).
-    { id: "col1", n1: "A", n2: "P" }, // pilar (0,0)->(0,4)
-    { id: "col2", n1: "P", n2: "T" }, // pilar (0,4)->(0,8)
-    { id: "cant", n1: "T", n2: "L" },
+    { id: "col1", n1: "A", n2: "M" }, // pilar (0,0)->(0,4)
+    { id: "col2", n1: "M", n2: "T" }, // pilar (0,4)->(0,8)
+    // voladizo orientado L->T (mismo sentido que el techo) para que el diagrama
+    // de corte sea consistente a traves del nudo T (barras colineales).
+    { id: "cant", n1: "L", n2: "T" },
     { id: "beam", n1: "T", n2: "A12", relJ: true }, // articulacion en A12
     // reticulado (barras biarticuladas)
     { id: "b1", n1: "A12", n2: "C", relI: true, relJ: true },
@@ -141,7 +143,7 @@ const r1: FrameModel = {
   loads: [
     { id: "q1", type: "mudl", member: "cant", gx: 0, gy: -5 }, // techo (-2,8)->(0,8)
     { id: "q2", type: "mudl", member: "beam", gx: 0, gy: -5 }, // techo (0,8)->(5,8)
-    { id: "m1", type: "nodal", node: "P", fx: 0, fy: 0, m: -15 }, // 15 kNm horario en (0,4)
+    { id: "m1", type: "nodal", node: "M", fx: 0, fy: 0, m: -15 }, // 15 kNm horario en (0,4)
     { id: "p1", type: "nodal", node: "E", fx: 0, fy: -20, m: 0 }, // 20 kN abajo
     { id: "p2", type: "nodal", node: "D", fx: 10, fy: 0, m: 0 }, // 10 kN derecha
   ],

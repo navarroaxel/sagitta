@@ -42,6 +42,7 @@ export interface ViewOptions {
   scaleN: number;
   scaleQ: number;
   scaleM: number;
+  scaleLoads: number;
 }
 
 interface Props {
@@ -223,6 +224,66 @@ function LoadArrow({
         <text
           x={(x1 + x2) / 2 + 6}
           y={(y1 + y2) / 2}
+          fontSize={highlighted ? 10 : 9}
+          fontFamily="monospace"
+          fill={color}
+          fontWeight={highlighted ? "bold" : "normal"}
+          style={{ paintOrder: "stroke", stroke: "#fff", strokeWidth: 2 }}
+        >
+          {label}
+        </text>
+      )}
+    </g>
+  );
+}
+
+// ─── Moment marker (curved arrow) ────────────────────────────────────────────
+function MomentMarker({
+  cx,
+  cy,
+  m,
+  scale = 1,
+  label,
+  highlighted,
+}: {
+  cx: number;
+  cy: number;
+  m: number;
+  scale?: number;
+  label?: string;
+  highlighted?: boolean;
+}) {
+  const color = highlighted ? "#ea580c" : C.loads;
+  const sw = highlighted ? 2.5 : 1.5;
+  const r = Math.min(34, 13 * scale);
+  const cw = m < 0; // positive m = counter-clockwise; negative = clockwise
+  const startDeg = cw ? -50 : 230;
+  const endDeg = cw ? 230 : -50;
+  const toXY = (deg: number) => {
+    const a = (deg * Math.PI) / 180;
+    return [cx + r * Math.cos(a), cy + r * Math.sin(a)] as const;
+  };
+  const [sx, sy] = toXY(startDeg);
+  const [ex, ey] = toXY(endDeg);
+  const sweep = cw ? 1 : 0;
+  const aEnd = (endDeg * Math.PI) / 180;
+  // tangent direction at the arrow end (along the rotation sense)
+  const tang = cw
+    ? Math.atan2(Math.cos(aEnd), -Math.sin(aEnd))
+    : Math.atan2(-Math.cos(aEnd), Math.sin(aEnd));
+  return (
+    <g>
+      <path
+        d={`M ${sx} ${sy} A ${r} ${r} 0 1 ${sweep} ${ex} ${ey}`}
+        fill="none"
+        stroke={color}
+        strokeWidth={sw}
+      />
+      <ArrowHead x={ex} y={ey} angle={tang} fill={color} />
+      {label && (
+        <text
+          x={cx + r + 5}
+          y={cy}
           fontSize={highlighted ? 10 : 9}
           fontFamily="monospace"
           fill={color}
@@ -641,6 +702,7 @@ export default function FrameCanvas({
             <LoadsLayer
               model={model}
               tr={tr}
+              scale={viewOpts.scaleLoads}
               highlightedLoadId={highlightedLoadId}
             />
           )}
@@ -826,10 +888,12 @@ function DiagramLayer({
 function LoadsLayer({
   model,
   tr,
+  scale = 1,
   highlightedLoadId,
 }: {
   model: FrameModel;
   tr: Transform;
+  scale?: number;
   highlightedLoadId?: string | null;
 }) {
   const ARROW_BASE = 40; // px for a "unit" force arrow
@@ -840,7 +904,7 @@ function LoadsLayer({
     if (l.type === "mpoint") maxF = Math.max(maxF, Math.hypot(l.gx, l.gy));
     if (l.type === "mudl") maxF = Math.max(maxF, Math.hypot(l.gx, l.gy));
   });
-  const k = maxF > 0 ? ARROW_BASE / maxF : 1;
+  const k = (maxF > 0 ? ARROW_BASE / maxF : 1) * scale;
   const anyHighlighted = highlightedLoadId != null;
 
   return (
@@ -853,21 +917,35 @@ function LoadsLayer({
           const nd = model.nodes.find((n) => n.id === load.node);
           if (!nd) return null;
           const mag = Math.hypot(load.fx, load.fy);
-          if (mag < 1e-10) return null;
+          const hasForce = mag >= 1e-10;
+          const hasMoment = Math.abs(load.m) >= 1e-10;
+          if (!hasForce && !hasMoment) return null;
           const sx = tr.toSX(nd.x),
             sy = tr.toSY(nd.y);
           const len = mag * k;
           const angle = Math.atan2(-load.fy, load.fx); // screen y is flipped
           return (
             <g key={load.id} opacity={opacity}>
-              <LoadArrow
-                x1={sx - Math.cos(angle) * len}
-                y1={sy - Math.sin(angle) * len}
-                x2={sx}
-                y2={sy}
-                label={`${mag.toFixed(0)}`}
-                highlighted={isHL}
-              />
+              {hasForce && (
+                <LoadArrow
+                  x1={sx - Math.cos(angle) * len}
+                  y1={sy - Math.sin(angle) * len}
+                  x2={sx}
+                  y2={sy}
+                  label={`${mag.toFixed(0)}`}
+                  highlighted={isHL}
+                />
+              )}
+              {hasMoment && (
+                <MomentMarker
+                  cx={sx}
+                  cy={sy}
+                  m={load.m}
+                  scale={scale}
+                  label={`${Math.abs(load.m).toFixed(0)}`}
+                  highlighted={isHL}
+                />
+              )}
             </g>
           );
         }

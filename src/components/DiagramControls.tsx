@@ -86,6 +86,23 @@ export default function DiagramControls({ opts, onChange }: Props) {
       <span className="text-xs font-semibold text-stone-600 dark:text-stone-300">
         {t("controls.scale")}
       </span>
+      <label className="flex items-center gap-1 text-stone-600 dark:text-stone-300">
+        <span className="font-mono font-bold text-orange-700 dark:text-orange-500">
+          {t("controls.loads")}
+        </span>
+        <input
+          type="range"
+          min={0.1}
+          max={5}
+          step={0.05}
+          value={opts.scaleLoads}
+          onChange={(e) => set("scaleLoads", parseFloat(e.target.value))}
+          className="w-20 accent-orange-700"
+        />
+        <span className="w-8 text-right font-mono text-xs">
+          {opts.scaleLoads.toFixed(2)}
+        </span>
+      </label>
       {(["N", "Q", "M"] as const).map((d) => {
         const key = `scale${d}` as keyof ViewOptions;
         const color =

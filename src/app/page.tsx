@@ -26,6 +26,7 @@ const DEFAULT_VIEW: ViewOptions = {
   scaleN: 1,
   scaleQ: 1,
   scaleM: 1,
+  scaleLoads: 1,
 };
 
 export default function Home() {
