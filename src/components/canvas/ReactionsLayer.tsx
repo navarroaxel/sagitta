@@ -18,7 +18,7 @@ export function ReactionsLayer({
   const ARROW_LEN = 50;
   const reactions = solved.result.reactions;
   return (
-    <g>
+    <g data-testid="reactions-layer">
       {model.nodes.map((nd, i) => {
         const r = reactions[i];
         if (!r) return null;

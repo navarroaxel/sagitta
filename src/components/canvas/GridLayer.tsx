@@ -36,5 +36,5 @@ export function GridLayer({ tr }: { tr: Transform }) {
       />,
     );
   }
-  return <g>{lines}</g>;
+  return <g data-testid="grid-layer">{lines}</g>;
 }

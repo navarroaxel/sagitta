@@ -20,7 +20,7 @@ export function DiagramLayer({
     type === "N" ? C.tension : type === "Q" ? C.shear : C.moment;
 
   return (
-    <g opacity={0.85}>
+    <g data-testid={`diagram-${type}`} opacity={0.85}>
       {/* Filled quads */}
       {diag.quads.map((group, gi) => {
         const pts = quadGroupToSvgPoints(group);

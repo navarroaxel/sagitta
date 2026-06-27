@@ -363,6 +363,7 @@ export default function FrameCanvas({
             return (
               <line
                 key={mem.id}
+                data-testid="member"
                 x1={tr.toSX(ni.x)}
                 y1={tr.toSY(ni.y)}
                 x2={tr.toSX(nj.x)}
@@ -466,6 +467,7 @@ export default function FrameCanvas({
           {model.nodes.map((n) => (
             <circle
               key={n.id}
+              data-testid="node"
               cx={tr.toSX(n.x)}
               cy={tr.toSY(n.y)}
               r={5}

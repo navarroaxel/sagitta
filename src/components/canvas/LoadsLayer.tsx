@@ -32,7 +32,7 @@ export function LoadsLayer({
   const anyHighlighted = highlightedLoadId != null;
 
   return (
-    <g>
+    <g data-testid="loads-layer">
       {model.loads.map((load) => {
         const isHL = load.id === highlightedLoadId;
         const opacity = anyHighlighted && !isHL ? 0.25 : 1;
@@ -49,7 +49,7 @@ export function LoadsLayer({
           const len = mag * k;
           const angle = Math.atan2(-load.fy, load.fx); // screen y is flipped
           return (
-            <g key={load.id} opacity={opacity}>
+            <g key={load.id} data-testid={`load-${load.id}`} opacity={opacity}>
               {hasForce && (
                 <LoadArrow
                   x1={sx - Math.cos(angle) * len}
@@ -87,7 +87,7 @@ export function LoadsLayer({
           const len = mag * k;
           const angle = Math.atan2(-load.gy, load.gx);
           return (
-            <g key={load.id} opacity={opacity}>
+            <g key={load.id} data-testid={`load-${load.id}`} opacity={opacity}>
               <LoadArrow
                 x1={sx - Math.cos(angle) * len}
                 y1={sy - Math.sin(angle) * len}
@@ -110,7 +110,7 @@ export function LoadsLayer({
           const angle = Math.atan2(-load.gy, load.gx);
           const len = mag * k * 0.6;
           return (
-            <g key={load.id} opacity={opacity}>
+            <g key={load.id} data-testid={`load-${load.id}`} opacity={opacity}>
               {udlArrowFractions(UDL_ARROW_COUNT).map((t, i) => {
                 const { x: wx, y: wy } = pointAlongMember(ni, nj, t);
                 const sx = tr.toSX(wx),
