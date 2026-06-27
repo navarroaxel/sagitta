@@ -39,14 +39,13 @@ const EN = {
   "preset.two_bay": "Two-Bay Portal",
   "preset.portico_reticulado": "Frame + Truss (r1)",
 
-  "forces.title": "Member axial forces",
   "forces.member": "Member",
   "forces.state": "State",
   "forces.tension": "Tension",
   "forces.compression": "Compression",
   "forces.zero": "Zero",
-  "forces.unavailable": "Solve the model to see member forces.",
 
+  "results.unavailable": "Solve the model to see the results.",
   "results.section.member_forces": "Member forces",
   "results.section.reactions": "Support reactions",
   "results.section.displacements": "Nodal displacements",
@@ -152,14 +151,13 @@ const ES: Record<TranslationKey, string> = {
   "preset.two_bay": "Pórtico de dos vanos",
   "preset.portico_reticulado": "Pórtico + Reticulado (r1)",
 
-  "forces.title": "Esfuerzos axiles en barras",
   "forces.member": "Barra",
   "forces.state": "Estado",
   "forces.tension": "Tracción",
   "forces.compression": "Compresión",
   "forces.zero": "Nula",
-  "forces.unavailable": "Resolvé el modelo para ver los esfuerzos.",
 
+  "results.unavailable": "Resolvé el modelo para ver los resultados.",
   "results.section.member_forces": "Esfuerzos en barras",
   "results.section.reactions": "Reacciones de apoyo",
   "results.section.displacements": "Desplazamientos nodales",

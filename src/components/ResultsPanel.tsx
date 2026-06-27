@@ -3,16 +3,13 @@
 import React from "react";
 import { FrameModel } from "@/lib/types";
 import { SolveOutput } from "@/lib/solve";
-import { Station } from "@/lib/sampling";
+import { clean, equilibrium, EQ_TOL, peak } from "@/lib/results";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Props {
   model: FrameModel;
   solved: SolveOutput | null;
 }
-
-const TOL = 1e-2; // below this a force/moment value is treated as zero
-const EQ_TOL = 1e-3; // equilibrium residual tolerance for the ✓/✗ indicator
 
 function Th({
   children,
@@ -48,25 +45,13 @@ const numCell =
 const idCell = "px-2 py-1 font-mono text-stone-700 dark:text-stone-300";
 const rowCls = "border-t border-stone-100 dark:border-stone-700";
 
-// Station maximising |key| along a member (signed value preserved).
-function peak(stations: Station[], key: "Q" | "M"): Station | null {
-  if (!stations.length) return null;
-  return stations.reduce((best, s) =>
-    Math.abs(s[key]) > Math.abs(best[key]) ? s : best,
-  );
-}
-
-function clean(v: number): number {
-  return Math.abs(v) < TOL ? 0 : v;
-}
-
 export default function ResultsPanel({ model, solved }: Props) {
   const { t } = useLanguage();
 
   if (!solved || !solved.result.stable) {
     return (
       <p className="px-1 py-2 text-xs text-stone-400 dark:text-stone-500">
-        {t("forces.unavailable")}
+        {t("results.unavailable")}
       </p>
     );
   }
@@ -140,43 +125,11 @@ export default function ResultsPanel({ model, solved }: Props) {
   });
 
   // ── Section D: global equilibrium (applied loads + reactions ≈ 0) ──────────
-  const nodeById = new Map(model.nodes.map((n) => [n.id, n]));
-  let sFx = 0;
-  let sFy = 0;
-  let sM = 0;
-  const addForce = (px: number, py: number, fx: number, fy: number, m = 0) => {
-    sFx += fx;
-    sFy += fy;
-    sM += px * fy - py * fx + m;
-  };
-  for (const load of model.loads) {
-    if (load.type === "nodal") {
-      const n = nodeById.get(load.node);
-      if (n) addForce(n.x, n.y, load.fx, load.fy, load.m);
-    } else {
-      const e = memberIndex.get(load.member);
-      const mem = model.members.find((mm) => mm.id === load.member);
-      if (e === undefined || !mem) continue;
-      const ni = nodeById.get(mem.n1);
-      if (!ni) continue;
-      const { L, c, s } = result.geo[e];
-      if (load.type === "mpoint") {
-        addForce(ni.x + load.dist * c, ni.y + load.dist * s, load.gx, load.gy);
-      } else {
-        // mudl: total resultant gx·L, gy·L acting at the member midpoint
-        addForce(ni.x + (L / 2) * c, ni.y + (L / 2) * s, load.gx * L, load.gy * L);
-      }
-    }
-  }
-  for (const n of model.nodes) {
-    if (n.support === "free") continue;
-    const r = result.reactions[nodeIndex.get(n.id)!];
-    addForce(n.x, n.y, r.rx, r.ry, r.rm);
-  }
+  const eq = equilibrium(model, solved);
   const eqRows: { label: string; value: number }[] = [
-    { label: t("results.eq_fx"), value: sFx },
-    { label: t("results.eq_fy"), value: sFy },
-    { label: t("results.eq_m"), value: sM },
+    { label: t("results.eq_fx"), value: eq.fx },
+    { label: t("results.eq_fy"), value: eq.fy },
+    { label: t("results.eq_m"), value: eq.m },
   ];
 
   return (
