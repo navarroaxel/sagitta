@@ -157,6 +157,7 @@ export default function Home() {
             <ModelEditor
               model={model}
               onChange={setModel}
+              solved={solved}
               highlightedLoadId={highlightedLoadId}
               onHighlightLoad={setHighlightedLoadId}
             />

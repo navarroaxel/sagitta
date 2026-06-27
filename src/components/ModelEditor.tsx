@@ -9,16 +9,19 @@ import {
   Support,
   Material,
 } from "@/lib/types";
+import { SolveOutput } from "@/lib/solve";
+import MemberForces from "@/components/MemberForces";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Props {
   model: FrameModel;
   onChange: (model: FrameModel) => void;
+  solved?: SolveOutput | null;
   highlightedLoadId?: string | null;
   onHighlightLoad?: (id: string | null) => void;
 }
 
-type Tab = "nodes" | "members" | "loads" | "material";
+type Tab = "nodes" | "members" | "loads" | "material" | "forces";
 
 const SUPPORTS: Support[] = ["free", "pinned", "fixed", "roller-v", "roller-h"];
 
@@ -79,6 +82,7 @@ const idInputCls =
 export default function ModelEditor({
   model,
   onChange,
+  solved,
   highlightedLoadId,
   onHighlightLoad,
 }: Props) {
@@ -96,18 +100,21 @@ export default function ModelEditor({
     | "editor.tab.members"
     | "editor.tab.loads"
     | "editor.tab.material"
+    | "editor.tab.forces"
   > = {
     nodes: "editor.tab.nodes",
     members: "editor.tab.members",
     loads: "editor.tab.loads",
     material: "editor.tab.material",
+    forces: "editor.tab.forces",
   };
 
   return (
     <div className="flex h-full flex-col text-sm text-stone-800 dark:text-stone-200">
       {/* Tab bar */}
       <div className="flex border-b border-stone-200 dark:border-stone-700">
-        {(["nodes", "members", "loads", "material"] as Tab[]).map((tabKey) => (
+        {(["nodes", "members", "loads", "material", "forces"] as Tab[]).map(
+          (tabKey) => (
           <button
             key={tabKey}
             onClick={() => setTab(tabKey)}
@@ -147,6 +154,9 @@ export default function ModelEditor({
         )}
         {tab === "material" && (
           <MaterialPanel material={model.material} onChange={setMaterial} />
+        )}
+        {tab === "forces" && (
+          <MemberForces model={model} solved={solved ?? null} />
         )}
       </div>
     </div>

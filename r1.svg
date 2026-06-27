@@ -1,0 +1,209 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 480" font-family="system-ui, sans-serif">
+  <!--
+    Estructura r1: portico de alma llena ("T") + reticulado, hasta apoyo B.
+    Mundo en metros, y hacia arriba. Transform: sx = 160 + x*40 ; sy = 400 - y*40
+    Nodos:
+      A   (0,0)   apoyo fijo            -> (160,400)
+      C   (0,8)   nudo rigido (tope T)  -> (160, 80)
+      L   (-2,8)  punta voladizo        -> ( 80, 80)
+      A1-2(5,8)   articulacion          -> (360, 80)
+      (9,8)  cordon superior            -> (520, 80)
+      (13,8) cordon superior            -> (680, 80)
+      (5,4)  cordon inferior            -> (360,240)
+      (9,4)  cordon inferior            -> (520,240)
+      (13,4) cordon inferior            -> (680,240)
+      B   (13,0)  apoyo fijo            -> (680,400)
+    Portico = alma llena (nudos rigidos). Reticulado = bielas (doble articulacion).
+  -->
+
+  <rect x="0" y="0" width="780" height="480" fill="#ffffff"/>
+
+  <!-- ===== Cotas / dimensiones ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <!-- altura del pilar: 8.00 m -->
+    <line x1="45" y1="80" x2="45" y2="400"/>
+    <line x1="40" y1="80" x2="50" y2="80"/>
+    <line x1="40" y1="400" x2="50" y2="400"/>
+    <text x="38" y="245" text-anchor="middle" transform="rotate(-90 38 245)">8.00 m</text>
+
+    <!-- horizontales arriba: 2 | 5 | 4 | 4 -->
+    <line x1="80"  y1="32" x2="160" y2="32"/>
+    <line x1="160" y1="32" x2="360" y2="32"/>
+    <line x1="360" y1="32" x2="520" y2="32"/>
+    <line x1="520" y1="32" x2="680" y2="32"/>
+    <line x1="80"  y1="27" x2="80"  y2="37"/>
+    <line x1="160" y1="27" x2="160" y2="37"/>
+    <line x1="360" y1="27" x2="360" y2="37"/>
+    <line x1="520" y1="27" x2="520" y2="37"/>
+    <line x1="680" y1="27" x2="680" y2="37"/>
+    <text x="120" y="25" text-anchor="middle">2.00</text>
+    <text x="260" y="25" text-anchor="middle">5.00</text>
+    <text x="440" y="25" text-anchor="middle">4.00</text>
+    <text x="600" y="25" text-anchor="middle">4.00</text>
+
+    <!-- profundidad reticulado y bajada a B: 4 + 4 (lado derecho) -->
+    <line x1="735" y1="80"  x2="735" y2="240"/>
+    <line x1="735" y1="240" x2="735" y2="400"/>
+    <line x1="730" y1="80"  x2="740" y2="80"/>
+    <line x1="730" y1="240" x2="740" y2="240"/>
+    <line x1="730" y1="400" x2="740" y2="400"/>
+    <text x="748" y="160" text-anchor="middle" transform="rotate(-90 748 160)">4.00 m</text>
+    <text x="748" y="320" text-anchor="middle" transform="rotate(-90 748 320)">4.00 m</text>
+  </g>
+
+  <!-- ===== Reticulado: bielas (doble articulacion) ===== -->
+  <g stroke="#0b8a8a" stroke-width="3" stroke-linecap="round">
+    <!-- cordon superior -->
+    <line x1="360" y1="80"  x2="520" y2="80"/>
+    <line x1="520" y1="80"  x2="680" y2="80"/>
+    <!-- cordon inferior -->
+    <line x1="360" y1="240" x2="520" y2="240"/>
+    <line x1="520" y1="240" x2="680" y2="240"/>
+    <!-- montantes -->
+    <line x1="360" y1="80"  x2="360" y2="240"/>
+    <line x1="520" y1="80"  x2="520" y2="240"/>
+    <line x1="680" y1="80"  x2="680" y2="240"/>
+    <!-- diagonales (bajan hacia la izquierda) -->
+    <line x1="520" y1="80"  x2="360" y2="240"/>
+    <line x1="680" y1="80"  x2="520" y2="240"/>
+    <!-- triangulo de cierre hasta B -->
+    <line x1="680" y1="240" x2="680" y2="400"/>
+    <line x1="520" y1="240" x2="680" y2="400"/>
+  </g>
+
+  <!-- ===== Portico de alma llena (nudos rigidos) ===== -->
+  <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
+    <line x1="160" y1="400" x2="160" y2="80"/> <!-- pilar A-C -->
+    <line x1="80"  y1="80"  x2="160" y2="80"/> <!-- voladizo L-C -->
+    <line x1="160" y1="80"  x2="360" y2="80"/> <!-- techo C-A1-2 -->
+  </g>
+
+  <!-- ===== Apoyos articulados (pinned) ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <!-- A -->
+    <polygon points="160,400 151,411 169,411"/>
+    <line x1="145" y1="411" x2="175" y2="411"/>
+    <line x1="149" y1="411" x2="143" y2="418"/>
+    <line x1="157" y1="411" x2="151" y2="418"/>
+    <line x1="165" y1="411" x2="159" y2="418"/>
+    <line x1="173" y1="411" x2="167" y2="418"/>
+    <!-- B -->
+    <polygon points="680,400 671,411 689,411"/>
+    <line x1="665" y1="411" x2="695" y2="411"/>
+    <line x1="669" y1="411" x2="663" y2="418"/>
+    <line x1="677" y1="411" x2="671" y2="418"/>
+    <line x1="685" y1="411" x2="679" y2="418"/>
+    <line x1="693" y1="411" x2="687" y2="418"/>
+  </g>
+
+  <!-- ===== Articulacion en A1-2 ===== -->
+  <circle cx="360" cy="80" r="6" fill="#ffffff" stroke="#1a1a1a" stroke-width="2"/>
+
+  <!-- ===== Nudos ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="160" cy="400" r="4"/> <!-- A -->
+    <circle cx="680" cy="400" r="4"/> <!-- B -->
+  </g>
+  <g fill="#0b8a8a">
+    <circle cx="520" cy="80"  r="4"/> <!-- (9,8) -->
+    <circle cx="680" cy="80"  r="4"/> <!-- (13,8) -->
+    <circle cx="360" cy="240" r="4"/> <!-- (5,4) -->
+    <circle cx="520" cy="240" r="4"/> <!-- (9,4) -->
+    <circle cx="680" cy="240" r="4"/> <!-- (13,4) -->
+  </g>
+
+  <!-- ===== Etiquetas de nudos ===== -->
+  <g font-size="13" font-weight="600">
+    <g fill="#1a73e8">
+      <text x="148" y="392" text-anchor="end">A</text>
+      <text x="698" y="392" text-anchor="start">B</text>
+      <text x="348" y="96" text-anchor="end">A<tspan font-size="10" dy="4">1-2</tspan></text>
+      <text x="520" y="70"  text-anchor="middle">C</text>
+      <text x="676" y="70"  text-anchor="end">D</text>
+      <text x="345" y="236" text-anchor="end">E</text>
+      <text x="520" y="260" text-anchor="middle">F</text>
+      <text x="692" y="244" text-anchor="start">G</text>
+    </g>
+  </g>
+
+  <!-- ===== Nombres de barras del reticulado (izq->der, arriba->abajo) ===== -->
+  <g fill="#c0392b" font-size="13" font-style="italic" font-weight="600">
+    <text x="440" y="98"  text-anchor="middle">b<tspan font-size="9" dy="3">1</tspan></text>
+    <text x="600" y="98"  text-anchor="middle">b<tspan font-size="9" dy="3">2</tspan></text>
+    <text x="348" y="162" text-anchor="end">b<tspan font-size="9" dy="3">3</tspan></text>
+    <text x="462" y="150" text-anchor="start">b<tspan font-size="9" dy="3">4</tspan></text>
+    <text x="532" y="162" text-anchor="start">b<tspan font-size="9" dy="3">5</tspan></text>
+    <text x="622" y="150" text-anchor="start">b<tspan font-size="9" dy="3">6</tspan></text>
+    <text x="668" y="162" text-anchor="end">b<tspan font-size="9" dy="3">7</tspan></text>
+    <text x="440" y="232" text-anchor="middle">b<tspan font-size="9" dy="3">8</tspan></text>
+    <text x="600" y="232" text-anchor="middle">b<tspan font-size="9" dy="3">9</tspan></text>
+    <text x="578" y="318" text-anchor="end">b<tspan font-size="9" dy="3">10</tspan></text>
+    <text x="692" y="320" text-anchor="start">b<tspan font-size="9" dy="3">11</tspan></text>
+  </g>
+
+  <!-- ===== Cargas ===== -->
+  <g stroke="#6a1b9a" fill="#6a1b9a" font-family="system-ui, sans-serif" font-size="13" font-weight="700">
+    <!-- UDL 5 kN/m hacia abajo en el techo, de (-2,8) a (5,8) -->
+    <line x1="80" y1="62" x2="360" y2="62" stroke-width="2"/>
+    <g stroke-width="1.5">
+      <line x1="80"  y1="62" x2="80"  y2="76"/>
+      <line x1="120" y1="62" x2="120" y2="76"/>
+      <line x1="160" y1="62" x2="160" y2="76"/>
+      <line x1="200" y1="62" x2="200" y2="76"/>
+      <line x1="240" y1="62" x2="240" y2="76"/>
+      <line x1="280" y1="62" x2="280" y2="76"/>
+      <line x1="320" y1="62" x2="320" y2="76"/>
+      <line x1="360" y1="62" x2="360" y2="76"/>
+    </g>
+    <g stroke="none">
+      <polygon points="80,79 77,73 83,73"/>
+      <polygon points="120,79 117,73 123,73"/>
+      <polygon points="160,79 157,73 163,73"/>
+      <polygon points="200,79 197,73 203,73"/>
+      <polygon points="240,79 237,73 243,73"/>
+      <polygon points="280,79 277,73 283,73"/>
+      <polygon points="320,79 317,73 323,73"/>
+      <polygon points="360,79 357,73 363,73"/>
+    </g>
+    <text x="220" y="54" text-anchor="middle" stroke="none">q = 5 kN/m</text>
+
+    <!-- Momento horario 15 kNm en (0,4) -->
+    <circle cx="160" cy="240" r="2.5" stroke="none"/>
+    <path d="M 167.5 227 A 15 15 0 1 1 152.5 227" fill="none" stroke-width="2.5"/>
+    <polygon points="157.7,224 150.5,223.5 154.5,230.5" stroke="none"/>
+    <text x="135" y="244" text-anchor="end" stroke="none">M = 15 kNm</text>
+
+    <!-- Fuerza 20 kN hacia abajo en (5,4) -->
+    <line x1="360" y1="240" x2="360" y2="280" stroke-width="2.5"/>
+    <polygon points="360,285 355,274 365,274" stroke="none"/>
+    <text x="372" y="270" text-anchor="start" stroke="none">20 kN</text>
+
+    <!-- Fuerza 10 kN hacia la derecha en (13,8) -->
+    <line x1="680" y1="80" x2="720" y2="80" stroke-width="2.5"/>
+    <polygon points="725,80 714,75 714,85" stroke="none"/>
+    <text x="710" y="68" text-anchor="middle" stroke="none">10 kN</text>
+  </g>
+
+  <!-- ===== Reacciones de vinculo ===== -->
+  <g stroke="#2e7d32" fill="#2e7d32" font-family="system-ui, sans-serif" font-size="13" font-weight="700">
+    <!-- A: V_A (arriba), H_A (derecha) -->
+    <line x1="160" y1="455" x2="160" y2="425" stroke-width="2.5"/>
+    <polygon points="160,420 155,431 165,431" stroke="none"/>
+    <text x="172" y="450" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan></text>
+    <line x1="122" y1="440" x2="157" y2="440" stroke-width="2.5"/>
+    <polygon points="162,440 151,435 151,445" stroke="none"/>
+    <text x="118" y="436" text-anchor="end" stroke="none">H<tspan font-size="10" dy="4">A</tspan></text>
+
+    <!-- B: V_B (arriba), H_B (derecha) -->
+    <line x1="680" y1="455" x2="680" y2="425" stroke-width="2.5"/>
+    <polygon points="680,420 675,431 685,431" stroke="none"/>
+    <text x="692" y="450" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">B</tspan></text>
+    <line x1="642" y1="440" x2="677" y2="440" stroke-width="2.5"/>
+    <polygon points="682,440 671,435 671,445" stroke="none"/>
+    <text x="638" y="436" text-anchor="end" stroke="none">H<tspan font-size="10" dy="4">B</tspan></text>
+  </g>
+
+  <text x="390" y="465" text-anchor="middle" fill="#5f6368" font-size="13">
+    r1 — alma llena (negro) + reticulado (verde) + cargas (violeta) + reacciones (verde oscuro)
+  </text>
+</svg>
