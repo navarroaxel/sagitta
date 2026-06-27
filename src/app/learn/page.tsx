@@ -452,7 +452,7 @@ export default function LearnPage() {
               <button
                 key={i}
                 onClick={() => setStep(i)}
-                aria-label={`Step ${i + 1}`}
+                aria-label={`${t("learn.step")} ${i + 1}`}
                 className={`h-2 rounded-full transition-all ${
                   i === step
                     ? "w-6 bg-stone-700 dark:bg-stone-300"
