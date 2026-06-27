@@ -76,8 +76,8 @@ export function LoadsLayer({
         if (load.type === "mpoint") {
           const mem = model.members.find((m) => m.id === load.member);
           if (!mem) return null;
-          const ni = model.nodes.find((n) => n.id === mem.n1)!;
-          const nj = model.nodes.find((n) => n.id === mem.n2)!;
+          const ni = model.nodes.find((n) => n.id === mem.n1);
+          const nj = model.nodes.find((n) => n.id === mem.n2);
           if (!ni || !nj) return null;
           const { x: wx, y: wy } = pointLoadPos(ni, nj, load.dist);
           const sx = tr.toSX(wx),
@@ -102,8 +102,8 @@ export function LoadsLayer({
         if (load.type === "mudl") {
           const mem = model.members.find((m) => m.id === load.member);
           if (!mem) return null;
-          const ni = model.nodes.find((n) => n.id === mem.n1)!;
-          const nj = model.nodes.find((n) => n.id === mem.n2)!;
+          const ni = model.nodes.find((n) => n.id === mem.n1);
+          const nj = model.nodes.find((n) => n.id === mem.n2);
           if (!ni || !nj) return null;
           const mag = Math.hypot(load.gx, load.gy);
           if (mag < 1e-10) return null;
