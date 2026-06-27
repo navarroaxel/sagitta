@@ -121,6 +121,40 @@ const EN = {
   "footer.relax_teaser": "Electric field & relaxation method",
   "footer.kinelab_teaser": "Circular motion kinematics & dynamics",
   "footer.resonara_teaser": "RLC circuits in AC",
+
+  "learn.link": "Learn the method",
+  "learn.back": "← Simulator",
+  "learn.title": "Tangent Method (Mohr's Theorems)",
+  "learn.step": "Step",
+  "learn.of": "of",
+  "learn.prev": "← Previous",
+  "learn.next": "Next →",
+  "learn.preset.two_bay": "Two-Bay Portal",
+  "learn.preset.frame_truss": "Frame + Truss",
+  "learn.step.0.title": "The structural model",
+  "learn.step.0.desc":
+    "We start by identifying the nodes, members, supports and loads. Each node has coordinates and boundary conditions; each member connects two nodes and carries internal forces N, Q and M.",
+  "learn.step.1.title": "Support reactions",
+  "learn.step.1.desc":
+    "Applying global equilibrium (ΣFx = 0, ΣFy = 0, ΣM = 0) we calculate the reactions at the supports. For statically indeterminate structures the stiffness method is used — the simulator solves it automatically.",
+  "learn.step.2.title": "Shear diagram (Q)",
+  "learn.step.2.desc":
+    "The shear diagram is obtained by integrating the transverse loads along each member: dQ/dx = −q. At a concentrated force there is a sudden jump equal to the magnitude of that force.",
+  "learn.step.3.title": "Bending moment diagram (M)",
+  "learn.step.3.desc":
+    "The moment diagram is obtained by integrating the shear: dM/dx = Q. Where Q = 0, M has a local maximum or minimum. At hinges (moment releases), M is always zero.",
+  "learn.step.tangent.title": "The 1m trick — tangent directions",
+  "learn.step.tangent.desc":
+    "To draw the tangent to the M curve at the end of a distributed load WITHOUT integrating: advance 1m along the member axis and mark the Q value on the moment scale — that point defines the tangent direction. The units work out: Q [kN] × 1 [m] = [kN·m], directly on the moment scale. Do this from both ends A and B to get two tangent lines.",
+  "learn.step.polo.title": "The pole and bisections",
+  "learn.step.polo.desc":
+    "The two tangents (from A and from B) intersect at the POLE P — the control point of the parabola. To find intermediate points: mark the midpoint of A→P and the midpoint of P→B; the midpoint of those two segments lies ON the parabola. Repeat for each sub-interval until you have enough points. The M diagram shown is exactly the parabola built this way.",
+  "learn.step.4.title": "Theorem I — Slope change",
+  "learn.step.4.desc":
+    "The change in slope of the elastic curve between two points A and B equals the area of the M/EI diagram between them. Zones with large M contribute most to the rotation change.",
+  "learn.step.5.title": "Theorem II — Full picture",
+  "learn.step.5.desc":
+    "The tangential deviation of B from the tangent at A equals the first moment of the M/EI area about B. With both theorems we can find rotations and deflections at any point in the structure.",
 } as const;
 
 export type TranslationKey = keyof typeof EN;
@@ -233,6 +267,40 @@ const ES: Record<TranslationKey, string> = {
   "footer.relax_teaser": "Teoría de Campos",
   "footer.kinelab_teaser": "Mecánica Técnica",
   "footer.resonara_teaser": "Electrotécnica I",
+
+  "learn.link": "Aprendé el método",
+  "learn.back": "← Simulador",
+  "learn.title": "Método de las Tangentes (Teoremas de Mohr)",
+  "learn.step": "Paso",
+  "learn.of": "de",
+  "learn.prev": "← Anterior",
+  "learn.next": "Siguiente →",
+  "learn.preset.two_bay": "Pórtico 2 Vanos",
+  "learn.preset.frame_truss": "Pórtico + Reticulado",
+  "learn.step.0.title": "El modelo estructural",
+  "learn.step.0.desc":
+    "Identificamos los nodos, barras, vínculos y cargas del sistema. Cada nodo tiene coordenadas y condiciones de borde; cada barra conecta dos nodos y transmite esfuerzos internos N, Q y M.",
+  "learn.step.1.title": "Reacciones de apoyo",
+  "learn.step.1.desc":
+    "Aplicando equilibrio global (ΣFx = 0, ΣFy = 0, ΣM = 0) calculamos las reacciones en los apoyos. Para estructuras hiperestáticas se usa el método de las rigideces — el simulador lo resuelve automáticamente.",
+  "learn.step.2.title": "Diagrama de Cortante (Q)",
+  "learn.step.2.desc":
+    "El diagrama de cortante se obtiene integrando las cargas transversales a lo largo de cada barra: dQ/dx = −q. En una carga puntual hay un salto brusco igual a la magnitud de esa fuerza.",
+  "learn.step.3.title": "Diagrama de Momentos (M)",
+  "learn.step.3.desc":
+    "El diagrama de momentos se obtiene integrando el cortante: dM/dx = Q. Donde Q = 0, M tiene un extremo local. En rótulas (liberación de momento), M es siempre cero.",
+  "learn.step.tangent.title": "El truco del 1m — dirección de las tangentes",
+  "learn.step.tangent.desc":
+    "Para trazar la tangente a la curva M en el extremo de una carga distribuida SIN INTEGRAR: avanzás 1m sobre el eje de la barra y marcás el valor de Q en la escala del diagrama de momentos — ese punto define la dirección de la tangente. Las unidades cierran: Q [kN] × 1 [m] = [kN·m], directo en la escala del diagrama M. Hacés esto desde ambos extremos A y B para obtener dos tangentes.",
+  "learn.step.polo.title": "El polo y las mediatrices",
+  "learn.step.polo.desc":
+    "Las dos tangentes (desde A y desde B) se cruzan en el POLO P — el punto de control de la parábola. Para encontrar puntos intermedios: marcás el punto medio de A→P y el punto medio de P→B; el punto medio de esos dos segmentos está SOBRE LA PARÁBOLA. Repetís para cada subintervalo hasta tener la precisión deseada. El diagrama M que ves es exactamente la parábola construida de esta forma.",
+  "learn.step.4.title": "Teorema I — Cambio de pendiente",
+  "learn.step.4.desc":
+    "El cambio de pendiente de la curva elástica entre dos puntos A y B es igual al área del diagrama M/EI entre esos puntos. Las zonas con M grande contribuyen más al cambio de giro.",
+  "learn.step.5.title": "Teorema II — Vista completa",
+  "learn.step.5.desc":
+    "La desviación tangencial del punto B respecto a la tangente trazada en A es igual al momento estático del área M/EI respecto a B. Con ambos teoremas podemos hallar giros y flechas en cualquier punto de la estructura.",
 };
 
 const translations: Record<Language, Record<TranslationKey, string>> = {

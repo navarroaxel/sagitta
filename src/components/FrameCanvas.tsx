@@ -40,6 +40,7 @@ interface Props {
   onNodeMove: (id: string, x: number, y: number) => void;
   svgRef?: React.RefObject<SVGSVGElement | null>;
   highlightedLoadId?: string | null;
+  svgOverlay?: React.ReactNode;
 }
 
 // ─── Main component ──────────────────────────────────────────────────────────
@@ -50,6 +51,7 @@ export default function FrameCanvas({
   onNodeMove,
   svgRef,
   highlightedLoadId,
+  svgOverlay,
 }: Props) {
   const internalRef = useRef<SVGSVGElement>(null);
   const ref = svgRef ?? internalRef;
@@ -478,6 +480,9 @@ export default function FrameCanvas({
               onMouseDown={(e) => onNodeMouseDown(e, n.id)}
             />
           ))}
+
+          {/* Optional overlay (learn page construction geometry) */}
+          {svgOverlay}
         </g>
       </svg>
 
