@@ -59,6 +59,10 @@ export default function MemberForces({ model, solved }: Props) {
   });
 
   return (
+    <>
+    <p className="px-2 pt-2 pb-1 text-xs font-semibold text-stone-500 dark:text-stone-400">
+      {t("forces.title")}
+    </p>
     <table className="w-full border-collapse text-xs">
       <thead>
         <tr>
@@ -86,5 +90,6 @@ export default function MemberForces({ model, solved }: Props) {
         ))}
       </tbody>
     </table>
+    </>
   );
 }

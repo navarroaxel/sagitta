@@ -23,6 +23,7 @@ const DEFAULT_VIEW: ViewOptions = {
   showLoads: true,
   showValues: true,
   showGrid: false,
+  showMemberLabels: false,
   scaleN: 1,
   scaleQ: 1,
   scaleM: 1,

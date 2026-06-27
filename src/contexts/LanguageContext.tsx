@@ -28,6 +28,7 @@ const EN = {
   "controls.loads": "Loads",
   "controls.values": "Values",
   "controls.grid": "Grid",
+  "controls.member_labels": "Members",
   "controls.scale": "Scale:",
 
   "preset.examples": "Examples ▾",
@@ -116,6 +117,7 @@ const ES: Record<TranslationKey, string> = {
   "controls.loads": "Cargas",
   "controls.values": "Valores",
   "controls.grid": "Grilla",
+  "controls.member_labels": "Barras",
   "controls.scale": "Escala:",
 
   "preset.examples": "Ejemplos ▾",

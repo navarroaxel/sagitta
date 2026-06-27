@@ -39,6 +39,7 @@ export interface ViewOptions {
   showLoads: boolean;
   showValues: boolean;
   showGrid: boolean;
+  showMemberLabels: boolean;
   scaleN: number;
   scaleQ: number;
   scaleM: number;
@@ -658,6 +659,36 @@ export default function FrameCanvas({
               />
             );
           })}
+
+          {/* Member labels */}
+          {viewOpts.showMemberLabels &&
+            model.members.map((mem) => {
+              const ni = model.nodes.find((n) => n.id === mem.n1)!;
+              const nj = model.nodes.find((n) => n.id === mem.n2)!;
+              if (!ni || !nj) return null;
+              const sx1 = tr.toSX(ni.x), sy1 = tr.toSY(ni.y);
+              const sx2 = tr.toSX(nj.x), sy2 = tr.toSY(nj.y);
+              const mx = (sx1 + sx2) / 2;
+              const my = (sy1 + sy2) / 2;
+              const segLen = Math.hypot(sx2 - sx1, sy2 - sy1);
+              const px = segLen > 0 ? -(sy2 - sy1) / segLen : 0;
+              const py = segLen > 0 ? (sx2 - sx1) / segLen : -1;
+              return (
+                <text
+                  key={`lbl-${mem.id}`}
+                  x={mx + px * 10}
+                  y={my + py * 10}
+                  fontSize={9}
+                  fontFamily="monospace"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fill={C.member}
+                  style={{ paintOrder: "stroke", stroke: C.paper, strokeWidth: 3 }}
+                >
+                  {mem.id}
+                </text>
+              );
+            })}
 
           {/* Hinges */}
           {model.members.map((mem) => {

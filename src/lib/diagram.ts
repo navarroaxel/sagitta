@@ -71,7 +71,7 @@ export function buildMemberDiagram(opts: BuildDiagramOptions): MemberDiagram {
     globalMax,
     diagLen,
   } = opts;
-  const { toSX, toSY, k } = transform;
+  const { toSX, toSY } = transform;
 
   // Member axis and normal in world coords
   const wiX = nodeI.x,
@@ -87,7 +87,7 @@ export function buildMemberDiagram(opts: BuildDiagramOptions): MemberDiagram {
 
   // Scale factor: globalMax reaches 0.17 * diagLen * scale pixels
   const pixelPerUnit =
-    globalMax > 1e-10 ? (0.17 * diagLen * k * scale) / globalMax : 0;
+    globalMax > 1e-10 ? (0.17 * diagLen * scale) / globalMax : 0;
 
   const processed = withZeros(stations, key);
 
