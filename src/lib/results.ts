@@ -48,8 +48,8 @@ export function equilibrium(model: FrameModel, solved: SolveOutput): Equilibrium
       if (n) add(n.x, n.y, load.fx, load.fy, load.m);
     } else {
       const e = memberIndex.get(load.member);
-      const mem = model.members.find((mm) => mm.id === load.member);
-      if (e === undefined || !mem) continue;
+      if (e === undefined) continue;
+      const mem = model.members[e]; // memberIndex maps id → index in model.members
       const ni = nodeById.get(mem.n1);
       if (!ni) continue;
       const { L, c, s } = result.geo[e];
