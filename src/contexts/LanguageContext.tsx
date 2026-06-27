@@ -28,6 +28,7 @@ const EN = {
   "controls.loads": "Loads",
   "controls.values": "Values",
   "controls.grid": "Grid",
+  "controls.member_labels": "Members",
   "controls.scale": "Scale:",
 
   "preset.examples": "Examples ▾",
@@ -36,11 +37,21 @@ const EN = {
   "preset.portal_fixed": "Portal Frame (fixed)",
   "preset.three_hinged": "Three-Hinged Frame",
   "preset.two_bay": "Two-Bay Portal",
+  "preset.portico_reticulado": "Frame + Truss (r1)",
+
+  "forces.title": "Member axial forces",
+  "forces.member": "Member",
+  "forces.state": "State",
+  "forces.tension": "Tension",
+  "forces.compression": "Compression",
+  "forces.zero": "Zero",
+  "forces.unavailable": "Solve the model to see member forces.",
 
   "editor.tab.nodes": "nodes",
   "editor.tab.members": "members",
   "editor.tab.loads": "loads",
   "editor.tab.material": "material",
+  "editor.tab.forces": "forces",
 
   "editor.nodes.id": "ID",
   "editor.nodes.x": "x",
@@ -106,6 +117,7 @@ const ES: Record<TranslationKey, string> = {
   "controls.loads": "Cargas",
   "controls.values": "Valores",
   "controls.grid": "Grilla",
+  "controls.member_labels": "Barras",
   "controls.scale": "Escala:",
 
   "preset.examples": "Ejemplos ▾",
@@ -114,11 +126,21 @@ const ES: Record<TranslationKey, string> = {
   "preset.portal_fixed": "Pórtico (empotrado)",
   "preset.three_hinged": "Arco de tres rótulas",
   "preset.two_bay": "Pórtico de dos vanos",
+  "preset.portico_reticulado": "Pórtico + Reticulado (r1)",
+
+  "forces.title": "Esfuerzos axiles en barras",
+  "forces.member": "Barra",
+  "forces.state": "Estado",
+  "forces.tension": "Tracción",
+  "forces.compression": "Compresión",
+  "forces.zero": "Nula",
+  "forces.unavailable": "Resolvé el modelo para ver los esfuerzos.",
 
   "editor.tab.nodes": "nodos",
   "editor.tab.members": "barras",
   "editor.tab.loads": "cargas",
   "editor.tab.material": "material",
+  "editor.tab.forces": "esfuerzos",
 
   "editor.nodes.id": "ID",
   "editor.nodes.x": "x",

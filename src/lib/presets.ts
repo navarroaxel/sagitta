@@ -102,10 +102,60 @@ const twoBayPortal: FrameModel = {
   unit: "kN",
 };
 
+// 6. r1 — portico de alma llena ("T") + reticulado, apoyos articulados en A y B.
+//    Nodos del reticulado: A1-2, C, D, E, F, G. Barras b1..b11 biarticuladas.
+const r1: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 0, support: "pinned" },
+    { id: "M", x: 0, y: 4, support: "free" }, // punto de aplicacion del momento (0,4)
+    { id: "T", x: 0, y: 8, support: "free" }, // encuentro pilar/techo
+    { id: "L", x: -2, y: 8, support: "free" }, // punta del voladizo
+    { id: "A12", x: 5, y: 8, support: "free" }, // articulacion portico <-> reticulado
+    { id: "C", x: 9, y: 8, support: "free" },
+    { id: "D", x: 13, y: 8, support: "free" },
+    { id: "E", x: 5, y: 4, support: "free" },
+    { id: "F", x: 9, y: 4, support: "free" },
+    { id: "G", x: 13, y: 4, support: "free" },
+    { id: "B", x: 13, y: 0, support: "pinned" },
+  ],
+  members: [
+    // portico de alma llena (nudos rigidos). El pilar es UNO solo (A->T), partido
+    // en P=(0,4) solo para poder aplicar ahi el momento (metodo de rigidez).
+    { id: "col1", n1: "A", n2: "M" }, // pilar (0,0)->(0,4)
+    { id: "col2", n1: "M", n2: "T" }, // pilar (0,4)->(0,8)
+    // voladizo orientado L->T (mismo sentido que el techo) para que el diagrama
+    // de corte sea consistente a traves del nudo T (barras colineales).
+    { id: "cant", n1: "L", n2: "T" },
+    { id: "beam", n1: "T", n2: "A12", relJ: true }, // articulacion en A12
+    // reticulado (barras biarticuladas)
+    { id: "b1", n1: "A12", n2: "C", relI: true, relJ: true },
+    { id: "b2", n1: "C", n2: "D", relI: true, relJ: true },
+    { id: "b3", n1: "A12", n2: "E", relI: true, relJ: true },
+    { id: "b4", n1: "C", n2: "E", relI: true, relJ: true },
+    { id: "b5", n1: "C", n2: "F", relI: true, relJ: true },
+    { id: "b6", n1: "D", n2: "F", relI: true, relJ: true },
+    { id: "b7", n1: "D", n2: "G", relI: true, relJ: true },
+    { id: "b8", n1: "E", n2: "F", relI: true, relJ: true },
+    { id: "b9", n1: "F", n2: "G", relI: true, relJ: true },
+    { id: "b10", n1: "F", n2: "B", relI: true, relJ: true },
+    { id: "b11", n1: "G", n2: "B", relI: true, relJ: true },
+  ],
+  loads: [
+    { id: "q1", type: "mudl", member: "cant", gx: 0, gy: -5 }, // techo (-2,8)->(0,8)
+    { id: "q2", type: "mudl", member: "beam", gx: 0, gy: -5 }, // techo (0,8)->(5,8)
+    { id: "m1", type: "nodal", node: "M", fx: 0, fy: 0, m: -15 }, // 15 kNm horario en (0,4)
+    { id: "p1", type: "nodal", node: "E", fx: 0, fy: -20, m: 0 }, // 20 kN abajo
+    { id: "p2", type: "nodal", node: "D", fx: 10, fy: 0, m: 0 }, // 10 kN derecha
+  ],
+  material: defaultMat,
+  unit: "kN",
+};
+
 export const PRESETS: Preset[] = [
   { name: "Simply Supported Beam", model: simplySupported },
   { name: "Cantilever", model: cantilever },
   { name: "Portal Frame (fixed)", model: portalFrame },
   { name: "Three-Hinged Frame", model: threeHinged },
   { name: "Two-Bay Portal", model: twoBayPortal },
+  { name: "Portico + Reticulado (r1)", model: r1 },
 ];

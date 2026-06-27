@@ -23,9 +23,11 @@ const DEFAULT_VIEW: ViewOptions = {
   showLoads: true,
   showValues: true,
   showGrid: false,
+  showMemberLabels: false,
   scaleN: 1,
   scaleQ: 1,
   scaleM: 1,
+  scaleLoads: 1,
 };
 
 export default function Home() {
@@ -157,6 +159,7 @@ export default function Home() {
             <ModelEditor
               model={model}
               onChange={setModel}
+              solved={solved}
               highlightedLoadId={highlightedLoadId}
               onHighlightLoad={setHighlightedLoadId}
             />
