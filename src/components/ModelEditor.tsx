@@ -10,7 +10,7 @@ import {
   Material,
 } from "@/lib/types";
 import { SolveOutput } from "@/lib/solve";
-import MemberForces from "@/components/MemberForces";
+import ResultsPanel from "@/components/ResultsPanel";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Props {
@@ -21,7 +21,7 @@ interface Props {
   onHighlightLoad?: (id: string | null) => void;
 }
 
-type Tab = "nodes" | "members" | "loads" | "material" | "forces";
+type Tab = "nodes" | "members" | "loads" | "material" | "results";
 
 const SUPPORTS: Support[] = ["free", "pinned", "fixed", "roller-v", "roller-h"];
 
@@ -100,20 +100,20 @@ export default function ModelEditor({
     | "editor.tab.members"
     | "editor.tab.loads"
     | "editor.tab.material"
-    | "editor.tab.forces"
+    | "editor.tab.results"
   > = {
     nodes: "editor.tab.nodes",
     members: "editor.tab.members",
     loads: "editor.tab.loads",
     material: "editor.tab.material",
-    forces: "editor.tab.forces",
+    results: "editor.tab.results",
   };
 
   return (
     <div className="flex h-full flex-col text-sm text-stone-800 dark:text-stone-200">
       {/* Tab bar */}
       <div className="flex border-b border-stone-200 dark:border-stone-700">
-        {(["nodes", "members", "loads", "material", "forces"] as Tab[]).map(
+        {(["nodes", "members", "loads", "material", "results"] as Tab[]).map(
           (tabKey) => (
           <button
             key={tabKey}
@@ -155,8 +155,8 @@ export default function ModelEditor({
         {tab === "material" && (
           <MaterialPanel material={model.material} onChange={setMaterial} />
         )}
-        {tab === "forces" && (
-          <MemberForces model={model} solved={solved ?? null} />
+        {tab === "results" && (
+          <ResultsPanel model={model} solved={solved ?? null} />
         )}
       </div>
     </div>
