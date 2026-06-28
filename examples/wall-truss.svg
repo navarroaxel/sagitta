@@ -174,6 +174,6 @@
   </g>
 
   <text x="410" y="452" text-anchor="middle" fill="#5f6368" font-size="12">
-    reticulado 12&#215;4 m (3 paneles), diagonales a la derecha · A: apoyo fijo a la pared · B: movil vertical · cargas (rojo), reacciones (azul)
+    truss 12&#215;4 m (3 panels), diagonals to the right · A: pinned to wall · B: vertical roller · loads (red), reactions (blue)
   </text>
 </svg>

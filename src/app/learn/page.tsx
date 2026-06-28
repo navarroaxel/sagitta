@@ -13,7 +13,7 @@ import { FrameModel } from "@/lib/types";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
-const PRESET_INDICES = [4, 11] as const;
+const PRESET_INDICES = [4, 12] as const;
 
 const BASE_VIEW: ViewOptions = {
   showN: false,
