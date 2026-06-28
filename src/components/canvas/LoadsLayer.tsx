@@ -60,6 +60,7 @@ export function LoadsLayer({
                   y2={sy}
                   label={`${mag.toFixed(0)}`}
                   highlighted={isHL}
+                  loadColor={colors.loads}
                 />
               )}
               {hasMoment && (
@@ -70,6 +71,7 @@ export function LoadsLayer({
                   scale={scale}
                   label={`${Math.abs(load.m).toFixed(0)}`}
                   highlighted={isHL}
+                  loadColor={colors.loads}
                 />
               )}
             </g>
@@ -97,6 +99,7 @@ export function LoadsLayer({
                 y2={sy}
                 label={`${mag.toFixed(0)}`}
                 highlighted={isHL}
+                loadColor={colors.loads}
               />
             </g>
           );
@@ -139,6 +142,7 @@ export function LoadsLayer({
                     y2={sy}
                     label={i === UDL_LABEL_INDEX ? `${mag.toFixed(0)}/m` : undefined}
                     highlighted={isHL}
+                    loadColor={colors.loads}
                   />
                 );
               })}

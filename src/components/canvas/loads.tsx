@@ -1,6 +1,9 @@
-import { useColors } from "@/contexts/ColorContext";
-
 // ─── Load arrows ────────────────────────────────────────────────────────────
+// These primitives take their color via props (`fill` / `loadColor`) rather than
+// reading the color store themselves: they're instantiated many times per render
+// (e.g. one LoadArrow per UDL arrow), so a per-instance useColors() subscription
+// would multiply window listeners. LoadsLayer reads useColors() once and passes
+// the load color down.
 export function ArrowHead({
   x,
   y,
@@ -10,10 +13,8 @@ export function ArrowHead({
   x: number;
   y: number;
   angle: number;
-  fill?: string;
+  fill: string;
 }) {
-  const colors = useColors();
-  const color = fill ?? colors.loads;
   const len = 8,
     wid = 4;
   const cos = Math.cos(angle),
@@ -21,7 +22,7 @@ export function ArrowHead({
   const p1 = `${x},${y}`;
   const p2 = `${x - len * cos + wid * sin},${y - len * sin - wid * cos}`;
   const p3 = `${x - len * cos - wid * sin},${y - len * sin + wid * cos}`;
-  return <polygon points={`${p1} ${p2} ${p3}`} fill={color} />;
+  return <polygon points={`${p1} ${p2} ${p3}`} fill={fill} />;
 }
 
 export function LoadArrow({
@@ -31,6 +32,7 @@ export function LoadArrow({
   y2,
   label,
   highlighted,
+  loadColor,
 }: {
   x1: number;
   y1: number;
@@ -38,10 +40,10 @@ export function LoadArrow({
   y2: number;
   label?: string;
   highlighted?: boolean;
+  loadColor: string;
 }) {
-  const colors = useColors();
   const angle = Math.atan2(y2 - y1, x2 - x1);
-  const color = highlighted ? "#ea580c" : colors.loads;
+  const color = highlighted ? "#ea580c" : loadColor;
   const sw = highlighted ? 2.5 : 1.5;
   return (
     <g>
@@ -84,6 +86,7 @@ export function MomentMarker({
   scale = 1,
   label,
   highlighted,
+  loadColor,
 }: {
   cx: number;
   cy: number;
@@ -91,9 +94,9 @@ export function MomentMarker({
   scale?: number;
   label?: string;
   highlighted?: boolean;
+  loadColor: string;
 }) {
-  const colors = useColors();
-  const color = highlighted ? "#ea580c" : colors.loads;
+  const color = highlighted ? "#ea580c" : loadColor;
   const sw = highlighted ? 2.5 : 1.5;
   const r = Math.min(34, 13 * scale);
   const cw = m < 0; // positive m = counter-clockwise; negative = clockwise
