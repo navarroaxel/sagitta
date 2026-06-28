@@ -3,6 +3,7 @@
 import React from "react";
 import { ViewOptions } from "./FrameCanvas";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useColors } from "@/contexts/ColorContext";
 
 interface Props {
   opts: ViewOptions;
@@ -23,11 +24,11 @@ interface ScaleSliderProps {
   min: number;
   max: number;
   step: number;
-  accentClass: string;
+  accentColor: string;
   onChange: (v: number) => void;
 }
 
-function ScaleSlider({ label, value, min, max, step, accentClass, onChange }: ScaleSliderProps) {
+function ScaleSlider({ label, value, min, max, step, accentColor, onChange }: ScaleSliderProps) {
   return (
     <label className="flex items-center gap-1 text-stone-600 dark:text-stone-300">
       {label}
@@ -38,7 +39,8 @@ function ScaleSlider({ label, value, min, max, step, accentClass, onChange }: Sc
         step={step}
         value={value}
         onChange={(e) => onChange(parseFloat(e.target.value))}
-        className={`w-20 ${accentClass}`}
+        className="w-20"
+        style={{ accentColor }}
       />
       <span className="w-8 text-right font-mono text-xs">{value.toFixed(2)}</span>
     </label>
@@ -47,6 +49,7 @@ function ScaleSlider({ label, value, min, max, step, accentClass, onChange }: Sc
 
 export default function DiagramControls({ opts, onChange }: Props) {
   const { t } = useLanguage();
+  const C = useColors();
 
   const set = <K extends keyof ViewOptions>(k: K, v: ViewOptions[K]) =>
     onChange({ ...opts, [k]: v });
@@ -59,22 +62,19 @@ export default function DiagramControls({ opts, onChange }: Props) {
       <SectionLabel>{t("controls.show")}</SectionLabel>
       {(["N", "Q", "M"] as const).map((d) => {
         const key = `show${d}` as keyof ViewOptions;
-        const color =
-          d === "N"
-            ? "text-teal-700 dark:text-teal-400"
-            : d === "Q"
-              ? "text-blue-700 dark:text-blue-400"
-              : "text-violet-700 dark:text-violet-400";
+        // Match the diagram's customizable color (N uses its tension color).
+        const color = d === "N" ? C.tension : d === "Q" ? C.shear : C.moment;
         return (
           <label
             key={d}
-            className={`flex cursor-pointer items-center gap-1 font-mono font-bold ${color}`}
+            className="flex cursor-pointer items-center gap-1 font-mono font-bold"
+            style={{ color }}
           >
             <input
               type="checkbox"
               checked={opts[key] as boolean}
               onChange={() => toggle(key)}
-              className="accent-current"
+              style={{ accentColor: color }}
             />
             {d}
           </label>
@@ -128,7 +128,7 @@ export default function DiagramControls({ opts, onChange }: Props) {
       <SectionLabel>{t("controls.scale")}</SectionLabel>
       <ScaleSlider
         label={
-          <span className="font-mono font-bold text-orange-700 dark:text-orange-500">
+          <span className="font-mono font-bold" style={{ color: C.loads }}>
             {t("controls.loads")}
           </span>
         }
@@ -136,26 +136,25 @@ export default function DiagramControls({ opts, onChange }: Props) {
         min={0.1}
         max={5}
         step={0.05}
-        accentClass="accent-orange-700"
+        accentColor={C.loads}
         onChange={(v) => set("scaleLoads", v)}
       />
       {(["N", "Q", "M"] as const).map((d) => {
         const key = `scale${d}` as keyof ViewOptions;
-        const accentClass =
-          d === "N"
-            ? "accent-teal-700"
-            : d === "Q"
-              ? "accent-blue-700"
-              : "accent-violet-700";
+        const color = d === "N" ? C.tension : d === "Q" ? C.shear : C.moment;
         return (
           <ScaleSlider
             key={d}
-            label={<span className="w-4 font-mono font-bold">{d}</span>}
+            label={
+              <span className="w-4 font-mono font-bold" style={{ color }}>
+                {d}
+              </span>
+            }
             value={opts[key] as number}
             min={0.1}
             max={3}
             step={0.05}
-            accentClass={accentClass}
+            accentColor={color}
             onChange={(v) => set(key, v)}
           />
         );

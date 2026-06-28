@@ -8,7 +8,7 @@ import {
   UDL_LABEL_INDEX,
 } from "@/lib/loadProjection";
 import { LoadArrow, MomentMarker } from "./loads";
-import { C } from "./constants";
+import { useColors } from "@/contexts/ColorContext";
 
 export function LoadsLayer({
   model,
@@ -21,6 +21,7 @@ export function LoadsLayer({
   scale?: number;
   highlightedLoadId?: string | null;
 }) {
+  const C = useColors();
   const ARROW_BASE = 40; // px for a "unit" force arrow
   // Find max magnitude for scaling
   let maxF = 0;

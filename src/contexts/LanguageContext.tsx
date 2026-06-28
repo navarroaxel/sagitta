@@ -119,6 +119,27 @@ const EN = {
     "Material properties only affect indeterminate frames. For determinate structures the results are independent of E, A, I.",
 
   "theme.label": "Theme:",
+
+  "settings.title": "Settings",
+  "settings.section.colors": "Colors",
+  "settings.section.diagrams": "Diagrams",
+  "settings.section.interface": "Interface",
+  "settings.reset": "Restore defaults",
+  "settings.high_contrast": "High contrast",
+  "settings.language": "Language",
+  "settings.theme": "Theme",
+  "settings.color.loads": "Loads",
+  "settings.color.reactions": "Reactions",
+  "settings.color.members": "Members / bars",
+  "settings.color.nodes": "Nodes",
+  "settings.color.labels": "Labels",
+  "settings.color.grid": "Grid",
+  "settings.color.background": "Background",
+  "settings.color.n_tension": "N — tension",
+  "settings.color.n_compression": "N — compression",
+  "settings.color.shear": "Shear (Q)",
+  "settings.color.moment": "Moment (M)",
+
   "github.aria": "View source on GitHub",
 
   "footer.description":
@@ -271,6 +292,27 @@ const ES: Record<TranslationKey, string> = {
     "Las propiedades del material solo afectan a las estructuras hiperestáticas. Para estructuras isostáticas, los resultados son independientes de E, A, I.",
 
   "theme.label": "Tema:",
+
+  "settings.title": "Configuración",
+  "settings.section.colors": "Colores",
+  "settings.section.diagrams": "Diagramas",
+  "settings.section.interface": "Interfaz",
+  "settings.reset": "Restaurar predeterminados",
+  "settings.high_contrast": "Alto contraste",
+  "settings.language": "Idioma",
+  "settings.theme": "Tema",
+  "settings.color.loads": "Cargas",
+  "settings.color.reactions": "Reacciones",
+  "settings.color.members": "Barras",
+  "settings.color.nodes": "Nodos",
+  "settings.color.labels": "Etiquetas",
+  "settings.color.grid": "Grilla",
+  "settings.color.background": "Fondo",
+  "settings.color.n_tension": "N — tracción",
+  "settings.color.n_compression": "N — compresión",
+  "settings.color.shear": "Cortante (Q)",
+  "settings.color.moment": "Momento (M)",
+
   "github.aria": "Ver código fuente en GitHub",
 
   "footer.description":

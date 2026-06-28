@@ -11,7 +11,8 @@ import { FrameModel } from "@/lib/types";
 import { SolveOutput } from "@/lib/solve";
 import { makeTransform } from "@/lib/geometry";
 import { buildMemberDiagram, DiagramKey } from "@/lib/diagram";
-import { C, SVG_W, SVG_H, SNAP, ZOOM_MIN, ZOOM_MAX } from "./canvas/constants";
+import { SVG_W, SVG_H, SNAP, ZOOM_MIN, ZOOM_MAX } from "./canvas/constants";
+import { useColors } from "@/contexts/ColorContext";
 import { SupportSymbol } from "./canvas/SupportSymbol";
 import { GridLayer } from "./canvas/GridLayer";
 import { DiagramLayer } from "./canvas/DiagramLayer";
@@ -53,6 +54,7 @@ export default function FrameCanvas({
   highlightedLoadId,
   svgOverlay,
 }: Props) {
+  const C = useColors();
   const internalRef = useRef<SVGSVGElement>(null);
   const ref = svgRef ?? internalRef;
 

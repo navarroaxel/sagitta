@@ -1,8 +1,10 @@
 import React from "react";
 import { Transform } from "@/lib/geometry";
-import { C, SNAP, SVG_W, SVG_H } from "./constants";
+import { useColors } from "@/contexts/ColorContext";
+import { SNAP, SVG_W, SVG_H } from "./constants";
 
 export function GridLayer({ tr }: { tr: Transform }) {
+  const C = useColors();
   const step = SNAP;
   const minWX = (0 - tr.ox) / tr.k;
   const maxWX = (SVG_W - tr.ox) / tr.k;

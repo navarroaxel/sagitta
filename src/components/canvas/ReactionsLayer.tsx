@@ -2,7 +2,7 @@ import React from "react";
 import { FrameModel } from "@/lib/types";
 import { SolveOutput } from "@/lib/solve";
 import { Transform } from "@/lib/geometry";
-import { C } from "./constants";
+import { useColors } from "@/contexts/ColorContext";
 
 export function ReactionsLayer({
   model,
@@ -15,6 +15,7 @@ export function ReactionsLayer({
   tr: Transform;
   unit: string;
 }) {
+  const C = useColors();
   const ARROW_LEN = 50;
   const reactions = solved.result.reactions;
   return (

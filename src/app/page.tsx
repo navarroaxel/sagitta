@@ -6,7 +6,7 @@ import FrameCanvas, { ViewOptions } from "@/components/FrameCanvas";
 import ModelEditor from "@/components/ModelEditor";
 import DiagramControls from "@/components/DiagramControls";
 import PresetMenu from "@/components/PresetMenu";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { SettingsPanel } from "@/components/SettingsPanel";
 import { GitHubLink } from "@/components/GitHubLink";
 import { Footer } from "@/components/Footer";
 import { FrameModel } from "@/lib/types";
@@ -32,7 +32,7 @@ const DEFAULT_VIEW: ViewOptions = {
 };
 
 export default function Home() {
-  const { t, toggle, language } = useLanguage();
+  const { t } = useLanguage();
   const [model, setModel] = useState<FrameModel>(DEFAULT_MODEL);
   const [viewOpts, setViewOpts] = useState<ViewOptions>(DEFAULT_VIEW);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -133,15 +133,8 @@ export default function Home() {
         >
           {t("app.export_png")}
         </button>
-        <button
-          onClick={toggle}
-          aria-label={t("language.switch_aria")}
-          className="rounded border border-stone-200 bg-stone-100 px-2 py-1 font-mono text-xs tracking-wide text-stone-700 uppercase transition-colors hover:bg-stone-200 dark:border-stone-600 dark:bg-stone-800 dark:text-stone-200 dark:hover:bg-stone-700"
-        >
-          {language === "en" ? "ES" : "EN"}
-        </button>
         <GitHubLink />
-        <ThemeToggle />
+        <SettingsPanel />
       </header>
 
       {/* Diagram controls */}

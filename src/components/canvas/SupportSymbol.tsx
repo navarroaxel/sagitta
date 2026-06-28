@@ -1,9 +1,10 @@
 import { FrameNode } from "@/lib/types";
 import { Transform } from "@/lib/geometry";
-import { C } from "./constants";
+import { useColors } from "@/contexts/ColorContext";
 
 // ─── Support symbols ────────────────────────────────────────────────────────
 export function SupportSymbol({ node, tr }: { node: FrameNode; tr: Transform }) {
+  const C = useColors();
   const sx = tr.toSX(node.x);
   const sy = tr.toSY(node.y);
   const sz = 18;

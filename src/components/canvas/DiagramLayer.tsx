@@ -1,5 +1,5 @@
 import { buildMemberDiagram, quadGroupToSvgPoints, DiagramKey } from "@/lib/diagram";
-import { C } from "./constants";
+import { useColors } from "@/contexts/ColorContext";
 import { ValLabel } from "./ValLabel";
 
 export function DiagramLayer({
@@ -13,6 +13,7 @@ export function DiagramLayer({
   unit: string;
   showValues: boolean;
 }) {
+  const C = useColors();
   const fillPos = type === "N" ? C.tension : type === "Q" ? C.shear : C.moment;
   const fillNeg =
     type === "N" ? C.compression : type === "Q" ? C.shear : C.moment;

@@ -1,17 +1,19 @@
-import { C } from "./constants";
+import { useColors } from "@/contexts/ColorContext";
 
 // ─── Load arrows ────────────────────────────────────────────────────────────
 export function ArrowHead({
   x,
   y,
   angle,
-  fill = C.loads,
+  fill,
 }: {
   x: number;
   y: number;
   angle: number;
   fill?: string;
 }) {
+  const C = useColors();
+  const color = fill ?? C.loads;
   const len = 8,
     wid = 4;
   const cos = Math.cos(angle),
@@ -19,7 +21,7 @@ export function ArrowHead({
   const p1 = `${x},${y}`;
   const p2 = `${x - len * cos + wid * sin},${y - len * sin - wid * cos}`;
   const p3 = `${x - len * cos - wid * sin},${y - len * sin + wid * cos}`;
-  return <polygon points={`${p1} ${p2} ${p3}`} fill={fill} />;
+  return <polygon points={`${p1} ${p2} ${p3}`} fill={color} />;
 }
 
 export function LoadArrow({
@@ -37,6 +39,7 @@ export function LoadArrow({
   label?: string;
   highlighted?: boolean;
 }) {
+  const C = useColors();
   const angle = Math.atan2(y2 - y1, x2 - x1);
   const color = highlighted ? "#ea580c" : C.loads;
   const sw = highlighted ? 2.5 : 1.5;
@@ -89,6 +92,7 @@ export function MomentMarker({
   label?: string;
   highlighted?: boolean;
 }) {
+  const C = useColors();
   const color = highlighted ? "#ea580c" : C.loads;
   const sw = highlighted ? 2.5 : 1.5;
   const r = Math.min(34, 13 * scale);

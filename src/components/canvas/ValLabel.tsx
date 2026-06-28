@@ -1,4 +1,4 @@
-import { C } from "./constants";
+import { useColors } from "@/contexts/ColorContext";
 
 // ─── Value label ─────────────────────────────────────────────────────────────
 export function ValLabel({
@@ -12,6 +12,7 @@ export function ValLabel({
   v: number;
   unit: string;
 }) {
+  const C = useColors();
   if (Math.abs(v) < 0.01) return null;
   return (
     <text

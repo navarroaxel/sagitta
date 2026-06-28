@@ -1,4 +1,7 @@
 // ─── Palette ────────────────────────────────────────────────────────────────
+// Default colors. Users can override these at runtime via the settings menu;
+// see src/contexts/ColorContext.tsx (canvas components read live values through
+// `useColors()` rather than importing `C` directly).
 export const C = {
   ink: "#1c1917",
   paper: "#fbfaf7",
@@ -12,6 +15,8 @@ export const C = {
   node: "#44403c",
   grid: "#e7e5e4",
 };
+
+export type Colors = typeof C;
 
 // ─── Layout / interaction constants ──────────────────────────────────────────
 export const SVG_W = 900;
