@@ -190,6 +190,33 @@ const r2: FrameModel = {
   unit: "T",
 };
 
+// 8. Portal frame, solid-web, with internal hinge A1-2 (matches examples/portal-frame.svg)
+const r3: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 0, support: "pinned" },
+    { id: "C", x: 2, y: 3, support: "free" }, // rigid knee: diagonal meets roof
+    { id: "A12", x: 4, y: 3, support: "free" }, // internal hinge A1-2
+    { id: "D", x: 7, y: 3, support: "free" }, // top of column
+    { id: "B", x: 7, y: 0, support: "pinned" },
+  ],
+  members: [
+    { id: "diag", n1: "A", n2: "C" },
+    { id: "roofL", n1: "C", n2: "A12", relJ: true }, // hinge at A12 ...
+    { id: "roofR", n1: "A12", n2: "D", relI: true }, // ... released both sides (cf. threeHinged)
+    { id: "col", n1: "D", n2: "B" },
+  ],
+  loads: [
+    // q1 = 5 kN/m perpendicular to diagonal A-C -> global (3,-2)/sqrt(13) * 5
+    { id: "q1", type: "mudl", member: "diag", gx: 4.1603, gy: -2.7735 },
+    // q2 = 10 kN/m vertical down on the right roof
+    { id: "q2", type: "mudl", member: "roofR", gx: 0, gy: -10 },
+    // P = 50 kN down, 1.5 m from A12 (x = 5.5 m, i.e. 1.5 m left of D)
+    { id: "p1", type: "mpoint", member: "roofR", dist: 1.5, gx: 0, gy: -50 },
+  ],
+  material: defaultMat,
+  unit: "kN",
+};
+
 export const PRESETS: Preset[] = [
   { name: "Simply Supported Beam", model: simplySupported },
   { name: "Cantilever", model: cantilever },
@@ -198,4 +225,5 @@ export const PRESETS: Preset[] = [
   { name: "Two-Bay Portal", model: twoBayPortal },
   { name: "Portico + Reticulado (r1)", model: r1 },
   { name: "Reticulado (r2)", model: r2 },
+  { name: "Portal Frame w/ Hinge (r3)", model: r3 },
 ];

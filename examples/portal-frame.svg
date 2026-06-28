@@ -1,0 +1,176 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-40 0 800 462" font-family="system-ui, sans-serif">
+  <!--
+    Estructura: portico de alma llena (nudos rigidos) con articulacion interna.
+    Mundo en metros, y hacia arriba. Transform: sx = 120 + x*60 ; sy = 320 - y*60
+    Nodos:
+      A    (0,0)  apoyo fijo (articulado)     -> (120,320)
+      C    (2,3)  arranque del techo / diag.  -> (240,140)
+      A1-2 (4,3)  articulacion interna        -> (360,140)
+      D    (7,3)  tope del pilar / techo der. -> (540,140)
+      B    (7,0)  apoyo fijo (articulado)     -> (540,320)
+    Barras (todas de alma llena, nudos rigidos salvo la articulacion):
+      A-C  diagonal (apoyo A -> arranque del techo)
+      C-A1-2  techo izquierdo  (2 m)
+      A1-2-D  techo derecho   (3 m)
+      D-B  pilar              (3 m)
+    Chapa 1 = {A, diagonal, techo izq.}  ;  Chapa 2 = {techo der., pilar, B}
+    La articulacion A1-2 une la chapa 1 con la chapa 2.
+    Determinacion: 4 reacciones (2 apoyos fijos) + 1 condicion (articulacion) = 4 ecs.
+    Cargas distribuidas:
+      q1 =  5 kN/m  perpendicular a la diagonal A-C
+      q2 = 10 kN/m  vertical (hacia abajo) sobre el techo derecho A1-2 -> D
+    Carga puntual:
+      P = 50 kN  vertical (hacia abajo) sobre el techo, a 1.5 m a la izquierda de D (x = 5.5 m)
+    Reacciones de vinculo:
+      A: V_A = 22.5 kN (arriba), H_A = 12.55 kN (derecha)
+      B: V_B = 67.5 kN (arriba), H_B = 27.5 kN (izquierda)
+  -->
+
+  <rect x="-40" y="0" width="800" height="462" fill="#ffffff"/>
+
+  <!-- ===== Cotas / dimensiones ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <!-- techo (arriba): 2.00 | 1.50 | 1.50 (tick en la carga puntual, a 1.5 m de D) -->
+    <line x1="240" y1="72" x2="540" y2="72"/>
+    <line x1="240" y1="67" x2="240" y2="77"/>
+    <line x1="360" y1="67" x2="360" y2="77"/>
+    <line x1="450" y1="67" x2="450" y2="77"/>
+    <line x1="540" y1="67" x2="540" y2="77"/>
+    <text x="300" y="64" text-anchor="middle">2.00</text>
+    <text x="405" y="64" text-anchor="middle">1.50</text>
+    <text x="495" y="64" text-anchor="middle">1.50</text>
+
+    <!-- pilar en B (lado interior, para no cruzar H_B): 3.00 m -->
+    <line x1="516" y1="140" x2="516" y2="320"/>
+    <line x1="511" y1="140" x2="521" y2="140"/>
+    <line x1="511" y1="320" x2="521" y2="320"/>
+    <text x="504" y="230" text-anchor="middle" transform="rotate(-90 504 230)">3.00 m</text>
+
+    <!-- base: separacion entre apoyos 7.00 m -->
+    <line x1="120" y1="410" x2="540" y2="410"/>
+    <line x1="120" y1="405" x2="120" y2="415"/>
+    <line x1="540" y1="405" x2="540" y2="415"/>
+    <text x="330" y="427" text-anchor="middle">7.00 m</text>
+  </g>
+
+  <!-- ===== Etiquetas de chapas (cuerpos rigidos) ===== -->
+  <g fill="#9aa0a6" font-size="13" font-style="italic" font-weight="600">
+    <text x="210" y="258" text-anchor="middle">chapa 1</text>
+    <text x="448" y="258" text-anchor="middle">chapa 2</text>
+  </g>
+
+  <!-- ===== Portico de alma llena (nudos rigidos) ===== -->
+  <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
+    <line x1="120" y1="320" x2="240" y2="140"/> <!-- diagonal A-C -->
+    <line x1="240" y1="140" x2="360" y2="140"/> <!-- techo izq. C-A1-2 -->
+    <line x1="360" y1="140" x2="540" y2="140"/> <!-- techo der. A1-2-D -->
+    <line x1="540" y1="140" x2="540" y2="320"/> <!-- pilar D-B -->
+  </g>
+
+  <!-- ===== Apoyos fijos (articulados / pinned) ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <!-- A -->
+    <polygon points="120,320 111,331 129,331"/>
+    <line x1="105" y1="331" x2="135" y2="331"/>
+    <line x1="109" y1="331" x2="103" y2="338"/>
+    <line x1="117" y1="331" x2="111" y2="338"/>
+    <line x1="125" y1="331" x2="119" y2="338"/>
+    <line x1="133" y1="331" x2="127" y2="338"/>
+    <!-- B -->
+    <polygon points="540,320 531,331 549,331"/>
+    <line x1="525" y1="331" x2="555" y2="331"/>
+    <line x1="529" y1="331" x2="523" y2="338"/>
+    <line x1="537" y1="331" x2="531" y2="338"/>
+    <line x1="545" y1="331" x2="539" y2="338"/>
+    <line x1="553" y1="331" x2="547" y2="338"/>
+  </g>
+
+  <!-- ===== Articulacion interna en A1-2 ===== -->
+  <circle cx="360" cy="140" r="6" fill="#ffffff" stroke="#1a1a1a" stroke-width="2"/>
+
+  <!-- ===== Nudos rigidos / apoyos ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="120" cy="320" r="4"/> <!-- A -->
+    <circle cx="540" cy="320" r="4"/> <!-- B -->
+    <circle cx="240" cy="140" r="4"/> <!-- C -->
+    <circle cx="540" cy="140" r="4"/> <!-- D -->
+  </g>
+
+  <!-- ===== Etiquetas de nudos ===== -->
+  <g font-size="13" font-weight="600" fill="#1a73e8">
+    <text x="130" y="326" text-anchor="start">A</text>
+    <text x="550" y="308" text-anchor="start">B</text>
+    <text x="232" y="130" text-anchor="end">C</text>
+    <text x="552" y="132" text-anchor="start">D</text>
+    <text x="360" y="166" text-anchor="middle">A<tspan font-size="10" dy="4">1-2</tspan></text>
+  </g>
+
+  <!-- ===== Cargas distribuidas (verticales, hacia abajo) ===== -->
+  <g stroke="#6a1b9a" fill="#6a1b9a" font-size="13" font-weight="700">
+    <!-- q1 = 5 kN/m perpendicular a la diagonal A-C -->
+    <line x1="92" y1="301" x2="212" y2="121" stroke-width="2"/>
+    <g stroke-width="1.5">
+      <line x1="104" y1="283" x2="125" y2="298"/>
+      <line x1="123" y1="254" x2="144" y2="269"/>
+      <line x1="142" y1="226" x2="163" y2="240"/>
+      <line x1="161" y1="197" x2="183" y2="212"/>
+      <line x1="181" y1="168" x2="202" y2="183"/>
+      <line x1="200" y1="139" x2="221" y2="154"/>
+    </g>
+    <g stroke="none">
+      <polygon points="132,302 127,295 123,300"/>
+      <polygon points="151,273 146,266 142,272"/>
+      <polygon points="170,244 165,237 161,243"/>
+      <polygon points="190,216 185,209 181,215"/>
+      <polygon points="209,187 204,180 200,186"/>
+      <polygon points="228,158 223,151 219,157"/>
+    </g>
+    <text x="140" y="203" text-anchor="middle" transform="rotate(-56.3 140 203)" stroke="none">q<tspan font-size="10" dy="4">1</tspan> = 5 kN/m</text>
+
+    <!-- q2 = 10 kN/m sobre el techo derecho A1-2 -> D -->
+    <line x1="360" y1="108" x2="540" y2="108" stroke-width="2"/>
+    <g stroke-width="1.5">
+      <line x1="390" y1="108" x2="390" y2="135"/>
+      <line x1="420" y1="108" x2="420" y2="135"/>
+      <line x1="480" y1="108" x2="480" y2="135"/>
+      <line x1="510" y1="108" x2="510" y2="135"/>
+      <line x1="540" y1="108" x2="540" y2="135"/>
+    </g>
+    <g stroke="none">
+      <polygon points="390,140 387,134 393,134"/>
+      <polygon points="420,140 417,134 423,134"/>
+      <polygon points="480,140 477,134 483,134"/>
+      <polygon points="510,140 507,134 513,134"/>
+      <polygon points="540,140 537,134 543,134"/>
+    </g>
+    <text x="398" y="99" text-anchor="middle" stroke="none">q<tspan font-size="10" dy="4">2</tspan> = 10 kN/m</text>
+
+    <!-- P = 50 kN vertical hacia abajo, a 1.5 m a la izquierda de D (x = 5.5 m) -->
+    <line x1="450" y1="84" x2="450" y2="132" stroke-width="3.2"/>
+    <polygon points="450,140 444,128 456,128" stroke="none"/>
+    <text x="458" y="98" text-anchor="start" stroke="none">50 kN</text>
+  </g>
+
+  <!-- ===== Reacciones de vinculo ===== -->
+  <g stroke="#2e7d32" fill="#2e7d32" font-size="13" font-weight="700">
+    <!-- A: V_A = 22.5 kN (arriba), H_A = 12.55 kN (derecha) -->
+    <line x1="120" y1="378" x2="120" y2="346" stroke-width="2.5"/>
+    <polygon points="120,341 115,352 125,352" stroke="none"/>
+    <text x="132" y="372" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan> = 22.5 kN</text>
+    <line x1="72" y1="320" x2="111" y2="320" stroke-width="2.5"/>
+    <polygon points="120,320 109,315 109,325" stroke="none"/>
+    <text x="66" y="316" text-anchor="end" stroke="none">H<tspan font-size="10" dy="4">A</tspan> = 12.55 kN</text>
+
+    <!-- B: V_B = 67.5 kN (arriba), H_B = 27.5 kN (izquierda) -->
+    <line x1="540" y1="378" x2="540" y2="346" stroke-width="2.5"/>
+    <polygon points="540,341 535,352 545,352" stroke="none"/>
+    <text x="528" y="372" text-anchor="end" stroke="none">V<tspan font-size="10" dy="4">B</tspan> = 67.5 kN</text>
+    <line x1="588" y1="320" x2="549" y2="320" stroke-width="2.5"/>
+    <polygon points="540,320 551,315 551,325" stroke="none"/>
+    <text x="594" y="316" text-anchor="start" stroke="none">H<tspan font-size="10" dy="4">B</tspan> = 27.5 kN</text>
+  </g>
+
+  <text x="350" y="448" text-anchor="middle" fill="#5f6368" font-size="13">
+    alma llena — portico con articulacion A1-2; cargas q (violeta) y reacciones de vinculo (verde)
+  </text>
+</svg>
