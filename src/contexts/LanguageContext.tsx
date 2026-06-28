@@ -38,6 +38,7 @@ const EN = {
   "preset.three_hinged": "Three-Hinged Frame",
   "preset.two_bay": "Two-Bay Portal",
   "preset.portico_reticulado": "Frame + Truss (r1)",
+  "preset.reticulado_r2": "Truss (r2)",
 
   "forces.member": "Member",
   "forces.state": "State",
@@ -184,6 +185,7 @@ const ES: Record<TranslationKey, string> = {
   "preset.three_hinged": "Arco de tres rótulas",
   "preset.two_bay": "Pórtico de dos vanos",
   "preset.portico_reticulado": "Pórtico + Reticulado (r1)",
+  "preset.reticulado_r2": "Reticulado (r2)",
 
   "forces.member": "Barra",
   "forces.state": "Estado",

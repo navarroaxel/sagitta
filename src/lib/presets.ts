@@ -151,6 +151,49 @@ const r1: FrameModel = {
   unit: "kN",
 };
 
+// 7. r2 — reticulado de cordones paralelos (12 m x 4 m, 3 paneles).
+//    b5/b7 bajan a la izquierda, b9 (ultimo panel) a la derecha. Barras b1..b13 biarticuladas.
+//    Apoyos: A movil (roller-v), B fijo (pinned). Cargas en T.
+const r2: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 0, support: "roller-v" },
+    { id: "C", x: 4, y: 0, support: "free" },
+    { id: "B", x: 8, y: 0, support: "pinned" },
+    { id: "D", x: 12, y: 0, support: "free" },
+    { id: "E", x: 0, y: 4, support: "free" },
+    { id: "F", x: 4, y: 4, support: "free" },
+    { id: "G", x: 8, y: 4, support: "free" },
+    { id: "H", x: 12, y: 4, support: "free" },
+  ],
+  members: [
+    // cordon inferior (piso)
+    { id: "b1", n1: "A", n2: "C", relI: true, relJ: true },
+    { id: "b2", n1: "C", n2: "B", relI: true, relJ: true },
+    { id: "b3", n1: "B", n2: "D", relI: true, relJ: true },
+    // cordon superior (techo)
+    { id: "b11", n1: "E", n2: "F", relI: true, relJ: true },
+    { id: "b12", n1: "F", n2: "G", relI: true, relJ: true },
+    { id: "b13", n1: "G", n2: "H", relI: true, relJ: true },
+    // montantes
+    { id: "b4", n1: "A", n2: "E", relI: true, relJ: true },
+    { id: "b6", n1: "C", n2: "F", relI: true, relJ: true },
+    { id: "b8", n1: "B", n2: "G", relI: true, relJ: true },
+    { id: "b10", n1: "D", n2: "H", relI: true, relJ: true },
+    // diagonales (b5, b7 bajan a la izquierda; b9 baja a la derecha)
+    { id: "b5", n1: "F", n2: "A", relI: true, relJ: true },
+    { id: "b7", n1: "G", n2: "C", relI: true, relJ: true },
+    { id: "b9", n1: "G", n2: "D", relI: true, relJ: true },
+  ],
+  loads: [
+    { id: "p1", type: "nodal", node: "C", fx: 0, fy: -10, m: 0 },
+    { id: "p2", type: "nodal", node: "F", fx: 0, fy: -5, m: 0 },
+    { id: "p3", type: "nodal", node: "D", fx: 0, fy: -25, m: 0 },
+    { id: "p4", type: "nodal", node: "H", fx: 10, fy: 0, m: 0 },
+  ],
+  material: defaultMat,
+  unit: "T",
+};
+
 export const PRESETS: Preset[] = [
   { name: "Simply Supported Beam", model: simplySupported },
   { name: "Cantilever", model: cantilever },
@@ -158,4 +201,5 @@ export const PRESETS: Preset[] = [
   { name: "Three-Hinged Frame", model: threeHinged },
   { name: "Two-Bay Portal", model: twoBayPortal },
   { name: "Portico + Reticulado (r1)", model: r1 },
+  { name: "Reticulado (r2)", model: r2 },
 ];
