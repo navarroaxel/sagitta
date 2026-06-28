@@ -14,9 +14,11 @@ Simulador interactivo de pórticos planos 2D que calcula y representa los tres d
 - Arrastra nodos para remodelar la estructura — los diagramas se recalculan en tiempo real; zoom y paneo del lienzo
 - Controles de escala por diagrama y activación/desactivación independiente; haz clic en una carga para resaltarla en el lienzo
 - Flechas de reacciones, flechas de cargas, símbolos de apoyos y marcadores de articulaciones internas
-- **i18n** (español / inglés) y **modo oscuro**
+- **Menú de configuración** — personaliza cada color del lienzo (cargas, barras, etiquetas, diagramas N/Q/M, grilla, fondo…) mediante selector de color + campo hexadecimal, con un preajuste de alto contraste; los toggles y controles de escala de N/Q/M siguen los colores de su diagrama
+- **Preferencias que persisten** — «recordar mi trabajo» guarda automáticamente el modelo + la vista entre recargas, además de un tamaño de ajuste de grilla configurable
+- **i18n** (español / inglés) y **modo oscuro**, ambos dentro del menú de configuración
 - Exporta la vista actual como SVG o PNG
-- Ocho ejemplos predefinidos, incluyendo un pórtico + reticulado y un reticulado de cordones paralelos
+- Ejemplos predefinidos incorporados, incluyendo un pórtico + reticulado y un reticulado de cordones paralelos
 - Página **/learn** con la explicación paso a paso del Método de la Tangente (Teoremas de Mohr)
 
 ## Tecnologías
@@ -37,7 +39,7 @@ Toda la interfaz interactiva es un componente cliente (`'use client'`). Sin ruta
 ```bash
 npm install        # instala también jsdom + testing-library usados en los tests de componentes
 npm run dev        # http://localhost:3000
-npm test           # suite Jest completa (~107 checks en 2 proyectos)
+npm test           # suite Jest completa (2 proyectos: lib + components)
 npm run build      # build de producción
 npm run lint       # ESLint
 ```
@@ -59,16 +61,19 @@ src/
       LoadsLayer.tsx    #   flechas de carga (nodal / puntual / distribuida)
       ReactionsLayer.tsx#   flechas de reacción + momentos
       SupportSymbol.tsx #   símbolos de apoyo articulado / móvil / empotrado
-      ValLabel.tsx      #   etiquetas de valores
+      ValueLabel.tsx    #   etiquetas de valores
       loads.tsx         #   primitivas de flecha y marcador de momento
       constants.ts      #   colores y tamaños compartidos
     ModelEditor.tsx     # editor con pestañas: nodos / barras / cargas / material / resultados
     ResultsPanel.tsx    # esfuerzos en barras, reacciones, desplazamientos, equilibrio
     DiagramControls.tsx # activación de diagramas + controles de escala por diagrama
+    SettingsPanel.tsx   # menú de configuración: colores, alto contraste, idioma, tema, preferencias
     PresetMenu.tsx      # menú desplegable para cargar estructuras de ejemplo
-    ThemeToggle.tsx · Footer.tsx · GitHubLink.tsx
+    Footer.tsx · GitHubLink.tsx
   contexts/
     LanguageContext.tsx # i18n (ES/EN), t(), unión TranslationKey
+    ColorContext.tsx    # colores personalizables del lienzo (sagitta-colors)
+    PrefsContext.tsx    # preferencias que persisten (recordar trabajo, ajuste de grilla)
   lib/
     types.ts            # FrameModel, FrameNode, Member, Load, Material, Support
     solver.ts           # solver de rigidez directa (solveFrame) — no modificar la matemática
@@ -78,9 +83,10 @@ src/
     diagram.ts          # constructor de polígonos para diagramas N/Q/M
     results.ts          # esfuerzos pico, verificación de equilibrio, limpieza de valores
     loadProjection.ts   # colocación de cargas / auxiliares de flechas UDL
-    presets.ts          # ocho estructuras de ejemplo
+    theme.ts            # lectura/aplicación del tema (claro/oscuro)
+    presets.ts          # estructuras de ejemplo
     __tests__/          # solver (33), diagram, geometry, loadProjection, results, presets
-  components/__tests__/  # FrameCanvas, ValLabel, ReactionsLayer (jsdom)
+  components/__tests__/  # FrameCanvas, ValueLabel, ReactionsLayer, SettingsPanel (jsdom)
 ```
 
 ## Convención de signos
@@ -117,3 +123,4 @@ Expuestas como `E`, `A`, `I` en el modelo con valores por defecto de ingeniería
 6. **Pórtico + Reticulado** — pórtico de alma llena unido a un reticulado biarticulado, apoyos articulados
 7. **Reticulado** — reticulado de cordones paralelos de 12 m × 4 m (3 paneles), apoyo móvil + fijo
 8. **Pórtico articulado** — pórtico biapoyado con articulación interna en el dintel
+```
