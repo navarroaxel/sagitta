@@ -6,6 +6,7 @@ import {
   HIGH_CONTRAST_COLORS,
 } from "@/contexts/ColorContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { usePrefs } from "@/contexts/PrefsContext";
 
 // Probe component that surfaces the live "loads" color so we can assert the
 // store updates flow through useColors().
@@ -14,11 +15,18 @@ function LoadsProbe() {
   return <div data-testid="loads-probe">{c.loads}</div>;
 }
 
+// Surfaces live prefs (rememberWork|snap) the same way for assertions.
+function PrefsProbe() {
+  const p = usePrefs();
+  return <div data-testid="prefs-probe">{`${p.rememberWork}|${p.snap}`}</div>;
+}
+
 function setup() {
   return render(
     <LanguageProvider>
       <SettingsPanel />
       <LoadsProbe />
+      <PrefsProbe />
     </LanguageProvider>,
   );
 }
@@ -98,6 +106,21 @@ describe("SettingsPanel", () => {
     expect(screen.getByTestId("loads-probe")).toHaveTextContent(
       DEFAULT_COLORS.loads,
     );
+  });
+
+  test("Preferences: grid snap updates the live prefs", () => {
+    setup();
+    fireEvent.click(screen.getByRole("button", { name: "Settings" }));
+    expect(screen.getByTestId("prefs-probe")).toHaveTextContent("true|0.25");
+    fireEvent.click(screen.getByRole("button", { name: "0.5" }));
+    expect(screen.getByTestId("prefs-probe")).toHaveTextContent("true|0.5");
+  });
+
+  test("Preferences: 'Remember my work' can be turned off", () => {
+    setup();
+    fireEvent.click(screen.getByRole("button", { name: "Settings" }));
+    fireEvent.click(screen.getByRole("button", { name: "Off" }));
+    expect(screen.getByTestId("prefs-probe")).toHaveTextContent("false|0.25");
   });
 
   test("language and theme controls live inside the panel", () => {

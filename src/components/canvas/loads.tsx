@@ -12,8 +12,8 @@ export function ArrowHead({
   angle: number;
   fill?: string;
 }) {
-  const C = useColors();
-  const color = fill ?? C.loads;
+  const colors = useColors();
+  const color = fill ?? colors.loads;
   const len = 8,
     wid = 4;
   const cos = Math.cos(angle),
@@ -39,9 +39,9 @@ export function LoadArrow({
   label?: string;
   highlighted?: boolean;
 }) {
-  const C = useColors();
+  const colors = useColors();
   const angle = Math.atan2(y2 - y1, x2 - x1);
-  const color = highlighted ? "#ea580c" : C.loads;
+  const color = highlighted ? "#ea580c" : colors.loads;
   const sw = highlighted ? 2.5 : 1.5;
   return (
     <g>
@@ -92,8 +92,8 @@ export function MomentMarker({
   label?: string;
   highlighted?: boolean;
 }) {
-  const C = useColors();
-  const color = highlighted ? "#ea580c" : C.loads;
+  const colors = useColors();
+  const color = highlighted ? "#ea580c" : colors.loads;
   const sw = highlighted ? 2.5 : 1.5;
   const r = Math.min(34, 13 * scale);
   const cw = m < 0; // positive m = counter-clockwise; negative = clockwise

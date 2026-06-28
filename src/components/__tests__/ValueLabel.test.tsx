@@ -1,16 +1,16 @@
 import { render } from "@testing-library/react";
-import { ValLabel } from "../canvas/ValLabel";
+import { ValueLabel } from "../canvas/ValueLabel";
 
-// ValLabel renders an SVG <text>; wrap it in an <svg> host element.
+// ValueLabel renders an SVG <text>; wrap it in an <svg> host element.
 function renderLabel(v: number, unit = "kN") {
   return render(
     <svg>
-      <ValLabel x={0} y={0} v={v} unit={unit} />
+      <ValueLabel x={0} y={0} v={v} unit={unit} />
     </svg>,
   );
 }
 
-describe("ValLabel – near-zero threshold", () => {
+describe("ValueLabel – near-zero threshold", () => {
   test("|v| < 0.01 renders nothing", () => {
     const { container } = renderLabel(0.005);
     expect(container.querySelector("text")).toBeNull();

@@ -59,7 +59,7 @@ src/
       LoadsLayer.tsx    #   load arrows (nodal / point / UDL)
       ReactionsLayer.tsx#   reaction arrows + moments
       SupportSymbol.tsx #   pinned / roller / fixed symbols
-      ValLabel.tsx      #   value labels
+      ValueLabel.tsx      #   value labels
       loads.tsx         #   arrow + moment-marker primitives
       constants.ts      #   shared colors / sizes
     ModelEditor.tsx     # tabbed editor: nodes / members / loads / material / results
@@ -80,7 +80,7 @@ src/
     loadProjection.ts   # load placement / UDL arrow helpers
     presets.ts          # seven example structures
     __tests__/          # solver (33), diagram, geometry, loadProjection, results, presets
-  components/__tests__/  # FrameCanvas, ValLabel, ReactionsLayer (jsdom)
+  components/__tests__/  # FrameCanvas, ValueLabel, ReactionsLayer (jsdom)
 ```
 
 ## Sign conventions

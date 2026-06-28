@@ -21,6 +21,7 @@ import {
   THEME_ORDER,
   type ThemeMode,
 } from "@/lib/theme";
+import { usePrefs, setPref, SNAP_OPTIONS } from "@/contexts/PrefsContext";
 
 // useLayoutEffect warns during SSR; fall back to useEffect on the server.
 const useIsomorphicLayoutEffect =
@@ -97,6 +98,7 @@ function ColorRow({ colorKey, label }: { colorKey: ColorKey; label: string }) {
 
 export function SettingsPanel() {
   const { t, language, toggle } = useLanguage();
+  const prefs = usePrefs();
   const [open, setOpen] = useState(false);
   const [themeMode, setThemeMode] = useState<ThemeMode>("auto");
   const [themeMounted, setThemeMounted] = useState(false);
@@ -229,6 +231,49 @@ export function SettingsPanel() {
                     className={segBtn(currentTheme === v)}
                   >
                     {THEME_ICONS[v]}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Preferences */}
+          <div className="border-t border-stone-200 pt-3 dark:border-stone-700">
+            <p className="mb-2 text-[10px] font-semibold tracking-wider text-stone-400 uppercase dark:text-stone-500">
+              {t("settings.section.preferences")}
+            </p>
+
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-xs text-stone-600 dark:text-stone-300">
+                {t("settings.remember_work")}
+              </span>
+              <div className="flex overflow-hidden rounded-md border border-stone-300 dark:border-stone-600">
+                {([true, false] as const).map((v) => (
+                  <button
+                    key={String(v)}
+                    type="button"
+                    onClick={() => setPref("rememberWork", v)}
+                    className={segBtn(prefs.rememberWork === v)}
+                  >
+                    {v ? t("settings.on") : t("settings.off")}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-stone-600 dark:text-stone-300">
+                {t("settings.snap")}
+              </span>
+              <div className="flex overflow-hidden rounded-md border border-stone-300 dark:border-stone-600">
+                {SNAP_OPTIONS.map((v) => (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => setPref("snap", v)}
+                    className={`${segBtn(prefs.snap === v)} font-mono`}
+                  >
+                    {v}
                   </button>
                 ))}
               </div>

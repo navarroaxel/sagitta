@@ -15,7 +15,7 @@ export function ReactionsLayer({
   tr: Transform;
   unit: string;
 }) {
-  const C = useColors();
+  const colors = useColors();
   const ARROW_LEN = 50;
   const reactions = solved.result.reactions;
   return (
@@ -35,19 +35,19 @@ export function ReactionsLayer({
                 y1={sy}
                 x2={sx}
                 y2={sy}
-                stroke={C.reactions}
+                stroke={colors.reactions}
                 strokeWidth={2}
               />
               <polygon
                 points={`${sx},${sy} ${sx - sign * 10},${sy - 5} ${sx - sign * 10},${sy + 5}`}
-                fill={C.reactions}
+                fill={colors.reactions}
               />
               <text
                 x={sx - sign * ARROW_LEN * 0.5}
                 y={sy - 8}
                 fontSize={9}
                 fontFamily="monospace"
-                fill={C.reactions}
+                fill={colors.reactions}
                 textAnchor="middle"
                 style={{ paintOrder: "stroke", stroke: "#fff", strokeWidth: 2 }}
               >
@@ -66,19 +66,19 @@ export function ReactionsLayer({
                 y1={sy - sign * ARROW_LEN}
                 x2={sx}
                 y2={sy}
-                stroke={C.reactions}
+                stroke={colors.reactions}
                 strokeWidth={2}
               />
               <polygon
                 points={`${sx},${sy} ${sx - 5},${sy - sign * 10} ${sx + 5},${sy - sign * 10}`}
-                fill={C.reactions}
+                fill={colors.reactions}
               />
               <text
                 x={sx + 12}
                 y={sy - sign * ARROW_LEN * 0.5}
                 fontSize={9}
                 fontFamily="monospace"
-                fill={C.reactions}
+                fill={colors.reactions}
                 style={{ paintOrder: "stroke", stroke: "#fff", strokeWidth: 2 }}
               >
                 {r.ry.toFixed(1)}
@@ -93,7 +93,7 @@ export function ReactionsLayer({
               <path
                 d={`M${sx + 18},${sy} A18,18 0 1,1 ${sx + 18 * Math.cos(Math.PI * 1.5)},${sy + 18 * Math.sin(Math.PI * 1.5)}`}
                 fill="none"
-                stroke={C.reactions}
+                stroke={colors.reactions}
                 strokeWidth={2}
               />
               <text
@@ -101,7 +101,7 @@ export function ReactionsLayer({
                 y={sy - 18}
                 fontSize={9}
                 fontFamily="monospace"
-                fill={C.reactions}
+                fill={colors.reactions}
                 style={{ paintOrder: "stroke", stroke: "#fff", strokeWidth: 2 }}
               >
                 {r.rm.toFixed(1)}

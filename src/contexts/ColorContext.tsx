@@ -1,13 +1,12 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { C, type Colors } from "@/components/canvas/constants";
-
-export type { Colors };
-export type ColorKey = keyof Colors;
+import { DEFAULT_COLORS, type Colors } from "@/components/canvas/constants";
 
 /** Built-in palette — the values the app ships with. */
-export const DEFAULT_COLORS: Colors = C;
+export { DEFAULT_COLORS };
+export type { Colors };
+export type ColorKey = keyof Colors;
 
 /**
  * High-contrast preset: pure black structure on a white background with

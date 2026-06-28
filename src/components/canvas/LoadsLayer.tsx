@@ -21,7 +21,7 @@ export function LoadsLayer({
   scale?: number;
   highlightedLoadId?: string | null;
 }) {
-  const C = useColors();
+  const colors = useColors();
   const ARROW_BASE = 40; // px for a "unit" force arrow
   // Find max magnitude for scaling
   let maxF = 0;
@@ -123,7 +123,7 @@ export function LoadsLayer({
                 y1={s0y - dy}
                 x2={s1x - dx}
                 y2={s1y - dy}
-                stroke={isHL ? "#ea580c" : C.loads}
+                stroke={isHL ? "#ea580c" : colors.loads}
                 strokeWidth={isHL ? 2.5 : 1.5}
               />
               {udlArrowFractions(UDL_ARROW_COUNT).map((t, i) => {

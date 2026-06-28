@@ -49,7 +49,7 @@ function ScaleSlider({ label, value, min, max, step, accentColor, onChange }: Sc
 
 export default function DiagramControls({ opts, onChange }: Props) {
   const { t } = useLanguage();
-  const C = useColors();
+  const colors = useColors();
 
   const set = <K extends keyof ViewOptions>(k: K, v: ViewOptions[K]) =>
     onChange({ ...opts, [k]: v });
@@ -63,7 +63,7 @@ export default function DiagramControls({ opts, onChange }: Props) {
       {(["N", "Q", "M"] as const).map((d) => {
         const key = `show${d}` as keyof ViewOptions;
         // Match the diagram's customizable color (N uses its tension color).
-        const color = d === "N" ? C.tension : d === "Q" ? C.shear : C.moment;
+        const color = d === "N" ? colors.tension : d === "Q" ? colors.shear : colors.moment;
         return (
           <label
             key={d}
@@ -128,7 +128,7 @@ export default function DiagramControls({ opts, onChange }: Props) {
       <SectionLabel>{t("controls.scale")}</SectionLabel>
       <ScaleSlider
         label={
-          <span className="font-mono font-bold" style={{ color: C.loads }}>
+          <span className="font-mono font-bold" style={{ color: colors.loads }}>
             {t("controls.loads")}
           </span>
         }
@@ -136,12 +136,12 @@ export default function DiagramControls({ opts, onChange }: Props) {
         min={0.1}
         max={5}
         step={0.05}
-        accentColor={C.loads}
+        accentColor={colors.loads}
         onChange={(v) => set("scaleLoads", v)}
       />
       {(["N", "Q", "M"] as const).map((d) => {
         const key = `scale${d}` as keyof ViewOptions;
-        const color = d === "N" ? C.tension : d === "Q" ? C.shear : C.moment;
+        const color = d === "N" ? colors.tension : d === "Q" ? colors.shear : colors.moment;
         return (
           <ScaleSlider
             key={d}

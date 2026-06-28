@@ -3,9 +3,9 @@ import { Transform } from "@/lib/geometry";
 import { useColors } from "@/contexts/ColorContext";
 import { SNAP, SVG_W, SVG_H } from "./constants";
 
-export function GridLayer({ tr }: { tr: Transform }) {
-  const C = useColors();
-  const step = SNAP;
+export function GridLayer({ tr, snap = SNAP }: { tr: Transform; snap?: number }) {
+  const colors = useColors();
+  const step = snap;
   const minWX = (0 - tr.ox) / tr.k;
   const maxWX = (SVG_W - tr.ox) / tr.k;
   const minWY = (tr.oy - SVG_H) / tr.k;
@@ -20,7 +20,7 @@ export function GridLayer({ tr }: { tr: Transform }) {
         y1={0}
         x2={tr.toSX(x)}
         y2={SVG_H}
-        stroke={C.grid}
+        stroke={colors.grid}
         strokeWidth={0.5}
       />,
     );
@@ -33,7 +33,7 @@ export function GridLayer({ tr }: { tr: Transform }) {
         y1={tr.toSY(y)}
         x2={SVG_W}
         y2={tr.toSY(y)}
-        stroke={C.grid}
+        stroke={colors.grid}
         strokeWidth={0.5}
       />,
     );
