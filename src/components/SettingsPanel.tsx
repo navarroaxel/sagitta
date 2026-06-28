@@ -142,13 +142,19 @@ export function SettingsPanel() {
         onClick={() => setOpen((v) => !v)}
         aria-label={t("settings.title")}
         title={t("settings.title")}
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        aria-controls="settings-panel"
         className="inline-flex items-center rounded border border-stone-300 bg-stone-100 px-2 py-1 text-sm text-stone-700 transition-colors hover:bg-stone-200 dark:border-stone-600 dark:bg-stone-800 dark:text-stone-200 dark:hover:bg-stone-700"
       >
         <span aria-hidden>⚙</span>
       </button>
 
       {open && (
-        <div className="absolute top-full right-0 z-50 mt-1 max-h-[80vh] w-72 space-y-3 overflow-y-auto rounded-lg border border-stone-200 bg-white p-3 shadow-lg dark:border-stone-700 dark:bg-stone-900">
+        <div
+          id="settings-panel"
+          className="absolute top-full right-0 z-50 mt-1 max-h-[80vh] w-72 space-y-3 overflow-y-auto rounded-lg border border-stone-200 bg-white p-3 shadow-lg dark:border-stone-700 dark:bg-stone-900"
+        >
           {/* Colors */}
           <div>
             <p className="mb-2 text-[10px] font-semibold tracking-wider text-stone-400 uppercase dark:text-stone-500">

@@ -44,6 +44,18 @@ describe("SettingsPanel", () => {
     expect(screen.getByLabelText("Loads")).toBeInTheDocument();
   });
 
+  test("the toggle exposes aria-expanded and controls the panel region", () => {
+    setup();
+    const toggle = screen.getByRole("button", { name: "Settings" });
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(toggle).toHaveAttribute("aria-controls", "settings-panel");
+
+    fireEvent.click(toggle);
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    // The opened panel carries the id the button points at.
+    expect(document.getElementById("settings-panel")).toBeInTheDocument();
+  });
+
   test("renders a swatch + hex field for every customizable color", () => {
     setup();
     fireEvent.click(screen.getByRole("button", { name: "Settings" }));
