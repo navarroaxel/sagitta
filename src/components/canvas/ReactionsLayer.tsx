@@ -69,7 +69,7 @@ export function ReactionsLayer({
                 strokeWidth={2}
               />
               <polygon
-                points={`${sx},${sy} ${sx - 5},${sy + sign * 10} ${sx + 5},${sy + sign * 10}`}
+                points={`${sx},${sy} ${sx - 5},${sy - sign * 10} ${sx + 5},${sy - sign * 10}`}
                 fill={C.reactions}
               />
               <text

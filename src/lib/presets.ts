@@ -151,11 +151,79 @@ const r1: FrameModel = {
   unit: "kN",
 };
 
+// 7. r2 — reticulado de cordones paralelos (12 m x 4 m, 3 paneles).
+//    b5/b7 bajan a la izquierda, b9 (ultimo panel) a la derecha. Barras b1..b13 biarticuladas.
+//    Apoyos: A movil (roller-v), B fijo (pinned). Cargas en T.
+const r2: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 0, support: "roller-v" },
+    { id: "C", x: 4, y: 0, support: "free" },
+    { id: "B", x: 8, y: 0, support: "pinned" },
+    { id: "D", x: 12, y: 0, support: "free" },
+    { id: "E", x: 0, y: 4, support: "free" },
+    { id: "F", x: 4, y: 4, support: "free" },
+    { id: "G", x: 8, y: 4, support: "free" },
+    { id: "H", x: 12, y: 4, support: "free" },
+  ],
+  members: [
+    { id: "b1", n1: "A", n2: "C", relI: true, relJ: true },
+    { id: "b2", n1: "C", n2: "B", relI: true, relJ: true },
+    { id: "b3", n1: "B", n2: "D", relI: true, relJ: true },
+    { id: "b4", n1: "A", n2: "E", relI: true, relJ: true },
+    { id: "b5", n1: "F", n2: "A", relI: true, relJ: true },
+    { id: "b6", n1: "C", n2: "F", relI: true, relJ: true },
+    { id: "b7", n1: "G", n2: "C", relI: true, relJ: true },
+    { id: "b8", n1: "B", n2: "G", relI: true, relJ: true },
+    { id: "b9", n1: "G", n2: "D", relI: true, relJ: true },
+    { id: "b10", n1: "D", n2: "H", relI: true, relJ: true },
+    { id: "b11", n1: "E", n2: "F", relI: true, relJ: true },
+    { id: "b12", n1: "F", n2: "G", relI: true, relJ: true },
+    { id: "b13", n1: "G", n2: "H", relI: true, relJ: true },
+  ],
+  loads: [
+    { id: "p1", type: "nodal", node: "C", fx: 0, fy: -10, m: 0 },
+    { id: "p2", type: "nodal", node: "F", fx: 0, fy: -5, m: 0 },
+    { id: "p3", type: "nodal", node: "D", fx: 0, fy: -25, m: 0 },
+    { id: "p4", type: "nodal", node: "H", fx: 10, fy: 0, m: 0 },
+  ],
+  material: defaultMat,
+  unit: "T",
+};
+
+// 8. Portal frame, solid-web, with internal hinge A1-2 (matches examples/portal-frame.svg)
+const r3: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 0, support: "pinned" },
+    { id: "C", x: 2, y: 3, support: "free" }, // rigid knee: diagonal meets roof
+    { id: "A12", x: 4, y: 3, support: "free" }, // internal hinge A1-2
+    { id: "D", x: 7, y: 3, support: "free" }, // top of column
+    { id: "B", x: 7, y: 0, support: "pinned" },
+  ],
+  members: [
+    { id: "diag", n1: "A", n2: "C" },
+    { id: "roofL", n1: "C", n2: "A12", relJ: true }, // hinge at A12 ...
+    { id: "roofR", n1: "A12", n2: "D", relI: true }, // ... released both sides (cf. threeHinged)
+    { id: "col", n1: "D", n2: "B" },
+  ],
+  loads: [
+    // q1 = 5 kN/m perpendicular to diagonal A-C -> global (3,-2)/sqrt(13) * 5
+    { id: "q1", type: "mudl", member: "diag", gx: 4.1603, gy: -2.7735 },
+    // q2 = 10 kN/m vertical down on the right roof
+    { id: "q2", type: "mudl", member: "roofR", gx: 0, gy: -10 },
+    // P = 50 kN down, 1.5 m from A12 (x = 5.5 m, i.e. 1.5 m left of D)
+    { id: "p1", type: "mpoint", member: "roofR", dist: 1.5, gx: 0, gy: -50 },
+  ],
+  material: defaultMat,
+  unit: "kN",
+};
+
 export const PRESETS: Preset[] = [
   { name: "Simply Supported Beam", model: simplySupported },
   { name: "Cantilever", model: cantilever },
   { name: "Portal Frame (fixed)", model: portalFrame },
   { name: "Three-Hinged Frame", model: threeHinged },
   { name: "Two-Bay Portal", model: twoBayPortal },
-  { name: "Portico + Reticulado (r1)", model: r1 },
+  { name: "Portico + Reticulado", model: r1 },
+  { name: "Reticulado", model: r2 },
+  { name: "Portal Frame w/ Hinge", model: r3 },
 ];
