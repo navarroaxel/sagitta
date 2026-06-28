@@ -114,7 +114,7 @@
 
   <!-- ===== Etiquetas de nudos ===== -->
   <g font-size="13" font-weight="600">
-    <g fill="#1a73e8">
+    <g fill="#6a1b9a">
       <text x="148" y="392" text-anchor="end">A</text>
       <text x="698" y="392" text-anchor="start">B</text>
       <text x="348" y="96" text-anchor="end">A<tspan font-size="10" dy="4">1-2</tspan></text>
@@ -127,7 +127,7 @@
   </g>
 
   <!-- ===== Nombres de barras del reticulado (izq->der, arriba->abajo) ===== -->
-  <g fill="#c0392b" font-size="13" font-style="italic" font-weight="600">
+  <g fill="#6a1b9a" font-size="13" font-style="italic" font-weight="600">
     <text x="440" y="98"  text-anchor="middle">b<tspan font-size="9" dy="3">1</tspan></text>
     <text x="600" y="98"  text-anchor="middle">b<tspan font-size="9" dy="3">2</tspan></text>
     <text x="348" y="162" text-anchor="end">b<tspan font-size="9" dy="3">3</tspan></text>
@@ -142,7 +142,7 @@
   </g>
 
   <!-- ===== Cargas ===== -->
-  <g stroke="#6a1b9a" fill="#6a1b9a" font-family="system-ui, sans-serif" font-size="13" font-weight="700">
+  <g stroke="#c0392b" fill="#c0392b" font-family="system-ui, sans-serif" font-size="13" font-weight="700">
     <!-- UDL 5 kN/m hacia abajo en el techo, de (-2,8) a (5,8) -->
     <line x1="80" y1="62" x2="360" y2="62" stroke-width="2"/>
     <g stroke-width="1.5">
@@ -184,26 +184,26 @@
     <text x="710" y="68" text-anchor="middle" stroke="none">10 kN</text>
   </g>
 
-  <!-- ===== Reacciones de vinculo ===== -->
-  <g stroke="#2e7d32" fill="#2e7d32" font-family="system-ui, sans-serif" font-size="13" font-weight="700">
-    <!-- A: V_A (arriba), H_A (derecha) -->
-    <line x1="160" y1="455" x2="160" y2="425" stroke-width="2.5"/>
-    <polygon points="160,420 155,431 165,431" stroke="none"/>
-    <text x="172" y="450" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan></text>
-    <line x1="122" y1="440" x2="157" y2="440" stroke-width="2.5"/>
-    <polygon points="162,440 151,435 151,445" stroke="none"/>
-    <text x="118" y="436" text-anchor="end" stroke="none">H<tspan font-size="10" dy="4">A</tspan></text>
+  <!-- ===== Reacciones de vinculo (aplicadas sobre los nudos: punta en el nudo) ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-family="system-ui, sans-serif" font-size="13" font-weight="700">
+    <!-- A (160,400): V_A arriba (punta en A, fuste abajo), H_A derecha (punta en A, fuste a la izq.) -->
+    <line x1="160" y1="450" x2="160" y2="411" stroke-width="2.5"/>
+    <polygon points="160,400 154,412 166,412" stroke="none"/>
+    <text x="172" y="440" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan></text>
+    <line x1="112" y1="400" x2="149" y2="400" stroke-width="2.5"/>
+    <polygon points="160,400 148,394 148,406" stroke="none"/>
+    <text x="108" y="396" text-anchor="end" stroke="none">H<tspan font-size="10" dy="4">A</tspan></text>
 
-    <!-- B: V_B (arriba), H_B (derecha) -->
-    <line x1="680" y1="455" x2="680" y2="425" stroke-width="2.5"/>
-    <polygon points="680,420 675,431 685,431" stroke="none"/>
-    <text x="692" y="450" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">B</tspan></text>
-    <line x1="642" y1="440" x2="677" y2="440" stroke-width="2.5"/>
-    <polygon points="682,440 671,435 671,445" stroke="none"/>
-    <text x="638" y="436" text-anchor="end" stroke="none">H<tspan font-size="10" dy="4">B</tspan></text>
+    <!-- B (680,400): V_B arriba (punta en B, fuste abajo), H_B derecha (punta en B, fuste a la izq.) -->
+    <line x1="680" y1="450" x2="680" y2="411" stroke-width="2.5"/>
+    <polygon points="680,400 674,412 686,412" stroke="none"/>
+    <text x="692" y="440" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">B</tspan></text>
+    <line x1="632" y1="400" x2="669" y2="400" stroke-width="2.5"/>
+    <polygon points="680,400 668,394 668,406" stroke="none"/>
+    <text x="628" y="396" text-anchor="end" stroke="none">H<tspan font-size="10" dy="4">B</tspan></text>
   </g>
 
   <text x="390" y="465" text-anchor="middle" fill="#5f6368" font-size="13">
-    r1 — alma llena (negro) + reticulado (verde) + cargas (violeta) + reacciones (verde oscuro)
+    alma llena (negro) + reticulado (verde) + cargas (rojo) + reacciones (azul)
   </text>
 </svg>

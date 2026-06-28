@@ -97,7 +97,7 @@
   </g>
 
   <!-- ===== Etiquetas de nudos ===== -->
-  <g font-size="13" font-weight="600" fill="#1a73e8">
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
     <text x="130" y="326" text-anchor="start">A</text>
     <text x="550" y="308" text-anchor="start">B</text>
     <text x="232" y="130" text-anchor="end">C</text>
@@ -106,7 +106,7 @@
   </g>
 
   <!-- ===== Cargas distribuidas (verticales, hacia abajo) ===== -->
-  <g stroke="#6a1b9a" fill="#6a1b9a" font-size="13" font-weight="700">
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
     <!-- q1 = 5 kN/m perpendicular a la diagonal A-C -->
     <line x1="92" y1="301" x2="212" y2="121" stroke-width="2"/>
     <g stroke-width="1.5">
@@ -152,7 +152,7 @@
   </g>
 
   <!-- ===== Reacciones de vinculo ===== -->
-  <g stroke="#2e7d32" fill="#2e7d32" font-size="13" font-weight="700">
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
     <!-- A: V_A = 22.5 kN (arriba), H_A = 12.55 kN (derecha) -->
     <line x1="120" y1="378" x2="120" y2="346" stroke-width="2.5"/>
     <polygon points="120,341 115,352 125,352" stroke="none"/>
@@ -171,6 +171,6 @@
   </g>
 
   <text x="350" y="448" text-anchor="middle" fill="#5f6368" font-size="13">
-    alma llena — portico con articulacion A1-2; cargas q (violeta) y reacciones de vinculo (verde)
+    alma llena — portico con articulacion A1-2; cargas q (rojo) y reacciones de vinculo (azul)
   </text>
 </svg>

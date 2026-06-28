@@ -8,6 +8,7 @@ import {
   UDL_LABEL_INDEX,
 } from "@/lib/loadProjection";
 import { LoadArrow, MomentMarker } from "./loads";
+import { C } from "./constants";
 
 export function LoadsLayer({
   model,
@@ -109,8 +110,21 @@ export function LoadsLayer({
           if (mag < 1e-10) return null;
           const angle = Math.atan2(-load.gy, load.gx);
           const len = mag * k * 0.6;
+          const dx = Math.cos(angle) * len;
+          const dy = Math.sin(angle) * len;
+          const s0x = tr.toSX(ni.x), s0y = tr.toSY(ni.y);
+          const s1x = tr.toSX(nj.x), s1y = tr.toSY(nj.y);
           return (
             <g key={load.id} data-testid={`load-${load.id}`} opacity={opacity}>
+              <line
+                data-testid={`udl-profile-${load.id}`}
+                x1={s0x - dx}
+                y1={s0y - dy}
+                x2={s1x - dx}
+                y2={s1y - dy}
+                stroke={isHL ? "#ea580c" : C.loads}
+                strokeWidth={isHL ? 2.5 : 1.5}
+              />
               {udlArrowFractions(UDL_ARROW_COUNT).map((t, i) => {
                 const { x: wx, y: wy } = pointAlongMember(ni, nj, t);
                 const sx = tr.toSX(wx),
