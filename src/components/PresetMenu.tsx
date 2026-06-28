@@ -18,6 +18,7 @@ const PRESET_KEYS: TranslationKey[] = [
   "preset.two_bay",
   "preset.portico_r3",
   "preset.reticulado_r2",
+  "preset.symmetric_truss",
   "preset.truss_wall",
   "preset.truss_cantilever",
   "preset.truss_tower",

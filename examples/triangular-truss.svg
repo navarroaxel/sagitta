@@ -125,6 +125,6 @@
   </g>
 
   <text x="300" y="350" text-anchor="middle" fill="#5f6368" font-size="12">
-    reticulado triangular 2&#215;1 m (mensula) &#183; carga (rojo), reacciones (azul)
+    triangular truss 2&#215;1 m (cantilever) &#183; load (red), reactions (blue)
   </text>
 </svg>

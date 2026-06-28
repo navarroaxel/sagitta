@@ -31,6 +31,33 @@ describe("Preset regression – r2 pure truss", () => {
   test("ΣM = 0", () => expect(Math.abs(eq.m)).toBeLessThan(1));
 });
 
+// ─── symmetric truss — pure truss, equilibrium, symmetric reactions ──────────
+describe("Preset regression – symmetric truss", () => {
+  const model = getPreset("Symmetric Truss");
+  const solved = solveModel(model);
+  const { result, stations, nodeIndex } = solved;
+  const eq = equilibrium(model, solved);
+
+  test("stable", () => expect(solved.result.stable).toBe(true));
+
+  test("M = 0 for every station (all members pinned-pinned)", () => {
+    for (const ms of stations) {
+      for (const s of ms) expect(Math.abs(s.M)).toBeLessThan(1e-3);
+    }
+  });
+
+  test("ΣFx = 0", () => expect(Math.abs(eq.fx)).toBeLessThan(EQ));
+  test("ΣFy = 0", () => expect(Math.abs(eq.fy)).toBeLessThan(EQ));
+  test("ΣM = 0", () => expect(Math.abs(eq.m)).toBeLessThan(1));
+
+  test("symmetric reactions V_A = V_B = 75 T", () => {
+    const ry_A = result.reactions[nodeIndex.get("A")!].ry;
+    const ry_B = result.reactions[nodeIndex.get("B")!].ry;
+    expect(Math.abs(ry_A - 75)).toBeLessThan(0.1);
+    expect(Math.abs(ry_B - 75)).toBeLessThan(0.1);
+  });
+});
+
 // ─── three-hinged frame — crown hinge M ≈ 0, symmetric reactions ────────────
 describe("Preset regression – three-hinged frame", () => {
   const model = getPreset("Three-Hinged Frame");

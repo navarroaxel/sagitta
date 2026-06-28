@@ -164,6 +164,6 @@
   </g>
 
   <text x="390" y="380" text-anchor="middle" fill="#5f6368" font-size="12">
-    reticulado 12×4 m, 3er panel en voladizo · cargas (rojo) en C, E, G · A: apoyo fijo · B: apoyo movil · reacciones (azul)
+    truss 12×4 m, 3rd panel cantilevered · loads (red) at C, E, G · A: pinned · B: roller · reactions (blue)
   </text>
 </svg>

@@ -1,0 +1,190 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 480" font-family="system-ui, sans-serif">
+  <!--
+    Reticulado simétrico (simetric-truss): 4 paneles, cordones paralelos.
+    Ancho 20 m (4 paneles de 5 m), altura 8.66 m. Diagonales = 10 m (panel 5 m x 8.66 m).
+    Mundo en metros, y hacia arriba. Transform: sx = 90 + x*30 ; sy = 350 - y*30
+    (la altura 8.66 m se dibuja como 260 px; techo en y=90, piso en y=350).
+    Nodos (piso A,C,D,E,B ; techo F,G,H,I,J):
+      A (0,0)    -> ( 90,350)      F (0,8.66)  -> ( 90, 90)
+      C (5,0)    -> (240,350)      G (5,8.66)  -> (240, 90)
+      D (10,0)   -> (390,350)      H (10,8.66) -> (390, 90)
+      E (15,0)   -> (540,350)      I (15,8.66) -> (540, 90)
+      B (20,0)   -> (690,350)      J (20,8.66) -> (690, 90)
+    Barras:
+      piso  (cordon inferior): b1, b2, b3, b4
+      techo (cordon superior): b14, b15, b16, b17
+      medio (montantes + diagonales): b5..b13
+      Diagonales: b6 (F-C) y b8 (G-D) bajan hacia la derecha;
+                  b10 (I-D) y b12 (J-E) bajan hacia la izquierda (convergen en D).
+    Apoyos:
+      A -> apoyo movil (rodillo, solo reaccion vertical)
+      B -> apoyo fijo (articulado)
+    Cargas (verticales hacia abajo, sobre el cordon superior):
+      F:20 T  G:30 T  H:50 T  I:30 T  J:20 T   (total 150 T)
+    Reacciones (por simetria):
+      V_A = 75 T hacia arriba ; V_B = 75 T hacia arriba ; H_B = 0
+    Determinacion: nodos=10, barras=17, reacciones=3 -> 2*10 = 17+3 = 20 (isostatico).
+  -->
+
+  <rect x="0" y="0" width="780" height="480" fill="#ffffff"/>
+
+  <!-- ===== Reticulado: bielas (doble articulacion) ===== -->
+  <g stroke="#1a1a1a" stroke-width="3" stroke-linecap="round">
+    <!-- cordon inferior (piso): b1, b2, b3, b4 -->
+    <line x1="90"  y1="350" x2="240" y2="350"/>
+    <line x1="240" y1="350" x2="390" y2="350"/>
+    <line x1="390" y1="350" x2="540" y2="350"/>
+    <line x1="540" y1="350" x2="690" y2="350"/>
+    <!-- cordon superior (techo): b14, b15, b16, b17 -->
+    <line x1="90"  y1="90"  x2="240" y2="90"/>
+    <line x1="240" y1="90"  x2="390" y2="90"/>
+    <line x1="390" y1="90"  x2="540" y2="90"/>
+    <line x1="540" y1="90"  x2="690" y2="90"/>
+    <!-- montantes: b5, b7, b9, b11, b13 -->
+    <line x1="90"  y1="90"  x2="90"  y2="350"/>
+    <line x1="240" y1="90"  x2="240" y2="350"/>
+    <line x1="390" y1="90"  x2="390" y2="350"/>
+    <line x1="540" y1="90"  x2="540" y2="350"/>
+    <line x1="690" y1="90"  x2="690" y2="350"/>
+    <!-- diagonales: b6, b8 bajan a la derecha; b10, b12 bajan a la izquierda (convergen en D) -->
+    <line x1="90"  y1="90"  x2="240" y2="350"/>
+    <line x1="240" y1="90"  x2="390" y2="350"/>
+    <line x1="540" y1="90"  x2="390" y2="350"/>
+    <line x1="690" y1="90"  x2="540" y2="350"/>
+  </g>
+
+  <!-- ===== Nudos ===== -->
+  <g fill="#000000">
+    <circle cx="90"  cy="350" r="4"/>
+    <circle cx="240" cy="350" r="4"/>
+    <circle cx="390" cy="350" r="4"/>
+    <circle cx="540" cy="350" r="4"/>
+    <circle cx="690" cy="350" r="4"/>
+    <circle cx="90"  cy="90"  r="4"/>
+    <circle cx="240" cy="90"  r="4"/>
+    <circle cx="390" cy="90"  r="4"/>
+    <circle cx="540" cy="90"  r="4"/>
+    <circle cx="690" cy="90"  r="4"/>
+  </g>
+
+  <!-- ===== Etiquetas de nudos ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <!-- piso -->
+    <text x="74"  y="344" text-anchor="end">A</text>
+    <text x="240" y="369" text-anchor="middle">C</text>
+    <text x="390" y="369" text-anchor="middle">D</text>
+    <text x="540" y="369" text-anchor="middle">E</text>
+    <text x="706" y="344" text-anchor="start">B</text>
+    <!-- techo -->
+    <text x="78"  y="84"  text-anchor="end">F</text>
+    <text x="228" y="84"  text-anchor="end">G</text>
+    <text x="378" y="84"  text-anchor="end">H</text>
+    <text x="528" y="84"  text-anchor="end">I</text>
+    <text x="678" y="84"  text-anchor="end">J</text>
+  </g>
+
+  <!-- ===== Nombres de barras (b con subindice) ===== -->
+  <g fill="#6a1b9a" font-size="13" font-style="italic" font-weight="600">
+    <!-- piso -->
+    <text x="165" y="372" text-anchor="middle">b<tspan font-size="9" dy="3">1</tspan></text>
+    <text x="315" y="372" text-anchor="middle">b<tspan font-size="9" dy="3">2</tspan></text>
+    <text x="465" y="372" text-anchor="middle">b<tspan font-size="9" dy="3">3</tspan></text>
+    <text x="615" y="372" text-anchor="middle">b<tspan font-size="9" dy="3">4</tspan></text>
+    <!-- montantes -->
+    <text x="78"  y="224" text-anchor="end">b<tspan font-size="9" dy="3">5</tspan></text>
+    <text x="252" y="224" text-anchor="start">b<tspan font-size="9" dy="3">7</tspan></text>
+    <text x="402" y="224" text-anchor="start">b<tspan font-size="9" dy="3">9</tspan></text>
+    <text x="552" y="224" text-anchor="start">b<tspan font-size="9" dy="3">11</tspan></text>
+    <text x="702" y="224" text-anchor="start">b<tspan font-size="9" dy="3">13</tspan></text>
+    <!-- diagonales -->
+    <text x="146" y="200" text-anchor="end">b<tspan font-size="9" dy="3">6</tspan></text>
+    <text x="311" y="200" text-anchor="start">b<tspan font-size="9" dy="3">8</tspan></text>
+    <text x="469" y="200" text-anchor="end">b<tspan font-size="9" dy="3">10</tspan></text>
+    <text x="634" y="200" text-anchor="start">b<tspan font-size="9" dy="3">12</tspan></text>
+    <!-- techo -->
+    <text x="165" y="80" text-anchor="middle">b<tspan font-size="9" dy="3">14</tspan></text>
+    <text x="315" y="80" text-anchor="middle">b<tspan font-size="9" dy="3">15</tspan></text>
+    <text x="465" y="80" text-anchor="middle">b<tspan font-size="9" dy="3">16</tspan></text>
+    <text x="615" y="80" text-anchor="middle">b<tspan font-size="9" dy="3">17</tspan></text>
+  </g>
+
+  <!-- ===== Apoyos ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <!-- A: apoyo movil (rodillo) -->
+    <polygon points="90,350 81,363 99,363"/>
+    <circle cx="85" cy="367" r="3"/>
+    <circle cx="95" cy="367" r="3"/>
+    <line x1="75"  y1="371" x2="105" y2="371"/>
+    <line x1="79"  y1="371" x2="73"  y2="378"/>
+    <line x1="87"  y1="371" x2="81"  y2="378"/>
+    <line x1="95"  y1="371" x2="89"  y2="378"/>
+    <line x1="103" y1="371" x2="97"  y2="378"/>
+    <!-- B: apoyo fijo (articulado) -->
+    <polygon points="690,350 681,363 699,363"/>
+    <line x1="675" y1="363" x2="705" y2="363"/>
+    <line x1="679" y1="363" x2="673" y2="370"/>
+    <line x1="687" y1="363" x2="681" y2="370"/>
+    <line x1="695" y1="363" x2="689" y2="370"/>
+    <line x1="703" y1="363" x2="697" y2="370"/>
+  </g>
+
+  <!-- ===== Cargas (sobre el cordon superior, hacia abajo: punta en el nudo) ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+    <!-- F: 20 T -->
+    <line x1="90" y1="46" x2="90" y2="85" stroke-width="2.5"/>
+    <polygon points="90,90 85,79 95,79" stroke="none"/>
+    <text x="90" y="38" text-anchor="middle" stroke="none">20 T</text>
+    <!-- G: 30 T -->
+    <line x1="240" y1="46" x2="240" y2="85" stroke-width="2.5"/>
+    <polygon points="240,90 235,79 245,79" stroke="none"/>
+    <text x="240" y="38" text-anchor="middle" stroke="none">30 T</text>
+    <!-- H: 50 T -->
+    <line x1="390" y1="46" x2="390" y2="85" stroke-width="2.5"/>
+    <polygon points="390,90 385,79 395,79" stroke="none"/>
+    <text x="390" y="38" text-anchor="middle" stroke="none">50 T</text>
+    <!-- I: 30 T -->
+    <line x1="540" y1="46" x2="540" y2="85" stroke-width="2.5"/>
+    <polygon points="540,90 535,79 545,79" stroke="none"/>
+    <text x="540" y="38" text-anchor="middle" stroke="none">30 T</text>
+    <!-- J: 20 T -->
+    <line x1="690" y1="46" x2="690" y2="85" stroke-width="2.5"/>
+    <polygon points="690,90 685,79 695,79" stroke="none"/>
+    <text x="690" y="38" text-anchor="middle" stroke="none">20 T</text>
+  </g>
+
+  <!-- ===== Reacciones de vinculo (punta en el nudo, fuste hacia abajo = fuerza hacia arriba) ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+    <!-- A: V_A = 75 T hacia arriba -->
+    <line x1="90" y1="389" x2="90" y2="361" stroke-width="2.5"/>
+    <polygon points="90,350 84,362 96,362" stroke="none"/>
+    <text x="102" y="338" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan> = 75 T</text>
+    <!-- B: V_B = 75 T hacia arriba -->
+    <line x1="690" y1="389" x2="690" y2="361" stroke-width="2.5"/>
+    <polygon points="690,350 684,362 696,362" stroke="none"/>
+    <text x="678" y="338" text-anchor="end" stroke="none">V<tspan font-size="10" dy="4">B</tspan> = 75 T</text>
+  </g>
+
+  <!-- ===== Cotas / dimensiones ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <!-- ancho: 5.00 | 5.00 | 5.00 | 5.00 -->
+    <line x1="90"  y1="432" x2="690" y2="432"/>
+    <line x1="90"  y1="427" x2="90"  y2="437"/>
+    <line x1="240" y1="427" x2="240" y2="437"/>
+    <line x1="390" y1="427" x2="390" y2="437"/>
+    <line x1="540" y1="427" x2="540" y2="437"/>
+    <line x1="690" y1="427" x2="690" y2="437"/>
+    <text x="165" y="424" text-anchor="middle">5.00</text>
+    <text x="315" y="424" text-anchor="middle">5.00</text>
+    <text x="465" y="424" text-anchor="middle">5.00</text>
+    <text x="615" y="424" text-anchor="middle">5.00</text>
+    <!-- altura: 8.66 m -->
+    <line x1="730" y1="90"  x2="730" y2="350"/>
+    <line x1="725" y1="90"  x2="735" y2="90"/>
+    <line x1="725" y1="350" x2="735" y2="350"/>
+    <text x="743" y="220" text-anchor="middle" transform="rotate(-90 743 220)">8.66 m</text>
+  </g>
+
+  <text x="390" y="462" text-anchor="middle" fill="#5f6368" font-size="13">
+    symmetric truss 20 m &#215; 8.66 m (4 panels); loads (red), supports A (roller) and B (pinned), reactions (blue); H<tspan font-size="10" dy="4">B</tspan><tspan dy="-4"> = 0</tspan>
+  </text>
+</svg>
