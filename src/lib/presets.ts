@@ -223,7 +223,7 @@ export const PRESETS: Preset[] = [
   { name: "Portal Frame (fixed)", model: portalFrame },
   { name: "Three-Hinged Frame", model: threeHinged },
   { name: "Two-Bay Portal", model: twoBayPortal },
-  { name: "Portico + Reticulado (r1)", model: r1 },
-  { name: "Reticulado (r2)", model: r2 },
-  { name: "Portal Frame w/ Hinge (r3)", model: r3 },
+  { name: "Portico + Reticulado", model: r1 },
+  { name: "Reticulado", model: r2 },
+  { name: "Portal Frame w/ Hinge", model: r3 },
 ];

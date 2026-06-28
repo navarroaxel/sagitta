@@ -16,7 +16,7 @@ Interactive 2D plane frame simulator that computes and renders the three charact
 - Reactions, load arrows, support symbols, and internal hinge markers
 - **i18n** (English / Spanish) and **dark mode**
 - Export current view as SVG or PNG
-- Seven built-in example presets, including a frame+truss (`r1`) and a parallel-chord truss (`r2`)
+- Eight built-in example presets, including a Frame + Truss and a parallel-chord Truss
 - A **/learn** page walking through the Tangent Method (Mohr's theorems) step by step
 
 ## Tech stack
@@ -37,7 +37,7 @@ The entire interactive surface is a client component (`'use client'`). No API ro
 ```bash
 npm install        # also installs jsdom + testing-library used by the component tests
 npm run dev        # http://localhost:3000
-npm test           # full Jest suite (~83 checks across 2 projects)
+npm test           # full Jest suite (~107 checks across 2 projects)
 npm run build      # production build
 npm run lint       # ESLint
 ```
@@ -79,7 +79,7 @@ src/
     results.ts          # peak forces, equilibrium check, value cleaning
     loadProjection.ts   # load placement / UDL arrow helpers
     presets.ts          # seven example structures
-    __tests__/          # solver (33), diagram, geometry, loadProjection, results
+    __tests__/          # solver (33), diagram, geometry, loadProjection, results, presets
   components/__tests__/  # FrameCanvas, ValLabel, ReactionsLayer (jsdom)
 ```
 
@@ -114,5 +114,6 @@ Exposed as `E`, `A`, `I` on the model with engineering defaults (`E = 2.1×10⁸
 3. Portal frame (fixed bases) — indeterminate, lateral load + UDL
 4. Three-hinged frame — determinate arch
 5. Two-bay portal — compound indeterminate frame (the solver acceptance test)
-6. Frame + truss (`r1`) — solid-web frame joined to a pin-jointed truss, pinned supports
-7. Truss (`r2`) — 12 m × 4 m parallel-chord truss (3 panels), roller + pinned supports
+6. Frame + Truss — solid-web frame joined to a pin-jointed truss, pinned supports
+7. Truss — 12 m × 4 m parallel-chord truss (3 panels), roller + pinned supports
+8. Frame w/ Hinge — two-pinned portal with an internal hinge in the roof beam
