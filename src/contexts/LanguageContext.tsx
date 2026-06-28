@@ -297,7 +297,7 @@ const ES: Record<TranslationKey, string> = {
   "settings.section.colors": "Colores",
   "settings.section.diagrams": "Diagramas",
   "settings.section.interface": "Interfaz",
-  "settings.reset": "Restaurar predeterminados",
+  "settings.reset": "Restaurar valores",
   "settings.high_contrast": "Alto contraste",
   "settings.language": "Idioma",
   "settings.theme": "Tema",
