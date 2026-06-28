@@ -48,7 +48,7 @@
   </g>
 
   <!-- ===== Reticulado: bielas (doble articulacion) ===== -->
-  <g stroke="#0b8a8a" stroke-width="3" stroke-linecap="round">
+  <g stroke="#1a1a1a" stroke-width="3" stroke-linecap="round">
     <!-- cordon inferior (piso): b1, b2, b3 -->
     <line x1="90"  y1="290" x2="290" y2="290"/>
     <line x1="290" y1="290" x2="490" y2="290"/>
@@ -69,7 +69,7 @@
   </g>
 
   <!-- ===== Nudos ===== -->
-  <g fill="#0b8a8a">
+  <g fill="#000000">
     <circle cx="90"  cy="290" r="4"/>
     <circle cx="290" cy="290" r="4"/>
     <circle cx="490" cy="290" r="4"/>
@@ -81,7 +81,7 @@
   </g>
 
   <!-- ===== Etiquetas de nudos ===== -->
-  <g font-size="13" font-weight="600" fill="#1a73e8">
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
     <text x="78"  y="296" text-anchor="end">A</text>
     <text x="276" y="309" text-anchor="end">C</text>
     <text x="466" y="309" text-anchor="end">B</text>
@@ -93,7 +93,7 @@
   </g>
 
   <!-- ===== Nombres de barras (b con subindice) ===== -->
-  <g fill="#c0392b" font-size="13" font-style="italic" font-weight="600">
+  <g fill="#6a1b9a" font-size="13" font-style="italic" font-weight="600">
     <!-- piso -->
     <text x="190" y="308" text-anchor="middle">b<tspan font-size="9" dy="3">1</tspan></text>
     <text x="390" y="308" text-anchor="middle">b<tspan font-size="9" dy="3">2</tspan></text>
@@ -133,7 +133,7 @@
   </g>
 
   <!-- ===== Cargas ===== -->
-  <g stroke="#6a1b9a" fill="#6a1b9a" font-size="13" font-weight="700">
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
     <!-- C: 10 T hacia abajo -->
     <line x1="290" y1="290" x2="290" y2="335" stroke-width="2.5"/>
     <polygon points="290,340 285,329 295,329" stroke="none"/>
@@ -152,23 +152,23 @@
     <text x="712" y="78" text-anchor="middle" stroke="none">10 T</text>
   </g>
 
-  <!-- ===== Reacciones de vinculo ===== -->
-  <g stroke="#2e7d32" fill="#2e7d32" font-size="13" font-weight="700">
-    <!-- A: V_A = 10 T hacia abajo -->
-    <line x1="90" y1="326" x2="90" y2="356" stroke-width="2.5"/>
-    <polygon points="90,361 85,350 95,350" stroke="none"/>
-    <text x="102" y="352" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan> = 10 T</text>
-    <!-- B: V_B = 50 T hacia arriba -->
-    <line x1="490" y1="361" x2="490" y2="326" stroke-width="2.5"/>
-    <polygon points="490,321 485,332 495,332" stroke="none"/>
-    <text x="498" y="358" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">B</tspan> = 50 T</text>
-    <!-- B: H_B = 10 T hacia la izquierda -->
-    <line x1="548" y1="338" x2="510" y2="338" stroke-width="2.5"/>
-    <polygon points="505,338 516,333 516,343" stroke="none"/>
-    <text x="552" y="342" text-anchor="start" stroke="none">H<tspan font-size="10" dy="4">B</tspan> = 10 T</text>
+  <!-- ===== Reacciones de vinculo (aplicadas sobre los nudos: punta en el nudo) ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+    <!-- A: V_A = 10 T hacia abajo (punta en A, fuste hacia arriba) -->
+    <line x1="90" y1="240" x2="90" y2="279" stroke-width="2.5"/>
+    <polygon points="90,290 84,278 96,278" stroke="none"/>
+    <text x="82" y="262" text-anchor="end" stroke="none">V<tspan font-size="10" dy="4">A</tspan> = 10 T</text>
+    <!-- B: V_B = 50 T hacia arriba (punta en B, fuste hacia abajo) -->
+    <line x1="490" y1="340" x2="490" y2="301" stroke-width="2.5"/>
+    <polygon points="490,290 484,302 496,302" stroke="none"/>
+    <text x="500" y="330" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">B</tspan> = 50 T</text>
+    <!-- B: H_B = 10 T hacia la izquierda (punta en B, fuste hacia la derecha) -->
+    <line x1="538" y1="290" x2="501" y2="290" stroke-width="2.5"/>
+    <polygon points="490,290 502,284 502,296" stroke="none"/>
+    <text x="512" y="282" text-anchor="start" stroke="none">H<tspan font-size="10" dy="4">B</tspan> = 10 T</text>
   </g>
 
   <text x="390" y="405" text-anchor="middle" fill="#5f6368" font-size="13">
-    r2 — reticulado 12 m x 4 m (3 paneles); cargas (violeta), apoyos A (movil) y B (fijo), reacciones (verde)
+    reticulado 12 m x 4 m (3 paneles); cargas (rojo), apoyos A (movil) y B (fijo), reacciones (azul)
   </text>
 </svg>

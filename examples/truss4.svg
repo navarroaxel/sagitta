@@ -1,0 +1,180 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 640" font-family="system-ui, sans-serif">
+  <!--
+    Estructura r6: reticulado de 2 paneles apilados (uno arriba del otro).
+    Cada panel: 5 m de ancho x 6 m de alto -> 12 m de alto total.
+    Diagonales que BAJAN hacia la IZQUIERDA (extremo bajo a la izquierda).
+    Mundo en metros, y hacia arriba. Transform: sx = 180 + x*40 ; sy = 540 - y*40
+    Nodos (6):
+      E (0,12) -> (180, 60)      F (5,12) -> (380, 60)   [arriba]
+      C (0, 6) -> (180,300)      D (5, 6) -> (380,300)   [medio]
+      A (0, 0) -> (180,540)      B (5, 0) -> (380,540)   [abajo]
+    Barras (9):
+      b1 -> piso (cordon inferior):  A-B
+      b2 -> columna izq. inferior:   A-C
+      b3 -> diagonal panel inferior: A-D  (baja hacia la izquierda)
+      b4 -> columna der. inferior:   B-D
+      b5 -> cordon intermedio:       C-D
+      b6 -> columna izq. superior:   C-E
+      b7 -> diagonal panel superior: C-F  (baja hacia la izquierda)
+      b8 -> columna der. superior:   D-F
+      b9 -> cordon superior:         E-F
+    Apoyos (al suelo):
+      A (0,0) -> apoyo fijo (articulado): reacciones H y V
+      B (5,0) -> apoyo movil (rodillo):   reaccion VERTICAL
+    Cargas:
+      C (0, 6) : 2 T horizontal hacia la derecha
+      E (0,12) : 3 T horizontal hacia la derecha + 4 T vertical hacia abajo
+      F (5,12) : 5 T vertical hacia abajo
+    Reacciones de vinculo:
+      A : H_A = 5 T hacia la izquierda ; V_A = 5,6 T hacia abajo
+      B : V_B = 14,6 T hacia arriba
+    Verif. de equilibrio (OK):
+      SFx  = 2 + 3 - 5             = 0
+      SFy  = 14,6 - (5,6 + 5 + 4)  = 0
+      SM_A = -(2*6) - (3*12) - (5*5) + (14,6*5) = 0
+             (la carga de 4 T en E pasa por la vertical de A: momento nulo)
+  -->
+
+  <rect x="0" y="0" width="600" height="640" fill="#ffffff"/>
+
+  <!-- ===== Cotas / dimensiones ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <!-- ancho: 5.00 m (cordon superior) -->
+    <line x1="180" y1="22" x2="380" y2="22"/>
+    <line x1="180" y1="17" x2="180" y2="27"/>
+    <line x1="380" y1="17" x2="380" y2="27"/>
+    <text x="280" y="14" text-anchor="middle">5.00 m</text>
+
+    <!-- altura: 6.00 m por panel (lado derecho) -->
+    <line x1="440" y1="540" x2="440" y2="300"/>
+    <line x1="435" y1="540" x2="445" y2="540"/>
+    <line x1="435" y1="300" x2="445" y2="300"/>
+    <text x="453" y="420" text-anchor="middle" transform="rotate(-90 453 420)">6.00 m</text>
+
+    <line x1="440" y1="300" x2="440" y2="60"/>
+    <line x1="435" y1="300" x2="445" y2="300"/>
+    <line x1="435" y1="60"  x2="445" y2="60"/>
+    <text x="453" y="180" text-anchor="middle" transform="rotate(-90 453 180)">6.00 m</text>
+  </g>
+
+  <!-- ===== Reticulado: bielas (doble articulacion) ===== -->
+  <g stroke="#1a1a1a" stroke-width="3" stroke-linecap="round">
+    <!-- b1: piso (cordon inferior) A-B -->
+    <line x1="180" y1="540" x2="380" y2="540"/>
+    <!-- b2: columna izq. inferior A-C -->
+    <line x1="180" y1="540" x2="180" y2="300"/>
+    <!-- b3: diagonal panel inferior A-D (baja a la izquierda) -->
+    <line x1="180" y1="540" x2="380" y2="300"/>
+    <!-- b4: columna der. inferior B-D -->
+    <line x1="380" y1="540" x2="380" y2="300"/>
+    <!-- b5: cordon intermedio C-D -->
+    <line x1="180" y1="300" x2="380" y2="300"/>
+    <!-- b6: columna izq. superior C-E -->
+    <line x1="180" y1="300" x2="180" y2="60"/>
+    <!-- b7: diagonal panel superior C-F (baja a la izquierda) -->
+    <line x1="180" y1="300" x2="380" y2="60"/>
+    <!-- b8: columna der. superior D-F -->
+    <line x1="380" y1="300" x2="380" y2="60"/>
+    <!-- b9: cordon superior E-F -->
+    <line x1="180" y1="60"  x2="380" y2="60"/>
+  </g>
+
+  <!-- ===== Nudos ===== -->
+  <g fill="#000000">
+    <circle cx="180" cy="540" r="4"/>
+    <circle cx="380" cy="540" r="4"/>
+    <circle cx="180" cy="300" r="4"/>
+    <circle cx="380" cy="300" r="4"/>
+    <circle cx="180" cy="60"  r="4"/>
+    <circle cx="380" cy="60"  r="4"/>
+  </g>
+
+  <!-- ===== Etiquetas de nudos ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <text x="168" y="538" text-anchor="end">A</text>
+    <text x="392" y="538" text-anchor="start">B</text>
+    <text x="170" y="318" text-anchor="end">C</text>
+    <text x="392" y="296" text-anchor="start">D</text>
+    <text x="170" y="50"  text-anchor="end">E</text>
+    <text x="392" y="56"  text-anchor="start">F</text>
+  </g>
+
+  <!-- ===== Nombres de barras (b con subindice) ===== -->
+  <g fill="#6a1b9a" font-size="13" font-style="italic" font-weight="600">
+    <!-- panel inferior -->
+    <text x="280" y="558" text-anchor="middle">b<tspan font-size="9" dy="3">1</tspan></text>
+    <text x="170" y="424" text-anchor="end">b<tspan font-size="9" dy="3">2</tspan></text>
+    <text x="296" y="425" text-anchor="start">b<tspan font-size="9" dy="3">3</tspan></text>
+    <text x="390" y="424" text-anchor="start">b<tspan font-size="9" dy="3">4</tspan></text>
+    <text x="280" y="294" text-anchor="middle">b<tspan font-size="9" dy="3">5</tspan></text>
+    <!-- panel superior -->
+    <text x="170" y="184" text-anchor="end">b<tspan font-size="9" dy="3">6</tspan></text>
+    <text x="296" y="185" text-anchor="start">b<tspan font-size="9" dy="3">7</tspan></text>
+    <text x="390" y="184" text-anchor="start">b<tspan font-size="9" dy="3">8</tspan></text>
+    <text x="280" y="54"  text-anchor="middle">b<tspan font-size="9" dy="3">9</tspan></text>
+  </g>
+
+  <!-- ===== Apoyos (al suelo) ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <!-- A: apoyo fijo (articulado) sobre el suelo -->
+    <polygon points="180,540 166,562 194,562"/>
+    <line x1="156" y1="562" x2="204" y2="562"/>
+    <line x1="163" y1="562" x2="156" y2="569"/>
+    <line x1="171" y1="562" x2="164" y2="569"/>
+    <line x1="179" y1="562" x2="172" y2="569"/>
+    <line x1="187" y1="562" x2="180" y2="569"/>
+    <line x1="195" y1="562" x2="188" y2="569"/>
+    <line x1="203" y1="562" x2="196" y2="569"/>
+    <!-- B: apoyo movil (rodillo) sobre el suelo -> reaccion vertical -->
+    <polygon points="380,540 366,560 394,560"/>
+    <circle cx="373" cy="564" r="3"/>
+    <circle cx="387" cy="564" r="3"/>
+    <line x1="356" y1="568" x2="404" y2="568"/>
+    <line x1="363" y1="568" x2="356" y2="575"/>
+    <line x1="371" y1="568" x2="364" y2="575"/>
+    <line x1="379" y1="568" x2="372" y2="575"/>
+    <line x1="387" y1="568" x2="380" y2="575"/>
+    <line x1="395" y1="568" x2="388" y2="575"/>
+    <line x1="403" y1="568" x2="396" y2="575"/>
+  </g>
+
+  <!-- ===== Cargas ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+    <!-- C: 2 T horizontal hacia la derecha (punta en C, fuste a la izq.) -->
+    <line x1="135" y1="300" x2="167" y2="300" stroke-width="2.5"/>
+    <polygon points="180,300 168,294 168,306" stroke="none"/>
+    <text x="130" y="304" text-anchor="end" stroke="none">2 T</text>
+    <!-- E: 3 T horizontal hacia la derecha (punta en E, fuste a la izq.) -->
+    <line x1="135" y1="60" x2="167" y2="60" stroke-width="2.5"/>
+    <polygon points="180,60 168,54 168,66" stroke="none"/>
+    <text x="130" y="64" text-anchor="end" stroke="none">3 T</text>
+    <!-- E: 4 T vertical hacia abajo (punta en E, fuste arriba) -->
+    <line x1="180" y1="34" x2="180" y2="49" stroke-width="2.5"/>
+    <polygon points="180,60 174,49 186,49" stroke="none"/>
+    <text x="190" y="44" text-anchor="start" stroke="none">4 T</text>
+    <!-- F: 5 T vertical hacia abajo (punta en F, fuste arriba) -->
+    <line x1="380" y1="34" x2="380" y2="49" stroke-width="2.5"/>
+    <polygon points="380,60 374,49 386,49" stroke="none"/>
+    <text x="388" y="44" text-anchor="start" stroke="none">5 T</text>
+  </g>
+
+  <!-- ===== Reacciones de vinculo (aplicadas en los nudos: punta en el nudo) ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+    <!-- A: H_A = 5 T hacia la izquierda (punta en A, fuste a la derecha) -->
+    <line x1="181" y1="540" x2="223" y2="540" stroke-width="2.5"/>
+    <polygon points="180,540 192,534 192,546" stroke="none"/>
+    <text x="206" y="532" text-anchor="start" stroke="none">H<tspan font-size="10" dy="4">A</tspan> = 5 T</text>
+    <!-- A: V_A = 5,6 T hacia abajo (punta en A, fuste hacia arriba) -->
+    <line x1="180" y1="495" x2="180" y2="528" stroke-width="2.5"/>
+    <polygon points="180,540 174,528 186,528" stroke="none"/>
+    <text x="172" y="512" text-anchor="end" stroke="none">V<tspan font-size="10" dy="4">A</tspan> = 5,6 T</text>
+    <!-- B: V_B = 14,6 T hacia arriba (punta en B, fuste hacia abajo) -->
+    <line x1="380" y1="552" x2="380" y2="588" stroke-width="2.5"/>
+    <polygon points="380,540 374,552 386,552" stroke="none"/>
+    <text x="374" y="533" text-anchor="end" stroke="none">V<tspan font-size="10" dy="4">B</tspan> = 14,6 T</text>
+  </g>
+
+  <text x="300" y="615" text-anchor="middle" fill="#5f6368" font-size="12">
+    reticulado 2 paneles 5&#215;6 m (12 m alto) · cargas (rojo), reacciones (azul)
+  </text>
+</svg>

@@ -102,9 +102,9 @@ const twoBayPortal: FrameModel = {
   unit: "kN",
 };
 
-// 6. r1 — portico de alma llena ("T") + reticulado, apoyos articulados en A y B.
+// 6. frameTruss — portico de alma llena ("T") + reticulado, apoyos articulados en A y B.
 //    Nodos del reticulado: A1-2, C, D, E, F, G. Barras b1..b11 biarticuladas.
-const r1: FrameModel = {
+const frameTruss: FrameModel = {
   nodes: [
     { id: "A", x: 0, y: 0, support: "pinned" },
     { id: "M", x: 0, y: 4, support: "free" }, // punto de aplicacion del momento (0,4)
@@ -151,10 +151,10 @@ const r1: FrameModel = {
   unit: "kN",
 };
 
-// 7. r2 — reticulado de cordones paralelos (12 m x 4 m, 3 paneles).
+// 7. simpleTruss — reticulado de cordones paralelos (12 m x 4 m, 3 paneles).
 //    b5/b7 bajan a la izquierda, b9 (ultimo panel) a la derecha. Barras b1..b13 biarticuladas.
 //    Apoyos: A movil (roller-v), B fijo (pinned). Cargas en T.
-const r2: FrameModel = {
+const simpleTruss: FrameModel = {
   nodes: [
     { id: "A", x: 0, y: 0, support: "roller-v" },
     { id: "C", x: 4, y: 0, support: "free" },
@@ -191,7 +191,7 @@ const r2: FrameModel = {
 };
 
 // 8. Portal frame, solid-web, with internal hinge A1-2 (matches examples/portal-frame.svg)
-const r3: FrameModel = {
+const portalHinged: FrameModel = {
   nodes: [
     { id: "A", x: 0, y: 0, support: "pinned" },
     { id: "C", x: 2, y: 3, support: "free" }, // rigid knee: diagonal meets roof
@@ -217,13 +217,144 @@ const r3: FrameModel = {
   unit: "kN",
 };
 
+// 9. wallTruss — reticulado de cordones paralelos 12x4 m (3 paneles), diagonales a la
+//    derecha, en voladizo desde el muro izquierdo. (examples/truss2.svg)
+const wallTruss: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 0, support: "pinned" },   // apoyo fijo a la pared (H+V)
+    { id: "C", x: 4, y: 0, support: "free" },
+    { id: "D", x: 8, y: 0, support: "free" },
+    { id: "E", x: 12, y: 0, support: "free" },
+    { id: "B", x: 0, y: 4, support: "roller-h" }, // movil vertical -> reaccion horizontal
+    { id: "F", x: 4, y: 4, support: "free" },
+    { id: "G", x: 8, y: 4, support: "free" },
+    { id: "H", x: 12, y: 4, support: "free" },
+  ],
+  members: [
+    { id: "b1", n1: "A", n2: "C", relI: true, relJ: true },  // cordon inferior
+    { id: "b2", n1: "C", n2: "D", relI: true, relJ: true },
+    { id: "b3", n1: "D", n2: "E", relI: true, relJ: true },
+    { id: "b4", n1: "B", n2: "F", relI: true, relJ: true },  // cordon superior
+    { id: "b5", n1: "F", n2: "G", relI: true, relJ: true },
+    { id: "b6", n1: "G", n2: "H", relI: true, relJ: true },
+    { id: "b7", n1: "A", n2: "B", relI: true, relJ: true },  // montantes
+    { id: "b8", n1: "C", n2: "F", relI: true, relJ: true },
+    { id: "b9", n1: "D", n2: "G", relI: true, relJ: true },
+    { id: "b10", n1: "E", n2: "H", relI: true, relJ: true },
+    { id: "b11", n1: "B", n2: "C", relI: true, relJ: true }, // diagonales (bajan a la derecha)
+    { id: "b12", n1: "F", n2: "D", relI: true, relJ: true },
+    { id: "b13", n1: "G", n2: "E", relI: true, relJ: true },
+  ],
+  loads: [
+    { id: "p1", type: "nodal", node: "F", fx: 0, fy: -40, m: 0 },
+    { id: "p2", type: "nodal", node: "G", fx: 0, fy: -60, m: 0 },
+    { id: "p3", type: "nodal", node: "H", fx: 0, fy: -10, m: 0 },
+    { id: "p4", type: "nodal", node: "E", fx: 14.142, fy: -14.142, m: 0 }, // 20 T a 45° abajo-der
+  ],
+  material: defaultMat,
+  unit: "T",
+};
+// Reacciones esperadas: A: V=124.14 arriba, H=218.29 derecha ; B: H=232.43 izquierda
+
+// 10. cantileverTruss — reticulado 12x4 m con 3er panel en voladizo (sin piso ni montante
+//     derecho). Diagonales suben a la derecha. (examples/truss3.svg)
+const cantileverTruss: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 4, support: "pinned" },    // apoyo fijo (H+V)
+    { id: "B", x: 0, y: 0, support: "roller-h" },  // movil -> reaccion horizontal
+    { id: "C", x: 4, y: 4, support: "free" },
+    { id: "D", x: 4, y: 0, support: "free" },
+    { id: "E", x: 8, y: 4, support: "free" },
+    { id: "F", x: 8, y: 0, support: "free" },
+    { id: "G", x: 12, y: 4, support: "free" },     // punta del voladizo
+  ],
+  members: [
+    { id: "b1", n1: "B", n2: "D", relI: true, relJ: true },  // piso (solo 2 paneles)
+    { id: "b2", n1: "D", n2: "F", relI: true, relJ: true },
+    { id: "b3", n1: "A", n2: "B", relI: true, relJ: true },  // montantes
+    { id: "b4", n1: "B", n2: "C", relI: true, relJ: true },  // diagonales (suben a la derecha)
+    { id: "b5", n1: "C", n2: "D", relI: true, relJ: true },
+    { id: "b6", n1: "D", n2: "E", relI: true, relJ: true },
+    { id: "b7", n1: "E", n2: "F", relI: true, relJ: true },
+    { id: "b8", n1: "F", n2: "G", relI: true, relJ: true },
+    { id: "b9", n1: "A", n2: "C", relI: true, relJ: true },  // techo (3 paneles)
+    { id: "b10", n1: "C", n2: "E", relI: true, relJ: true },
+    { id: "b11", n1: "E", n2: "G", relI: true, relJ: true },
+  ],
+  loads: [
+    { id: "p1", type: "nodal", node: "C", fx: 0, fy: -1, m: 0 },
+    { id: "p2", type: "nodal", node: "E", fx: 0, fy: -3, m: 0 },
+    { id: "p3", type: "nodal", node: "G", fx: 0, fy: -5, m: 0 },
+  ],
+  material: defaultMat,
+  unit: "T",
+};
+// Reacciones esperadas: A: H=22 izquierda, V=9 arriba ; B: H=22 derecha
+
+// 11. towerTruss — reticulado de 2 paneles apilados 5x6 m (12 m alto), diagonales que
+//     bajan a la izquierda. (examples/truss4.svg)
+const towerTruss: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 0, support: "pinned" },    // apoyo fijo (H+V)
+    { id: "B", x: 5, y: 0, support: "roller-v" },  // movil -> reaccion vertical
+    { id: "C", x: 0, y: 6, support: "free" },
+    { id: "D", x: 5, y: 6, support: "free" },
+    { id: "E", x: 0, y: 12, support: "free" },
+    { id: "F", x: 5, y: 12, support: "free" },
+  ],
+  members: [
+    { id: "b1", n1: "A", n2: "B", relI: true, relJ: true }, // piso
+    { id: "b2", n1: "A", n2: "C", relI: true, relJ: true }, // columna izq inf
+    { id: "b3", n1: "A", n2: "D", relI: true, relJ: true }, // diagonal inf (baja a la izq)
+    { id: "b4", n1: "B", n2: "D", relI: true, relJ: true }, // columna der inf
+    { id: "b5", n1: "C", n2: "D", relI: true, relJ: true }, // cordon intermedio
+    { id: "b6", n1: "C", n2: "E", relI: true, relJ: true }, // columna izq sup
+    { id: "b7", n1: "C", n2: "F", relI: true, relJ: true }, // diagonal sup (baja a la izq)
+    { id: "b8", n1: "D", n2: "F", relI: true, relJ: true }, // columna der sup
+    { id: "b9", n1: "E", n2: "F", relI: true, relJ: true }, // cordon superior
+  ],
+  loads: [
+    { id: "p1", type: "nodal", node: "C", fx: 2, fy: 0, m: 0 },  // 2 T derecha
+    { id: "p2", type: "nodal", node: "E", fx: 3, fy: -4, m: 0 }, // 3 T derecha + 4 T abajo
+    { id: "p3", type: "nodal", node: "F", fx: 0, fy: -5, m: 0 }, // 5 T abajo
+  ],
+  material: defaultMat,
+  unit: "T",
+};
+// Reacciones esperadas: A: H=5 izquierda, V=5.6 abajo ; B: V=14.6 arriba
+
+// 12. triangularTruss — reticulado triangular (mensula contra muro izquierdo), 1 triangulo
+//     2x1 m. Diagonal b3 baja hacia la izquierda. (examples/truss5.svg)
+const triangularTruss: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 0, support: "roller-h" }, // movil sobre muro -> reaccion horizontal
+    { id: "B", x: 0, y: 1, support: "pinned" },   // apoyo fijo (H+V)
+    { id: "C", x: 2, y: 1, support: "free" },     // extremo libre
+  ],
+  members: [
+    { id: "b1", n1: "A", n2: "B", relI: true, relJ: true }, // columna (vertical)
+    { id: "b2", n1: "B", n2: "C", relI: true, relJ: true }, // techo (horizontal)
+    { id: "b3", n1: "A", n2: "C", relI: true, relJ: true }, // diagonal (baja a la izquierda)
+  ],
+  loads: [
+    { id: "p1", type: "nodal", node: "C", fx: 0, fy: -500, m: 0 }, // 500 kg abajo
+  ],
+  material: defaultMat,
+  unit: "kg",
+};
+// Reacciones esperadas: A: H=1000 derecha ; B: H=1000 izquierda, V=500 arriba
+
 export const PRESETS: Preset[] = [
   { name: "Simply Supported Beam", model: simplySupported },
   { name: "Cantilever", model: cantilever },
   { name: "Portal Frame (fixed)", model: portalFrame },
   { name: "Three-Hinged Frame", model: threeHinged },
   { name: "Two-Bay Portal", model: twoBayPortal },
-  { name: "Portico + Reticulado", model: r1 },
-  { name: "Reticulado", model: r2 },
-  { name: "Portal Frame w/ Hinge", model: r3 },
+  { name: "Portal Frame w/ Hinge", model: portalHinged },
+  { name: "Simple Truss", model: simpleTruss },
+  { name: "Wall Truss", model: wallTruss },
+  { name: "Cantilever Truss", model: cantileverTruss },
+  { name: "Tower Truss", model: towerTruss },
+  { name: "Triangular Truss", model: triangularTruss },
+  { name: "Portico + Reticulado", model: frameTruss },
 ];

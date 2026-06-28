@@ -16,9 +16,13 @@ const PRESET_KEYS: TranslationKey[] = [
   "preset.portal_fixed",
   "preset.three_hinged",
   "preset.two_bay",
-  "preset.portico_reticulado",
-  "preset.reticulado_r2",
   "preset.portico_r3",
+  "preset.reticulado_r2",
+  "preset.truss_wall",
+  "preset.truss_cantilever",
+  "preset.truss_tower",
+  "preset.truss_triangular",
+  "preset.portico_reticulado",
 ];
 
 export default function PresetMenu({ onLoad }: Props) {

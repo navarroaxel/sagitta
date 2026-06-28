@@ -14,7 +14,7 @@ const M0 = 0.5; // hinge-moment tolerance (kN·m)
 
 // ─── r2: pure truss — every member pinned-pinned → M = 0 everywhere ─────────
 describe("Preset regression – r2 pure truss", () => {
-  const model = getPreset("Reticulado");
+  const model = getPreset("Simple Truss");
   const solved = solveModel(model);
   const eq = equilibrium(model, solved);
 
@@ -116,4 +116,80 @@ describe("Preset regression – r1 frame + truss", () => {
     const st = stations[memberIndex.get("beam")!];
     expect(Math.abs(st[st.length - 1].M)).toBeLessThan(M0);
   });
+});
+
+// ─── r4: wall-mounted parallel-chord truss (pure truss) ─────────────────────
+describe("Preset regression – r4 wall truss", () => {
+  const model = getPreset("Wall Truss");
+  const solved = solveModel(model);
+  const eq = equilibrium(model, solved);
+
+  test("stable", () => expect(solved.result.stable).toBe(true));
+
+  test("M = 0 for every station (all members pinned-pinned)", () => {
+    for (const ms of solved.stations) {
+      for (const s of ms) expect(Math.abs(s.M)).toBeLessThan(1e-3);
+    }
+  });
+
+  test("ΣFx = 0", () => expect(Math.abs(eq.fx)).toBeLessThan(EQ));
+  test("ΣFy = 0", () => expect(Math.abs(eq.fy)).toBeLessThan(EQ));
+  test("ΣM = 0", () => expect(Math.abs(eq.m)).toBeLessThan(1));
+});
+
+// ─── r5: parallel-chord truss with cantilever overhang (pure truss) ─────────
+describe("Preset regression – r5 cantilever truss", () => {
+  const model = getPreset("Cantilever Truss");
+  const solved = solveModel(model);
+  const eq = equilibrium(model, solved);
+
+  test("stable", () => expect(solved.result.stable).toBe(true));
+
+  test("M = 0 for every station (all members pinned-pinned)", () => {
+    for (const ms of solved.stations) {
+      for (const s of ms) expect(Math.abs(s.M)).toBeLessThan(1e-3);
+    }
+  });
+
+  test("ΣFx = 0", () => expect(Math.abs(eq.fx)).toBeLessThan(EQ));
+  test("ΣFy = 0", () => expect(Math.abs(eq.fy)).toBeLessThan(EQ));
+  test("ΣM = 0", () => expect(Math.abs(eq.m)).toBeLessThan(1));
+});
+
+// ─── r6: two-panel stacked tower truss (pure truss) ─────────────────────────
+describe("Preset regression – r6 tower truss", () => {
+  const model = getPreset("Tower Truss");
+  const solved = solveModel(model);
+  const eq = equilibrium(model, solved);
+
+  test("stable", () => expect(solved.result.stable).toBe(true));
+
+  test("M = 0 for every station (all members pinned-pinned)", () => {
+    for (const ms of solved.stations) {
+      for (const s of ms) expect(Math.abs(s.M)).toBeLessThan(1e-3);
+    }
+  });
+
+  test("ΣFx = 0", () => expect(Math.abs(eq.fx)).toBeLessThan(EQ));
+  test("ΣFy = 0", () => expect(Math.abs(eq.fy)).toBeLessThan(EQ));
+  test("ΣM = 0", () => expect(Math.abs(eq.m)).toBeLessThan(1));
+});
+
+// ─── r7: triangular cantilever bracket truss (pure truss) ───────────────────
+describe("Preset regression – r7 triangular truss", () => {
+  const model = getPreset("Triangular Truss");
+  const solved = solveModel(model);
+  const eq = equilibrium(model, solved);
+
+  test("stable", () => expect(solved.result.stable).toBe(true));
+
+  test("M = 0 for every station (all members pinned-pinned)", () => {
+    for (const ms of solved.stations) {
+      for (const s of ms) expect(Math.abs(s.M)).toBeLessThan(1e-3);
+    }
+  });
+
+  test("ΣFx = 0", () => expect(Math.abs(eq.fx)).toBeLessThan(EQ));
+  test("ΣFy = 0", () => expect(Math.abs(eq.fy)).toBeLessThan(EQ));
+  test("ΣM = 0", () => expect(Math.abs(eq.m)).toBeLessThan(1));
 });
