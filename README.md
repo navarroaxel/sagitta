@@ -14,7 +14,9 @@ Interactive 2D plane frame simulator that computes and renders the three charact
 - Drag nodes to reshape the structure — diagrams recompute live; zoom and pan the canvas
 - Per-diagram scale sliders and on/off toggles; click a load card to highlight it on the canvas
 - Reactions, load arrows, support symbols, and internal hinge markers
-- **i18n** (English / Spanish) and **dark mode**
+- **Settings menu** — customize every canvas color (loads, members, labels, N/Q/M diagrams, grid, background…) via swatch + hex inputs, with a high-contrast preset; the N/Q/M toggles and scale sliders follow their diagram colors
+- **Persistent preferences** — "remember my work" auto-saves the model + view across reloads, plus a configurable grid-snap size
+- **i18n** (English / Spanish) and **dark mode**, both inside the settings menu
 - Export current view as SVG or PNG
 - Eight built-in example presets, including a Frame + Truss and a parallel-chord Truss
 - A **/learn** page walking through the Tangent Method (Mohr's theorems) step by step
@@ -37,7 +39,7 @@ The entire interactive surface is a client component (`'use client'`). No API ro
 ```bash
 npm install        # also installs jsdom + testing-library used by the component tests
 npm run dev        # http://localhost:3000
-npm test           # full Jest suite (~107 checks across 2 projects)
+npm test           # full Jest suite (2 projects: lib + components)
 npm run build      # production build
 npm run lint       # ESLint
 ```
@@ -59,16 +61,19 @@ src/
       LoadsLayer.tsx    #   load arrows (nodal / point / UDL)
       ReactionsLayer.tsx#   reaction arrows + moments
       SupportSymbol.tsx #   pinned / roller / fixed symbols
-      ValLabel.tsx      #   value labels
+      ValueLabel.tsx      #   value labels
       loads.tsx         #   arrow + moment-marker primitives
       constants.ts      #   shared colors / sizes
     ModelEditor.tsx     # tabbed editor: nodes / members / loads / material / results
     ResultsPanel.tsx    # member forces, reactions, displacements, equilibrium
     DiagramControls.tsx # diagram toggles + per-diagram scale sliders
+    SettingsPanel.tsx   # settings menu: colors, high-contrast, language, theme, prefs
     PresetMenu.tsx      # dropdown to load example structures
-    ThemeToggle.tsx · Footer.tsx · GitHubLink.tsx
+    Footer.tsx · GitHubLink.tsx
   contexts/
     LanguageContext.tsx # i18n (EN/ES), t(), TranslationKey union
+    ColorContext.tsx    # customizable canvas colors (sagitta-colors)
+    PrefsContext.tsx    # persistent preferences (remember work, grid snap)
   lib/
     types.ts            # FrameModel, FrameNode, Member, Load, Material, Support
     solver.ts           # direct stiffness solver (solveFrame) — do not edit math
@@ -78,9 +83,10 @@ src/
     diagram.ts          # polygon builder for N/Q/M diagrams
     results.ts          # peak forces, equilibrium check, value cleaning
     loadProjection.ts   # load placement / UDL arrow helpers
-    presets.ts          # seven example structures
+    theme.ts            # light/dark theme read/apply helpers
+    presets.ts          # example structures
     __tests__/          # solver (33), diagram, geometry, loadProjection, results, presets
-  components/__tests__/  # FrameCanvas, ValLabel, ReactionsLayer (jsdom)
+  components/__tests__/  # FrameCanvas, ValueLabel, ReactionsLayer, SettingsPanel (jsdom)
 ```
 
 ## Sign conventions

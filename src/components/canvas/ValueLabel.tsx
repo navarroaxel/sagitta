@@ -1,7 +1,7 @@
-import { C } from "./constants";
+import { useColors } from "@/contexts/ColorContext";
 
 // ─── Value label ─────────────────────────────────────────────────────────────
-export function ValLabel({
+export function ValueLabel({
   x,
   y,
   v,
@@ -12,6 +12,7 @@ export function ValLabel({
   v: number;
   unit: string;
 }) {
+  const colors = useColors();
   if (Math.abs(v) < 0.01) return null;
   return (
     <text
@@ -21,7 +22,7 @@ export function ValLabel({
       fontFamily="monospace"
       textAnchor="middle"
       dominantBaseline="middle"
-      fill={C.ink}
+      fill={colors.ink}
       style={{ paintOrder: "stroke", stroke: "#fff", strokeWidth: 3 }}
     >
       {v.toFixed(1)}

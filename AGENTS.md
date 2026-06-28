@@ -40,7 +40,7 @@ npx tsc --noEmit  # TypeScript check
 
 - **No server state.** Everything is client-side; pages are statically prerendered (no API routes). `page.tsx` is `'use client'`; all computation happens in `useMemo`. There is also a `/learn` page (`src/app/learn/page.tsx`).
 - **Solver pipeline:** `FrameModel` (id-based) → `solve.ts` adapter → `SolverModel` (index-based) → `solveFrame` → `sampleMember` per member → `buildMemberDiagram` → SVG polygons.
-- **Canvas is modular.** `FrameCanvas.tsx` composes per-concern layers in `src/components/canvas/` (`DiagramLayer`, `GridLayer`, `LoadsLayer`, `ReactionsLayer`, `SupportSymbol`, `ValLabel`), with shared colors/consts in `constants.ts` and arrow primitives in `loads.tsx`. Don't reintroduce the old "god component" — add new visuals as a layer.
+- **Canvas is modular.** `FrameCanvas.tsx` composes per-concern layers in `src/components/canvas/` (`DiagramLayer`, `GridLayer`, `LoadsLayer`, `ReactionsLayer`, `SupportSymbol`, `ValueLabel`), with shared colors/consts in `constants.ts` and arrow primitives in `loads.tsx`. Don't reintroduce the old "god component" — add new visuals as a layer.
 - **Results are derived, not stored.** `ResultsPanel.tsx` + `src/lib/results.ts` compute member-force peaks (`peak`), the equilibrium residual check (`equilibrium`, ✓/✗ via `EQ_TOL`), reactions, and nodal displacements straight from the `SolveOutput`. The editor's **results** tab surfaces them.
 - **World coords:** y-up, metres. SVG coords: y-down. The transform in `geometry.ts` handles the flip via `toSY(y) = oy − y·k`. The canvas supports zoom/pan.
 - **Reaction/load arrows:** drawn with the tip AT the node and the shaft trailing opposite the force. For the vertical reaction the arrowhead base offset and the shaft must share the same `sign` (`ReactionsLayer.tsx`) — a mismatch flips the head for one sign.
@@ -63,7 +63,7 @@ npx tsc --noEmit  # TypeScript check
 | `src/lib/loadProjection.ts`                          | Load placement helpers (`pointLoadPos`, UDL arrow fractions)                                                                                     |
 | `src/lib/presets.ts`                                 | 8 preset models (frame+truss, truss, portal w/ hinge, etc.)                                                                                      |
 | `src/components/FrameCanvas.tsx`                     | Composes the `canvas/` layers; drag-to-move nodes, zoom/pan                                                                                      |
-| `src/components/canvas/*`                            | Per-concern SVG layers: `DiagramLayer`, `GridLayer`, `LoadsLayer`, `ReactionsLayer`, `SupportSymbol`, `ValLabel` (+ `constants.ts`, `loads.tsx`) |
+| `src/components/canvas/*`                            | Per-concern SVG layers: `DiagramLayer`, `GridLayer`, `LoadsLayer`, `ReactionsLayer`, `SupportSymbol`, `ValueLabel` (+ `constants.ts`, `loads.tsx`) |
 | `src/components/ModelEditor.tsx`                     | Tabbed editor (nodes / members / loads / material / results)                                                                                     |
 | `src/components/ResultsPanel.tsx`                    | Member forces, reactions, displacements, equilibrium                                                                                             |
 | `src/components/DiagramControls.tsx`                 | Toggles + scale sliders                                                                                                                          |
@@ -86,7 +86,7 @@ npx tsc --noEmit  # TypeScript check
     5. Compound two-bay portal — global equilibrium (ΣFx, ΣFy, ΣM), hinge condition, local member equilibrium, and three expected reaction values
 - `diagram.test.ts`, `geometry.test.ts`, `loadProjection.test.ts`, `results.test.ts` — diagram/geometry/load-placement/results helpers.
 
-**components project (jsdom, React render):** `FrameCanvas.test.tsx`, `ValLabel.test.tsx`, `ReactionsLayer.test.tsx` (the last guards reaction-arrow direction for both signs of the reaction).
+**components project (jsdom, React render):** `FrameCanvas.test.tsx`, `ValueLabel.test.tsx`, `ReactionsLayer.test.tsx` (the last guards reaction-arrow direction for both signs of the reaction).
 
 Total ~107 checks. Component tests render with `@testing-library/react`; remember to add a test there when adding a canvas layer or fixing a rendering bug.
 

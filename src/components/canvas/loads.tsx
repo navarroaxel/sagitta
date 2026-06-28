@@ -1,16 +1,19 @@
-import { C } from "./constants";
-
 // ─── Load arrows ────────────────────────────────────────────────────────────
+// These primitives take their color via props (`fill` / `loadColor`) rather than
+// reading the color store themselves: they're instantiated many times per render
+// (e.g. one LoadArrow per UDL arrow), so a per-instance useColors() subscription
+// would multiply window listeners. LoadsLayer reads useColors() once and passes
+// the load color down.
 export function ArrowHead({
   x,
   y,
   angle,
-  fill = C.loads,
+  fill,
 }: {
   x: number;
   y: number;
   angle: number;
-  fill?: string;
+  fill: string;
 }) {
   const len = 8,
     wid = 4;
@@ -29,6 +32,7 @@ export function LoadArrow({
   y2,
   label,
   highlighted,
+  loadColor,
 }: {
   x1: number;
   y1: number;
@@ -36,9 +40,10 @@ export function LoadArrow({
   y2: number;
   label?: string;
   highlighted?: boolean;
+  loadColor: string;
 }) {
   const angle = Math.atan2(y2 - y1, x2 - x1);
-  const color = highlighted ? "#ea580c" : C.loads;
+  const color = highlighted ? "#ea580c" : loadColor;
   const sw = highlighted ? 2.5 : 1.5;
   return (
     <g>
@@ -81,6 +86,7 @@ export function MomentMarker({
   scale = 1,
   label,
   highlighted,
+  loadColor,
 }: {
   cx: number;
   cy: number;
@@ -88,8 +94,9 @@ export function MomentMarker({
   scale?: number;
   label?: string;
   highlighted?: boolean;
+  loadColor: string;
 }) {
-  const color = highlighted ? "#ea580c" : C.loads;
+  const color = highlighted ? "#ea580c" : loadColor;
   const sw = highlighted ? 2.5 : 1.5;
   const r = Math.min(34, 13 * scale);
   const cw = m < 0; // positive m = counter-clockwise; negative = clockwise

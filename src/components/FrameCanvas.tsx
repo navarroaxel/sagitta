@@ -11,7 +11,9 @@ import { FrameModel } from "@/lib/types";
 import { SolveOutput } from "@/lib/solve";
 import { makeTransform } from "@/lib/geometry";
 import { buildMemberDiagram, DiagramKey } from "@/lib/diagram";
-import { C, SVG_W, SVG_H, SNAP, ZOOM_MIN, ZOOM_MAX } from "./canvas/constants";
+import { SVG_W, SVG_H, ZOOM_MIN, ZOOM_MAX } from "./canvas/constants";
+import { useColors } from "@/contexts/ColorContext";
+import { usePrefs } from "@/contexts/PrefsContext";
 import { SupportSymbol } from "./canvas/SupportSymbol";
 import { GridLayer } from "./canvas/GridLayer";
 import { DiagramLayer } from "./canvas/DiagramLayer";
@@ -53,6 +55,8 @@ export default function FrameCanvas({
   highlightedLoadId,
   svgOverlay,
 }: Props) {
+  const colors = useColors();
+  const { snap } = usePrefs();
   const internalRef = useRef<SVGSVGElement>(null);
   const ref = svgRef ?? internalRef;
 
@@ -242,9 +246,9 @@ export default function FrameCanvas({
     const contentY = (py - panRef.current.y) / zoomRef.current;
     let wx = (contentX - tr.ox) / tr.k;
     let wy = (tr.oy - contentY) / tr.k;
-    // Snap to 0.25m grid
-    wx = Math.round(wx / SNAP) * SNAP;
-    wy = Math.round(wy / SNAP) * SNAP;
+    // Snap to the grid increment (preference)
+    wx = Math.round(wx / snap) * snap;
+    wy = Math.round(wy / snap) * snap;
     onNodeMove(dragging.current.id, wx, wy);
   };
 
@@ -292,7 +296,7 @@ export default function FrameCanvas({
         height={SVG_H}
         viewBox={`0 0 ${SVG_W} ${SVG_H}`}
         style={{
-          background: C.paper,
+          background: colors.paper,
           userSelect: "none",
           cursor: "crosshair",
           display: "block",
@@ -305,7 +309,7 @@ export default function FrameCanvas({
         {/* All content inside pan+zoom group */}
         <g transform={`translate(${pan.x},${pan.y}) scale(${zoom})`}>
           {/* Grid */}
-          {viewOpts.showGrid && <GridLayer tr={tr} />}
+          {viewOpts.showGrid && <GridLayer tr={tr} snap={snap} />}
 
           {/* Unstable overlay */}
           {solved && !stable && (
@@ -370,7 +374,7 @@ export default function FrameCanvas({
                 y1={tr.toSY(ni.y)}
                 x2={tr.toSX(nj.x)}
                 y2={tr.toSY(nj.y)}
-                stroke={stable ? C.member : "#a8a29e"}
+                stroke={stable ? colors.member : "#a8a29e"}
                 strokeWidth={2.5}
                 strokeLinecap="round"
               />
@@ -399,8 +403,8 @@ export default function FrameCanvas({
                   fontFamily="monospace"
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  fill={C.member}
-                  style={{ paintOrder: "stroke", stroke: C.paper, strokeWidth: 3 }}
+                  fill={colors.member}
+                  style={{ paintOrder: "stroke", stroke: colors.paper, strokeWidth: 3 }}
                 >
                   {mem.id}
                 </text>
@@ -419,8 +423,8 @@ export default function FrameCanvas({
                     cx={tr.toSX(ni.x)}
                     cy={tr.toSY(ni.y)}
                     r={5}
-                    fill={C.paper}
-                    stroke={C.member}
+                    fill={colors.paper}
+                    stroke={colors.member}
                     strokeWidth={1.5}
                   />
                 )}
@@ -429,8 +433,8 @@ export default function FrameCanvas({
                     cx={tr.toSX(nj.x)}
                     cy={tr.toSY(nj.y)}
                     r={5}
-                    fill={C.paper}
-                    stroke={C.member}
+                    fill={colors.paper}
+                    stroke={colors.member}
                     strokeWidth={1.5}
                   />
                 )}
@@ -473,8 +477,8 @@ export default function FrameCanvas({
               cx={tr.toSX(n.x)}
               cy={tr.toSY(n.y)}
               r={5}
-              fill={stable ? C.node : "#a8a29e"}
-              stroke={C.paper}
+              fill={stable ? colors.node : "#a8a29e"}
+              stroke={colors.paper}
               strokeWidth={1.5}
               style={{ cursor: "grab" }}
               onMouseDown={(e) => onNodeMouseDown(e, n.id)}

@@ -8,7 +8,7 @@ import { solveModel, SolveOutput } from "@/lib/solve";
 import { makeTransform } from "@/lib/geometry";
 import { SVG_W, SVG_H } from "@/components/canvas/constants";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { SettingsPanel } from "@/components/SettingsPanel";
 import { FrameModel } from "@/lib/types";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -352,7 +352,7 @@ function ConstructionOverlay({
 // ─── Main page ────────────────────────────────────────────────────────────────
 
 export default function LearnPage() {
-  const { t, toggle, language } = useLanguage();
+  const { t } = useLanguage();
   const [presetIdx, setPresetIdx] = useState<(typeof PRESET_INDICES)[number]>(PRESET_INDICES[0]);
   const [step, setStep] = useState(0);
 
@@ -427,14 +427,7 @@ export default function LearnPage() {
             </button>
           ))}
         </div>
-        <button
-          onClick={toggle}
-          aria-label={t("language.switch_aria")}
-          className="rounded border border-stone-200 bg-stone-100 px-2 py-1 font-mono text-xs uppercase tracking-wide text-stone-700 transition-colors hover:bg-stone-200 dark:border-stone-600 dark:bg-stone-800 dark:text-stone-200 dark:hover:bg-stone-700"
-        >
-          {language === "en" ? "ES" : "EN"}
-        </button>
-        <ThemeToggle />
+        <SettingsPanel />
       </header>
 
       {/* Main area */}

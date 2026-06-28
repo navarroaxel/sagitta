@@ -8,7 +8,7 @@ import {
   UDL_LABEL_INDEX,
 } from "@/lib/loadProjection";
 import { LoadArrow, MomentMarker } from "./loads";
-import { C } from "./constants";
+import { useColors } from "@/contexts/ColorContext";
 
 export function LoadsLayer({
   model,
@@ -21,6 +21,7 @@ export function LoadsLayer({
   scale?: number;
   highlightedLoadId?: string | null;
 }) {
+  const colors = useColors();
   const ARROW_BASE = 40; // px for a "unit" force arrow
   // Find max magnitude for scaling
   let maxF = 0;
@@ -59,6 +60,7 @@ export function LoadsLayer({
                   y2={sy}
                   label={`${mag.toFixed(0)}`}
                   highlighted={isHL}
+                  loadColor={colors.loads}
                 />
               )}
               {hasMoment && (
@@ -69,6 +71,7 @@ export function LoadsLayer({
                   scale={scale}
                   label={`${Math.abs(load.m).toFixed(0)}`}
                   highlighted={isHL}
+                  loadColor={colors.loads}
                 />
               )}
             </g>
@@ -96,6 +99,7 @@ export function LoadsLayer({
                 y2={sy}
                 label={`${mag.toFixed(0)}`}
                 highlighted={isHL}
+                loadColor={colors.loads}
               />
             </g>
           );
@@ -122,7 +126,7 @@ export function LoadsLayer({
                 y1={s0y - dy}
                 x2={s1x - dx}
                 y2={s1y - dy}
-                stroke={isHL ? "#ea580c" : C.loads}
+                stroke={isHL ? "#ea580c" : colors.loads}
                 strokeWidth={isHL ? 2.5 : 1.5}
               />
               {udlArrowFractions(UDL_ARROW_COUNT).map((t, i) => {
@@ -138,6 +142,7 @@ export function LoadsLayer({
                     y2={sy}
                     label={i === UDL_LABEL_INDEX ? `${mag.toFixed(0)}/m` : undefined}
                     highlighted={isHL}
+                    loadColor={colors.loads}
                   />
                 );
               })}

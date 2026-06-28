@@ -1,6 +1,6 @@
 import { buildMemberDiagram, quadGroupToSvgPoints, DiagramKey } from "@/lib/diagram";
-import { C } from "./constants";
-import { ValLabel } from "./ValLabel";
+import { useColors } from "@/contexts/ColorContext";
+import { ValueLabel } from "./ValueLabel";
 
 export function DiagramLayer({
   diag,
@@ -13,11 +13,12 @@ export function DiagramLayer({
   unit: string;
   showValues: boolean;
 }) {
-  const fillPos = type === "N" ? C.tension : type === "Q" ? C.shear : C.moment;
+  const colors = useColors();
+  const fillPos = type === "N" ? colors.tension : type === "Q" ? colors.shear : colors.moment;
   const fillNeg =
-    type === "N" ? C.compression : type === "Q" ? C.shear : C.moment;
+    type === "N" ? colors.compression : type === "Q" ? colors.shear : colors.moment;
   const strokeColor =
-    type === "N" ? C.tension : type === "Q" ? C.shear : C.moment;
+    type === "N" ? colors.tension : type === "Q" ? colors.shear : colors.moment;
 
   return (
     <g data-testid={`diagram-${type}`} opacity={0.85}>
@@ -55,19 +56,19 @@ export function DiagramLayer({
       {/* Labels */}
       {showValues && (
         <g>
-          <ValLabel
+          <ValueLabel
             x={diag.iLabel.x}
             y={diag.iLabel.y}
             v={diag.iLabel.v}
             unit={unit}
           />
-          <ValLabel
+          <ValueLabel
             x={diag.jLabel.x}
             y={diag.jLabel.y}
             v={diag.jLabel.v}
             unit={unit}
           />
-          <ValLabel
+          <ValueLabel
             x={diag.extremumLabel.x}
             y={diag.extremumLabel.y}
             v={diag.extremumLabel.v}

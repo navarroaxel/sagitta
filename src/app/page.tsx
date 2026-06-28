@@ -1,18 +1,33 @@
 "use client";
 
-import React, { useState, useMemo, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useMemo,
+  useRef,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+} from "react";
 import Link from "next/link";
 import FrameCanvas, { ViewOptions } from "@/components/FrameCanvas";
 import ModelEditor from "@/components/ModelEditor";
 import DiagramControls from "@/components/DiagramControls";
 import PresetMenu from "@/components/PresetMenu";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { SettingsPanel } from "@/components/SettingsPanel";
 import { GitHubLink } from "@/components/GitHubLink";
 import { Footer } from "@/components/Footer";
 import { FrameModel } from "@/lib/types";
 import { solveModel, SolveOutput } from "@/lib/solve";
 import { PRESETS } from "@/lib/presets";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { usePrefs, getPrefs } from "@/contexts/PrefsContext";
+
+const MODEL_KEY = "sagitta-model";
+const VIEW_KEY = "sagitta-view";
+
+// useLayoutEffect warns during SSR; fall back to useEffect on the server.
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 const DEFAULT_MODEL: FrameModel = PRESETS[0].model;
 
@@ -32,7 +47,8 @@ const DEFAULT_VIEW: ViewOptions = {
 };
 
 export default function Home() {
-  const { t, toggle, language } = useLanguage();
+  const { t } = useLanguage();
+  const prefs = usePrefs();
   const [model, setModel] = useState<FrameModel>(DEFAULT_MODEL);
   const [viewOpts, setViewOpts] = useState<ViewOptions>(DEFAULT_VIEW);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -40,6 +56,48 @@ export default function Home() {
     null,
   );
   const svgRef = useRef<SVGSVGElement>(null);
+
+  // ── "Remember my work" persistence ──────────────────────────────────────
+  // Restore is gated behind a post-hydration effect (not a useState
+  // initializer) so the prerendered HTML matches the first client render.
+  const [loaded, setLoaded] = useState(false);
+  useIsomorphicLayoutEffect(() => {
+    if (getPrefs().rememberWork) {
+      try {
+        const savedModel = localStorage.getItem(MODEL_KEY);
+        if (savedModel) {
+          const m = JSON.parse(savedModel) as FrameModel;
+          if (m?.nodes && m?.members) setModel(m);
+        }
+        const savedView = localStorage.getItem(VIEW_KEY);
+        if (savedView) {
+          setViewOpts({
+            ...DEFAULT_VIEW,
+            ...(JSON.parse(savedView) as Partial<ViewOptions>),
+          });
+        }
+      } catch {
+        /* ignore a corrupt cache */
+      }
+    }
+    setLoaded(true);
+  }, []);
+
+  // Save (or clear) the working state as it changes / the preference toggles.
+  useEffect(() => {
+    if (!loaded) return;
+    try {
+      if (prefs.rememberWork) {
+        localStorage.setItem(MODEL_KEY, JSON.stringify(model));
+        localStorage.setItem(VIEW_KEY, JSON.stringify(viewOpts));
+      } else {
+        localStorage.removeItem(MODEL_KEY);
+        localStorage.removeItem(VIEW_KEY);
+      }
+    } catch {
+      /* storage unavailable */
+    }
+  }, [model, viewOpts, prefs.rememberWork, loaded]);
 
   const solved = useMemo<SolveOutput | null>(() => {
     try {
@@ -133,15 +191,8 @@ export default function Home() {
         >
           {t("app.export_png")}
         </button>
-        <button
-          onClick={toggle}
-          aria-label={t("language.switch_aria")}
-          className="rounded border border-stone-200 bg-stone-100 px-2 py-1 font-mono text-xs tracking-wide text-stone-700 uppercase transition-colors hover:bg-stone-200 dark:border-stone-600 dark:bg-stone-800 dark:text-stone-200 dark:hover:bg-stone-700"
-        >
-          {language === "en" ? "ES" : "EN"}
-        </button>
         <GitHubLink />
-        <ThemeToggle />
+        <SettingsPanel />
       </header>
 
       {/* Diagram controls */}

@@ -1,15 +1,16 @@
 import { FrameNode } from "@/lib/types";
 import { Transform } from "@/lib/geometry";
-import { C } from "./constants";
+import { useColors } from "@/contexts/ColorContext";
 
 // ─── Support symbols ────────────────────────────────────────────────────────
 export function SupportSymbol({ node, tr }: { node: FrameNode; tr: Transform }) {
+  const colors = useColors();
   const sx = tr.toSX(node.x);
   const sy = tr.toSY(node.y);
   const sz = 18;
   const hatch = (x: number, y: number, w: number) => (
     <g>
-      <line x1={x} y1={y} x2={x + w} y2={y} stroke={C.ink} strokeWidth={1.5} />
+      <line x1={x} y1={y} x2={x + w} y2={y} stroke={colors.ink} strokeWidth={1.5} />
       {[0, 1, 2, 3, 4].map((i) => (
         <line
           key={i}
@@ -17,7 +18,7 @@ export function SupportSymbol({ node, tr }: { node: FrameNode; tr: Transform }) 
           y1={y}
           x2={x + (i * w) / 4 - 6}
           y2={y + 6}
-          stroke={C.ink}
+          stroke={colors.ink}
           strokeWidth={1}
         />
       ))}
@@ -30,7 +31,7 @@ export function SupportSymbol({ node, tr }: { node: FrameNode; tr: Transform }) 
         <polygon
           points={`${sx},${sy} ${sx - sz},${sy + sz} ${sx + sz},${sy + sz}`}
           fill="none"
-          stroke={C.ink}
+          stroke={colors.ink}
           strokeWidth={1.5}
         />
         {hatch(sx - sz - 2, sy + sz, (sz + 2) * 2)}
@@ -43,7 +44,7 @@ export function SupportSymbol({ node, tr }: { node: FrameNode; tr: Transform }) 
         <polygon
           points={`${sx},${sy} ${sx - sz},${sy + sz} ${sx + sz},${sy + sz}`}
           fill="none"
-          stroke={C.ink}
+          stroke={colors.ink}
           strokeWidth={1.5}
         />
         <line
@@ -51,7 +52,7 @@ export function SupportSymbol({ node, tr }: { node: FrameNode; tr: Transform }) 
           y1={sy + sz + 5}
           x2={sx + sz}
           y2={sy + sz + 5}
-          stroke={C.ink}
+          stroke={colors.ink}
           strokeWidth={1.5}
         />
       </g>
@@ -64,7 +65,7 @@ export function SupportSymbol({ node, tr }: { node: FrameNode; tr: Transform }) 
         <polygon
           points={`${sx},${sy} ${sx - sz},${sy - sz} ${sx - sz},${sy + sz}`}
           fill="none"
-          stroke={C.ink}
+          stroke={colors.ink}
           strokeWidth={1.5}
         />
         <line
@@ -72,7 +73,7 @@ export function SupportSymbol({ node, tr }: { node: FrameNode; tr: Transform }) 
           y1={sy - sz}
           x2={sx - sz - 5}
           y2={sy + sz}
-          stroke={C.ink}
+          stroke={colors.ink}
           strokeWidth={1.5}
         />
       </g>
@@ -87,7 +88,7 @@ export function SupportSymbol({ node, tr }: { node: FrameNode; tr: Transform }) 
           y={sy - sz}
           width={sz}
           height={sz * 2}
-          fill={C.ink}
+          fill={colors.ink}
         />
         {[0, 1, 2, 3].map((i) => (
           <line
@@ -96,7 +97,7 @@ export function SupportSymbol({ node, tr }: { node: FrameNode; tr: Transform }) 
             y1={sy - sz + i * sz * 0.55}
             x2={wallX}
             y2={sy - sz + i * sz * 0.55 - 6}
-            stroke={C.paper}
+            stroke={colors.paper}
             strokeWidth={1}
           />
         ))}
