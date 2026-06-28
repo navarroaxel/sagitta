@@ -166,23 +166,19 @@ const r2: FrameModel = {
     { id: "H", x: 12, y: 4, support: "free" },
   ],
   members: [
-    // cordon inferior (piso)
     { id: "b1", n1: "A", n2: "C", relI: true, relJ: true },
     { id: "b2", n1: "C", n2: "B", relI: true, relJ: true },
     { id: "b3", n1: "B", n2: "D", relI: true, relJ: true },
-    // cordon superior (techo)
+    { id: "b4", n1: "A", n2: "E", relI: true, relJ: true },
+    { id: "b5", n1: "F", n2: "A", relI: true, relJ: true },
+    { id: "b6", n1: "C", n2: "F", relI: true, relJ: true },
+    { id: "b7", n1: "G", n2: "C", relI: true, relJ: true },
+    { id: "b8", n1: "B", n2: "G", relI: true, relJ: true },
+    { id: "b9", n1: "G", n2: "D", relI: true, relJ: true },
+    { id: "b10", n1: "D", n2: "H", relI: true, relJ: true },
     { id: "b11", n1: "E", n2: "F", relI: true, relJ: true },
     { id: "b12", n1: "F", n2: "G", relI: true, relJ: true },
     { id: "b13", n1: "G", n2: "H", relI: true, relJ: true },
-    // montantes
-    { id: "b4", n1: "A", n2: "E", relI: true, relJ: true },
-    { id: "b6", n1: "C", n2: "F", relI: true, relJ: true },
-    { id: "b8", n1: "B", n2: "G", relI: true, relJ: true },
-    { id: "b10", n1: "D", n2: "H", relI: true, relJ: true },
-    // diagonales (b5, b7 bajan a la izquierda; b9 baja a la derecha)
-    { id: "b5", n1: "F", n2: "A", relI: true, relJ: true },
-    { id: "b7", n1: "G", n2: "C", relI: true, relJ: true },
-    { id: "b9", n1: "G", n2: "D", relI: true, relJ: true },
   ],
   loads: [
     { id: "p1", type: "nodal", node: "C", fx: 0, fy: -10, m: 0 },
