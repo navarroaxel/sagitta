@@ -25,6 +25,7 @@ export const HIGH_CONTRAST_COLORS: Colors = {
   member: "#000000",
   node: "#000000",
   grid: "#c8c8c8",
+  dimensions: "#000000",
 };
 
 const STORAGE_KEY = "sagitta-colors";

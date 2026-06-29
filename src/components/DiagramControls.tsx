@@ -4,6 +4,7 @@ import React from "react";
 import { ViewOptions } from "./FrameCanvas";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useColors } from "@/contexts/ColorContext";
+import { usePrefs, setPref } from "@/contexts/PrefsContext";
 
 interface Props {
   opts: ViewOptions;
@@ -50,6 +51,7 @@ function ScaleSlider({ label, value, min, max, step, accentColor, onChange }: Sc
 export default function DiagramControls({ opts, onChange }: Props) {
   const { t } = useLanguage();
   const colors = useColors();
+  const prefs = usePrefs();
 
   const set = <K extends keyof ViewOptions>(k: K, v: ViewOptions[K]) =>
     onChange({ ...opts, [k]: v });
@@ -120,6 +122,14 @@ export default function DiagramControls({ opts, onChange }: Props) {
           onChange={() => toggle("showMemberLabels")}
         />
         {t("controls.member_labels")}
+      </label>
+      <label className="flex cursor-pointer items-center gap-1 text-stone-600 dark:text-stone-300">
+        <input
+          type="checkbox"
+          checked={prefs.showDimensions}
+          onChange={() => setPref("showDimensions", !prefs.showDimensions)}
+        />
+        {t("controls.dimensions")}
       </label>
 
       <span className="h-4 w-px bg-stone-300 dark:bg-stone-600" />

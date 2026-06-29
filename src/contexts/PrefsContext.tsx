@@ -8,11 +8,17 @@ export interface Prefs {
   rememberWork: boolean;
   /** Node drag / grid snap increment, in metres. */
   snap: number;
+  /** Show force unit label on load arrows and reaction labels on the canvas. */
+  showLoadUnits: boolean;
+  /** Show automatic dimension lines (cotas) between distinct node coordinates. */
+  showDimensions: boolean;
 }
 
 export const DEFAULT_PREFS: Prefs = {
   rememberWork: true,
   snap: 0.25,
+  showLoadUnits: true,
+  showDimensions: false,
 };
 
 export const SNAP_OPTIONS = [0.25, 0.5, 1] as const;
