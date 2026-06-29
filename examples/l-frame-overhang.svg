@@ -1,0 +1,161 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="68 95 877 460" font-family="system-ui, sans-serif">
+  <!--
+    Structure: L-frame (column + cantilever roof, solid web, rigid joints).
+    World in metres, y up. Transform: sx = 402 + x*42 ; sy = 448 - y*42
+    Nodes:
+      A  (0,0)   pinned support                  -> (402,448)
+      K  (0,6)   rigid corner (top of column)    -> (402,196)
+      C  (-6,6)  free end of the overhang        -> (150,196)
+      B  (10,6)  roller support                  -> (822,196)
+    Members (solid web, rigid joints):
+      A-K  column (6 m)
+      C-B  roof   (16 m: overhang C-K of 6 m + span K-B of 10 m)
+    Determinacy: 3 reactions (1 pinned + 1 roller) and no hinges -> statically determinate (3 eqs.).
+    Loads:
+      P_h = 2 kN horizontal to the left at C (free end of the overhang)
+      q   = 1 kN/m vertical (downward) on the roof from x=-6 to x=4 (10 m)
+      P_v = 4 kN vertical (downward) 8 m to the right of the column (8,6)
+      M_1 = 4 kNm clockwise at B
+    Support reactions (given):
+      A: H_A = 2 kN (to the right) ; V_A = 12.60 kN (upward)
+      B: V_B = 1.40 kN (upward)
+    These reactions DO satisfy global equilibrium (SumFx=0, SumFy=0, SumM_A=0).
+  -->
+
+  <rect x="68" y="95" width="877" height="460" fill="#ffffff"/>
+
+  <!-- ===== Dimensions ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <!-- roof segments (top): 6.00 | 4.00 | 4.00 | 2.00 -->
+    <line x1="150" y1="120" x2="822" y2="120"/>
+    <line x1="150" y1="115" x2="150" y2="125"/>
+    <line x1="402" y1="115" x2="402" y2="125"/>
+    <line x1="570" y1="115" x2="570" y2="125"/>
+    <line x1="738" y1="115" x2="738" y2="125"/>
+    <line x1="822" y1="115" x2="822" y2="125"/>
+    <text x="276" y="112" text-anchor="middle">6.00</text>
+    <text x="486" y="112" text-anchor="middle">4.00</text>
+    <text x="654" y="112" text-anchor="middle">4.00</text>
+    <text x="780" y="112" text-anchor="middle">2.00</text>
+
+    <!-- column (interior): 6.00 m -->
+    <line x1="430" y1="196" x2="430" y2="448"/>
+    <line x1="425" y1="196" x2="435" y2="196"/>
+    <line x1="425" y1="448" x2="435" y2="448"/>
+    <text x="445" y="322" text-anchor="middle" transform="rotate(-90 445 322)">6.00 m</text>
+  </g>
+
+  <!-- ===== Solid-web frame (rigid joints) ===== -->
+  <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
+    <line x1="402" y1="448" x2="402" y2="196"/> <!-- column A-K -->
+    <line x1="150" y1="196" x2="822" y2="196"/> <!-- roof C-K-B -->
+  </g>
+
+  <!-- ===== Pinned support at A ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <polygon points="402,448 393,459 411,459"/>
+    <line x1="387" y1="459" x2="417" y2="459"/>
+    <line x1="391" y1="459" x2="385" y2="466"/>
+    <line x1="399" y1="459" x2="393" y2="466"/>
+    <line x1="407" y1="459" x2="401" y2="466"/>
+    <line x1="415" y1="459" x2="409" y2="466"/>
+  </g>
+
+  <!-- ===== Roller support at B ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <polygon points="822,196 813,209 831,209"/>
+    <circle cx="817" cy="213" r="3"/>
+    <circle cx="827" cy="213" r="3"/>
+    <line x1="807" y1="217" x2="837" y2="217"/>
+    <line x1="811" y1="217" x2="805" y2="224"/>
+    <line x1="819" y1="217" x2="813" y2="224"/>
+    <line x1="827" y1="217" x2="821" y2="224"/>
+    <line x1="835" y1="217" x2="829" y2="224"/>
+  </g>
+
+  <!-- ===== Nodes ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="402" cy="448" r="4"/> <!-- A -->
+    <circle cx="402" cy="196" r="4"/> <!-- K corner -->
+    <circle cx="150" cy="196" r="4"/> <!-- C free end -->
+    <circle cx="822" cy="196" r="4"/> <!-- B -->
+  </g>
+
+  <!-- ===== Node labels ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <text x="408" y="443" text-anchor="start">A</text>
+    <text x="416" y="214" text-anchor="start">K</text>
+    <text x="150" y="182" text-anchor="middle">C</text>
+    <text x="822" y="176" text-anchor="middle">B</text>
+  </g>
+
+  <!-- ===== Loads ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+    <!-- P_h = 2 kN horizontal to the left at C; drawn to the left of the node
+         (outside C) so it is not collinear with the roof nor overlapping the UDL -->
+    <line x1="150" y1="196" x2="123" y2="196" stroke-width="2.5"/>
+    <polygon points="111,196 123,190 123,202" stroke="none"/>
+    <text x="106" y="200" text-anchor="end" stroke="none">2 kN</text>
+
+    <!-- q = 1 kN/m vertical (downward) on the roof from C to x=4 -->
+    <line x1="150" y1="158" x2="570" y2="158" stroke-width="2"/>
+    <g stroke-width="1.5">
+      <line x1="168" y1="158" x2="168" y2="190"/>
+      <line x1="210" y1="158" x2="210" y2="190"/>
+      <line x1="252" y1="158" x2="252" y2="190"/>
+      <line x1="294" y1="158" x2="294" y2="190"/>
+      <line x1="336" y1="158" x2="336" y2="190"/>
+      <line x1="378" y1="158" x2="378" y2="190"/>
+      <line x1="420" y1="158" x2="420" y2="190"/>
+      <line x1="462" y1="158" x2="462" y2="190"/>
+      <line x1="504" y1="158" x2="504" y2="190"/>
+      <line x1="546" y1="158" x2="546" y2="190"/>
+    </g>
+    <g stroke="none">
+      <polygon points="168,195 165,189 171,189"/>
+      <polygon points="210,195 207,189 213,189"/>
+      <polygon points="252,195 249,189 255,189"/>
+      <polygon points="294,195 291,189 297,189"/>
+      <polygon points="336,195 333,189 339,189"/>
+      <polygon points="378,195 375,189 381,189"/>
+      <polygon points="420,195 417,189 423,189"/>
+      <polygon points="462,195 459,189 465,189"/>
+      <polygon points="504,195 501,189 507,189"/>
+      <polygon points="546,195 543,189 549,189"/>
+    </g>
+    <text x="360" y="150" text-anchor="middle" stroke="none">q = 1 kN/m</text>
+
+    <!-- P_v = 4 kN vertical downward at (8,6) (tip at the node, shaft trailing opposite) -->
+    <line x1="738" y1="150" x2="738" y2="184" stroke-width="2.5"/>
+    <polygon points="738,196 732,184 744,184" stroke="none"/>
+    <text x="728" y="164" text-anchor="end" stroke="none">4 kN</text>
+
+    <!-- M_1 = 4 kNm clockwise at B -->
+    <circle cx="822" cy="196" r="2" stroke="none"/>
+    <path d="M 828 185.6 A 12 12 0 1 1 816 185.6" fill="none" stroke-width="2.5"/>
+    <polygon points="820.16,183.2 814.4,182.8 817.6,188.4" stroke="none"/>
+    <text x="838" y="180" text-anchor="start" stroke="none">M<tspan font-size="10" dy="4">1</tspan> = 4 kNm</text>
+  </g>
+
+  <!-- ===== Support reactions (blue) ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+    <!-- A: H_A = 2 kN to the right (tip at A, shaft trailing to the left) -->
+    <line x1="363" y1="448" x2="388" y2="448" stroke-width="2.5"/>
+    <polygon points="402,448 390,442 390,454" stroke="none"/>
+    <text x="359" y="444" text-anchor="end" stroke="none">H<tspan font-size="10" dy="4">A</tspan> = 2 kN</text>
+
+    <!-- A: V_A = 12.60 kN upward; drawn above the node pointing upward -->
+    <line x1="402" y1="448" x2="402" y2="411" stroke-width="2.5"/>
+    <polygon points="402,399 396,411 408,411" stroke="none"/>
+    <text x="390" y="408" text-anchor="end" stroke="none">V<tspan font-size="10" dy="4">A</tspan> = 12.60 kN</text>
+
+    <!-- B: V_B = 1.40 kN upward (tip at B, shaft trailing downward) -->
+    <line x1="822" y1="211" x2="822" y2="250" stroke-width="2.5"/>
+    <polygon points="822,196 816,208 828,208" stroke="none"/>
+    <text x="838" y="244" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">B</tspan> = 1.40 kN</text>
+  </g>
+
+  <text x="515" y="540" text-anchor="middle" fill="#5f6368" font-size="13">
+    L-frame with cantilever roof — A pinned, B roller; loads (red), support reactions (blue). Given reactions satisfy equilibrium.
+  </text>
+</svg>

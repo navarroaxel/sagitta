@@ -392,6 +392,84 @@ const symmetricTruss: FrameModel = {
   unit: "T",
 };
 
+// L-frame, continuous Gerber beam with internal hinge (examples/l-frame-hinge.svg)
+const lFrameHinge: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 0, support: "pinned" },
+    { id: "K", x: 0, y: 2, support: "free" }, // rigid corner (column top)
+    { id: "B", x: 5, y: 2, support: "roller-v" },
+    { id: "A12", x: 10, y: 2, support: "free" }, // internal hinge
+    { id: "C", x: 15, y: 2, support: "roller-v" },
+  ],
+  members: [
+    { id: "col", n1: "A", n2: "K" },
+    { id: "beamKB", n1: "K", n2: "B" },
+    { id: "beamB", n1: "B", n2: "A12", relJ: true }, // hinge at A12 (cf. portalHinged)
+    { id: "beamC", n1: "A12", n2: "C", relI: true }, // hinge at A12
+  ],
+  loads: [
+    { id: "pK", type: "nodal", node: "K", fx: -3, fy: 0, m: 0 }, // 3 kN ← at corner
+    { id: "mB", type: "nodal", node: "B", fx: 0, fy: 0, m: -10 }, // 10 kNm clockwise
+    { id: "pA12", type: "nodal", node: "A12", fx: 8, fy: -8, m: 0 }, // 8 kN → + 8 kN ↓
+    { id: "q", type: "mudl", member: "beamC", gx: 0, gy: -2 }, // 2 kN/m ↓ on A12–C
+    { id: "pC", type: "nodal", node: "C", fx: -2, fy: 0, m: 0 }, // 2 kN ← at C
+  ],
+  material: defaultMat,
+  unit: "kN",
+};
+
+// L-frame, cantilever roof / overhang, all rigid joints (examples/l-frame-overhang.svg)
+const lFrameOverhang: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 0, support: "pinned" },
+    { id: "K", x: 0, y: 6, support: "free" }, // rigid corner
+    { id: "C", x: -6, y: 6, support: "free" }, // overhang free end
+    { id: "D", x: 4, y: 6, support: "free" }, // UDL end — split point so mudl maps to whole members
+    { id: "B", x: 10, y: 6, support: "roller-v" },
+  ],
+  members: [
+    { id: "col", n1: "A", n2: "K" },
+    { id: "roofCK", n1: "C", n2: "K" }, // overhang  x -6..0
+    { id: "roofKD", n1: "K", n2: "D" }, //           x  0..4
+    { id: "roofDB", n1: "D", n2: "B" }, //           x  4..10
+  ],
+  loads: [
+    { id: "pC", type: "nodal", node: "C", fx: -2, fy: 0, m: 0 }, // 2 kN ← at overhang tip
+    { id: "q1", type: "mudl", member: "roofCK", gx: 0, gy: -1 }, // 1 kN/m ↓  x -6..0
+    { id: "q2", type: "mudl", member: "roofKD", gx: 0, gy: -1 }, // 1 kN/m ↓  x  0..4
+    { id: "pV", type: "mpoint", member: "roofDB", dist: 4, gx: 0, gy: -4 }, // 4 kN ↓ at x=8 (4 m from D)
+    { id: "mB", type: "nodal", node: "B", fx: 0, fy: 0, m: -4 }, // 4 kNm clockwise
+  ],
+  material: defaultMat,
+  unit: "kN",
+};
+
+// Two-column portal, solid web, rigid joints (examples/two-column-portal.svg)
+const twoColumnPortal: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 0, support: "roller-v" }, // base of left column
+    { id: "B", x: 10, y: 0, support: "pinned" }, // base of right column
+    { id: "C", x: 0, y: 8, support: "free" }, // top-left corner
+    { id: "E", x: 4, y: 8, support: "free" }, // UDL end — split point so mudl maps to a whole member
+    { id: "D", x: 10, y: 8, support: "free" }, // top-right corner
+  ],
+  members: [
+    { id: "colL", n1: "A", n2: "C" },
+    { id: "colR", n1: "B", n2: "D" },
+    { id: "roofCE", n1: "C", n2: "E" }, // roof  x 0..4
+    { id: "roofED", n1: "E", n2: "D" }, // roof  x 4..10
+  ],
+  loads: [
+    { id: "h8", type: "mpoint", member: "colL", dist: 4, gx: -8, gy: 0 }, // 8 T ← at mid-column (0,4)
+    { id: "h5", type: "nodal", node: "C", fx: 5, fy: 0, m: 0 }, // 5 T → at C
+    { id: "h7", type: "nodal", node: "D", fx: 7, fy: 0, m: 0 }, // 7 T → at D
+    { id: "q", type: "mudl", member: "roofCE", gx: 0, gy: -3 }, // 3 T/m ↓ on roof x 0..4
+    { id: "p12", type: "mpoint", member: "roofED", dist: 3, gx: 0, gy: -12 }, // 12 T ↓ at (7,8)
+  ],
+  material: defaultMat,
+  unit: "T",
+};
+
 export const PRESETS: Preset[] = [
   { name: "Simply Supported Beam", model: simplySupported },
   { name: "Cantilever", model: cantilever },
@@ -399,6 +477,9 @@ export const PRESETS: Preset[] = [
   { name: "Three-Hinged Frame", model: threeHinged },
   { name: "Two-Bay Portal", model: twoBayPortal },
   { name: "Portal Frame w/ Hinge", model: portalHinged },
+  { name: "L-Frame w/ Hinge", model: lFrameHinge },
+  { name: "L-Frame w/ Overhang", model: lFrameOverhang },
+  { name: "Two-Column Portal", model: twoColumnPortal },
   { name: "Simple Truss", model: simpleTruss },
   { name: "Symmetric Truss", model: symmetricTruss },
   { name: "Wall Truss", model: wallTruss },

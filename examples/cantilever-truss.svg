@@ -1,31 +1,31 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 400" font-family="system-ui, sans-serif">
   <!--
-    Estructura r5: reticulado de cordones paralelos con voladizo a la derecha.
-    Ancho 12 m (3 paneles de 4 m), altura 4 m. Barras vert. y horiz. = 4 m.
-    El 3er panel (derecha) NO tiene piso ni montante (pared) derecho: cordon
-    superior en voladizo apoyado en la diagonal b8.
-    Mundo en metros, y hacia arriba. Transform: sx = 90 + x*50 ; sy = 290 - y*50
-    Nodos (7), columna por columna (arriba, abajo):
-      A (0,4)  -> ( 90, 90)   [apoyo fijo, pared izq.]   cordon superior
-      B (0,0)  -> ( 90,290)   [apoyo movil, pared izq.]  cordon inferior
-      C (4,4)  -> (290, 90)   cordon superior
-      D (4,0)  -> (290,290)   cordon inferior
-      E (8,4)  -> (490, 90)   cordon superior
-      F (8,0)  -> (490,290)   cordon inferior (fin del piso)
-      G (12,4) -> (690, 90)   cordon superior (punta del voladizo)
-    Barras (11):
-      piso  (cordon inferior): b1 (B-D), b2 (D-F)             (solo 2 paneles)
-      techo (cordon superior): b9 (A-C), b10 (C-E), b11 (E-G) (3 paneles)
-      medio (montantes + diagonales): b3..b8
-        montantes:  b3 (x=0, A-B), b5 (x=4, C-D), b7 (x=8, E-F)
-        diagonales: b4 (B->C), b6 (D->E), b8 (F->G)  (suben hacia la DERECHA)
-    Apoyos (contra la pared izquierda):
-      A -> apoyo fijo (articulado): reacciones H y V
-      B -> apoyo movil (rodillo sobre muro): reaccion HORIZONTAL
-    Reacciones de vinculo:
-      A: H_A = 22 T hacia la izquierda ; V_A = 9 T hacia arriba
-      B: H_B = 22 T hacia la derecha
-    Cargas (cordon superior, hacia abajo):
+    Structure r5: parallel-chord truss with a cantilever to the right.
+    Width 12 m (3 panels of 4 m), height 4 m. Vertical and horizontal bars = 4 m.
+    The 3rd panel (right) has NO floor and no right post (wall): top
+    chord cantilevered, supported by diagonal b8.
+    World in metres, y up. Transform: sx = 90 + x*50 ; sy = 290 - y*50
+    Nodes (7), column by column (top, bottom):
+      A (0,4)  -> ( 90, 90)   [pinned support, left wall]   top chord
+      B (0,0)  -> ( 90,290)   [roller support, left wall]   bottom chord
+      C (4,4)  -> (290, 90)   top chord
+      D (4,0)  -> (290,290)   bottom chord
+      E (8,4)  -> (490, 90)   top chord
+      F (8,0)  -> (490,290)   bottom chord (end of floor)
+      G (12,4) -> (690, 90)   top chord (cantilever tip)
+    Bars (11):
+      floor (bottom chord): b1 (B-D), b2 (D-F)               (only 2 panels)
+      roof  (top chord):    b9 (A-C), b10 (C-E), b11 (E-G)   (3 panels)
+      middle (posts + diagonals): b3..b8
+        posts:      b3 (x=0, A-B), b5 (x=4, C-D), b7 (x=8, E-F)
+        diagonals:  b4 (B->C), b6 (D->E), b8 (F->G)  (rise to the RIGHT)
+    Supports (against the left wall):
+      A -> pinned support: reactions H and V
+      B -> roller support (on wall): HORIZONTAL reaction
+    Support reactions:
+      A: H_A = 22 T to the left ; V_A = 9 T upward
+      B: H_B = 22 T to the right
+    Loads (top chord, downward):
       C (4,4)  : 1 T
       E (8,4)  : 3 T
       G (12,4) : 5 T
@@ -33,9 +33,9 @@
 
   <rect x="0" y="0" width="780" height="400" fill="#ffffff"/>
 
-  <!-- ===== Cotas / dimensiones ===== -->
+  <!-- ===== Dimensions ===== -->
   <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
-    <!-- ancho: 4 | 4 | 4 (cordon superior, 0..12) -->
+    <!-- width: 4 | 4 | 4 (top chord, 0..12) -->
     <line x1="90"  y1="35" x2="690" y2="35"/>
     <line x1="90"  y1="30" x2="90"  y2="40"/>
     <line x1="290" y1="30" x2="290" y2="40"/>
@@ -45,33 +45,33 @@
     <text x="390" y="24" text-anchor="middle">4.00</text>
     <text x="590" y="24" text-anchor="middle">4.00</text>
 
-    <!-- altura: 4.00 m -->
+    <!-- height: 4.00 m -->
     <line x1="730" y1="90"  x2="730" y2="290"/>
     <line x1="725" y1="90"  x2="735" y2="90"/>
     <line x1="725" y1="290" x2="735" y2="290"/>
     <text x="743" y="190" text-anchor="middle" transform="rotate(-90 743 190)">4.00 m</text>
   </g>
 
-  <!-- ===== Reticulado: bielas (doble articulacion) ===== -->
+  <!-- ===== Truss: two-force members (double hinge) ===== -->
   <g stroke="#1a1a1a" stroke-width="3" stroke-linecap="round">
-    <!-- cordon inferior (piso): b1, b2 -->
+    <!-- bottom chord (floor): b1, b2 -->
     <line x1="90"  y1="290" x2="290" y2="290"/>
     <line x1="290" y1="290" x2="490" y2="290"/>
-    <!-- cordon superior (techo): b9, b10, b11 -->
+    <!-- top chord (roof): b9, b10, b11 -->
     <line x1="90"  y1="90"  x2="290" y2="90"/>
     <line x1="290" y1="90"  x2="490" y2="90"/>
     <line x1="490" y1="90"  x2="690" y2="90"/>
-    <!-- montantes: b3, b5, b7 -->
+    <!-- posts: b3, b5, b7 -->
     <line x1="90"  y1="90"  x2="90"  y2="290"/>
     <line x1="290" y1="90"  x2="290" y2="290"/>
     <line x1="490" y1="90"  x2="490" y2="290"/>
-    <!-- diagonales: b4, b6, b8 suben hacia la DERECHA -->
+    <!-- diagonals: b4, b6, b8 rise to the RIGHT -->
     <line x1="90"  y1="290" x2="290" y2="90"/>
     <line x1="290" y1="290" x2="490" y2="90"/>
     <line x1="490" y1="290" x2="690" y2="90"/>
   </g>
 
-  <!-- ===== Nudos ===== -->
+  <!-- ===== Nodes ===== -->
   <g fill="#000000">
     <circle cx="90"  cy="290" r="4"/>
     <circle cx="290" cy="290" r="4"/>
@@ -82,7 +82,7 @@
     <circle cx="690" cy="90"  r="4"/>
   </g>
 
-  <!-- ===== Etiquetas de nudos ===== -->
+  <!-- ===== Node labels ===== -->
   <g font-size="13" font-weight="600" fill="#6a1b9a">
     <text x="84"  y="74"  text-anchor="end">A</text>
     <text x="82"  y="280" text-anchor="end">B</text>
@@ -93,34 +93,34 @@
     <text x="700" y="84"  text-anchor="start">G</text>
   </g>
 
-  <!-- ===== Nombres de barras (b con subindice) ===== -->
+  <!-- ===== Bar names (b with subscript) ===== -->
   <g fill="#6a1b9a" font-size="13" font-style="italic" font-weight="600">
-    <!-- piso -->
+    <!-- floor -->
     <text x="190" y="308" text-anchor="middle">b<tspan font-size="9" dy="3">1</tspan></text>
     <text x="390" y="308" text-anchor="middle">b<tspan font-size="9" dy="3">2</tspan></text>
-    <!-- medio: montantes (b3,b5,b7) y diagonales (b4,b6,b8), izq -> der -->
+    <!-- middle: posts (b3,b5,b7) and diagonals (b4,b6,b8), left -> right -->
     <text x="80"  y="190" text-anchor="end">b<tspan font-size="9" dy="3">3</tspan></text>
     <text x="170" y="178" text-anchor="end">b<tspan font-size="9" dy="3">4</tspan></text>
     <text x="300" y="190" text-anchor="start">b<tspan font-size="9" dy="3">5</tspan></text>
     <text x="370" y="178" text-anchor="end">b<tspan font-size="9" dy="3">6</tspan></text>
     <text x="500" y="190" text-anchor="start">b<tspan font-size="9" dy="3">7</tspan></text>
     <text x="570" y="178" text-anchor="end">b<tspan font-size="9" dy="3">8</tspan></text>
-    <!-- techo -->
+    <!-- roof -->
     <text x="190" y="78" text-anchor="middle">b<tspan font-size="9" dy="3">9</tspan></text>
     <text x="390" y="78" text-anchor="middle">b<tspan font-size="9" dy="3">10</tspan></text>
     <text x="590" y="78" text-anchor="middle">b<tspan font-size="9" dy="3">11</tspan></text>
   </g>
 
-  <!-- ===== Apoyos (contra la pared izquierda) ===== -->
+  <!-- ===== Supports (against the left wall) ===== -->
   <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
-    <!-- A: apoyo fijo (articulado), triangulo apoyado en el muro izquierdo -->
+    <!-- A: pinned support, triangle resting on the left wall -->
     <polygon points="90,90 77,81 77,99"/>
     <line x1="77" y1="75" x2="77" y2="105"/>
     <line x1="77" y1="79"  x2="70" y2="73"/>
     <line x1="77" y1="87"  x2="70" y2="81"/>
     <line x1="77" y1="95"  x2="70" y2="89"/>
     <line x1="77" y1="103" x2="70" y2="97"/>
-    <!-- B: apoyo movil (rodillo sobre muro izquierdo) -> reaccion horizontal -->
+    <!-- B: roller support (on the left wall) -> horizontal reaction -->
     <polygon points="90,290 77,281 77,299"/>
     <circle cx="73" cy="285" r="3"/>
     <circle cx="73" cy="295" r="3"/>
@@ -131,33 +131,33 @@
     <line x1="69" y1="303" x2="62" y2="297"/>
   </g>
 
-  <!-- ===== Cargas (cordon superior, hacia abajo) ===== -->
+  <!-- ===== Loads (top chord, downward) ===== -->
   <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
-    <!-- C: 1 T hacia abajo -->
+    <!-- C: 1 T downward -->
     <line x1="290" y1="50" x2="290" y2="85" stroke-width="2.5"/>
     <polygon points="290,90 285,79 295,79" stroke="none"/>
     <text x="300" y="66" text-anchor="start" stroke="none">1 T</text>
-    <!-- E: 3 T hacia abajo -->
+    <!-- E: 3 T downward -->
     <line x1="490" y1="50" x2="490" y2="85" stroke-width="2.5"/>
     <polygon points="490,90 485,79 495,79" stroke="none"/>
     <text x="500" y="66" text-anchor="start" stroke="none">3 T</text>
-    <!-- G: 5 T hacia abajo -->
+    <!-- G: 5 T downward -->
     <line x1="690" y1="50" x2="690" y2="85" stroke-width="2.5"/>
     <polygon points="690,90 685,79 695,79" stroke="none"/>
     <text x="678" y="66" text-anchor="end" stroke="none">5 T</text>
   </g>
 
-  <!-- ===== Reacciones de vinculo (estilo truss2: aplicadas sobre los nudos, punta en el nudo, fuste opuesto a la fuerza) ===== -->
+  <!-- ===== Support reactions (truss2 style: applied at the nodes, tip at the node, shaft trailing opposite the force) ===== -->
   <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
-    <!-- A: V_A = 9 T hacia arriba (punta en A, fuste hacia abajo) -->
+    <!-- A: V_A = 9 T upward (tip at A, shaft downward) -->
     <line x1="90" y1="140" x2="90" y2="101" stroke-width="2.5"/>
     <polygon points="90,90 84,102 96,102" stroke="none"/>
     <text x="99" y="124" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan> = 9 T</text>
-    <!-- A: H_A = 22 T hacia la izquierda (punta en A, fuste hacia la derecha) -->
+    <!-- A: H_A = 22 T to the left (tip at A, shaft to the right) -->
     <line x1="136" y1="90" x2="101" y2="90" stroke-width="2.5"/>
     <polygon points="90,90 102,84 102,96" stroke="none"/>
     <text x="106" y="80" text-anchor="start" stroke="none">H<tspan font-size="10" dy="4">A</tspan> = 22 T</text>
-    <!-- B: H_B = 22 T hacia la derecha (punta en B, fuste hacia la izquierda) -->
+    <!-- B: H_B = 22 T to the right (tip at B, shaft to the left) -->
     <line x1="44" y1="290" x2="79" y2="290" stroke-width="2.5"/>
     <polygon points="90,290 78,284 78,296" stroke="none"/>
     <text x="99" y="312" text-anchor="start" stroke="none">H<tspan font-size="10" dy="4">B</tspan> = 22 T</text>

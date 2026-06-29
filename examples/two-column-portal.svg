@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="110 22 630 540" font-family="system-ui, sans-serif">
+  <!--
+    Structure: planar two-column portal frame (solid web, rigid joints); units in T and T/m.
+    World in metres, y up. Transform: sx = 200 + x*40 ; sy = 430 - y*40
+    Nodes:
+      A  (0,0)  roller support (base of left column)   -> (200,430)
+      B  (10,0) pinned support (base of right column)  -> (600,430)
+      C  (0,8)  top-left corner                        -> (200,110)
+      D  (10,8) top-right corner                       -> (600,110)
+    Members:
+      A-C  left column  (8 m)
+      B-D  right column (8 m)
+      C-D  roof         (10 m)
+    Determinacy: 3 reactions (roller 1 + pinned 2) and no hinges -> statically determinate (3 eqs).
+    Loads:
+      8 T  horizontal to the left at mid-height of the left column (0,4)
+      5 T  horizontal to the right at C (top-left corner)
+      7 T  horizontal to the right at D (top-right corner)
+      12 T vertical downward, hanging from the roof, 3 m from the right column (7,8)
+      q = 3 T/m vertical (downward) on the roof, 4 m from the left column (x=0 to x=4)
+    Support reactions (given):
+      A: V_A = 6.80 T (up)
+      B: V_B = 17.20 T (up) ; H_B = 4 T (left)
+    These reactions DO satisfy global equilibrium (SumFx=0, SumFy=0, SumM_A=0).
+  -->
+
+  <rect x="110" y="22" width="630" height="540" fill="#ffffff"/>
+
+  <!-- ===== Dimensions ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <!-- roof (top): 4.00 | 3.00 | 3.00 -->
+    <line x1="200" y1="44" x2="600" y2="44"/>
+    <line x1="200" y1="39" x2="200" y2="49"/>
+    <line x1="360" y1="39" x2="360" y2="49"/>
+    <line x1="480" y1="39" x2="480" y2="49"/>
+    <line x1="600" y1="39" x2="600" y2="49"/>
+    <text x="280" y="36" text-anchor="middle">4.00</text>
+    <text x="420" y="36" text-anchor="middle">3.00</text>
+    <text x="540" y="36" text-anchor="middle">3.00</text>
+    <!-- left column (left side): 4.00 + 4.00 m (mid tick marks the 8 T force) -->
+    <line x1="140" y1="110" x2="140" y2="430"/>
+    <line x1="135" y1="430" x2="145" y2="430"/>
+    <line x1="135" y1="270" x2="145" y2="270"/>
+    <line x1="135" y1="110" x2="145" y2="110"/>
+    <text x="128" y="190" text-anchor="middle" transform="rotate(-90 128 190)">4.00</text>
+    <text x="128" y="350" text-anchor="middle" transform="rotate(-90 128 350)">4.00</text>
+  </g>
+
+  <!-- ===== Solid-web portal frame (rigid joints) ===== -->
+  <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
+    <line x1="200" y1="430" x2="200" y2="110"/> <!-- left column A-C -->
+    <line x1="600" y1="430" x2="600" y2="110"/> <!-- right column B-D -->
+    <line x1="200" y1="110" x2="600" y2="110"/> <!-- roof C-D -->
+  </g>
+
+  <!-- ===== Roller support at A ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <polygon points="200,430 191,443 209,443"/>
+    <circle cx="195" cy="447" r="3"/>
+    <circle cx="205" cy="447" r="3"/>
+    <line x1="185" y1="451" x2="215" y2="451"/>
+    <line x1="189" y1="451" x2="183" y2="458"/>
+    <line x1="197" y1="451" x2="191" y2="458"/>
+    <line x1="205" y1="451" x2="199" y2="458"/>
+    <line x1="213" y1="451" x2="207" y2="458"/>
+  </g>
+
+  <!-- ===== Pinned support at B ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <polygon points="600,430 591,441 609,441"/>
+    <line x1="585" y1="441" x2="615" y2="441"/>
+    <line x1="589" y1="441" x2="583" y2="448"/>
+    <line x1="597" y1="441" x2="591" y2="448"/>
+    <line x1="605" y1="441" x2="599" y2="448"/>
+    <line x1="613" y1="441" x2="607" y2="448"/>
+  </g>
+
+  <!-- ===== Nodes ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="200" cy="430" r="4"/> <!-- A -->
+    <circle cx="600" cy="430" r="4"/> <!-- B -->
+    <circle cx="200" cy="110" r="4"/> <!-- C -->
+    <circle cx="600" cy="110" r="4"/> <!-- D -->
+  </g>
+
+  <!-- ===== Node labels ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <text x="184" y="422" text-anchor="end">A</text>
+    <text x="586" y="420" text-anchor="end">B</text>
+    <text x="188" y="102" text-anchor="end">C</text>
+    <text x="593" y="102" text-anchor="start">D</text>
+  </g>
+
+  <!-- ===== Loads ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+    <!-- 8 T horizontal to the left at mid-height of the left column; drawn on the right (interior) side -->
+    <line x1="212" y1="270" x2="248" y2="270" stroke-width="2.5"/>
+    <polygon points="200,270 212,264 212,276" stroke="none"/>
+    <text x="230" y="288" text-anchor="middle" stroke="none">8 T</text>
+    <!-- 5 T horizontal to the right at C (tip at the node, shaft trailing outside) -->
+    <line x1="160" y1="110" x2="188" y2="110" stroke-width="2.5"/>
+    <polygon points="200,110 188,104 188,116" stroke="none"/>
+    <text x="170" y="125" text-anchor="middle" stroke="none">5 T</text>
+    <!-- q = 3 T/m vertical downward on the roof, from x=0 to x=4 -->
+    <line x1="200" y1="72" x2="360" y2="72" stroke-width="2"/>
+    <g stroke-width="1.5">
+      <line x1="213" y1="72" x2="213" y2="104"/>
+      <line x1="240" y1="72" x2="240" y2="104"/>
+      <line x1="267" y1="72" x2="267" y2="104"/>
+      <line x1="293" y1="72" x2="293" y2="104"/>
+      <line x1="320" y1="72" x2="320" y2="104"/>
+      <line x1="347" y1="72" x2="347" y2="104"/>
+    </g>
+    <g stroke="none">
+      <polygon points="213,109 210,103 216,103"/>
+      <polygon points="240,109 237,103 243,103"/>
+      <polygon points="267,109 264,103 270,103"/>
+      <polygon points="293,109 290,103 296,103"/>
+      <polygon points="320,109 317,103 323,103"/>
+      <polygon points="347,109 344,103 350,103"/>
+    </g>
+    <text x="280" y="64" text-anchor="middle" stroke="none">q = 3 T/m</text>
+    <!-- 12 T vertical downward, hanging from the roof at (7,8): shaft down from the roof, head below -->
+    <line x1="480" y1="110" x2="480" y2="146" stroke-width="2.5"/>
+    <polygon points="480,158 474,146 486,146" stroke="none"/>
+    <text x="492" y="140" text-anchor="start" stroke="none">12 T</text>
+    <!-- 7 T horizontal to the right at D; drawn outside the node (not collinear with the roof) -->
+    <line x1="600" y1="110" x2="636" y2="110" stroke-width="2.5"/>
+    <polygon points="648,110 636,104 636,116" stroke="none"/>
+    <text x="624" y="128" text-anchor="middle" stroke="none">7 T</text>
+  </g>
+
+  <!-- ===== Support reactions (blue) ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+    <!-- A: V_A = 6.80 T upward; drawn just below the roller pointing up, label to the right -->
+    <line x1="200" y1="470" x2="200" y2="515" stroke-width="2.5"/>
+    <polygon points="200,462 194,474 206,474" stroke="none"/>
+    <text x="218" y="492" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan> = 6.80 T</text>
+    <!-- B: V_B = 17.20 T upward; drawn just below the support pointing up, aligned with V_A -->
+    <line x1="600" y1="470" x2="600" y2="515" stroke-width="2.5"/>
+    <polygon points="600,462 594,474 606,474" stroke="none"/>
+    <text x="588" y="492" text-anchor="end" stroke="none">V<tspan font-size="10" dy="4">B</tspan> = 17.20 T</text>
+    <!-- B: H_B = 4 T to the left (tip at B, shaft to the right) -->
+    <line x1="612" y1="430" x2="645" y2="430" stroke-width="2.5"/>
+    <polygon points="600,430 612,424 612,436" stroke="none"/>
+    <text x="649" y="434" text-anchor="start" stroke="none">H<tspan font-size="10" dy="4">B</tspan> = 4 T</text>
+  </g>
+
+  <text x="425" y="548" text-anchor="middle" fill="#5f6368" font-size="13">
+    Two-column portal frame — A roller, B pinned; applied loads (red), support reactions (blue).
+  </text>
+</svg>

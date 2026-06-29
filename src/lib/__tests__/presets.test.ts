@@ -220,3 +220,79 @@ describe("Preset regression – r7 triangular truss", () => {
   test("ΣFy = 0", () => expect(Math.abs(eq.fy)).toBeLessThan(EQ));
   test("ΣM = 0", () => expect(Math.abs(eq.m)).toBeLessThan(1));
 });
+
+// ─── L-frame: Gerber beam with internal hinge at A12 ────────────────────────
+describe("Preset regression – L-frame w/ hinge", () => {
+  const model = getPreset("L-Frame w/ Hinge");
+  const solved = solveModel(model);
+  const { result, stations, memberIndex, nodeIndex } = solved;
+  const eq = equilibrium(model, solved);
+
+  test("stable", () => expect(result.stable).toBe(true));
+  test("ΣFx = 0", () => expect(Math.abs(eq.fx)).toBeLessThan(EQ));
+  test("ΣFy = 0", () => expect(Math.abs(eq.fy)).toBeLessThan(EQ));
+  test("ΣM = 0", () => expect(Math.abs(eq.m)).toBeLessThan(1));
+
+  // beamB: B→A12 with relJ=true → hinge at A12 (j-end)
+  test("internal hinge M ≈ 0 (beamB j-end)", () => {
+    const st = stations[memberIndex.get("beamB")!];
+    expect(Math.abs(st[st.length - 1].M)).toBeLessThan(M0);
+  });
+  // beamC: A12→C with relI=true → hinge at A12 (i-end)
+  test("internal hinge M ≈ 0 (beamC i-end)", () => {
+    const st = stations[memberIndex.get("beamC")!];
+    expect(Math.abs(st[0].M)).toBeLessThan(M0);
+  });
+
+  test("reactions: H_A=3←, V_A=16.20↓, V_B=29.2↑, V_C=5↑", () => {
+    const rA = result.reactions[nodeIndex.get("A")!];
+    const rB = result.reactions[nodeIndex.get("B")!];
+    const rC = result.reactions[nodeIndex.get("C")!];
+    expect(Math.abs(rA.rx - -3)).toBeLessThan(0.1);
+    expect(Math.abs(rA.ry - -16.2)).toBeLessThan(0.1);
+    expect(Math.abs(rB.ry - 29.2)).toBeLessThan(0.1);
+    expect(Math.abs(rC.ry - 5)).toBeLessThan(0.1);
+  });
+});
+
+// ─── L-frame: cantilever roof / overhang, all rigid joints ──────────────────
+describe("Preset regression – L-frame w/ overhang", () => {
+  const model = getPreset("L-Frame w/ Overhang");
+  const solved = solveModel(model);
+  const { result, nodeIndex } = solved;
+  const eq = equilibrium(model, solved);
+
+  test("stable", () => expect(result.stable).toBe(true));
+  test("ΣFx = 0", () => expect(Math.abs(eq.fx)).toBeLessThan(EQ));
+  test("ΣFy = 0", () => expect(Math.abs(eq.fy)).toBeLessThan(EQ));
+  test("ΣM = 0", () => expect(Math.abs(eq.m)).toBeLessThan(1));
+
+  test("reactions: H_A=2→, V_A=12.60↑, V_B=1.40↑", () => {
+    const rA = result.reactions[nodeIndex.get("A")!];
+    const rB = result.reactions[nodeIndex.get("B")!];
+    expect(Math.abs(rA.rx - 2)).toBeLessThan(0.1);
+    expect(Math.abs(rA.ry - 12.6)).toBeLessThan(0.1);
+    expect(Math.abs(rB.ry - 1.4)).toBeLessThan(0.1);
+  });
+});
+
+// ─── two-column portal frame (roller + pinned, all rigid joints) ────────────
+describe("Preset regression – two-column portal", () => {
+  const model = getPreset("Two-Column Portal");
+  const solved = solveModel(model);
+  const { result, nodeIndex } = solved;
+  const eq = equilibrium(model, solved);
+
+  test("stable", () => expect(result.stable).toBe(true));
+  test("ΣFx = 0", () => expect(Math.abs(eq.fx)).toBeLessThan(EQ));
+  test("ΣFy = 0", () => expect(Math.abs(eq.fy)).toBeLessThan(EQ));
+  test("ΣM = 0", () => expect(Math.abs(eq.m)).toBeLessThan(1));
+
+  test("reactions: V_A=6.80↑, V_B=17.20↑, H_B=4←", () => {
+    const rA = result.reactions[nodeIndex.get("A")!];
+    const rB = result.reactions[nodeIndex.get("B")!];
+    expect(Math.abs(rA.ry - 6.8)).toBeLessThan(0.1);
+    expect(Math.abs(rB.ry - 17.2)).toBeLessThan(0.1);
+    expect(Math.abs(rB.rx - -4)).toBeLessThan(0.1);
+  });
+});

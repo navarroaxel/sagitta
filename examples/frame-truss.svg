@@ -1,32 +1,32 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 480" font-family="system-ui, sans-serif">
   <!--
-    Estructura r1: portico de alma llena ("T") + reticulado, hasta apoyo B.
-    Mundo en metros, y hacia arriba. Transform: sx = 160 + x*40 ; sy = 400 - y*40
-    Nodos:
-      A   (0,0)   apoyo fijo            -> (160,400)
-      C   (0,8)   nudo rigido (tope T)  -> (160, 80)
-      L   (-2,8)  punta voladizo        -> ( 80, 80)
-      A1-2(5,8)   articulacion          -> (360, 80)
-      (9,8)  cordon superior            -> (520, 80)
-      (13,8) cordon superior            -> (680, 80)
-      (5,4)  cordon inferior            -> (360,240)
-      (9,4)  cordon inferior            -> (520,240)
-      (13,4) cordon inferior            -> (680,240)
-      B   (13,0)  apoyo fijo            -> (680,400)
-    Portico = alma llena (nudos rigidos). Reticulado = bielas (doble articulacion).
+    Structure r1: solid-web frame ("T") + truss, up to support B.
+    World in metres, y up. Transform: sx = 160 + x*40 ; sy = 400 - y*40
+    Nodes:
+      A   (0,0)   pinned support        -> (160,400)
+      C   (0,8)   rigid joint (T top)   -> (160, 80)
+      L   (-2,8)  cantilever tip        -> ( 80, 80)
+      A1-2(5,8)   internal hinge        -> (360, 80)
+      (9,8)  top chord                  -> (520, 80)
+      (13,8) top chord                  -> (680, 80)
+      (5,4)  bottom chord               -> (360,240)
+      (9,4)  bottom chord               -> (520,240)
+      (13,4) bottom chord               -> (680,240)
+      B   (13,0)  pinned support        -> (680,400)
+    Frame = solid web (rigid joints). Truss = bars (double-pinned).
   -->
 
   <rect x="0" y="0" width="780" height="480" fill="#ffffff"/>
 
-  <!-- ===== Cotas / dimensiones ===== -->
+  <!-- ===== Dimensions ===== -->
   <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
-    <!-- altura del pilar: 8.00 m -->
+    <!-- column height: 8.00 m -->
     <line x1="45" y1="80" x2="45" y2="400"/>
     <line x1="40" y1="80" x2="50" y2="80"/>
     <line x1="40" y1="400" x2="50" y2="400"/>
     <text x="38" y="245" text-anchor="middle" transform="rotate(-90 38 245)">8.00 m</text>
 
-    <!-- horizontales arriba: 2 | 5 | 4 | 4 -->
+    <!-- horizontals on top: 2 | 5 | 4 | 4 -->
     <line x1="80"  y1="32" x2="160" y2="32"/>
     <line x1="160" y1="32" x2="360" y2="32"/>
     <line x1="360" y1="32" x2="520" y2="32"/>
@@ -41,7 +41,7 @@
     <text x="440" y="25" text-anchor="middle">4.00</text>
     <text x="600" y="25" text-anchor="middle">4.00</text>
 
-    <!-- profundidad reticulado y bajada a B: 4 + 4 (lado derecho) -->
+    <!-- truss depth and drop to B: 4 + 4 (right side) -->
     <line x1="735" y1="80"  x2="735" y2="240"/>
     <line x1="735" y1="240" x2="735" y2="400"/>
     <line x1="730" y1="80"  x2="740" y2="80"/>
@@ -51,34 +51,34 @@
     <text x="748" y="320" text-anchor="middle" transform="rotate(-90 748 320)">4.00 m</text>
   </g>
 
-  <!-- ===== Reticulado: bielas (doble articulacion) ===== -->
+  <!-- ===== Truss: bars (double-pinned) ===== -->
   <g stroke="#0b8a8a" stroke-width="3" stroke-linecap="round">
-    <!-- cordon superior -->
+    <!-- top chord -->
     <line x1="360" y1="80"  x2="520" y2="80"/>
     <line x1="520" y1="80"  x2="680" y2="80"/>
-    <!-- cordon inferior -->
+    <!-- bottom chord -->
     <line x1="360" y1="240" x2="520" y2="240"/>
     <line x1="520" y1="240" x2="680" y2="240"/>
-    <!-- montantes -->
+    <!-- posts -->
     <line x1="360" y1="80"  x2="360" y2="240"/>
     <line x1="520" y1="80"  x2="520" y2="240"/>
     <line x1="680" y1="80"  x2="680" y2="240"/>
-    <!-- diagonales (bajan hacia la izquierda) -->
+    <!-- diagonals (descending to the left) -->
     <line x1="520" y1="80"  x2="360" y2="240"/>
     <line x1="680" y1="80"  x2="520" y2="240"/>
-    <!-- triangulo de cierre hasta B -->
+    <!-- closing triangle down to B -->
     <line x1="680" y1="240" x2="680" y2="400"/>
     <line x1="520" y1="240" x2="680" y2="400"/>
   </g>
 
-  <!-- ===== Portico de alma llena (nudos rigidos) ===== -->
+  <!-- ===== Solid-web frame (rigid joints) ===== -->
   <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
-    <line x1="160" y1="400" x2="160" y2="80"/> <!-- pilar A-C -->
-    <line x1="80"  y1="80"  x2="160" y2="80"/> <!-- voladizo L-C -->
-    <line x1="160" y1="80"  x2="360" y2="80"/> <!-- techo C-A1-2 -->
+    <line x1="160" y1="400" x2="160" y2="80"/> <!-- column A-C -->
+    <line x1="80"  y1="80"  x2="160" y2="80"/> <!-- cantilever L-C -->
+    <line x1="160" y1="80"  x2="360" y2="80"/> <!-- roof C-A1-2 -->
   </g>
 
-  <!-- ===== Apoyos articulados (pinned) ===== -->
+  <!-- ===== Pinned supports ===== -->
   <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
     <!-- A -->
     <polygon points="160,400 151,411 169,411"/>
@@ -96,10 +96,10 @@
     <line x1="693" y1="411" x2="687" y2="418"/>
   </g>
 
-  <!-- ===== Articulacion en A1-2 ===== -->
+  <!-- ===== Internal hinge at A1-2 ===== -->
   <circle cx="360" cy="80" r="6" fill="#ffffff" stroke="#1a1a1a" stroke-width="2"/>
 
-  <!-- ===== Nudos ===== -->
+  <!-- ===== Nodes ===== -->
   <g fill="#1a1a1a">
     <circle cx="160" cy="400" r="4"/> <!-- A -->
     <circle cx="680" cy="400" r="4"/> <!-- B -->
@@ -112,7 +112,7 @@
     <circle cx="680" cy="240" r="4"/> <!-- (13,4) -->
   </g>
 
-  <!-- ===== Etiquetas de nudos ===== -->
+  <!-- ===== Node labels ===== -->
   <g font-size="13" font-weight="600">
     <g fill="#6a1b9a">
       <text x="148" y="392" text-anchor="end">A</text>
@@ -126,7 +126,7 @@
     </g>
   </g>
 
-  <!-- ===== Nombres de barras del reticulado (izq->der, arriba->abajo) ===== -->
+  <!-- ===== Truss bar names (left->right, top->bottom) ===== -->
   <g fill="#6a1b9a" font-size="13" font-style="italic" font-weight="600">
     <text x="440" y="98"  text-anchor="middle">b<tspan font-size="9" dy="3">1</tspan></text>
     <text x="600" y="98"  text-anchor="middle">b<tspan font-size="9" dy="3">2</tspan></text>
@@ -141,9 +141,9 @@
     <text x="692" y="320" text-anchor="start">b<tspan font-size="9" dy="3">11</tspan></text>
   </g>
 
-  <!-- ===== Cargas ===== -->
+  <!-- ===== Loads ===== -->
   <g stroke="#c0392b" fill="#c0392b" font-family="system-ui, sans-serif" font-size="13" font-weight="700">
-    <!-- UDL 5 kN/m hacia abajo en el techo, de (-2,8) a (5,8) -->
+    <!-- UDL 5 kN/m downward on the roof, from (-2,8) to (5,8) -->
     <line x1="80" y1="62" x2="360" y2="62" stroke-width="2"/>
     <g stroke-width="1.5">
       <line x1="80"  y1="62" x2="80"  y2="76"/>
@@ -167,26 +167,26 @@
     </g>
     <text x="220" y="54" text-anchor="middle" stroke="none">q = 5 kN/m</text>
 
-    <!-- Momento horario 15 kNm en (0,4) -->
+    <!-- Clockwise moment 15 kNm at (0,4) -->
     <circle cx="160" cy="240" r="2.5" stroke="none"/>
     <path d="M 167.5 227 A 15 15 0 1 1 152.5 227" fill="none" stroke-width="2.5"/>
     <polygon points="157.7,224 150.5,223.5 154.5,230.5" stroke="none"/>
     <text x="135" y="244" text-anchor="end" stroke="none">M = 15 kNm</text>
 
-    <!-- Fuerza 20 kN hacia abajo en (5,4) -->
+    <!-- Force 20 kN downward at (5,4) -->
     <line x1="360" y1="240" x2="360" y2="280" stroke-width="2.5"/>
     <polygon points="360,285 355,274 365,274" stroke="none"/>
     <text x="372" y="270" text-anchor="start" stroke="none">20 kN</text>
 
-    <!-- Fuerza 10 kN hacia la derecha en (13,8) -->
+    <!-- Force 10 kN to the right at (13,8) -->
     <line x1="680" y1="80" x2="720" y2="80" stroke-width="2.5"/>
     <polygon points="725,80 714,75 714,85" stroke="none"/>
     <text x="710" y="68" text-anchor="middle" stroke="none">10 kN</text>
   </g>
 
-  <!-- ===== Reacciones de vinculo (aplicadas sobre los nudos: punta en el nudo) ===== -->
+  <!-- ===== Support reactions (applied on the nodes: tip at the node) ===== -->
   <g stroke="#1a73e8" fill="#1a73e8" font-family="system-ui, sans-serif" font-size="13" font-weight="700">
-    <!-- A (160,400): V_A arriba (punta en A, fuste abajo), H_A derecha (punta en A, fuste a la izq.) -->
+    <!-- A (160,400): V_A upward (tip at A, shaft below), H_A to the right (tip at A, shaft to the left) -->
     <line x1="160" y1="450" x2="160" y2="411" stroke-width="2.5"/>
     <polygon points="160,400 154,412 166,412" stroke="none"/>
     <text x="172" y="440" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan></text>
@@ -194,7 +194,7 @@
     <polygon points="160,400 148,394 148,406" stroke="none"/>
     <text x="108" y="396" text-anchor="end" stroke="none">H<tspan font-size="10" dy="4">A</tspan></text>
 
-    <!-- B (680,400): V_B arriba (punta en B, fuste abajo), H_B derecha (punta en B, fuste a la izq.) -->
+    <!-- B (680,400): V_B upward (tip at B, shaft below), H_B to the right (tip at B, shaft to the left) -->
     <line x1="680" y1="450" x2="680" y2="411" stroke-width="2.5"/>
     <polygon points="680,400 674,412 686,412" stroke="none"/>
     <text x="692" y="440" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">B</tspan></text>
