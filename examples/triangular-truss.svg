@@ -1,88 +1,88 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 370" font-family="system-ui, sans-serif">
   <!--
-    Estructura r7: reticulado triangular (mensula contra muro izquierdo).
-    1 solo triangulo. Ancho total 2 m, alto 1 m.
-    Mundo en metros, y hacia arriba. Transform: sx = 170 + x*150 ; sy = 250 - y*150
-    Nodos (3):
-      A (0,0) -> (170,250)   [base, sobre el muro]
-      B (0,1) -> (170,100)   [arriba, sobre el muro]
-      C (2,1) -> (470,100)   [extremo libre, derecha]
-    Barras (3):
-      b1 -> columna (vertical):   A-B   (de A hacia arriba a B)
-      b2 -> techo (horizontal):   B-C
-      b3 -> diagonal (baja hacia la IZQUIERDA): A-C  (de C arriba-der. a A abajo-izq.)
-    Apoyos (contra el muro izquierdo):
-      A -> apoyo movil (rodillo sobre muro): reaccion HORIZONTAL
-      B -> apoyo fijo (articulado):          reacciones H y V
-    Cargas:
-      C (2,1) : 500 kg hacia abajo
-    Reacciones de vinculo:
-      A : H_A = 1000 kg hacia la derecha
-      B : H_B = 1000 kg hacia la izquierda ; V_B = 500 kg hacia arriba
-    Verif. de equilibrio (OK):
+    Structure r7: triangular truss (cantilever against the left wall).
+    A single triangle. Total width 2 m, height 1 m.
+    World in metres, y up. Transform: sx = 170 + x*150 ; sy = 250 - y*150
+    Nodes (3):
+      A (0,0) -> (170,250)   [base, on the wall]
+      B (0,1) -> (170,100)   [top, on the wall]
+      C (2,1) -> (470,100)   [free end, right]
+    Bars (3):
+      b1 -> column (vertical):   A-B   (from A upward to B)
+      b2 -> roof (horizontal):   B-C
+      b3 -> diagonal (descends to the LEFT): A-C  (from C top-right to A bottom-left)
+    Supports (against the left wall):
+      A -> roller support (roller on wall): HORIZONTAL reaction
+      B -> pinned support (articulated):     reactions H and V
+    Loads:
+      C (2,1) : 500 kg downward
+    Support reactions (given):
+      A : H_A = 1000 kg to the right
+      B : H_B = 1000 kg to the left ; V_B = 500 kg upward
+    Equilibrium check (OK):
       SFx  = H_A - H_B        = 1000 - 1000   = 0
       SFy  = V_B - P          = 500  - 500    = 0
-      SM_A = H_B*1 - P*2      = 1000 - 1000   = 0   (B y C a la misma altura, y=1)
-    Nota: el enunciado daba V_B = 50 kg, pero con A movil (solo reaccion horizontal)
-          toda la carga vertical la toma B -> V_B = P = 500 kg para que SFy = 0.
-    Esfuerzos en barras (referencia): b1 traccion 500 kg ; b2 traccion 1000 kg ;
-          b3 compresion 500*raiz(5) = 1118 kg.
+      SM_A = H_B*1 - P*2      = 1000 - 1000   = 0   (B and C at the same height, y=1)
+    Note: the problem statement gave V_B = 50 kg, but with A as a roller (horizontal reaction only)
+          B takes the entire vertical load -> V_B = P = 500 kg so that SFy = 0.
+    Bar forces (reference): b1 tension 500 kg ; b2 tension 1000 kg ;
+          b3 compression 500*sqrt(5) = 1118 kg.
   -->
 
   <rect x="0" y="0" width="600" height="370" fill="#ffffff"/>
 
-  <!-- ===== Cotas / dimensiones ===== -->
+  <!-- ===== Dimensions ===== -->
   <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
-    <!-- ancho: 2.00 m (techo B-C) -->
+    <!-- width: 2.00 m (roof B-C) -->
     <line x1="170" y1="55" x2="470" y2="55"/>
     <line x1="170" y1="50" x2="170" y2="60"/>
     <line x1="470" y1="50" x2="470" y2="60"/>
     <text x="320" y="46" text-anchor="middle">2.00 m</text>
 
-    <!-- alto: 1.00 m (lado derecho) -->
+    <!-- height: 1.00 m (right side) -->
     <line x1="510" y1="100" x2="510" y2="250"/>
     <line x1="505" y1="100" x2="515" y2="100"/>
     <line x1="505" y1="250" x2="515" y2="250"/>
-    <!-- lineas de extension -->
+    <!-- extension lines -->
     <line x1="470" y1="100" x2="510" y2="100"/>
     <line x1="170" y1="250" x2="510" y2="250"/>
     <text x="525" y="175" text-anchor="middle" transform="rotate(-90 525 175)">1.00 m</text>
   </g>
 
-  <!-- ===== Reticulado: bielas (doble articulacion) ===== -->
+  <!-- ===== Truss: bars (double pin) ===== -->
   <g stroke="#1a1a1a" stroke-width="3" stroke-linecap="round">
-    <!-- b1: columna A-B (de A hacia arriba a B) -->
+    <!-- b1: column A-B (from A upward to B) -->
     <line x1="170" y1="250" x2="170" y2="100"/>
-    <!-- b2: techo B-C -->
+    <!-- b2: roof B-C -->
     <line x1="170" y1="100" x2="470" y2="100"/>
-    <!-- b3: diagonal A-C (baja hacia la izquierda) -->
+    <!-- b3: diagonal A-C (descends to the left) -->
     <line x1="170" y1="250" x2="470" y2="100"/>
   </g>
 
-  <!-- ===== Nudos ===== -->
+  <!-- ===== Nodes ===== -->
   <g fill="#000000">
     <circle cx="170" cy="250" r="4"/>
     <circle cx="170" cy="100" r="4"/>
     <circle cx="470" cy="100" r="4"/>
   </g>
 
-  <!-- ===== Etiquetas de nudos ===== -->
+  <!-- ===== Node labels ===== -->
   <g font-size="13" font-weight="600" fill="#6a1b9a">
     <text x="182" y="268" text-anchor="start">A</text>
     <text x="174" y="88"  text-anchor="end">B</text>
     <text x="478" y="112" text-anchor="start">C</text>
   </g>
 
-  <!-- ===== Nombres de barras (b con subindice) ===== -->
+  <!-- ===== Bar names (b with subscript) ===== -->
   <g fill="#6a1b9a" font-size="13" font-style="italic" font-weight="600">
     <text x="180" y="180" text-anchor="start">b<tspan font-size="9" dy="3">1</tspan></text>
     <text x="330" y="92"  text-anchor="middle">b<tspan font-size="9" dy="3">2</tspan></text>
     <text x="322" y="192" text-anchor="start">b<tspan font-size="9" dy="3">3</tspan></text>
   </g>
 
-  <!-- ===== Apoyos (contra el muro izquierdo) ===== -->
+  <!-- ===== Supports (against the left wall) ===== -->
   <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
-    <!-- A: apoyo movil (rodillo sobre muro izquierdo) -> reaccion horizontal -->
+    <!-- A: roller support (roller on left wall) -> horizontal reaction -->
     <polygon points="170,250 157,241 157,259"/>
     <circle cx="153" cy="245" r="3"/>
     <circle cx="153" cy="255" r="3"/>
@@ -91,7 +91,7 @@
     <line x1="149" y1="247" x2="142" y2="241"/>
     <line x1="149" y1="255" x2="142" y2="249"/>
     <line x1="149" y1="263" x2="142" y2="257"/>
-    <!-- B: apoyo fijo (articulado) contra el muro izquierdo -> reacciones H y V -->
+    <!-- B: pinned support (articulated) against the left wall -> reactions H and V -->
     <polygon points="170,100 157,91 157,109"/>
     <line x1="157" y1="85" x2="157" y2="115"/>
     <line x1="157" y1="91"  x2="150" y2="85"/>
@@ -100,25 +100,25 @@
     <line x1="157" y1="115" x2="150" y2="109"/>
   </g>
 
-  <!-- ===== Cargas (rojo) ===== -->
+  <!-- ===== Loads (red) ===== -->
   <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
-    <!-- C: 500 kg hacia abajo (punta en C, fuste arriba) -->
+    <!-- C: 500 kg downward (tip at C, shaft above) -->
     <line x1="470" y1="56" x2="470" y2="90" stroke-width="2.5"/>
     <polygon points="470,100 464,89 476,89" stroke="none"/>
     <text x="480" y="80" text-anchor="start" stroke="none">500 kg</text>
   </g>
 
-  <!-- ===== Reacciones de vinculo (azul, punta en el nudo, fuste opuesto a la fuerza) ===== -->
+  <!-- ===== Support reactions (blue, tip at the node, shaft trailing opposite the force) ===== -->
   <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
-    <!-- A: H_A = 1000 kg hacia la derecha (punta en A, fuste a la izquierda) -->
+    <!-- A: H_A = 1000 kg to the right (tip at A, shaft to the left) -->
     <line x1="123" y1="250" x2="157" y2="250" stroke-width="2.5"/>
     <polygon points="170,250 158,244 158,256" stroke="none"/>
     <text x="118" y="254" text-anchor="end" stroke="none">H<tspan font-size="10" dy="4">A</tspan> = 1000 kg</text>
-    <!-- B: H_B = 1000 kg hacia la izquierda (punta en B, fuste a la derecha) -->
+    <!-- B: H_B = 1000 kg to the left (tip at B, shaft to the right) -->
     <line x1="218" y1="100" x2="183" y2="100" stroke-width="2.5"/>
     <polygon points="170,100 182,94 182,106" stroke="none"/>
     <text x="200" y="92" text-anchor="start" stroke="none">H<tspan font-size="10" dy="4">B</tspan> = 1000 kg</text>
-    <!-- B: V_B = 500 kg hacia arriba (punta en B, fuste hacia abajo) -->
+    <!-- B: V_B = 500 kg upward (tip at B, shaft downward) -->
     <line x1="170" y1="148" x2="170" y2="113" stroke-width="2.5"/>
     <polygon points="170,100 164,112 176,112" stroke="none"/>
     <text x="180" y="120" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">B</tspan> = 500 kg</text>

@@ -13,7 +13,15 @@ import { FrameModel } from "@/lib/types";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
-const PRESET_INDICES = [4, 12] as const;
+const PRESET_INDICES = [4, 6, 7, 15] as const;
+
+// Tab labels, aligned by index with PRESET_INDICES.
+const LEARN_PRESET_LABEL_KEYS = [
+  "learn.preset.two_bay",
+  "learn.preset.l_frame_hinge",
+  "learn.preset.l_frame_overhang",
+  "learn.preset.frame_truss",
+] as const;
 
 const BASE_VIEW: ViewOptions = {
   showN: false,
@@ -423,7 +431,7 @@ export default function LearnPage() {
                   : "border-stone-200 bg-stone-100 text-stone-700 hover:bg-stone-200 dark:border-stone-600 dark:bg-stone-800 dark:text-stone-300 dark:hover:bg-stone-700"
               }`}
             >
-              {i === 0 ? t("learn.preset.two_bay") : t("learn.preset.frame_truss")}
+              {t(LEARN_PRESET_LABEL_KEYS[i] ?? "learn.preset.two_bay")}
             </button>
           ))}
         </div>

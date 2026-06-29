@@ -1,36 +1,36 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-40 0 800 462" font-family="system-ui, sans-serif">
   <!--
-    Estructura: portico de alma llena (nudos rigidos) con articulacion interna.
-    Mundo en metros, y hacia arriba. Transform: sx = 120 + x*60 ; sy = 320 - y*60
-    Nodos:
-      A    (0,0)  apoyo fijo (articulado)     -> (120,320)
-      C    (2,3)  arranque del techo / diag.  -> (240,140)
-      A1-2 (4,3)  articulacion interna        -> (360,140)
-      D    (7,3)  tope del pilar / techo der. -> (540,140)
-      B    (7,0)  apoyo fijo (articulado)     -> (540,320)
-    Barras (todas de alma llena, nudos rigidos salvo la articulacion):
-      A-C  diagonal (apoyo A -> arranque del techo)
-      C-A1-2  techo izquierdo  (2 m)
-      A1-2-D  techo derecho   (3 m)
-      D-B  pilar              (3 m)
-    Chapa 1 = {A, diagonal, techo izq.}  ;  Chapa 2 = {techo der., pilar, B}
-    La articulacion A1-2 une la chapa 1 con la chapa 2.
-    Determinacion: 4 reacciones (2 apoyos fijos) + 1 condicion (articulacion) = 4 ecs.
-    Cargas distribuidas:
-      q1 =  5 kN/m  perpendicular a la diagonal A-C
-      q2 = 10 kN/m  vertical (hacia abajo) sobre el techo derecho A1-2 -> D
-    Carga puntual:
-      P = 50 kN  vertical (hacia abajo) sobre el techo, a 1.5 m a la izquierda de D (x = 5.5 m)
-    Reacciones de vinculo:
-      A: V_A = 22.5 kN (arriba), H_A = 12.55 kN (derecha)
-      B: V_B = 67.5 kN (arriba), H_B = 27.5 kN (izquierda)
+    Structure: solid-web portal (rigid joints) with an internal hinge.
+    World in metres, y up. Transform: sx = 120 + x*60 ; sy = 320 - y*60
+    Nodes:
+      A    (0,0)  pinned support              -> (120,320)
+      C    (2,3)  roof start / diag.          -> (240,140)
+      A1-2 (4,3)  internal hinge              -> (360,140)
+      D    (7,3)  top of column / right roof  -> (540,140)
+      B    (7,0)  pinned support              -> (540,320)
+    Members (all solid-web, rigid joints except the hinge):
+      A-C  diagonal (support A -> roof start)
+      C-A1-2  left roof   (2 m)
+      A1-2-D  right roof  (3 m)
+      D-B  column         (3 m)
+    Plate 1 = {A, diagonal, left roof}  ;  Plate 2 = {right roof, column, B}
+    The hinge A1-2 connects plate 1 with plate 2.
+    Determinacy: 4 reactions (2 pinned supports) + 1 condition (hinge) = 4 eqs.
+    Distributed loads:
+      q1 =  5 kN/m  perpendicular to the diagonal A-C
+      q2 = 10 kN/m  vertical (downward) on the right roof A1-2 -> D
+    Point load:
+      P = 50 kN  vertical (downward) on the roof, 1.5 m to the left of D (x = 5.5 m)
+    Support reactions:
+      A: V_A = 22.5 kN (upward), H_A = 12.55 kN (to the right)
+      B: V_B = 67.5 kN (upward), H_B = 27.5 kN (to the left)
   -->
 
   <rect x="-40" y="0" width="800" height="462" fill="#ffffff"/>
 
-  <!-- ===== Cotas / dimensiones ===== -->
+  <!-- ===== Dimensions ===== -->
   <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
-    <!-- techo (arriba): 2.00 | 1.50 | 1.50 (tick en la carga puntual, a 1.5 m de D) -->
+    <!-- roof (top): 2.00 | 1.50 | 1.50 (tick at the point load, 1.5 m from D) -->
     <line x1="240" y1="72" x2="540" y2="72"/>
     <line x1="240" y1="67" x2="240" y2="77"/>
     <line x1="360" y1="67" x2="360" y2="77"/>
@@ -40,34 +40,34 @@
     <text x="405" y="64" text-anchor="middle">1.50</text>
     <text x="495" y="64" text-anchor="middle">1.50</text>
 
-    <!-- pilar en B (lado interior, para no cruzar H_B): 3.00 m -->
+    <!-- column at B (inner side, to avoid crossing H_B): 3.00 m -->
     <line x1="516" y1="140" x2="516" y2="320"/>
     <line x1="511" y1="140" x2="521" y2="140"/>
     <line x1="511" y1="320" x2="521" y2="320"/>
     <text x="504" y="230" text-anchor="middle" transform="rotate(-90 504 230)">3.00 m</text>
 
-    <!-- base: separacion entre apoyos 7.00 m -->
+    <!-- base: spacing between supports 7.00 m -->
     <line x1="120" y1="410" x2="540" y2="410"/>
     <line x1="120" y1="405" x2="120" y2="415"/>
     <line x1="540" y1="405" x2="540" y2="415"/>
     <text x="330" y="427" text-anchor="middle">7.00 m</text>
   </g>
 
-  <!-- ===== Etiquetas de chapas (cuerpos rigidos) ===== -->
+  <!-- ===== Plate labels (rigid bodies) ===== -->
   <g fill="#9aa0a6" font-size="13" font-style="italic" font-weight="600">
     <text x="210" y="258" text-anchor="middle">chapa 1</text>
     <text x="448" y="258" text-anchor="middle">chapa 2</text>
   </g>
 
-  <!-- ===== Portico de alma llena (nudos rigidos) ===== -->
+  <!-- ===== Solid-web portal (rigid joints) ===== -->
   <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
     <line x1="120" y1="320" x2="240" y2="140"/> <!-- diagonal A-C -->
-    <line x1="240" y1="140" x2="360" y2="140"/> <!-- techo izq. C-A1-2 -->
-    <line x1="360" y1="140" x2="540" y2="140"/> <!-- techo der. A1-2-D -->
-    <line x1="540" y1="140" x2="540" y2="320"/> <!-- pilar D-B -->
+    <line x1="240" y1="140" x2="360" y2="140"/> <!-- left roof C-A1-2 -->
+    <line x1="360" y1="140" x2="540" y2="140"/> <!-- right roof A1-2-D -->
+    <line x1="540" y1="140" x2="540" y2="320"/> <!-- column D-B -->
   </g>
 
-  <!-- ===== Apoyos fijos (articulados / pinned) ===== -->
+  <!-- ===== Pinned supports ===== -->
   <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
     <!-- A -->
     <polygon points="120,320 111,331 129,331"/>
@@ -85,10 +85,10 @@
     <line x1="553" y1="331" x2="547" y2="338"/>
   </g>
 
-  <!-- ===== Articulacion interna en A1-2 ===== -->
+  <!-- ===== Internal hinge at A1-2 ===== -->
   <circle cx="360" cy="140" r="6" fill="#ffffff" stroke="#1a1a1a" stroke-width="2"/>
 
-  <!-- ===== Nudos rigidos / apoyos ===== -->
+  <!-- ===== Rigid joints / supports ===== -->
   <g fill="#1a1a1a">
     <circle cx="120" cy="320" r="4"/> <!-- A -->
     <circle cx="540" cy="320" r="4"/> <!-- B -->
@@ -96,7 +96,7 @@
     <circle cx="540" cy="140" r="4"/> <!-- D -->
   </g>
 
-  <!-- ===== Etiquetas de nudos ===== -->
+  <!-- ===== Node labels ===== -->
   <g font-size="13" font-weight="600" fill="#6a1b9a">
     <text x="130" y="326" text-anchor="start">A</text>
     <text x="550" y="308" text-anchor="start">B</text>
@@ -105,9 +105,9 @@
     <text x="360" y="166" text-anchor="middle">A<tspan font-size="10" dy="4">1-2</tspan></text>
   </g>
 
-  <!-- ===== Cargas distribuidas (verticales, hacia abajo) ===== -->
+  <!-- ===== Distributed loads (vertical, downward) ===== -->
   <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
-    <!-- q1 = 5 kN/m perpendicular a la diagonal A-C -->
+    <!-- q1 = 5 kN/m perpendicular to the diagonal A-C -->
     <line x1="92" y1="301" x2="212" y2="121" stroke-width="2"/>
     <g stroke-width="1.5">
       <line x1="104" y1="283" x2="125" y2="298"/>
@@ -127,7 +127,7 @@
     </g>
     <text x="140" y="203" text-anchor="middle" transform="rotate(-56.3 140 203)" stroke="none">q<tspan font-size="10" dy="4">1</tspan> = 5 kN/m</text>
 
-    <!-- q2 = 10 kN/m sobre el techo derecho A1-2 -> D -->
+    <!-- q2 = 10 kN/m on the right roof A1-2 -> D -->
     <line x1="360" y1="108" x2="540" y2="108" stroke-width="2"/>
     <g stroke-width="1.5">
       <line x1="390" y1="108" x2="390" y2="135"/>
@@ -145,15 +145,15 @@
     </g>
     <text x="398" y="99" text-anchor="middle" stroke="none">q<tspan font-size="10" dy="4">2</tspan> = 10 kN/m</text>
 
-    <!-- P = 50 kN vertical hacia abajo, a 1.5 m a la izquierda de D (x = 5.5 m) -->
+    <!-- P = 50 kN vertical downward, 1.5 m to the left of D (x = 5.5 m) -->
     <line x1="450" y1="84" x2="450" y2="132" stroke-width="3.2"/>
     <polygon points="450,140 444,128 456,128" stroke="none"/>
     <text x="458" y="98" text-anchor="start" stroke="none">50 kN</text>
   </g>
 
-  <!-- ===== Reacciones de vinculo ===== -->
+  <!-- ===== Support reactions ===== -->
   <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
-    <!-- A: V_A = 22.5 kN (arriba), H_A = 12.55 kN (derecha) -->
+    <!-- A: V_A = 22.5 kN (upward), H_A = 12.55 kN (to the right) -->
     <line x1="120" y1="378" x2="120" y2="346" stroke-width="2.5"/>
     <polygon points="120,341 115,352 125,352" stroke="none"/>
     <text x="132" y="372" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan> = 22.5 kN</text>
@@ -161,7 +161,7 @@
     <polygon points="120,320 109,315 109,325" stroke="none"/>
     <text x="66" y="316" text-anchor="end" stroke="none">H<tspan font-size="10" dy="4">A</tspan> = 12.55 kN</text>
 
-    <!-- B: V_B = 67.5 kN (arriba), H_B = 27.5 kN (izquierda) -->
+    <!-- B: V_B = 67.5 kN (upward), H_B = 27.5 kN (to the left) -->
     <line x1="540" y1="378" x2="540" y2="346" stroke-width="2.5"/>
     <polygon points="540,341 535,352 545,352" stroke="none"/>
     <text x="528" y="372" text-anchor="end" stroke="none">V<tspan font-size="10" dy="4">B</tspan> = 67.5 kN</text>
