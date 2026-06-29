@@ -42,14 +42,12 @@ content bounds (it need not start at `0 0`; see `portal-frame` and
 
 ## Header comment (required)
 
-Open every file with a comment block (Spanish **or** English — pick one per file)
-documenting the model, in this order: **Estructura/Structure**, **Transform**,
-**Nodos/Nodes** (id, world coord → screen coord, support type), **Barras/Members**,
-**Apoyos/Supports**, **Cargas/Loads**, **Reacciones/Reactions**. State whether the
+Open every file with an **English** comment block documenting the model, in this
+order: **Structure**, **Transform**, **Nodes** (id, world coord → screen coord,
+support type), **Members**, **Supports**, **Loads**, **Reactions**. State whether the
 given reactions satisfy equilibrium; if they do not, say so and draw them as given
-anyway (see the NOTA in `l-frame-hinge.svg`; `two-column-portal.svg` is an
-English-comment example). Loads may be in **kN or T** — be consistent within a file
-and label accordingly.
+anyway (see the NOTE in `l-frame-hinge.svg`). Loads may be in **kN or T** — be
+consistent within a file and label accordingly.
 
 ## Palette (do not invent colors)
 
@@ -81,7 +79,7 @@ caption.** Don't merge concerns into one group.
 Coordinates below assume a node at `(NX, NY)`; translate the literals from a
 canonical file. **Supports hang from the node** (apex AT the node, symbol below).
 
-**Pinned (apoyo fijo / articulado)** — triangle + ground hatch:
+**Pinned support** — triangle + ground hatch:
 ```svg
 <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
   <polygon points="NX,NY  NX-9,NY+11  NX+9,NY+11"/>
@@ -90,11 +88,11 @@ canonical file. **Supports hang from the node** (apex AT the node, symbol below)
 </g>
 ```
 
-**Roller (apoyo movil)** — pinned triangle + two wheels + lower hatch
+**Roller support** — pinned triangle + two wheels + lower hatch
 (`l-frame-hinge.svg`, support at B/C). Adds `<circle r="3">` wheels at
 `NY+17` and the hatch at `NY+21`.
 
-**Internal hinge (articulacion / rotula)** — white open circle on the member:
+**Internal hinge** — white open circle on the member:
 ```svg
 <circle cx="NX" cy="NY" r="6" fill="#ffffff" stroke="#1a1a1a" stroke-width="2"/>
 ```
@@ -110,14 +108,14 @@ the member: shaft starting at the member, arrowhead at the loose end pointing aw
 (see the `12 T` load in `two-column-portal.svg`). When an arrow stands in open space
 (not piercing a support), let the shaft **overlap the arrowhead base by a few px** —
 the arrowhead is drawn last and hides the join; a 2–3 px gap otherwise reads as a
-split arrow (`punta separada del cuerpo`).
+split arrow (tip detached from the shaft).
 
 **UDL** — a top rail line, evenly spaced vertical shafts, an arrowhead per shaft,
 and a `q = … kN/m` (or `T/m`) label. Inclined UDLs (perpendicular to a member) exist
 in `portal-frame.svg`; a partial-span horizontal UDL is in `two-column-portal.svg`.
 
 **Concentrated moment** — arc + arrowhead + center dot (`frame-truss.svg`,
-`l-frame-hinge.svg`). Clockwise ("horario") uses an SVG arc with
+`l-frame-hinge.svg`). Clockwise uses an SVG arc with
 `large-arc-flag=1 sweep-flag=1` and a small gap at the top where the arrowhead
 sits. To resize, scale the arc radius and the arrowhead offsets together about the
 center.
@@ -128,7 +126,7 @@ Reactions and loads are drawn **tip AT the node, shaft trailing in the opposite
 direction** of the force (the arrowhead pushes on the node). A leftward force →
 arrowhead on the left, shaft to the right; an upward reaction → arrowhead at the
 node, shaft below (it pierces the support symbol — that's expected, blue over
-black). Comments in the example files say `punta en el nudo, fuste opuesto`.
+black). Comments in the example files say `tip at the node, shaft trailing opposite`.
 
 **Exception:** when trailing the shaft would make it collinear with a member (e.g.
 a *downward* reaction at the base of a column, where the column is directly above),
