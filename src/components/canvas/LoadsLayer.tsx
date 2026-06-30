@@ -15,11 +15,15 @@ export function LoadsLayer({
   tr,
   scale = 1,
   highlightedLoadId,
+  unit = "",
+  showUnit = true,
 }: {
   model: FrameModel;
   tr: Transform;
   scale?: number;
   highlightedLoadId?: string | null;
+  unit?: string;
+  showUnit?: boolean;
 }) {
   const colors = useColors();
   const ARROW_BASE = 40; // px for a "unit" force arrow
@@ -32,6 +36,7 @@ export function LoadsLayer({
   });
   const k = (maxF > 0 ? ARROW_BASE / maxF : 1) * scale;
   const anyHighlighted = highlightedLoadId != null;
+  const u = showUnit && unit ? ` ${unit}` : "";
 
   return (
     <g data-testid="loads-layer">
@@ -58,7 +63,7 @@ export function LoadsLayer({
                   y1={sy - Math.sin(angle) * len}
                   x2={sx}
                   y2={sy}
-                  label={`${mag.toFixed(0)}`}
+                  label={`${mag.toFixed(0)}${u}`}
                   highlighted={isHL}
                   loadColor={colors.loads}
                 />
@@ -69,7 +74,7 @@ export function LoadsLayer({
                   cy={sy}
                   m={load.m}
                   scale={scale}
-                  label={`${Math.abs(load.m).toFixed(0)}`}
+                  label={`${Math.abs(load.m).toFixed(0)}${u}`}
                   highlighted={isHL}
                   loadColor={colors.loads}
                 />
@@ -97,7 +102,7 @@ export function LoadsLayer({
                 y1={sy - Math.sin(angle) * len}
                 x2={sx}
                 y2={sy}
-                label={`${mag.toFixed(0)}`}
+                label={`${mag.toFixed(0)}${u}`}
                 highlighted={isHL}
                 loadColor={colors.loads}
               />
@@ -140,7 +145,7 @@ export function LoadsLayer({
                     y1={sy - Math.sin(angle) * len}
                     x2={sx}
                     y2={sy}
-                    label={i === UDL_LABEL_INDEX ? `${mag.toFixed(0)}/m` : undefined}
+                    label={i === UDL_LABEL_INDEX ? `${mag.toFixed(0)}${u}/m` : undefined}
                     highlighted={isHL}
                     loadColor={colors.loads}
                   />

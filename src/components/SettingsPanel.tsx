@@ -37,6 +37,7 @@ const COLOR_ROWS: { key: ColorKey; label: TranslationKey }[] = [
   { key: "node", label: "settings.color.nodes" },
   { key: "ink", label: "settings.color.labels" },
   { key: "grid", label: "settings.color.grid" },
+  { key: "dimensions", label: "settings.color.dimensions" },
   { key: "paper", label: "settings.color.background" },
 ];
 const DIAGRAM_ROWS: { key: ColorKey; label: TranslationKey }[] = [
@@ -260,6 +261,24 @@ export function SettingsPanel() {
                     type="button"
                     onClick={() => setPref("rememberWork", v)}
                     className={segBtn(prefs.rememberWork === v)}
+                  >
+                    {v ? t("settings.on") : t("settings.off")}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-xs text-stone-600 dark:text-stone-300">
+                {t("settings.show_load_units")}
+              </span>
+              <div className="flex overflow-hidden rounded-md border border-stone-300 dark:border-stone-600">
+                {([true, false] as const).map((v) => (
+                  <button
+                    key={String(v)}
+                    type="button"
+                    onClick={() => setPref("showLoadUnits", v)}
+                    className={segBtn(prefs.showLoadUnits === v)}
                   >
                     {v ? t("settings.on") : t("settings.off")}
                   </button>

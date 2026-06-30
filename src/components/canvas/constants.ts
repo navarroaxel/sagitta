@@ -14,6 +14,7 @@ export const DEFAULT_COLORS = {
   member: "#292524",
   node: "#44403c",
   grid: "#e7e5e4",
+  dimensions: "#52525b",
 };
 
 export type Colors = typeof DEFAULT_COLORS;

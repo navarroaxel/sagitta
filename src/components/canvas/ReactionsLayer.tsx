@@ -9,15 +9,18 @@ export function ReactionsLayer({
   solved,
   tr,
   unit,
+  showUnit = true,
 }: {
   model: FrameModel;
   solved: SolveOutput;
   tr: Transform;
   unit: string;
+  showUnit?: boolean;
 }) {
   const colors = useColors();
   const ARROW_LEN = 50;
   const reactions = solved.result.reactions;
+  const u = showUnit ? unit : "";
   return (
     <g data-testid="reactions-layer">
       {model.nodes.map((nd, i) => {
@@ -52,7 +55,7 @@ export function ReactionsLayer({
                 style={{ paintOrder: "stroke", stroke: "#fff", strokeWidth: 2 }}
               >
                 {r.rx.toFixed(1)}
-                {unit}
+                {u}
               </text>
             </g>,
           );
@@ -82,7 +85,7 @@ export function ReactionsLayer({
                 style={{ paintOrder: "stroke", stroke: "#fff", strokeWidth: 2 }}
               >
                 {r.ry.toFixed(1)}
-                {unit}
+                {u}
               </text>
             </g>,
           );
@@ -105,7 +108,7 @@ export function ReactionsLayer({
                 style={{ paintOrder: "stroke", stroke: "#fff", strokeWidth: 2 }}
               >
                 {r.rm.toFixed(1)}
-                {unit}
+                {u}
               </text>
             </g>,
           );

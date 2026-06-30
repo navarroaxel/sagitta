@@ -16,6 +16,7 @@ import { useColors } from "@/contexts/ColorContext";
 import { usePrefs } from "@/contexts/PrefsContext";
 import { SupportSymbol } from "./canvas/SupportSymbol";
 import { GridLayer } from "./canvas/GridLayer";
+import { DimensionsLayer } from "./canvas/DimensionsLayer";
 import { DiagramLayer } from "./canvas/DiagramLayer";
 import { LoadsLayer } from "./canvas/LoadsLayer";
 import { ReactionsLayer } from "./canvas/ReactionsLayer";
@@ -56,7 +57,7 @@ export default function FrameCanvas({
   svgOverlay,
 }: Props) {
   const colors = useColors();
-  const { snap } = usePrefs();
+  const { snap, showLoadUnits, showDimensions } = usePrefs();
   const internalRef = useRef<SVGSVGElement>(null);
   const ref = svgRef ?? internalRef;
 
@@ -311,6 +312,9 @@ export default function FrameCanvas({
           {/* Grid */}
           {viewOpts.showGrid && <GridLayer tr={tr} snap={snap} />}
 
+          {/* Dimension lines (cotas) */}
+          {showDimensions && <DimensionsLayer tr={tr} model={model} />}
+
           {/* Unstable overlay */}
           {solved && !stable && (
             <text
@@ -456,6 +460,8 @@ export default function FrameCanvas({
               tr={tr}
               scale={viewOpts.scaleLoads}
               highlightedLoadId={highlightedLoadId}
+              unit={model.unit}
+              showUnit={showLoadUnits}
             />
           )}
 
@@ -466,6 +472,7 @@ export default function FrameCanvas({
               solved={solved}
               tr={tr}
               unit={model.unit}
+              showUnit={showLoadUnits}
             />
           )}
 

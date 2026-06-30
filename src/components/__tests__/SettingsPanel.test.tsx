@@ -131,7 +131,8 @@ describe("SettingsPanel", () => {
   test("Preferences: 'Remember my work' can be turned off", () => {
     setup();
     fireEvent.click(screen.getByRole("button", { name: "Settings" }));
-    fireEvent.click(screen.getByRole("button", { name: "Off" }));
+    // First "Off" button corresponds to "Remember my work"
+    fireEvent.click(screen.getAllByRole("button", { name: "Off" })[0]);
     expect(screen.getByTestId("prefs-probe")).toHaveTextContent("false|0.25");
   });
 
