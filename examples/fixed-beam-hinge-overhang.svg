@@ -1,0 +1,172 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-10 155 965 280" font-family="system-ui, sans-serif">
+  <!--
+    Structure: straight horizontal beam, 14 m, solid web. Fixed (built-in) support
+      at the left end A, roller (apoyo movil) at B, one internal hinge A_1-2.
+    World in metres, y up. Transform: sx = 100 + x*55 ; sy = 320 - y*55
+    Nodes:
+      A   (0,0)   fixed / built-in support           -> (100,320)
+      -   (3,0)   point-load application              -> (265,320)
+      -   (7,0)   point load + start of the UDL       -> (485,320)
+      A_1-2 (10,0) internal hinge (2 m left of B)     -> (650,320)
+      B   (12,0)  roller support (2 m left of the end)-> (760,320)
+      D   (14,0)  free right-hand tip (loaded)        -> (870,320)
+    Members:
+      A-D  beam (14 m), rigid throughout except the internal hinge at x=10.
+    Determinacy: fixed (H,V,M = 3) + roller (V = 1) = 4 reactions, 1 hinge condition
+      -> 4 - 3 equilibrium - 1 hinge = 0  =>  statically determinate.
+    Loads (all in T):
+      P1 = 10 T vertical (downward) at x=3
+      P2 =  4 T vertical (downward) at x=7
+      q  =  4 T/m vertical (downward), from x=7 to x=12 (5 m long -> 20 T, centroid x=9.5)
+      P3 =  5 T vertical (downward) at the tip x=14
+      H  =  7 T horizontal to the left at the tip x=14
+    Support reactions (computed):
+      Hinge M=0 at x=10 (right part): -8*1 + 2*V_B - 5*4 = 0  -> V_B = 14 T up
+      A: H_A = 7 T (to the right) ; V_A = 25 T (upward) ; M_A = 150 T.m (counterclockwise)
+      B: V_B = 14 T (upward)
+    These reactions satisfy global equilibrium (SumFx=0: 7-7; SumFy=0: 25+14-39;
+    SumM_A=0) and the hinge condition (M=0 at x=10). Determinate figure.
+  -->
+
+  <rect x="-10" y="155" width="965" height="280" fill="#ffffff"/>
+
+  <!-- ===== Dimensions ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <!-- chain along the beam: 3.00 | 4.00 | 3.00 | 2.00 | 2.00 = 14.00 -->
+    <line x1="100" y1="180" x2="870" y2="180"/>
+    <line x1="100" y1="175" x2="100" y2="185"/>
+    <line x1="265" y1="175" x2="265" y2="185"/>
+    <line x1="485" y1="175" x2="485" y2="185"/>
+    <line x1="650" y1="175" x2="650" y2="185"/>
+    <line x1="760" y1="175" x2="760" y2="185"/>
+    <line x1="870" y1="175" x2="870" y2="185"/>
+    <text x="183" y="172" text-anchor="middle">3.00</text>
+    <text x="375" y="172" text-anchor="middle">4.00</text>
+    <text x="568" y="172" text-anchor="middle">3.00</text>
+    <text x="705" y="172" text-anchor="middle">2.00</text>
+    <text x="815" y="172" text-anchor="middle">2.00</text>
+  </g>
+
+  <!-- ===== Beam (solid web) ===== -->
+  <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
+    <line x1="100" y1="320" x2="870" y2="320"/>
+  </g>
+
+  <!-- ===== Fixed / built-in support at A (vertical wall + hatch) ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="none">
+    <line x1="100" y1="300" x2="100" y2="340"/>
+    <line x1="100" y1="300" x2="92" y2="308"/>
+    <line x1="100" y1="310" x2="92" y2="318"/>
+    <line x1="100" y1="320" x2="92" y2="328"/>
+    <line x1="100" y1="330" x2="92" y2="338"/>
+    <line x1="100" y1="340" x2="92" y2="348"/>
+  </g>
+
+  <!-- ===== Roller support at B ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <polygon points="760,320 751,333 769,333"/>
+    <circle cx="755" cy="337" r="3"/>
+    <circle cx="765" cy="337" r="3"/>
+    <line x1="745" y1="341" x2="775" y2="341"/>
+    <line x1="749" y1="341" x2="743" y2="348"/>
+    <line x1="757" y1="341" x2="751" y2="348"/>
+    <line x1="765" y1="341" x2="759" y2="348"/>
+    <line x1="773" y1="341" x2="767" y2="348"/>
+  </g>
+
+  <!-- ===== Internal hinge A_1-2 (open circle on the beam) ===== -->
+  <circle cx="650" cy="320" r="6" fill="#ffffff" stroke="#1a1a1a" stroke-width="2"/>
+
+  <!-- ===== Nodes ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="100" cy="320" r="4"/> <!-- A -->
+    <circle cx="760" cy="320" r="4"/> <!-- B -->
+    <circle cx="870" cy="320" r="4"/> <!-- D free tip -->
+  </g>
+
+  <!-- ===== Node labels ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <text x="125" y="342" text-anchor="start">A</text>
+    <text x="772" y="308" text-anchor="start">B</text>
+    <text x="650" y="352" text-anchor="middle">A<tspan font-size="10" dy="4">1-2</tspan></text>
+  </g>
+
+  <!-- ===== Loads (red) ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+    <!-- P1 = 10 T downward at x=3 (tip at the beam, shaft trailing up) -->
+    <line x1="265" y1="214" x2="265" y2="308" stroke-width="2.5"/>
+    <polygon points="265,320 259,308 271,308" stroke="none"/>
+    <text x="265" y="207" text-anchor="middle" stroke="none">10 T</text>
+
+    <!-- P2 = 4 T downward at x=7 -->
+    <line x1="485" y1="214" x2="485" y2="308" stroke-width="2.5"/>
+    <polygon points="485,320 479,308 491,308" stroke="none"/>
+    <text x="472" y="207" text-anchor="end" stroke="none">4 T</text>
+
+    <!-- q = 4 T/m downward, x=7 (485) to x=12 (760) -->
+    <line x1="485" y1="262" x2="760" y2="262" stroke-width="2"/>
+    <g stroke-width="1.5">
+      <line x1="499" y1="262" x2="499" y2="312"/>
+      <line x1="526" y1="262" x2="526" y2="312"/>
+      <line x1="554" y1="262" x2="554" y2="312"/>
+      <line x1="581" y1="262" x2="581" y2="312"/>
+      <line x1="609" y1="262" x2="609" y2="312"/>
+      <line x1="636" y1="262" x2="636" y2="312"/>
+      <line x1="664" y1="262" x2="664" y2="312"/>
+      <line x1="691" y1="262" x2="691" y2="312"/>
+      <line x1="719" y1="262" x2="719" y2="312"/>
+      <line x1="746" y1="262" x2="746" y2="312"/>
+    </g>
+    <g stroke="none">
+      <polygon points="499,318 496,312 502,312"/>
+      <polygon points="526,318 523,312 529,312"/>
+      <polygon points="554,318 551,312 557,312"/>
+      <polygon points="581,318 578,312 584,312"/>
+      <polygon points="609,318 606,312 612,312"/>
+      <polygon points="636,318 633,312 639,312"/>
+      <polygon points="664,318 661,312 667,312"/>
+      <polygon points="691,318 688,312 694,312"/>
+      <polygon points="719,318 716,312 722,312"/>
+      <polygon points="746,318 743,312 749,312"/>
+    </g>
+    <text x="622" y="252" text-anchor="middle" stroke="none">q = 4 T/m</text>
+
+    <!-- P3 = 5 T downward at the tip x=14 -->
+    <line x1="870" y1="214" x2="870" y2="308" stroke-width="2.5"/>
+    <polygon points="870,320 864,308 876,308" stroke="none"/>
+    <text x="858" y="207" text-anchor="end" stroke="none">5 T</text>
+
+    <!-- H = 7 T horizontal to the left at the tip (tip at node, shaft trailing right) -->
+    <line x1="880" y1="320" x2="912" y2="320" stroke-width="2.5"/>
+    <polygon points="870,320 882,314 882,326" stroke="none"/>
+    <text x="916" y="324" text-anchor="start" stroke="none">7 T</text>
+  </g>
+
+  <!-- ===== Support reactions (blue) ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+    <!-- A: V_A = 25 T upward (drawn below the node pointing up) -->
+    <line x1="100" y1="360" x2="100" y2="400" stroke-width="2.5"/>
+    <polygon points="100,352 94,364 106,364" stroke="none"/>
+    <text x="118" y="382" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan><tspan dy="-4"> = 25 T</tspan></text>
+
+    <!-- A: H_A = 7 T to the right (drawn to the left of the support, pointing toward it) -->
+    <line x1="50" y1="320" x2="76" y2="320" stroke-width="2.5"/>
+    <polygon points="86,320 74,314 74,326" stroke="none"/>
+    <text x="46" y="325" text-anchor="end" stroke="none">H<tspan font-size="10" dy="4">A</tspan><tspan dy="-4"> = 7 T</tspan></text>
+
+    <!-- A: M_A = 150 T.m counterclockwise (arc centered on node A) -->
+    <circle cx="100" cy="320" r="2" stroke="none"/>
+    <path d="M 91 304.41 A 18 18 0 1 0 109 304.41" fill="none" stroke-width="2.5"/>
+    <polygon points="102.76,300.8 111.4,300.2 106.6,308.6" stroke="none"/>
+    <text x="100" y="292" text-anchor="middle" stroke="none">M<tspan font-size="10" dy="4">A</tspan><tspan dy="-4"> = 150 T&#183;m</tspan></text>
+
+    <!-- B: V_B = 14 T upward (drawn below the support pointing up, aligned with V_A) -->
+    <line x1="760" y1="360" x2="760" y2="400" stroke-width="2.5"/>
+    <polygon points="760,352 754,364 766,364" stroke="none"/>
+    <text x="778" y="382" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">B</tspan><tspan dy="-4"> = 14 T</tspan></text>
+  </g>
+
+  <text x="470" y="412" text-anchor="middle" fill="#5f6368" font-size="13">
+    14 m beam — A fixed, B roller, internal hinge A_1-2. Loads (red), reactions (blue); given reactions satisfy equilibrium.
+  </text>
+</svg>

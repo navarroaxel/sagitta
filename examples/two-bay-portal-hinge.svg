@@ -1,0 +1,187 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="88 150 654 415" font-family="system-ui, sans-serif">
+  <!--
+    Structure: planar two-bay portal frame (solid web, rigid joints) with one
+    internal hinge; units in T and T/m. World in metres, y up.
+    Transform: sx = 200 + x*50 ; sy = 430 - y*50
+    Nodes:
+      A     (0,0)  roller support (base of left column)      -> (200,430)
+      G     (0,4)  top-left corner (rigid)                   -> (200,230)
+      Btop  (5,4)  top of central column (rigid corner)      -> (450,230)
+      A12   (5,2)  internal hinge — mid-height of column B,
+                   where the right roof attaches             -> (450,330)
+      B     (5,0)  pinned support (base of central column)   -> (450,430)
+      F     (8,2)  top of right column (rigid)               -> (600,330)
+      C     (8,0)  roller support (base of right column)     -> (600,430)
+    Members:
+      A-G      left column    (4 m, vertical)
+      G-Btop   left roof       (5 m, horizontal at y=4) — bay 1, 4 m tall
+      B-Btop   central column  (4 m, vertical, continuous through A12)
+      A12-F    right roof      (3 m, horizontal at y=2) — hinged at A12 end
+      F-C      right column    (2 m, vertical)
+    Supports: A roller (V only), B pinned (H+V), C roller (V only) -> 4 reactions.
+    Determinacy: 4 reactions, 3 global equations + 1 hinge condition (M=0 at the
+      A12 end of the right roof) = 4 -> statically determinate.
+    Loads:
+      q = 3 T/m horizontal, acting to the RIGHT (perpendicular to the left
+        column, e.g. wind from the left), over its full 4 m height. Resultant 12 T
+        -> at (0,2). [Direction assumed; not stated in the request.]
+      6 T vertical downward on the left roof, 2.5 m from the left column, at (2.5,4)
+      8 T horizontal to the LEFT at the top of the right column, at (8,2)
+      2 T vertical downward on the right roof, 1 m left of the right column, at (7,2)
+    Support reactions (computed):
+      A: V_A = 1.40 T (up)
+      B: H_B = 4 T (left) ; V_B = 5.27 T (up)
+      C: V_C = 1.33 T (up)
+    These reactions satisfy global equilibrium (SumFx=0, SumFy=0, SumM_A=0).
+  -->
+
+  <rect x="88" y="150" width="654" height="415" fill="#ffffff"/>
+
+  <!-- ===== Dimensions ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <!-- roof (top): 2.50 | 2.50 | 3.00 (horizontal spans) -->
+    <line x1="200" y1="178" x2="600" y2="178"/>
+    <line x1="200" y1="173" x2="200" y2="183"/>
+    <line x1="325" y1="173" x2="325" y2="183"/>
+    <line x1="450" y1="173" x2="450" y2="183"/>
+    <line x1="600" y1="173" x2="600" y2="183"/>
+    <text x="262" y="170" text-anchor="middle">2.50</text>
+    <text x="387" y="170" text-anchor="middle">2.50</text>
+    <text x="525" y="170" text-anchor="middle">3.00</text>
+    <!-- left column height (left side): 2.00 + 2.00 m (mid tick = hinge level) -->
+    <line x1="140" y1="230" x2="140" y2="430"/>
+    <line x1="135" y1="230" x2="145" y2="230"/>
+    <line x1="135" y1="330" x2="145" y2="330"/>
+    <line x1="135" y1="430" x2="145" y2="430"/>
+    <text x="128" y="280" text-anchor="middle" transform="rotate(-90 128 280)">2.00</text>
+    <text x="128" y="380" text-anchor="middle" transform="rotate(-90 128 380)">2.00</text>
+    <!-- right column height (right side): 2.00 m -->
+    <line x1="662" y1="330" x2="662" y2="430"/>
+    <line x1="657" y1="330" x2="667" y2="330"/>
+    <line x1="657" y1="430" x2="667" y2="430"/>
+    <text x="674" y="380" text-anchor="middle" transform="rotate(-90 674 380)">2.00</text>
+  </g>
+
+  <!-- ===== Solid-web frame (rigid joints) ===== -->
+  <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
+    <line x1="200" y1="430" x2="200" y2="230"/> <!-- left column A-G -->
+    <line x1="200" y1="230" x2="450" y2="230"/> <!-- left roof G-Btop -->
+    <line x1="450" y1="430" x2="450" y2="230"/> <!-- central column B-Btop (continuous) -->
+    <line x1="450" y1="330" x2="600" y2="330"/> <!-- right roof A12-F (horizontal) -->
+    <line x1="600" y1="330" x2="600" y2="430"/> <!-- right column F-C -->
+  </g>
+
+  <!-- ===== Roller support at A ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <polygon points="200,430 191,443 209,443"/>
+    <circle cx="195" cy="447" r="3"/>
+    <circle cx="205" cy="447" r="3"/>
+    <line x1="185" y1="451" x2="215" y2="451"/>
+    <line x1="189" y1="451" x2="183" y2="458"/>
+    <line x1="197" y1="451" x2="191" y2="458"/>
+    <line x1="205" y1="451" x2="199" y2="458"/>
+    <line x1="213" y1="451" x2="207" y2="458"/>
+  </g>
+
+  <!-- ===== Pinned support at B ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <polygon points="450,430 441,441 459,441"/>
+    <line x1="435" y1="441" x2="465" y2="441"/>
+    <line x1="439" y1="441" x2="433" y2="448"/>
+    <line x1="447" y1="441" x2="441" y2="448"/>
+    <line x1="455" y1="441" x2="449" y2="448"/>
+    <line x1="463" y1="441" x2="457" y2="448"/>
+  </g>
+
+  <!-- ===== Roller support at C ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <polygon points="600,430 591,443 609,443"/>
+    <circle cx="595" cy="447" r="3"/>
+    <circle cx="605" cy="447" r="3"/>
+    <line x1="585" y1="451" x2="615" y2="451"/>
+    <line x1="589" y1="451" x2="583" y2="458"/>
+    <line x1="597" y1="451" x2="591" y2="458"/>
+    <line x1="605" y1="451" x2="599" y2="458"/>
+    <line x1="613" y1="451" x2="607" y2="458"/>
+  </g>
+
+  <!-- ===== Internal hinge at A12 (mid-height of central column) ===== -->
+  <circle cx="450" cy="330" r="6" fill="#ffffff" stroke="#1a1a1a" stroke-width="2"/>
+
+  <!-- ===== Nodes (rigid joints / supports; hinge stays an open circle) ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="200" cy="430" r="4"/> <!-- A -->
+    <circle cx="200" cy="230" r="4"/> <!-- G -->
+    <circle cx="450" cy="230" r="4"/> <!-- Btop -->
+    <circle cx="450" cy="430" r="4"/> <!-- B -->
+    <circle cx="600" cy="330" r="4"/> <!-- F -->
+    <circle cx="600" cy="430" r="4"/> <!-- C -->
+  </g>
+
+  <!-- ===== Node labels ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <text x="213" y="421" text-anchor="start">A</text>
+    <text x="438" y="421" text-anchor="end">B</text>
+    <text x="588" y="421" text-anchor="end">C</text>
+    <text x="440" y="322" text-anchor="end">A<tspan font-size="10" dy="4">1-2</tspan></text>
+  </g>
+
+  <!-- ===== Loads (red) ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+    <!-- q = 3 T/m horizontal to the right on the full left column (tips at the column) -->
+    <line x1="170" y1="230" x2="170" y2="430" stroke-width="2"/>
+    <g stroke-width="1.5">
+      <line x1="170" y1="248" x2="190" y2="248"/>
+      <line x1="170" y1="282" x2="190" y2="282"/>
+      <line x1="170" y1="316" x2="190" y2="316"/>
+      <line x1="170" y1="350" x2="190" y2="350"/>
+      <line x1="170" y1="384" x2="190" y2="384"/>
+      <line x1="170" y1="418" x2="190" y2="418"/>
+    </g>
+    <g stroke="none">
+      <polygon points="200,248 188,242 188,254"/>
+      <polygon points="200,282 188,276 188,288"/>
+      <polygon points="200,316 188,310 188,322"/>
+      <polygon points="200,350 188,344 188,356"/>
+      <polygon points="200,384 188,378 188,390"/>
+      <polygon points="200,418 188,412 188,424"/>
+    </g>
+    <text x="156" y="330" text-anchor="middle" transform="rotate(-90 156 330)" stroke="none">q = 3 T/m</text>
+    <!-- 6 T vertical downward on the left roof at (2.5,4); shaft above, tip on the roof -->
+    <line x1="325" y1="196" x2="325" y2="222" stroke-width="2.5"/>
+    <polygon points="325,230 319,218 331,218" stroke="none"/>
+    <text x="335" y="210" text-anchor="start" stroke="none">6 T</text>
+    <!-- 8 T horizontal to the LEFT at the top of the right column (tip at F, shaft to the right) -->
+    <line x1="612" y1="330" x2="645" y2="330" stroke-width="2.5"/>
+    <polygon points="600,330 612,324 612,336" stroke="none"/>
+    <text x="628" y="318" text-anchor="middle" stroke="none">8 T</text>
+    <!-- 2 T vertical downward on the right roof, 1 m left of the right column, at (7,2) -->
+    <line x1="550" y1="296" x2="550" y2="322" stroke-width="2.5"/>
+    <polygon points="550,330 544,318 556,318" stroke="none"/>
+    <text x="560" y="310" text-anchor="start" stroke="none">2 T</text>
+  </g>
+
+  <!-- ===== Support reactions (blue) ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+    <!-- A: V_A = 1.40 T upward; below the roller pointing up -->
+    <line x1="200" y1="470" x2="200" y2="513" stroke-width="2.5"/>
+    <polygon points="200,462 194,474 206,474" stroke="none"/>
+    <text x="216" y="492" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan> = 1.40 T</text>
+    <!-- B: H_B = 4.00 T to the left (tip at B, shaft to the right) -->
+    <line x1="462" y1="430" x2="495" y2="430" stroke-width="2.5"/>
+    <polygon points="450,430 462,424 462,436" stroke="none"/>
+    <text x="499" y="434" text-anchor="start" stroke="none">H<tspan font-size="10" dy="4">B</tspan> = 4 T</text>
+    <!-- B: V_B = 5.27 T upward; below the support pointing up -->
+    <line x1="450" y1="470" x2="450" y2="513" stroke-width="2.5"/>
+    <polygon points="450,462 444,474 456,474" stroke="none"/>
+    <text x="466" y="497" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">B</tspan> = 5.27 T</text>
+    <!-- C: V_C = 1.33 T upward; below the roller pointing up -->
+    <line x1="600" y1="470" x2="600" y2="513" stroke-width="2.5"/>
+    <polygon points="600,462 594,474 606,474" stroke="none"/>
+    <text x="616" y="492" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">C</tspan> = 1.33 T</text>
+  </g>
+
+  <text x="415" y="548" text-anchor="middle" fill="#5f6368" font-size="13">
+    Two-bay portal — A/C rollers, B pinned; hinge A₁₋₂ at mid-column B. Loads (red), reactions (blue).
+  </text>
+</svg>

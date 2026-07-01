@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 470" font-family="system-ui, sans-serif">
   <!--
-    Structure r4: parallel-chord truss. Load at E is horizontal (to the right).
-    (Variant with a diagonal load at E: see wall-truss-e-diagonal.svg.)
+    Structure r4: parallel-chord truss. Load at E is diagonal (down-right, 45 deg).
+    (Variant with a horizontal load at E: see wall-truss.svg.)
     Width 12 m (3 panels of 4 m), height 4 m. Vertical and horizontal bars = 4 m.
     World in metres, y up. Transform: sx = 90 + x*50 ; sy = 290 - y*50
     Nodes:
@@ -21,10 +21,10 @@
       F (4,4)  : 40 T downward
       G (8,4)  : 60 T downward
       H (12,4) : 10 T downward
-      E (12,0) : 20 T horizontal to the right -> (+20, 0)
+      E (12,0) : 20 T diagonal down-right (45 deg depression) -> (+14.14, -14.14)
     Support reactions:
-      A: V_A = 110 T upward ; H_A = 170 T to the right
-      B: H_B = 190 T to the left
+      A: V_A = 124.14 T upward ; H_A = 218.29 T to the right
+      B: H_B = 232.43 T to the left
   -->
 
   <rect x="0" y="0" width="820" height="470" fill="#ffffff"/>
@@ -86,7 +86,7 @@
     <text x="101" y="307" text-anchor="start">A</text>
     <text x="290" y="309" text-anchor="middle">C</text>
     <text x="490" y="309" text-anchor="middle">D</text>
-    <text x="690" y="309" text-anchor="middle">E</text>
+    <text x="702" y="286" text-anchor="start">E</text>
     <text x="87"  y="80"  text-anchor="start">B</text>
     <text x="281" y="86"  text-anchor="end">F</text>
     <text x="481" y="86"  text-anchor="end">G</text>
@@ -148,26 +148,30 @@
     <line x1="690" y1="52" x2="690" y2="80" stroke-width="2.5"/>
     <polygon points="690,88 685,77 695,77" stroke="none"/>
     <text x="698" y="68" text-anchor="start" stroke="none">10 T</text>
-    <!-- E: 20 T horizontal to the right (drawn outside the node; a shaft trailing left would lie on the floor member) -->
-    <line x1="690" y1="290" x2="726" y2="290" stroke-width="2.5"/>
-    <polygon points="738,290 726,284 726,296" stroke="none"/>
-    <text x="720" y="280" text-anchor="middle" stroke="none">20 T</text>
+    <!-- E: 20 T diagonal down-right, 45 deg depression -->
+    <line x1="690" y1="290" x2="720" y2="320" stroke-width="2.5"/>
+    <polygon points="727,327 716,322 722,316" stroke="none"/>
+    <text x="724" y="346" text-anchor="start" stroke="none">20 T</text>
+    <!-- angle reference (45 deg depression) -->
+    <line x1="690" y1="290" x2="738" y2="290" stroke="#9aa0a6" stroke-width="1" stroke-dasharray="4 3"/>
+    <path d="M 720 290 A 30 30 0 0 1 711.2 311.2" fill="none" stroke="#9aa0a6" stroke-width="1"/>
+    <text x="726" y="306" text-anchor="start" stroke="none" fill="#5f6368" font-size="11" font-weight="400">45&#176;</text>
   </g>
 
   <!-- ===== Support reactions (applied on the nodes: tip at the node) ===== -->
   <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
-    <!-- A: V_A = 110 T upward (tip at A, shaft trailing downward) -->
+    <!-- A: V_A = 124.14 T upward (tip at A, shaft trailing downward) -->
     <line x1="90" y1="340" x2="90" y2="301" stroke-width="2.5"/>
     <polygon points="90,290 84,302 96,302" stroke="none"/>
-    <text x="99" y="322" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan> = 110 T</text>
-    <!-- A: H_A = 170 T to the right (tip at A, shaft trailing to the left) -->
+    <text x="99" y="322" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan> = 124,14 T</text>
+    <!-- A: H_A = 218.29 T to the right (tip at A, shaft trailing to the left) -->
     <line x1="44" y1="290" x2="79" y2="290" stroke-width="2.5"/>
     <polygon points="90,290 78,284 78,296" stroke="none"/>
-    <text x="98" y="283" text-anchor="start" stroke="none">H<tspan font-size="10" dy="4">A</tspan> = 170 T</text>
-    <!-- B: H_B = 190 T to the left (tip at B, shaft trailing to the right) -->
+    <text x="98" y="283" text-anchor="start" stroke="none">H<tspan font-size="10" dy="4">A</tspan> = 218,29 T</text>
+    <!-- B: H_B = 232.43 T to the left (tip at B, shaft trailing to the right) -->
     <line x1="138" y1="90" x2="101" y2="90" stroke-width="2.5"/>
     <polygon points="90,90 102,84 102,96" stroke="none"/>
-    <text x="120" y="80" text-anchor="start" stroke="none">H<tspan font-size="10" dy="4">B</tspan> = 190 T</text>
+    <text x="120" y="80" text-anchor="start" stroke="none">H<tspan font-size="10" dy="4">B</tspan> = 232,43 T</text>
   </g>
 
   <text x="410" y="452" text-anchor="middle" fill="#5f6368" font-size="12">
