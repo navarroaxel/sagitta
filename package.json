@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
-    "next": "16.2.9",
+    "next": "16.2.10",
     "react": "19.2.7",
     "react-dom": "19.2.7"
   },
@@ -25,10 +25,10 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.2.9",
+    "eslint-config-next": "16.2.10",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1",
-    "prettier": "^3.9.3",
+    "prettier": "^3.9.4",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "tailwindcss": "^4",
     "ts-jest": "^29.4.11",

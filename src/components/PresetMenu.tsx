@@ -27,6 +27,9 @@ const PRESET_KEYS: TranslationKey[] = [
   "preset.truss_tower",
   "preset.truss_triangular",
   "preset.portico_reticulado",
+  "preset.fixed_beam_hinge_overhang",
+  "preset.fixed_beam_udl_hinge",
+  "preset.t_frame_fixed",
 ];
 
 export default function PresetMenu({ onLoad }: Props) {

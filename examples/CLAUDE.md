@@ -24,6 +24,11 @@ below. The cleanest models to clone from:
   roller, a UDL, a point load, a clockwise moment at the roller, and a horizontal load
   at the free tip drawn *outside* the node (collinearity exception). No hinge —
   determinate through the supports alone.
+- **`fixed-beam-hinge-overhang.svg`** — straight horizontal beam with a **fixed
+  (built-in) support**, an internal hinge, a roller, and an overhang; point loads, a
+  UDL, and the **reaction moment** (M_A arc) at the fixed end. The canonical example
+  for the fixed-support + reaction-moment building blocks (see also
+  `t-frame-fixed.svg`, a column fixed at its base).
 
 ## Coordinate system
 
@@ -92,6 +97,20 @@ canonical file. **Supports hang from the node** (apex AT the node, symbol below)
 (`l-frame-hinge.svg`, support at B/C). Adds `<circle r="3">` wheels at
 `NY+17` and the hatch at `NY+21`.
 
+**Fixed / built-in support (empotramiento)** — a solid line *perpendicular to the
+member* through the node, with short hatch ticks trailing off its far side (the
+member runs away from it). Carries H, V **and moment**, so a fixed end usually also
+gets a **reaction-moment arc** (see *Concentrated moment*). A beam fixed at its end
+uses a **vertical** wall (`fixed-beam-hinge-overhang.svg`); a column fixed at its
+base uses a **horizontal** ground line (`t-frame-fixed.svg`):
+```svg
+<!-- beam end fixed to a wall on the LEFT (member runs right); 5 hatch ticks, 10 px apart -->
+<g stroke="#1a1a1a" stroke-width="2" fill="none">
+  <line x1="NX" y1="NY-20" x2="NX" y2="NY+20"/>       <!-- wall through the node -->
+  <line x1="NX" y1="NY-20" x2="NX-8" y2="NY-12"/>     <!-- ...repeat down to NY+20 -->
+</g>
+```
+
 **Internal hinge** — white open circle on the member:
 ```svg
 <circle cx="NX" cy="NY" r="6" fill="#ffffff" stroke="#1a1a1a" stroke-width="2"/>
@@ -117,8 +136,10 @@ in `portal-frame.svg`; a partial-span horizontal UDL is in `two-column-portal.sv
 **Concentrated moment** — arc + arrowhead + center dot (`frame-truss.svg`,
 `l-frame-hinge.svg`). Clockwise uses an SVG arc with
 `large-arc-flag=1 sweep-flag=1` and a small gap at the top where the arrowhead
-sits. To resize, scale the arc radius and the arrowhead offsets together about the
-center.
+sits; counterclockwise uses `sweep-flag=0`. To resize, scale the arc radius and the
+arrowhead offsets together about the center. The **reaction moment** at a fixed
+support (`M_A` in `fixed-beam-hinge-overhang.svg`) uses the same glyph drawn in the
+reactions (blue) group.
 
 ## Reaction / load arrow convention
 

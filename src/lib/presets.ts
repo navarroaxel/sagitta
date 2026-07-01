@@ -470,6 +470,84 @@ const twoColumnPortal: FrameModel = {
   unit: "T",
 };
 
+// Fixed-ended beam, internal hinge A1-2, roller + overhang (examples/fixed-beam-hinge-overhang.svg)
+// 14 m beam: A fixed, hinge at x=10, roller B at x=12, free tip at x=14. Loads in T.
+const fixedBeamHingeOverhang: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 0, support: "fixed" },
+    { id: "N3", x: 3, y: 0, support: "free" }, // 10 T point load
+    { id: "N7", x: 7, y: 0, support: "free" }, // 4 T point load + UDL start
+    { id: "A12", x: 10, y: 0, support: "free" }, // internal hinge (2 m left of B)
+    { id: "B", x: 12, y: 0, support: "roller-v" },
+    { id: "D", x: 14, y: 0, support: "free" }, // free tip
+  ],
+  members: [
+    { id: "m1", n1: "A", n2: "N3" }, //  x 0..3
+    { id: "m2", n1: "N3", n2: "N7" }, // x 3..7
+    { id: "m3", n1: "N7", n2: "A12", relJ: true }, // x 7..10, hinge at A12
+    { id: "m4", n1: "A12", n2: "B", relI: true }, //  x 10..12, hinge at A12
+    { id: "m5", n1: "B", n2: "D" }, //   x 12..14
+  ],
+  loads: [
+    { id: "p1", type: "nodal", node: "N3", fx: 0, fy: -10, m: 0 }, // 10 T ↓ at x=3
+    { id: "p2", type: "nodal", node: "N7", fx: 0, fy: -4, m: 0 }, //  4 T ↓ at x=7
+    { id: "q1", type: "mudl", member: "m3", gx: 0, gy: -4 }, // 4 T/m ↓ x 7..10
+    { id: "q2", type: "mudl", member: "m4", gx: 0, gy: -4 }, // 4 T/m ↓ x 10..12
+    { id: "p3", type: "nodal", node: "D", fx: -7, fy: -5, m: 0 }, // 5 T ↓ + 7 T ← at tip
+  ],
+  material: defaultMat,
+  unit: "T",
+};
+// Expected reactions: A: H=7 →, V=25 ↑, M=150 T·m CCW ; B: V=14 ↑
+
+// Fixed-ended beam, full-span UDL, internal hinge, roller + overhang.
+// 10 m beam, loads in kN.
+const fixedBeamUdlHinge: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 0, support: "fixed" },
+    { id: "A12", x: 4, y: 0, support: "free" }, // internal hinge (4 m right of A)
+    { id: "B", x: 7, y: 0, support: "roller-v" },
+    { id: "D", x: 10, y: 0, support: "free" }, // free tip
+  ],
+  members: [
+    { id: "m1", n1: "A", n2: "A12", relJ: true }, // x 0..4, hinge at A12
+    { id: "m2", n1: "A12", n2: "B", relI: true }, // x 4..7, hinge at A12
+    { id: "m3", n1: "B", n2: "D" }, //              x 7..10
+  ],
+  loads: [
+    { id: "q1", type: "mudl", member: "m1", gx: 0, gy: -5 }, // 5 kN/m ↓ x 0..4
+    { id: "q2", type: "mudl", member: "m2", gx: 0, gy: -5 }, // 5 kN/m ↓ x 4..7
+    { id: "q3", type: "mudl", member: "m3", gx: 0, gy: -5 }, // 5 kN/m ↓ x 7..10
+    { id: "h1", type: "nodal", node: "D", fx: -2, fy: 0, m: 0 }, // 2 kN ← at tip
+  ],
+  material: defaultMat,
+  unit: "kN",
+};
+// Expected reactions: A: H=2 →, V=20 ↑, M=40 kN·m CCW ; B: V=30 ↑
+
+// T-frame — column fixed to the ground, horizontal beam on top (examples/t-frame-fixed.svg)
+// Column 8 m; left arm 4 m, right arm 7 m. Loads in T.
+const tFrameFixed: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 0, support: "fixed" }, // fixed base
+    { id: "B", x: 0, y: 8, support: "free" }, // T-junction (top of column)
+    { id: "C", x: -4, y: 8, support: "free" }, // left arm tip
+    { id: "D", x: 7, y: 8, support: "free" }, // right arm tip
+  ],
+  members: [
+    { id: "col", n1: "A", n2: "B" }, //  column (8 m)
+    { id: "armL", n1: "C", n2: "B" }, // left arm (4 m)
+    { id: "armR", n1: "B", n2: "D" }, // right arm (7 m)
+  ],
+  loads: [
+    { id: "pC", type: "nodal", node: "C", fx: 0, fy: -10, m: 0 }, // 10 T ↓ at C
+    { id: "pD", type: "nodal", node: "D", fx: 10, fy: -10, m: 0 }, // 10 T ↓ + 10 T → at D
+  ],
+  material: defaultMat,
+  unit: "T",
+};
+// Expected reactions: A: H=10 ←, V=20 ↑, M=110 T·m CCW
+
 export const PRESETS: Preset[] = [
   { name: "Simply Supported Beam", model: simplySupported },
   { name: "Cantilever", model: cantilever },
@@ -487,4 +565,7 @@ export const PRESETS: Preset[] = [
   { name: "Tower Truss", model: towerTruss },
   { name: "Triangular Truss", model: triangularTruss },
   { name: "Portico + Reticulado", model: frameTruss },
+  { name: "Fixed Beam w/ Hinge & Overhang", model: fixedBeamHingeOverhang },
+  { name: "Fixed Beam (UDL + Hinge)", model: fixedBeamUdlHinge },
+  { name: "T-Frame (fixed base)", model: tFrameFixed },
 ];
