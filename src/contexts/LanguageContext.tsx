@@ -49,6 +49,9 @@ const EN = {
   "preset.truss_tower": "Tower Truss",
   "preset.truss_triangular": "Triangular Truss",
   "preset.symmetric_truss": "Symmetric Truss",
+  "preset.fixed_beam_hinge_overhang": "Fixed Beam w/ Hinge & Overhang",
+  "preset.fixed_beam_udl_hinge": "Fixed Beam (UDL + Hinge)",
+  "preset.t_frame_fixed": "T-Frame (fixed base)",
 
   "forces.member": "Member",
   "forces.state": "State",
@@ -236,6 +239,9 @@ const ES: Record<TranslationKey, string> = {
   "preset.truss_tower": "Reticulado en torre",
   "preset.truss_triangular": "Reticulado triangular",
   "preset.symmetric_truss": "Reticulado simétrico",
+  "preset.fixed_beam_hinge_overhang": "Viga empotrada con rótula y voladizo",
+  "preset.fixed_beam_udl_hinge": "Viga empotrada (distribuida + rótula)",
+  "preset.t_frame_fixed": "Pórtico en T (empotrado)",
 
   "forces.member": "Barra",
   "forces.state": "Estado",
