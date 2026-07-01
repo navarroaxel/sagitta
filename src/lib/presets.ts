@@ -500,8 +500,8 @@ const fixedBeamHingeOverhang: FrameModel = {
 };
 // Expected reactions: A: H=7 →, V=25 ↑, M=150 T·m CCW ; B: V=14 ↑
 
-// Fixed-ended beam, full-span UDL, internal hinge, roller + overhang
-// (examples/fixed-beam-udl-hinge-overhang.svg). 10 m beam, loads in kN.
+// Fixed-ended beam, full-span UDL, internal hinge, roller + overhang.
+// 10 m beam, loads in kN.
 const fixedBeamUdlHinge: FrameModel = {
   nodes: [
     { id: "A", x: 0, y: 0, support: "fixed" },
