@@ -39,15 +39,17 @@
 
   <!-- ===== Dimensions ===== -->
   <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
-    <!-- roof (top): 2.50 | 2.50 | 3.00 (horizontal spans) -->
+    <!-- roof (top): 2.50 | 2.50 | 2.00 | 1.00 (horizontal spans) -->
     <line x1="200" y1="178" x2="600" y2="178"/>
     <line x1="200" y1="173" x2="200" y2="183"/>
     <line x1="325" y1="173" x2="325" y2="183"/>
     <line x1="450" y1="173" x2="450" y2="183"/>
+    <line x1="550" y1="173" x2="550" y2="183"/>
     <line x1="600" y1="173" x2="600" y2="183"/>
     <text x="262" y="170" text-anchor="middle">2.50</text>
     <text x="387" y="170" text-anchor="middle">2.50</text>
-    <text x="525" y="170" text-anchor="middle">3.00</text>
+    <text x="500" y="170" text-anchor="middle">2.00</text>
+    <text x="575" y="170" text-anchor="middle">1.00</text>
     <!-- left column height (left side): 2.00 + 2.00 m (mid tick = hinge level) -->
     <line x1="140" y1="230" x2="140" y2="430"/>
     <line x1="135" y1="230" x2="145" y2="230"/>
