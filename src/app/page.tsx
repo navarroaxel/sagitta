@@ -167,6 +167,12 @@ export default function Home() {
         >
           {t("learn.link")}
         </Link>
+        <Link
+          href="/learn/hinge"
+          className="text-xs text-stone-400 transition-colors hover:text-stone-600 dark:text-stone-500 dark:hover:text-stone-300"
+        >
+          {t("learn.hinge.link")}
+        </Link>
         <div className="flex-1" />
         <PresetMenu
           onLoad={(m) => {
