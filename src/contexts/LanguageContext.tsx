@@ -199,6 +199,27 @@ const EN = {
   "learn.step.5.title": "Theorem II — Full picture",
   "learn.step.5.desc":
     "The tangential deviation of B from the tangent at A equals the first moment of the M/EI area about B. With both theorems we can find rotations and deflections at any point in the structure.",
+
+  "learn.hinge.link": "Beam with Hinge",
+  "learn.hinge.title": "Max Moment in Beam with Internal Hinge",
+  "learn.hinge.step.0.title": "The structural model",
+  "learn.hinge.step.0.desc":
+    "14 m beam: fixed at A, internal hinge A₁₋₂ at x=10, roller at B (x=12), free tip at D (x=14). Loads: P1=10T at x=3, P2=4T and q=4T/m from x=7→12, P3=5T and H=7T at the tip.",
+  "learn.hinge.step.1.title": "Is it statically determinate?",
+  "learn.hinge.step.1.desc":
+    "Count unknowns: fixed A gives H, V, M (3 reactions) + roller B gives V (1) = 4 total. Equations: ΣFx, ΣFy, ΣM (3 global) + hinge condition M=0 at A₁₋₂ (1) = 4. Equal — statically determinate, solvable without matrices.",
+  "learn.hinge.step.2.title": "Key trick: isolate the right portion at the hinge",
+  "learn.hinge.step.2.desc":
+    "At an internal hinge, the bending moment is zero by definition. Take the right portion (x=10→14): V_B is the only unknown. Sum moments about A₁₋₂ — the UDL remainder and P3 are the only loads. Solve directly for V_B.",
+  "learn.hinge.step.3.title": "Global equilibrium → reactions at A",
+  "learn.hinge.step.3.desc":
+    "With V_B known, apply the three global equations to the full beam: ΣFx=0 → H_A=7T; ΣFy=0 → V_A=25T; ΣM_A=0 → M_A=150T·m (counterclockwise). Verify the hinge condition: M at x=10 must equal zero.",
+  "learn.hinge.step.4.title": "Shear diagram V(x)",
+  "learn.hinge.step.4.desc":
+    "Integrate vertical forces from the left. Shear jumps at each concentrated load and varies linearly under the UDL. The zero crossing of V(x) locates the maximum moment.",
+  "learn.hinge.step.5.title": "Maximum moment: where V = 0",
+  "learn.hinge.step.5.desc":
+    "The relation dM/dx = V(x) means M reaches its maximum where shear is zero. In segment x∈[7,10]: V(x) = 39 − 4x = 0 → x = 9.75 m, only 0.25 m from the hinge. Substituting: M(9.75) = +0.125 T·m. The dominant moment remains the fixed-end hogging: M_A = −150 T·m.",
 } as const;
 
 export type TranslationKey = keyof typeof EN;
@@ -389,6 +410,27 @@ const ES: Record<TranslationKey, string> = {
   "learn.step.5.title": "Teorema II — Vista completa",
   "learn.step.5.desc":
     "La desviación tangencial del punto B respecto a la tangente trazada en A es igual al momento estático del área M/EI respecto a B. Con ambos teoremas podemos hallar giros y flechas en cualquier punto de la estructura.",
+
+  "learn.hinge.link": "Viga con Rótula",
+  "learn.hinge.title": "Momento Máximo en Viga con Rótula Interna",
+  "learn.hinge.step.0.title": "El modelo estructural",
+  "learn.hinge.step.0.desc":
+    "Viga de 14 m: empotrada en A, rótula interna A₁₋₂ en x=10, rodillo en B (x=12), extremo libre en D (x=14). Cargas: P1=10T en x=3, P2=4T y q=4T/m de x=7→12, P3=5T y H=7T en la punta.",
+  "learn.hinge.step.1.title": "¿Es isostática?",
+  "learn.hinge.step.1.desc":
+    "Incógnitas: empotrado A = H,V,M (3) + rodillo B = V (1) = 4 en total. Ecuaciones: ΣFx, ΣFy, ΣM (3 globales) + condición de rótula M=0 en A₁₋₂ (1) = 4. Iguales — es isostática, se resuelve sin matrices.",
+  "learn.hinge.step.2.title": "Truco: aislar el trozo en la rótula",
+  "learn.hinge.step.2.desc":
+    "En la rótula interna el momento flector es cero por definición. Tomamos el trozo derecho (x=10→14): V_B es la única incógnita. Sumamos momentos respecto a A₁₋₂ — sólo actúan el resto de la carga distribuida y P3. Se obtiene V_B directamente.",
+  "learn.hinge.step.3.title": "Equilibrio global → reacciones en A",
+  "learn.hinge.step.3.desc":
+    "Con V_B conocido, aplicamos las tres ecuaciones globales a la viga completa: ΣFx=0 → H_A=7T; ΣFy=0 → V_A=25T; ΣM_A=0 → M_A=150T·m (antihorario). Verificar: M en x=10 debe ser cero.",
+  "learn.hinge.step.4.title": "Diagrama de Cortante V(x)",
+  "learn.hinge.step.4.desc":
+    "Se integran las fuerzas verticales desde la izquierda. El cortante salta en cada carga puntual y varía linealmente bajo la carga distribuida. El punto donde V(x)=0 localiza el momento máximo.",
+  "learn.hinge.step.5.title": "Momento máximo: donde V = 0",
+  "learn.hinge.step.5.desc":
+    "La relación dM/dx = V(x) implica que M alcanza su extremo donde el cortante se anula. En el tramo x∈[7,10]: V(x) = 39 − 4x = 0 → x = 9.75 m, a 0.25 m de la rótula. Sustituyendo: M(9.75) = +0.125 T·m. El momento dominante sigue siendo el empotramiento: M_A = −150 T·m.",
 };
 
 const translations: Record<Language, Record<TranslationKey, string>> = {
