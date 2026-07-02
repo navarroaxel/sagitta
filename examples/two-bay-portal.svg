@@ -47,7 +47,7 @@
 
   <!-- ===== Dimensions ===== -->
   <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
-    <!-- Top horizontal spans: 3 m | 2 m | 2 m | 3 m | 6 m -->
+    <!-- Top horizontal spans: 3.00 | 2.00 | 2.00 | 3.00 | 6.00 -->
     <line x1="100" y1="72" x2="900" y2="72"/>
     <line x1="100" y1="67" x2="100" y2="77"/>
     <line x1="250" y1="67" x2="250" y2="77"/>
@@ -55,18 +55,18 @@
     <line x1="450" y1="67" x2="450" y2="77"/>
     <line x1="600" y1="67" x2="600" y2="77"/>
     <line x1="900" y1="67" x2="900" y2="77"/>
-    <text x="175" y="65" text-anchor="middle">3 m</text>
-    <text x="300" y="65" text-anchor="middle">2 m</text>
-    <text x="400" y="65" text-anchor="middle">2 m</text>
-    <text x="525" y="65" text-anchor="middle">3 m</text>
-    <text x="750" y="65" text-anchor="middle">6 m</text>
-    <!-- Left column height (left side): 3 m + 3 m m with mid-tick at y=3 -->
+    <text x="175" y="65" text-anchor="middle">3.00</text>
+    <text x="300" y="65" text-anchor="middle">2.00</text>
+    <text x="400" y="65" text-anchor="middle">2.00</text>
+    <text x="525" y="65" text-anchor="middle">3.00</text>
+    <text x="750" y="65" text-anchor="middle">6.00</text>
+    <!-- Left column height (left side): 3.00 + 3.00 m with mid-tick at y=3 -->
     <line x1="75" y1="120" x2="75" y2="420"/>
     <line x1="70" y1="120" x2="80" y2="120"/>
     <line x1="70" y1="270" x2="80" y2="270"/>
     <line x1="70" y1="420" x2="80" y2="420"/>
-    <text x="63" y="200" text-anchor="middle" transform="rotate(-90 63 200)">3 m</text>
-    <text x="63" y="345" text-anchor="middle" transform="rotate(-90 63 345)">3 m</text>
+    <text x="63" y="200" text-anchor="middle" transform="rotate(-90 63 200)">3.00</text>
+    <text x="63" y="345" text-anchor="middle" transform="rotate(-90 63 345)">3.00</text>
   </g>
 
   <!-- ===== Solid-web frame (rigid joints) ===== -->
