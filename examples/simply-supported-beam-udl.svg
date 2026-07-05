@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 380" font-family="system-ui, sans-serif">
+  <!--
+    Structure: Simply supported beam, span 10 m, uniform load over the full span.
+    World in metres, y up. Transform: sx = 80 + x*40 ; sy = 220 (beam is horizontal, y=0)
+    Nodes (2):
+      A (0,0)  -> (80,220)   [pinned: H and V]
+      B (10,0) -> (480,220)  [roller: V only]
+    Members (1):
+      m1 -> beam A-B (solid web)
+    Supports:
+      A -> pinned (reactions H_A, V_A)
+      B -> roller-v (reaction V_B)
+    Loads:
+      q = 10 kN/m downward, full span (0 to 10 m)
+    Reactions (given):
+      A : H_A = 0 ; V_A = 50 kN upward
+      B : V_B = 50 kN upward
+    Equilibrium check (OK):
+      SFy = V_A + V_B - q*10 = 50 + 50 - 100 = 0
+      SM_A = V_B*10 - q*10*5 = 500 - 500 = 0
+  -->
+
+  <rect x="0" y="0" width="620" height="380" fill="#ffffff"/>
+
+  <!-- ===== Dimensions ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <!-- span: 10.00 m -->
+    <line x1="80" y1="330" x2="480" y2="330"/>
+    <line x1="80" y1="325" x2="80" y2="335"/>
+    <line x1="480" y1="325" x2="480" y2="335"/>
+    <text x="280" y="350" text-anchor="middle">10.00 m</text>
+  </g>
+
+  <!-- ===== Beam (solid web) ===== -->
+  <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
+    <line x1="80" y1="220" x2="480" y2="220"/>
+  </g>
+
+  <!-- ===== Pinned support at A ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <polygon points="80,220 71,231 89,231"/>
+    <line x1="65" y1="231" x2="95" y2="231"/>
+    <line x1="68" y1="231" x2="62" y2="238"/>
+    <line x1="76" y1="231" x2="70" y2="238"/>
+    <line x1="84" y1="231" x2="78" y2="238"/>
+    <line x1="92" y1="231" x2="86" y2="238"/>
+  </g>
+
+  <!-- ===== Roller support at B ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <polygon points="480,220 471,231 489,231"/>
+    <circle cx="475" cy="237" r="3"/>
+    <circle cx="485" cy="237" r="3"/>
+    <line x1="465" y1="241" x2="495" y2="241"/>
+    <line x1="468" y1="241" x2="462" y2="248"/>
+    <line x1="476" y1="241" x2="470" y2="248"/>
+    <line x1="484" y1="241" x2="478" y2="248"/>
+    <line x1="492" y1="241" x2="486" y2="248"/>
+  </g>
+
+  <!-- ===== Nodes ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="80" cy="220" r="4"/>
+    <circle cx="480" cy="220" r="4"/>
+  </g>
+
+  <!-- ===== Node labels ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <text x="66" y="206" text-anchor="end">A</text>
+    <text x="494" y="206" text-anchor="start">B</text>
+  </g>
+
+  <!-- ===== Loads (red): UDL q = 10 kN/m downward, full span ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+    <text x="280" y="95" text-anchor="middle" stroke="none">q = 10 kN/m</text>
+    <line x1="80" y1="110" x2="480" y2="110" stroke-width="2"/>
+    <!-- 9 evenly spaced arrow shafts, tip at the beam surface -->
+    <line x1="80"  y1="110" x2="80"  y2="212" stroke-width="2"/>
+    <polygon points="80,220 74,209 86,209" stroke="none"/>
+    <line x1="130" y1="110" x2="130" y2="212" stroke-width="2"/>
+    <polygon points="130,220 124,209 136,209" stroke="none"/>
+    <line x1="180" y1="110" x2="180" y2="212" stroke-width="2"/>
+    <polygon points="180,220 174,209 186,209" stroke="none"/>
+    <line x1="230" y1="110" x2="230" y2="212" stroke-width="2"/>
+    <polygon points="230,220 224,209 236,209" stroke="none"/>
+    <line x1="280" y1="110" x2="280" y2="212" stroke-width="2"/>
+    <polygon points="280,220 274,209 286,209" stroke="none"/>
+    <line x1="330" y1="110" x2="330" y2="212" stroke-width="2"/>
+    <polygon points="330,220 324,209 336,209" stroke="none"/>
+    <line x1="380" y1="110" x2="380" y2="212" stroke-width="2"/>
+    <polygon points="380,220 374,209 386,209" stroke="none"/>
+    <line x1="430" y1="110" x2="430" y2="212" stroke-width="2"/>
+    <polygon points="430,220 424,209 436,209" stroke="none"/>
+    <line x1="480" y1="110" x2="480" y2="212" stroke-width="2"/>
+    <polygon points="480,220 474,209 486,209" stroke="none"/>
+  </g>
+
+  <!-- ===== Support reactions (blue), drawn below the supports pointing up ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+    <!-- A: V_A = 50 kN upward -->
+    <line x1="80" y1="260" x2="80" y2="300" stroke-width="2.5"/>
+    <polygon points="80,252 74,264 86,264" stroke="none"/>
+    <text x="98" y="282" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan><tspan dy="-4"> = 50 kN</tspan></text>
+    <!-- B: V_B = 50 kN upward -->
+    <line x1="480" y1="260" x2="480" y2="300" stroke-width="2.5"/>
+    <polygon points="480,252 474,264 486,264" stroke="none"/>
+    <text x="498" y="282" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">B</tspan><tspan dy="-4"> = 50 kN</tspan></text>
+  </g>
+
+  <text x="310" y="368" text-anchor="middle" fill="#5f6368" font-size="13">
+    simply supported beam, 10 m span — pinned at A, roller at B; UDL q=10 kN/m (red); reactions (blue) satisfy equilibrium.
+  </text>
+</svg>
