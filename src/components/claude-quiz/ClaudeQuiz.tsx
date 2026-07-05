@@ -211,11 +211,11 @@ export function ClaudeQuiz() {
         </p>
       )}
 
-      {visible.map((question) => (
+      {visible.map((question, i) => (
         <ClaudeQuestionCard
           key={question.id}
           question={question}
-          index={CLAUDE_QUIZ_QUESTIONS.indexOf(question)}
+          index={i}
           answer={answers[question.id] ?? null}
           onAnswer={(value) => handleAnswer(question.id, value)}
         />

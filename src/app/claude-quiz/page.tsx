@@ -5,8 +5,7 @@ import { ClaudeQuizHeader } from "@/components/claude-quiz/ClaudeQuizHeader";
 
 const title =
   "Examen teórico de Estabilidad (V/F y multiple choice) — Ing. Eléctrica UTN FRBA";
-const description =
-  "Autoevaluación teórica de Estabilidad para Ingeniería Eléctrica (UTN FRBA): 43 preguntas de verdadero/falso y opción múltiple sobre sistemas de fuerzas, vínculos, cadenas cinemáticas, reticulados e inercia de superficies, con corrección inmediata y explicaciones.";
+const description = `Autoevaluación teórica de Estabilidad para Ingeniería Eléctrica (UTN FRBA): ${CLAUDE_QUIZ_QUESTIONS.length} preguntas de verdadero/falso y opción múltiple sobre sistemas de fuerzas, vínculos, cadenas cinemáticas y reticulados, con corrección inmediata y explicaciones.`;
 
 export const metadata: Metadata = {
   title,
@@ -19,7 +18,6 @@ export const metadata: Metadata = {
     "vínculos",
     "cadenas cinemáticas",
     "reticulados",
-    "momento de inercia",
   ],
   alternates: { canonical: "/claude-quiz" },
   openGraph: { title, description, url: "/claude-quiz" },
