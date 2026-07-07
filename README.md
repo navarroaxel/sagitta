@@ -15,11 +15,13 @@ Interactive 2D plane frame simulator that computes and renders the three charact
 - Per-diagram scale sliders and on/off toggles; click a load card to highlight it on the canvas
 - Reactions, load arrows, support symbols, and internal hinge markers
 - **Settings menu** — customize every canvas color (loads, members, labels, N/Q/M diagrams, grid, background…) via swatch + hex inputs, with a high-contrast preset; the N/Q/M toggles and scale sliders follow their diagram colors
-- **Persistent preferences** — "remember my work" auto-saves the model + view across reloads, plus a configurable grid-snap size
+- **Sign-convention setting** — choose how N/Q/M are plotted: **Argentina (UTN FRBA)** (default) or **International**. Presentation-layer only — the solver/sampling math is untouched
+- **Persistent preferences** — "remember my work" auto-saves the model + view across reloads, plus a configurable grid-snap size and the sign convention
 - **i18n** (English / Spanish) and **dark mode**, both inside the settings menu
 - Export current view as SVG or PNG
 - Eight built-in example presets, including a Frame + Truss and a parallel-chord Truss
 - A **/learn** page walking through the Tangent Method (Mohr's theorems) step by step
+- An **/esfuerzos-caracteristicos** guide (bilingual) — internal forces, the local triad, N/Q/M signs & notation, how diagrams are built, and a worked example, based on the UTN FRBA course notes
 
 ## Tech stack
 
@@ -52,6 +54,7 @@ src/
     layout.tsx          # root layout + metadata
     page.tsx            # 'use client' — hosts the whole simulator
     learn/page.tsx      # /learn — Tangent Method (Mohr) guide
+    esfuerzos-caracteristicos/page.tsx  # /esfuerzos-caracteristicos — internal forces guide
     globals.css
   components/
     FrameCanvas.tsx     # composes the canvas/ layers; drag nodes, zoom/pan
@@ -81,6 +84,7 @@ src/
     solve.ts            # adapter: id-based FrameModel → solver index-based input
     geometry.ts         # world↔screen transform, bounds, zoom/pan
     diagram.ts          # polygon builder for N/Q/M diagrams
+    conventions.ts      # per-diagram side/sign factors for Argentina vs International
     results.ts          # peak forces, equilibrium check, value cleaning
     loadProjection.ts   # load placement / UDL arrow helpers
     theme.ts            # light/dark theme read/apply helpers
@@ -96,6 +100,13 @@ src/
 | **N**   | `> 0` tension, `< 0` compression                                                                                |
 | **Q**   | Standard beam convention from the i-end free body                                                               |
 | **M**   | `> 0` sagging; diagram drawn on the tension-fibre side (positive M on a horizontal beam appears below the beam) |
+
+Internally the solver/sampling always use the table above. The **sign-convention setting** (Settings → *Sign convention*) only re-maps how the diagrams are *drawn and labelled*:
+
+- **Argentina (UTN FRBA)** (default) — a value shown as negative is drawn to the left of columns / above beams. N shows the physical value, Q's shown sign is flipped, and M is drawn on the tension fibre (continuous across joints), the same as International.
+- **International** — the plotting used by the solver's native conventions (N/Q positive on the outer normal, M on the tension fibre).
+
+The N/Q side is made independent of the member's node order (canonical normal); M keeps the raw normal so the moment stays continuous around beam–column joints.
 
 ## Load types
 
