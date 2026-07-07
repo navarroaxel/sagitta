@@ -11,6 +11,7 @@ import { FrameModel } from "@/lib/types";
 import { SolveOutput } from "@/lib/solve";
 import { makeTransform } from "@/lib/geometry";
 import { buildMemberDiagram, DiagramKey } from "@/lib/diagram";
+import { diagramSigns } from "@/lib/conventions";
 import { SVG_W, SVG_H, ZOOM_MIN, ZOOM_MAX } from "./canvas/constants";
 import { useColors } from "@/contexts/ColorContext";
 import { usePrefs } from "@/contexts/PrefsContext";
@@ -57,7 +58,7 @@ export default function FrameCanvas({
   svgOverlay,
 }: Props) {
   const colors = useColors();
-  const { snap, showLoadUnits, showDimensions } = usePrefs();
+  const { snap, showLoadUnits, showDimensions, signConvention } = usePrefs();
   const internalRef = useRef<SVGSVGElement>(null);
   const ref = svgRef ?? internalRef;
 
@@ -172,7 +173,7 @@ export default function FrameCanvas({
             : key === "Q"
               ? viewOpts.scaleQ
               : viewOpts.scaleM;
-        const sideSign = key === "M" ? -1 : 1;
+        const { sideSign } = diagramSigns(signConvention, key);
         diags[key].push(
           buildMemberDiagram({
             ...base,
@@ -193,6 +194,7 @@ export default function FrameCanvas({
     viewOpts.scaleN,
     viewOpts.scaleQ,
     viewOpts.scaleM,
+    signConvention,
   ]);
 
   // ── Node drag handling ──────────────────────────────────────────────────
@@ -340,6 +342,7 @@ export default function FrameCanvas({
                     type="N"
                     unit={model.unit}
                     showValues={viewOpts.showValues}
+                    dispSign={diagramSigns(signConvention, "N").dispSign}
                   />
                 ))}
               {viewOpts.showQ &&
@@ -350,6 +353,7 @@ export default function FrameCanvas({
                     type="Q"
                     unit={model.unit}
                     showValues={viewOpts.showValues}
+                    dispSign={diagramSigns(signConvention, "Q").dispSign}
                   />
                 ))}
               {viewOpts.showM &&
@@ -360,6 +364,7 @@ export default function FrameCanvas({
                     type="M"
                     unit={model.unit}
                     showValues={viewOpts.showValues}
+                    dispSign={diagramSigns(signConvention, "M").dispSign}
                   />
                 ))}
             </>

@@ -15,11 +15,13 @@ Simulador interactivo de pórticos planos 2D que calcula y representa los tres d
 - Controles de escala por diagrama y activación/desactivación independiente; haz clic en una carga para resaltarla en el lienzo
 - Flechas de reacciones, flechas de cargas, símbolos de apoyos y marcadores de articulaciones internas
 - **Menú de configuración** — personaliza cada color del lienzo (cargas, barras, etiquetas, diagramas N/Q/M, grilla, fondo…) mediante selector de color + campo hexadecimal, con un preajuste de alto contraste; los toggles y controles de escala de N/Q/M siguen los colores de su diagrama
-- **Preferencias que persisten** — «recordar mi trabajo» guarda automáticamente el modelo + la vista entre recargas, además de un tamaño de ajuste de grilla configurable
+- **Convención de signos** — elegí cómo se grafican N/Q/M: **Argentina (UTN FRBA)** (por defecto) o **Internacional**. Solo cambia la capa de presentación — la matemática del solver/muestreo no se toca
+- **Preferencias que persisten** — «recordar mi trabajo» guarda automáticamente el modelo + la vista entre recargas, además de un tamaño de ajuste de grilla configurable y la convención de signos
 - **i18n** (español / inglés) y **modo oscuro**, ambos dentro del menú de configuración
 - Exporta la vista actual como SVG o PNG
 - Ejemplos predefinidos incorporados, incluyendo un pórtico + reticulado y un reticulado de cordones paralelos
 - Página **/learn** con la explicación paso a paso del Método de la Tangente (Teoremas de Mohr)
+- Guía **/esfuerzos-caracteristicos** (bilingüe) — esfuerzos internos, la terna local, signos y notación de N/Q/M, cómo se arman los diagramas y un ejemplo resuelto, según el apunte de la cátedra UTN FRBA
 
 ## Tecnologías
 
@@ -52,6 +54,7 @@ src/
     layout.tsx          # layout raíz + metadatos
     page.tsx            # 'use client' — aloja todo el simulador
     learn/page.tsx      # /learn — guía del Método de la Tangente (Mohr)
+    esfuerzos-caracteristicos/page.tsx  # /esfuerzos-caracteristicos — guía de esfuerzos internos
     globals.css
   components/
     FrameCanvas.tsx     # compone las capas de canvas/; arrastre de nodos, zoom/paneo
@@ -81,6 +84,7 @@ src/
     solve.ts            # adaptador: FrameModel con ids → entrada indexada del solver
     geometry.ts         # transformación mundo↔pantalla, límites, zoom/paneo
     diagram.ts          # constructor de polígonos para diagramas N/Q/M
+    conventions.ts      # factores de lado/signo por diagrama para Argentina vs Internacional
     results.ts          # esfuerzos pico, verificación de equilibrio, limpieza de valores
     loadProjection.ts   # colocación de cargas / auxiliares de flechas UDL
     theme.ts            # lectura/aplicación del tema (claro/oscuro)
@@ -96,6 +100,13 @@ src/
 | **N**    | `> 0` tracción, `< 0` compresión                                                                                        |
 | **Q**    | Convención estándar de viga desde el sólido libre del extremo i                                                         |
 | **M**    | `> 0` flector positivo (sagging); diagrama en el lado de la fibra traccionada (M positivo en viga horizontal → debajo) |
+
+Internamente el solver/muestreo usan siempre la tabla de arriba. La **convención de signos** (Configuración → *Convención de signos*) solo re-mapea cómo se *dibujan y rotulan* los diagramas:
+
+- **Argentina (UTN FRBA)** (por defecto) — un valor mostrado como negativo se grafica a la izquierda de las columnas / por arriba de las vigas. N muestra el valor físico, el signo mostrado de Q se invierte, y M se dibuja sobre la fibra traccionada (continuo en los nudos), igual que Internacional.
+- **Internacional** — el trazado según las convenciones nativas del solver (N/Q positivos sobre la normal exterior, M sobre la fibra traccionada).
+
+El lado de N/Q se hace independiente del orden de los nodos de la barra (normal canónica); M mantiene la normal cruda para que el momento quede continuo alrededor de las esquinas viga–columna.
 
 ## Tipos de carga
 

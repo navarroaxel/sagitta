@@ -1,0 +1,262 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="55 -10 845 600" font-family="system-ui, sans-serif">
+  <!--
+    Structure: asymmetric two-bay portal frame (solid web, rigid joints) with one
+    internal hinge; units in kN. World in metres, y-up.
+    Transform: sx = 120 + x*40 ; sy = 460 - y*40
+
+    Nodes:
+      A     (0,0)   roller support (apoyo movil: triangle + 2 wheels + hatch)  -> (120,460)
+      G     (0,6)   top-left corner (rigid)                                     -> (120,220)
+      Lm    (4,6)   mid-left-roof rigid joint (moment applied here)             -> (280,220)
+      A12   (8,6)   internal hinge — left roof meets central column             -> (440,220)
+      Btop  (8,10)  top of central column (rigid corner)                        -> (440,60)
+      B     (8,0)   roller support (apoyo movil)                                -> (440,460)
+      F     (16,10) top of right column (rigid corner)                          -> (760,60)
+      C     (16,0)  pinned support (apoyo fijo: triangle + hatch, NO wheels)    -> (760,460)
+
+    Members:
+      A-G      left column      (6 m, vertical)
+      G-Lm     left roof seg 1  (4 m, horizontal at y=6)
+      Lm-A12   left roof seg 2  (4 m, horizontal at y=6, hinged at A12 end)
+      A12-Btop central column upper (4 m, vertical, continuous through hinge)
+      B-A12    central column lower (6 m, vertical, continuous through hinge)
+      Btop-F   right roof       (8 m, horizontal at y=10)
+      F-C      right column     (10 m, vertical)
+
+    Supports:
+      A roller (V only), B roller (V only), C pinned (H+V) — 4 reactions total.
+
+    Determinacy:
+      4 reactions + 3 global equations + 1 hinge condition (M=0 at A12 end of left roof)
+      = 4 equations for 4 unknowns => statically determinate.
+
+    Loads (kN, red — tip AT point of application, shaft trailing opposite force direction):
+      1. UDL q = 2 kN/m horizontal RIGHT over full 6 m of left column A-G.
+         [Direction assumed: wind from left.]
+      2. 3 kN vertical DOWN at G (0,6) -> sx=120, sy=220.
+      3. M = 2 kN·m CLOCKWISE at Lm (4,6) -> sx=280, sy=220.
+      4. 5 kN vertical DOWN at Btop (8,10) -> sx=440, sy=60.
+      5. 3 kN vertical DOWN at F (16,10) -> sx=760, sy=60.
+         [Direction assumed downward.]
+      6. 7 kN horizontal RIGHT at A12 (8,6) -> sx=440, sy=220 (collinearity exception:
+         arrow drawn just outside/right of hinge so it does not merge with left roof).
+      7. 2 kN horizontal LEFT at node B (8,0) -> sx=440, sy=460.
+
+    Reactions (kN, blue — satisfy global equilibrium SumFx=0, SumFy=0, SumM=0
+    and the hinge condition M=0 at A12 end of left roof):
+      A (roller): V_A = 7.25 kN UPWARD (tip at A, shaft trailing below support).
+      B (roller): V_B = 13.5 kN DOWNWARD (collinearity exception: drawn below support
+                  pointing down — column above makes upward direction collinear with member).
+      C (pinned): H_C = 17 kN to the LEFT (tip at C, shaft trailing right).
+                  V_C = 17.25 kN UPWARD (tip at C, shaft below).
+    These reactions satisfy global equilibrium (SumFx=0, SumFy=0, SumM_A=0) and
+    the hinge condition (M=0 at A12 end of left roof).
+  -->
+
+  <rect x="55" y="-10" width="845" height="600" fill="#ffffff"/>
+
+  <!-- ===== Dimensions (cotas) ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+
+    <!-- Horizontal spans, all on one top row: 4.00 + 4.00 (left roof) + 8.00 (right roof)
+         G/x=0 sx=120, Lm/x=4 sx=280, A12/x=8 sx=440, F/x=16 sx=760; dim line raised to
+         sy=8, above the 5 kN / 3 kN load arrows (whose shafts start at sy=28). -->
+    <line x1="120" y1="8" x2="760" y2="8"/>
+    <line x1="120" y1="3" x2="120" y2="13"/>
+    <line x1="280" y1="3" x2="280" y2="13"/>
+    <line x1="440" y1="3" x2="440" y2="13"/>
+    <line x1="760" y1="3" x2="760" y2="13"/>
+    <text x="200" y="1" text-anchor="middle">4.00</text>
+    <text x="360" y="1" text-anchor="middle">4.00</text>
+    <text x="600" y="1" text-anchor="middle">8.00</text>
+
+    <!-- Heights on the far right: 6.00 (base to hinge level) + 4.00 (hinge level to top)
+         y=0 sy=460, y=6 sy=220, y=10 sy=60; dim line at sx=800 -->
+    <line x1="800" y1="60" x2="800" y2="460"/>
+    <line x1="795" y1="60" x2="805" y2="60"/>
+    <line x1="795" y1="220" x2="805" y2="220"/>
+    <line x1="795" y1="460" x2="805" y2="460"/>
+    <text x="812" y="340" text-anchor="middle" transform="rotate(-90 812 340)">6.00</text>
+    <text x="812" y="140" text-anchor="middle" transform="rotate(-90 812 140)">4.00</text>
+
+  </g>
+
+  <!-- ===== Solid-web frame members ===== -->
+  <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
+    <line x1="120" y1="460" x2="120" y2="220"/> <!-- left column A-G -->
+    <line x1="120" y1="220" x2="280" y2="220"/> <!-- left roof seg 1 G-Lm -->
+    <line x1="280" y1="220" x2="440" y2="220"/> <!-- left roof seg 2 Lm-A12 -->
+    <line x1="440" y1="460" x2="440" y2="220"/> <!-- central column lower B-A12 -->
+    <line x1="440" y1="220" x2="440" y2="60"/>  <!-- central column upper A12-Btop -->
+    <line x1="440" y1="60"  x2="760" y2="60"/>  <!-- right roof Btop-F -->
+    <line x1="760" y1="60"  x2="760" y2="460"/> <!-- right column F-C -->
+  </g>
+
+  <!-- ===== Roller support at A (0,0) -> (120,460): triangle + 2 wheels + hatch ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <polygon points="120,460 111,473 129,473"/>
+    <circle cx="115" cy="477" r="3"/>
+    <circle cx="125" cy="477" r="3"/>
+    <line x1="105" y1="481" x2="135" y2="481"/>
+    <line x1="109" y1="481" x2="103" y2="488"/>
+    <line x1="117" y1="481" x2="111" y2="488"/>
+    <line x1="125" y1="481" x2="119" y2="488"/>
+    <line x1="133" y1="481" x2="127" y2="488"/>
+  </g>
+
+  <!-- ===== Roller support at B (8,0) -> (440,460): triangle + 2 wheels + hatch ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <polygon points="440,460 431,473 449,473"/>
+    <circle cx="435" cy="477" r="3"/>
+    <circle cx="445" cy="477" r="3"/>
+    <line x1="425" y1="481" x2="455" y2="481"/>
+    <line x1="429" y1="481" x2="423" y2="488"/>
+    <line x1="437" y1="481" x2="431" y2="488"/>
+    <line x1="445" y1="481" x2="439" y2="488"/>
+    <line x1="453" y1="481" x2="447" y2="488"/>
+  </g>
+
+  <!-- ===== Pinned support at C (16,0) -> (760,460): triangle + hatch, NO wheels ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <polygon points="760,460 751,471 769,471"/>
+    <line x1="745" y1="471" x2="775" y2="471"/>
+    <line x1="749" y1="471" x2="743" y2="478"/>
+    <line x1="757" y1="471" x2="751" y2="478"/>
+    <line x1="765" y1="471" x2="759" y2="478"/>
+    <line x1="773" y1="471" x2="767" y2="478"/>
+  </g>
+
+  <!-- ===== Internal hinge at A12 (8,6) -> (440,220): white open circle ===== -->
+  <!-- This hinge belongs to the left roof end; central column is continuous through it -->
+  <circle cx="440" cy="220" r="6" fill="#ffffff" stroke="#1a1a1a" stroke-width="2"/>
+
+  <!-- ===== Nodes (rigid joints — filled dots; hinge stays open) ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="120" cy="460" r="4"/> <!-- A -->
+    <circle cx="120" cy="220" r="4"/> <!-- G -->
+    <circle cx="280" cy="220" r="4"/> <!-- Lm (moment point) -->
+    <circle cx="440" cy="60"  r="4"/> <!-- Btop -->
+    <circle cx="440" cy="460" r="4"/> <!-- B -->
+    <circle cx="760" cy="60"  r="4"/> <!-- F -->
+    <circle cx="760" cy="460" r="4"/> <!-- C -->
+  </g>
+
+  <!-- ===== Node labels ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <text x="107" y="451" text-anchor="end">A</text>
+    <text x="280" y="210" text-anchor="middle">L<tspan font-size="10" dy="4">m</tspan></text>
+    <!-- A12 label: below/left of hinge -->
+    <text x="428" y="213" text-anchor="end">A<tspan font-size="10" dy="4">1-2</tspan></text>
+    <text x="427" y="451" text-anchor="end">B</text>
+    <text x="773" y="451" text-anchor="start">C</text>
+  </g>
+
+  <!-- ===== Loads (red #c0392b) ===== -->
+  <!-- tip AT point of application, shaft trailing in the opposite direction of the force -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+
+    <!-- Load 1: UDL q = 2 kN/m horizontal RIGHT over full left column A-G (sy=220 to sy=460)
+         Rail at sx=90 (30 px to left of column sx=120); shafts from sx=90 to sx=118;
+         arrowhead tips ON the column at sx=120. 6 evenly-spaced shafts. -->
+    <line x1="90" y1="220" x2="90" y2="460" stroke-width="2"/>
+    <!-- Shaft levels: evenly from sy=248 to sy=432, step 40 (6 arrows over 240px range) -->
+    <g stroke-width="1.5">
+      <line x1="90" y1="248" x2="118" y2="248"/>
+      <line x1="90" y1="288" x2="118" y2="288"/>
+      <line x1="90" y1="328" x2="118" y2="328"/>
+      <line x1="90" y1="368" x2="118" y2="368"/>
+      <line x1="90" y1="408" x2="118" y2="408"/>
+      <line x1="90" y1="448" x2="118" y2="448"/>
+    </g>
+    <g stroke="none">
+      <polygon points="120,248 108,242 108,254"/>
+      <polygon points="120,288 108,282 108,294"/>
+      <polygon points="120,328 108,322 108,334"/>
+      <polygon points="120,368 108,362 108,374"/>
+      <polygon points="120,408 108,402 108,414"/>
+      <polygon points="120,448 108,442 108,454"/>
+    </g>
+    <text x="75" y="340" text-anchor="middle" transform="rotate(-90 75 340)" stroke="none">q = 2 kN/m</text>
+
+    <!-- Load 2: 3 kN vertical DOWN at G (0,6) -> sx=120, sy=220
+         Shaft above (sy=188 to sy=218), tip at sy=220 pointing down. -->
+    <line x1="120" y1="188" x2="120" y2="218" stroke-width="2.5"/>
+    <polygon points="120,220 114,208 126,208" stroke="none"/>
+    <text x="132" y="207" text-anchor="start" stroke="none">3 kN</text>
+
+    <!-- Load 3: M = 2 kN·m CLOCKWISE at Lm (4,6) -> sx=280, sy=220
+         Clockwise arc: large-arc-flag=1 sweep-flag=1, radius=14.
+         Arc from right-top to left-top; arrowhead at the left end. -->
+    <circle cx="280" cy="220" r="2" stroke="none"/>
+    <path d="M 286 209.6 A 14 14 0 1 1 274 209.6" fill="none" stroke-width="2.5"/>
+    <polygon points="278.16,207.2 272.4,206.8 275.6,212.4" stroke="none"/>
+    <text x="256" y="204" text-anchor="end" stroke="none">2 kN·m</text>
+
+    <!-- Load 4: 5 kN vertical DOWN at Btop (8,10) -> sx=440, sy=60
+         Shaft above (sy=28 to sy=58), tip at sy=60 pointing down. -->
+    <line x1="440" y1="28" x2="440" y2="58" stroke-width="2.5"/>
+    <polygon points="440,60 434,48 446,48" stroke="none"/>
+    <text x="452" y="46" text-anchor="start" stroke="none">5 kN</text>
+
+    <!-- Load 5: 3 kN vertical DOWN at F (16,10) -> sx=760, sy=60
+         Shaft above (sy=28 to sy=58), tip at sy=60 pointing down. -->
+    <line x1="760" y1="28" x2="760" y2="58" stroke-width="2.5"/>
+    <polygon points="760,60 754,48 766,48" stroke="none"/>
+    <text x="772" y="46" text-anchor="start" stroke="none">3 kN</text>
+
+    <!-- Load 6: 7 kN horizontal RIGHT at A12 (8,6) -> sx=440, sy=220
+         Collinearity exception: the left roof is horizontal at the same y=220 level,
+         so a shaft trailing LEFT would run along the roof member.
+         Draw the arrow just outside/right of the hinge (tip at sx=460, shaft from sx=448 to sx=458),
+         offset slightly below to read clearly — tip at (462,230), shaft from (447,230). -->
+    <line x1="447" y1="230" x2="460" y2="230" stroke-width="2.5"/>
+    <polygon points="462,230 450,224 450,236" stroke="none"/>
+    <text x="466" y="244" text-anchor="start" stroke="none">7 kN</text>
+
+    <!-- Load 7: 2 kN horizontal LEFT at node B (8,0) -> sx=440, sy=460
+         Tip at B pointing left, shaft trailing to the RIGHT (into open span). -->
+    <line x1="450" y1="460" x2="486" y2="460" stroke-width="2.5"/>
+    <polygon points="440,460 452,454 452,466" stroke="none"/>
+    <text x="490" y="464" text-anchor="start" stroke="none">2 kN</text>
+
+  </g>
+
+  <!-- ===== Support reactions (blue #1a73e8) ===== -->
+  <!-- tip AT node, shaft trailing opposite direction of reaction force -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+
+    <!-- V_A = 7.25 kN UPWARD at A (120,460) — roller
+         Upward reaction: tip at (120,460), shaft below (from sy=504 to sy=462). -->
+    <line x1="120" y1="504" x2="120" y2="462" stroke-width="2.5"/>
+    <polygon points="120,460 114,472 126,472" stroke="none"/>
+    <text x="132" y="502" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan><tspan font-size="13" dy="-4"> = 7.25 kN</tspan></text>
+
+    <!-- V_B = 13.5 kN DOWNWARD at B (440,460) — roller
+         Collinearity exception (central column runs directly above B):
+         draw below the support pointing DOWN.
+         Tip at (440,508), shaft from (440,481) to (440,506). -->
+    <line x1="440" y1="481" x2="440" y2="506" stroke-width="2.5"/>
+    <polygon points="440,508 434,496 446,496" stroke="none"/>
+    <text x="452" y="504" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">B</tspan><tspan font-size="13" dy="-4"> = 13.5 kN ↓</tspan></text>
+
+    <!-- H_C = 17 kN to the LEFT at C (760,460) — pinned; drawn to the LEFT of the node
+         to clear the right-side dimension. Shaft from node (760,460) to (726,460);
+         arrowhead points left, apex at (714,460). -->
+    <line x1="726" y1="460" x2="760" y2="460" stroke-width="2.5"/>
+    <polygon points="714,460 726,454 726,466" stroke="none"/>
+    <text x="710" y="464" text-anchor="end" stroke="none">H<tspan font-size="10" dy="4">C</tspan><tspan font-size="13" dy="-4"> = 17 kN</tspan></text>
+
+    <!-- V_C = 17.25 kN UPWARD at C (760,460) — pinned
+         Upward reaction: tip at (760,460), shaft below (from sy=510 to sy=462). -->
+    <line x1="760" y1="510" x2="760" y2="462" stroke-width="2.5"/>
+    <polygon points="760,460 754,472 766,472" stroke="none"/>
+    <text x="772" y="510" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">C</tspan><tspan font-size="13" dy="-4"> = 17.25 kN</tspan></text>
+
+  </g>
+
+  <!-- ===== Caption ===== -->
+  <text x="440" y="562" text-anchor="middle" fill="#5f6368" font-size="13">
+    Asymmetric two-bay portal — A/B rollers, C pinned; hinge A₁₋₂ at left roof (y=6 m). Loads (red), reactions (blue).
+  </text>
+
+</svg>

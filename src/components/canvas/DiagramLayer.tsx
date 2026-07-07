@@ -7,11 +7,13 @@ export function DiagramLayer({
   type,
   unit,
   showValues,
+  dispSign = 1,
 }: {
   diag: ReturnType<typeof buildMemberDiagram>;
   type: DiagramKey;
   unit: string;
   showValues: boolean;
+  dispSign?: number;
 }) {
   const colors = useColors();
   const fillPos = type === "N" ? colors.tension : type === "Q" ? colors.shear : colors.moment;
@@ -59,19 +61,19 @@ export function DiagramLayer({
           <ValueLabel
             x={diag.iLabel.x}
             y={diag.iLabel.y}
-            v={diag.iLabel.v}
+            v={diag.iLabel.v * dispSign}
             unit={unit}
           />
           <ValueLabel
             x={diag.jLabel.x}
             y={diag.jLabel.y}
-            v={diag.jLabel.v}
+            v={diag.jLabel.v * dispSign}
             unit={unit}
           />
           <ValueLabel
             x={diag.extremumLabel.x}
             y={diag.extremumLabel.y}
-            v={diag.extremumLabel.v}
+            v={diag.extremumLabel.v * dispSign}
             unit={unit}
           />
         </g>

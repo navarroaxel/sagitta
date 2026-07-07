@@ -90,6 +90,38 @@ describe("buildMemberDiagram – degenerate values", () => {
   });
 });
 
+describe("buildMemberDiagram – canonical normal (node-order independent side)", () => {
+  // Two identical vertical columns defined in opposite node orders must draw the
+  // same-signed value on the same geometric side.
+  const bottom: FrameNode = { id: "b", x: 0, y: 0, support: "free" };
+  const top: FrameNode = { id: "t", x: 0, y: 6, support: "free" };
+  const vTransform: Transform = {
+    toSX: (x) => x,
+    toSY: (y) => -y,
+    k: 1,
+    ox: 0,
+    oy: 0,
+    box: { minX: 0, maxX: 0, minY: 0, maxY: 6, diagLen: 6 },
+  };
+  const sts: Station[] = [
+    { x: 0, N: 0, Q: 10, M: 0 },
+    { x: 6, N: 0, Q: 10, M: 0 },
+  ]; // uniform +10 shear along the column
+
+  test("same value lands on the same side regardless of i→j order", () => {
+    const up = buildMemberDiagram(
+      opts(sts, { transform: vTransform, nodeI: bottom, nodeJ: top, key: "Q", sideSign: 1 }),
+    );
+    const down = buildMemberDiagram(
+      opts(sts, { transform: vTransform, nodeI: top, nodeJ: bottom, key: "Q", sideSign: 1 }),
+    );
+    const upSide = Math.sign(up.points[0].ox - up.points[0].bx);
+    const downSide = Math.sign(down.points[0].ox - down.points[0].bx);
+    expect(upSide).toBe(downSide);
+    expect(upSide).not.toBe(0);
+  });
+});
+
 describe("buildMemberDiagram – sideSign", () => {
   test("flipping sideSign mirrors offsets about the baseline", () => {
     const stations = [station(0, 10), station(5, 50), station(10, 20)];

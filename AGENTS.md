@@ -13,7 +13,7 @@ A Next.js 16 + React 19 client-side app that renders structural internal force d
 ```bash
 npm install     # required: installs jsdom + testing-library for the component tests
 npm run dev     # dev server on localhost:3000
-npm test        # full Jest suite (107 checks, 2 projects — must stay green)
+npm test        # full Jest suite (213 checks, 2 projects — must stay green)
 npm run build   # production build (must stay clean)
 npm run lint    # ESLint
 npx tsc --noEmit  # TypeScript check
@@ -31,14 +31,18 @@ npx tsc --noEmit  # TypeScript check
 
 `src/lib/__tests__/solver.test.ts` must pass at all times (`npm test`). Never skip or modify a failing test — fix the implementation instead.
 
-### Sign conventions — do not flip
+### Sign conventions
+
+Internal (sampling) signs are fixed — never flip them:
 
 - N > 0 = tension (teal), N < 0 = compression (red)
-- M diagram uses `sideSign = -1` so positive (sagging) M appears on the tension-fibre side (below a horizontal beam). Do not change this.
+- Positive (sagging) M is on the tension-fibre side (below a horizontal beam)
+
+How diagrams are *drawn and labelled* is selected by the **sign-convention setting** (`prefs.signConvention`: `argentina` default / `international`) via `src/lib/conventions.ts` (`diagramSigns` → per-diagram `{ sideSign, dispSign }`), applied in `FrameCanvas` / `DiagramLayer` / `ResultsPanel`. `sideSign` picks the drawn side; `dispSign` flips only the displayed number. `buildMemberDiagram` uses a **canonical, node-order-independent normal for N and Q** (so negatives land left of columns / above beams regardless of how the member was defined), and the **raw i→j normal for M** so the moment stays on the tension fibre and continuous across beam–column joints. This is presentation only — never touch `solver.ts` / `sampling.ts`.
 
 ## Architecture notes
 
-- **No server state.** Everything is client-side; pages are statically prerendered (no API routes). `page.tsx` is `'use client'`; all computation happens in `useMemo`. There is also a `/learn` page (`src/app/learn/page.tsx`).
+- **No server state.** Everything is client-side; pages are statically prerendered (no API routes). `page.tsx` is `'use client'`; all computation happens in `useMemo`. There are also two guide pages: `/learn` (`src/app/learn/page.tsx`, Tangent Method) and `/esfuerzos-caracteristicos` (`src/app/esfuerzos-caracteristicos/page.tsx`, internal-forces guide, bilingual).
 - **Solver pipeline:** `FrameModel` (id-based) → `solve.ts` adapter → `SolverModel` (index-based) → `solveFrame` → `sampleMember` per member → `buildMemberDiagram` → SVG polygons.
 - **Canvas is modular.** `FrameCanvas.tsx` composes per-concern layers in `src/components/canvas/` (`DiagramLayer`, `GridLayer`, `LoadsLayer`, `ReactionsLayer`, `SupportSymbol`, `ValueLabel`), with shared colors/consts in `constants.ts` and arrow primitives in `loads.tsx`. Don't reintroduce the old "god component" — add new visuals as a layer.
 - **Results are derived, not stored.** `ResultsPanel.tsx` + `src/lib/results.ts` compute member-force peaks (`peak`), the equilibrium residual check (`equilibrium`, ✓/✗ via `EQ_TOL`), reactions, and nodal displacements straight from the `SolveOutput`. The editor's **results** tab surfaces them.
@@ -58,7 +62,8 @@ npx tsc --noEmit  # TypeScript check
 | `src/lib/sampling.ts`                                | `sampleMember` — N/Q/M at 64+ stations along a member                                                                                            |
 | `src/lib/solve.ts`                                   | Adapter: id-based model → solver input + `sampleMember` calls                                                                                    |
 | `src/lib/geometry.ts`                                | `makeTransform` — world↔screen, padded bounds, zoom/pan                                                                                          |
-| `src/lib/diagram.ts`                                 | `buildMemberDiagram`, `quadGroupToSvgPoints`                                                                                                     |
+| `src/lib/diagram.ts`                                 | `buildMemberDiagram`, `quadGroupToSvgPoints` (canonical normal for N/Q, raw for M)                                                               |
+| `src/lib/conventions.ts`                             | `diagramSigns` — per-diagram `{sideSign, dispSign}` for Argentina vs International                                                               |
 | `src/lib/results.ts`                                 | `peak`, `equilibrium`, `clean` — derived results + ✓/✗ tolerances                                                                                |
 | `src/lib/loadProjection.ts`                          | Load placement helpers (`pointLoadPos`, UDL arrow fractions)                                                                                     |
 | `src/lib/presets.ts`                                 | 8 preset models (frame+truss, truss, portal w/ hinge, etc.)                                                                                      |
@@ -72,6 +77,8 @@ npx tsc --noEmit  # TypeScript check
 | `src/contexts/LanguageContext.tsx`                   | i18n (EN/ES), `t()`, `TranslationKey` union                                                                                                      |
 | `src/app/page.tsx`                                   | Root client component, wires everything together                                                                                                 |
 | `src/app/learn/page.tsx`                             | `/learn` — Tangent Method (Mohr) step-by-step guide                                                                                              |
+| `src/app/esfuerzos-caracteristicos/page.tsx`         | `/esfuerzos-caracteristicos` — internal forces guide (N/Q/M, local triad, diagrams), bilingual                                                  |
+| `src/contexts/PrefsContext.tsx`                      | Persistent prefs incl. `signConvention` (argentina/international), remember-work, grid snap                                                      |
 | `jest.config.ts`                                     | Jest + ts-jest, 2 projects (lib=node, components=jsdom), `@/*` alias                                                                             |
 
 ## Testing
@@ -88,7 +95,9 @@ npx tsc --noEmit  # TypeScript check
 
 **components project (jsdom, React render):** `FrameCanvas.test.tsx`, `ValueLabel.test.tsx`, `ReactionsLayer.test.tsx` (the last guards reaction-arrow direction for both signs of the reaction).
 
-Total ~107 checks. Component tests render with `@testing-library/react`; remember to add a test there when adding a canvas layer or fixing a rendering bug.
+- `conventions.test.ts` — `diagramSigns` returns the expected `{sideSign, dispSign}` for both conventions × N/Q/M.
+
+Total ~213 checks. Component tests render with `@testing-library/react`; remember to add a test there when adding a canvas layer or fixing a rendering bug.
 
 ## Out of scope (v1)
 
