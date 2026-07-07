@@ -14,6 +14,15 @@
       (13,4) bottom chord               -> (680,240)
       B   (13,0)  pinned support        -> (680,400)
     Frame = solid web (rigid joints). Truss = bars (double-pinned).
+    Loads (kN / kN·m):
+      q = 5 kN/m down on the roof, x=-2..5 (35 kN at x=1.5)
+      M = 15 kN·m clockwise at (0,4)
+      20 kN down at E=(5,4)
+      10 kN to the right at D=(13,8)
+    Reactions (kN), from 3 global equations + hinge (ΣM=0 at A1-2):
+      A: V_A = 35.96 kN (up),  H_A = 9.04 kN (right)
+      B: V_B = 19.04 kN (up),  H_B = 19.04 kN (left)
+    These satisfy ΣFx = 0, ΣFy = 0, ΣM_A = 0 (statically determinate).
   -->
 
   <rect x="0" y="0" width="780" height="480" fill="#ffffff"/>
@@ -189,18 +198,18 @@
     <!-- A (160,400): V_A upward (tip at A, shaft below), H_A to the right (tip at A, shaft to the left) -->
     <line x1="160" y1="450" x2="160" y2="411" stroke-width="2.5"/>
     <polygon points="160,400 154,412 166,412" stroke="none"/>
-    <text x="172" y="440" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan></text>
+    <text x="172" y="440" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan><tspan dy="-4"> = 35.96 kN</tspan></text>
     <line x1="112" y1="400" x2="149" y2="400" stroke-width="2.5"/>
     <polygon points="160,400 148,394 148,406" stroke="none"/>
-    <text x="108" y="396" text-anchor="end" stroke="none">H<tspan font-size="10" dy="4">A</tspan></text>
+    <text x="108" y="396" text-anchor="end" stroke="none">H<tspan font-size="10" dy="4">A</tspan><tspan dy="-4"> = 9.04 kN</tspan></text>
 
-    <!-- B (680,400): V_B upward (tip at B, shaft below), H_B to the right (tip at B, shaft to the left) -->
+    <!-- B (680,400): V_B upward (tip at B, shaft below), H_B to the LEFT (tip at B, shaft to the right) -->
     <line x1="680" y1="450" x2="680" y2="411" stroke-width="2.5"/>
     <polygon points="680,400 674,412 686,412" stroke="none"/>
-    <text x="692" y="440" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">B</tspan></text>
-    <line x1="632" y1="400" x2="669" y2="400" stroke-width="2.5"/>
-    <polygon points="680,400 668,394 668,406" stroke="none"/>
-    <text x="628" y="396" text-anchor="end" stroke="none">H<tspan font-size="10" dy="4">B</tspan></text>
+    <text x="686" y="444" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">B</tspan><tspan dy="-4"> = 19.04 kN</tspan></text>
+    <line x1="692" y1="400" x2="729" y2="400" stroke-width="2.5"/>
+    <polygon points="680,400 692,394 692,406" stroke="none"/>
+    <text x="665" y="393" text-anchor="end" stroke="none">H<tspan font-size="10" dy="4">B</tspan><tspan dy="-4"> = 19.04 kN</tspan></text>
   </g>
 
   <text x="390" y="465" text-anchor="middle" fill="#5f6368" font-size="13">

@@ -1,0 +1,203 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="118 5 630 600" font-family="system-ui, sans-serif">
+  <!--
+    Structure: Z-frame (crank frame) — left column, horizontal bar, right column
+    forming a Z shape (or S depending on view); no internal hinge; statically
+    determinate via 3 reactions. World in metres, y up. Units kN and kN·m.
+    Transform: sx = 210 + x*40 ; sy = 470 - y*40
+    Nodes:
+      A  (0,10) -> (210, 70)   ceiling roller (vertical reaction only)
+      D  (0, 5) -> (210,270)   rigid corner (top of left column / left end of bar)
+      E  (8, 5) -> (530,270)   rigid corner (right end of bar / top of right column)
+      B  (8, 0) -> (530,470)   pinned support (H + V reactions)
+    Members:
+      A-D  left column   (210, 70)-(210,270)  5 m vertical
+      D-E  horizontal bar (210,270)-(530,270)  8 m
+      E-B  right column   (530,270)-(530,470)  5 m vertical
+    Supports:
+      A: ceiling roller — triangle apex AT the node (210,70) pointing UP, base above,
+         two wheels above the base, ground hatch line and diagonal ticks above that;
+         vertical reaction only (V_A).
+      B: standard pinned at floor — triangle apex at (530,470), base below,
+         ground hatch and 4 diagonal ticks; H_B and V_B reactions.
+    Determinacy:
+      3 reactions (V_A, H_B, V_B) = 3 global equilibrium equations.
+      Statically determinate.
+    Loads (red, kN / kN·m):
+      1. q1 = 2 kN/m horizontal to the RIGHT on left column A-D over 5 m.
+         Resultant = 10 kN at (0, 7.5) -> (210, 170). [Direction assumed: wind
+         from the left; not stated in the problem statement.]
+      2. P = 8 kN vertical DOWN at midspan of bar, at (4,5) -> (370,270).
+      3. M = 3 kN·m CLOCKWISE concentrated moment at bar midspan (370,270).
+      4. q2 = 3 kN/m horizontal to the RIGHT on right column E-B over 5 m.
+         Resultant = 15 kN at (8, 2.5) -> (530, 370).
+      5. F = 5 kN at 45° depression (↘, down-right) at E=(530,270).
+         Components: Fx = +3.54 kN (right), Fy = -3.54 kN (down).
+         [Angle assumed: 45° below horizontal.]
+    Reactions (blue, kN):
+      V_A = 12.65 kN DOWNWARD at A (ceiling roller pushes down on the node).
+      H_B = 28.54 kN to the LEFT at B.
+      V_B = 24.18 kN UPWARD at B.
+    Equilibrium check:
+      ΣFx = -H_B + q1·5 + F·cos45 = -28.54 + 10 + 3.54 + 15 = 0.00 ✓
+      ΣFy = -V_A + V_B - P - F·sin45 = -12.65 + 24.18 - 8 - 3.54 = -0.01 ≈ 0 ✓
+      ΣM_B = 0 verified about B.
+    These reactions satisfy ΣFx = 0, ΣFy = 0, ΣM = 0 (statically determinate).
+  -->
+
+  <rect x="118" y="5" width="630" height="600" fill="#ffffff"/>
+
+  <!-- ===== Dimensions ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <!-- Bar length 8 m split 4 + 4 (mid tick at x=370 marks the 8 kN load) — dim line below support B -->
+    <line x1="210" y1="548" x2="530" y2="548"/>
+    <line x1="210" y1="543" x2="210" y2="553"/>
+    <line x1="370" y1="543" x2="370" y2="553"/>
+    <line x1="530" y1="543" x2="530" y2="553"/>
+    <text x="290" y="540" text-anchor="middle">4.00</text>
+    <text x="450" y="540" text-anchor="middle">4.00</text>
+
+    <!-- Heights 5 m + 5 m: single vertical dim line at x=150 (both stacked, tick at bar level y=270) -->
+    <line x1="150" y1="70" x2="150" y2="470"/>
+    <line x1="145" y1="70" x2="155" y2="70"/>
+    <line x1="145" y1="270" x2="155" y2="270"/>
+    <line x1="145" y1="470" x2="155" y2="470"/>
+    <text x="138" y="170" text-anchor="middle" transform="rotate(-90 138 170)">5.00</text>
+    <text x="138" y="370" text-anchor="middle" transform="rotate(-90 138 370)">5.00</text>
+  </g>
+
+  <!-- ===== Members ===== -->
+  <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
+    <line x1="210" y1="70"  x2="210" y2="270"/> <!-- A-D left column -->
+    <line x1="210" y1="270" x2="530" y2="270"/> <!-- D-E horizontal bar -->
+    <line x1="530" y1="270" x2="530" y2="470"/> <!-- E-B right column -->
+  </g>
+
+  <!-- ===== Ceiling roller support at A (210,70) — mirrored vertically ===== -->
+  <!-- Apex at (210,70) pointing UP; base at y=57; wheels at y=53; hatch at y=49; ticks go up to y=42 -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <polygon points="210,70 201,57 219,57"/>
+    <circle cx="205" cy="53" r="3"/>
+    <circle cx="215" cy="53" r="3"/>
+    <line x1="195" y1="49" x2="225" y2="49"/>
+    <line x1="199" y1="49" x2="193" y2="42"/>
+    <line x1="207" y1="49" x2="201" y2="42"/>
+    <line x1="215" y1="49" x2="209" y2="42"/>
+    <line x1="223" y1="49" x2="217" y2="42"/>
+  </g>
+
+  <!-- ===== Pinned support at B (530,470) ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <polygon points="530,470 521,481 539,481"/>
+    <line x1="515" y1="481" x2="545" y2="481"/>
+    <line x1="519" y1="481" x2="513" y2="488"/>
+    <line x1="527" y1="481" x2="521" y2="488"/>
+    <line x1="535" y1="481" x2="529" y2="488"/>
+    <line x1="543" y1="481" x2="537" y2="488"/>
+  </g>
+
+  <!-- ===== Nodes ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="210" cy="70"  r="4"/> <!-- A -->
+    <circle cx="210" cy="270" r="4"/> <!-- D -->
+    <circle cx="530" cy="270" r="4"/> <!-- E -->
+    <circle cx="530" cy="470" r="4"/> <!-- B -->
+  </g>
+
+  <!-- ===== Node labels ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <text x="222" y="80" text-anchor="start">A</text>
+    <text x="516" y="462" text-anchor="end">B</text>
+  </g>
+
+  <!-- ===== Loads (red) ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+
+    <!-- 1. q1 = 2 kN/m horizontal to the RIGHT on left column A-D -->
+    <!-- Rail line at x=180 from y=70 to y=270; shafts point right, tips at x=210 -->
+    <line x1="180" y1="70" x2="180" y2="270" stroke-width="2"/>
+    <g stroke-width="1.5">
+      <line x1="180" y1="120" x2="200" y2="120"/>
+      <line x1="180" y1="145" x2="200" y2="145"/>
+      <line x1="180" y1="170" x2="200" y2="170"/>
+      <line x1="180" y1="195" x2="200" y2="195"/>
+      <line x1="180" y1="220" x2="200" y2="220"/>
+    </g>
+    <g stroke="none">
+      <polygon points="210,120 198,114 198,126"/>
+      <polygon points="210,145 198,139 198,151"/>
+      <polygon points="210,170 198,164 198,176"/>
+      <polygon points="210,195 198,189 198,201"/>
+      <polygon points="210,220 198,214 198,226"/>
+    </g>
+    <text x="166" y="170" text-anchor="middle" transform="rotate(-90 166 170)" stroke="none">q = 2 kN/m</text>
+
+    <!-- 2. P = 8 kN vertical DOWN at midspan (370,270); shaft above, tip on the bar -->
+    <line x1="370" y1="240" x2="370" y2="262" stroke-width="2.5"/>
+    <polygon points="370,270 364,258 376,258" stroke="none"/>
+    <text x="380" y="255" text-anchor="start" stroke="none">8 kN</text>
+
+    <!-- 3. M = 3 kN·m CLOCKWISE at (370,270) — arc mainly below the bar -->
+    <!-- Arc from (390,270) CW through bottom to (350,270); gap at top; arrowhead at left end -->
+    <circle cx="370" cy="270" r="2.5" stroke="none"/>
+    <path d="M 390 270 A 20 20 0 1 1 350 270" fill="none" stroke-width="2.5"/>
+    <!-- Arrowhead at (350,270): CW tangent there is upward-right; tip at (350,270) -->
+    <polygon points="350,270 358,263 355,272" stroke="none"/>
+    <text x="400" y="305" text-anchor="start" stroke="none">3 kN·m</text>
+
+    <!-- 4. q2 = 3 kN/m horizontal to the RIGHT on right column E-B -->
+    <!-- Rail line at x=500 from y=270 to y=470; shafts point right, tips at x=530 -->
+    <line x1="500" y1="270" x2="500" y2="470" stroke-width="2"/>
+    <g stroke-width="1.5">
+      <line x1="500" y1="320" x2="520" y2="320"/>
+      <line x1="500" y1="345" x2="520" y2="345"/>
+      <line x1="500" y1="370" x2="520" y2="370"/>
+      <line x1="500" y1="395" x2="520" y2="395"/>
+      <line x1="500" y1="420" x2="520" y2="420"/>
+    </g>
+    <g stroke="none">
+      <polygon points="530,320 518,314 518,326"/>
+      <polygon points="530,345 518,339 518,351"/>
+      <polygon points="530,370 518,364 518,376"/>
+      <polygon points="530,395 518,389 518,401"/>
+      <polygon points="530,420 518,414 518,426"/>
+    </g>
+    <text x="486" y="370" text-anchor="middle" transform="rotate(-90 486 370)" stroke="none">q = 3 kN/m</text>
+
+    <!-- 5. F = 5 kN at 45° depression (↘) at E=(530,270) — drawn like wall-truss-e-diagonal.svg: -->
+    <!-- tail at the node, arrowhead pointing AWAY (down-right), plus a 45° angle reference -->
+    <line x1="530" y1="270" x2="560" y2="300" stroke-width="2.5"/>
+    <polygon points="567,307 556,302 562,296" stroke="none"/>
+    <text x="564" y="326" text-anchor="start" stroke="none">5 kN</text>
+    <!-- angle reference (45° depression) -->
+    <line x1="530" y1="270" x2="578" y2="270" stroke="#9aa0a6" stroke-width="1" stroke-dasharray="4 3"/>
+    <path d="M 560 270 A 30 30 0 0 1 551.2 291.2" fill="none" stroke="#9aa0a6" stroke-width="1"/>
+    <text x="566" y="286" text-anchor="start" stroke="none" fill="#5f6368" font-size="11" font-weight="400">45&#176;</text>
+  </g>
+
+  <!-- ===== Reactions (blue) ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+
+    <!-- V_A = 12.65 kN DOWNWARD at A (ceiling roller) -->
+    <!-- The reaction acts on the node at (210,70) downward. The ceiling support is above the node. -->
+    <!-- Draw the arrow in the space above the roller hatch: shaft from ~y=12 to y=32 (just above hatch), tip pointing down -->
+    <line x1="210" y1="12" x2="210" y2="34" stroke-width="2.5"/>
+    <polygon points="210,42 204,30 216,30" stroke="none"/>
+    <text x="224" y="26" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan><tspan dy="-4"> = 12.65 kN</tspan></text>
+
+    <!-- H_B = 28.54 kN to the LEFT at B=(530,470) -->
+    <!-- Tip at B pointing left, shaft trailing right to ~x=580 -->
+    <line x1="542" y1="470" x2="580" y2="470" stroke-width="2.5"/>
+    <polygon points="530,470 542,464 542,476" stroke="none"/>
+    <text x="590" y="462" text-anchor="start" stroke="none">H<tspan font-size="10" dy="4">B</tspan><tspan dy="-4"> = 28.54 kN</tspan></text>
+
+    <!-- V_B = 24.18 kN UPWARD at B=(530,470) -->
+    <!-- Drawn below the pinned support (below the hatch at y=488), tip pointing up -->
+    <line x1="530" y1="504" x2="530" y2="544" stroke-width="2.5"/>
+    <polygon points="530,492 524,504 536,504" stroke="none"/>
+    <text x="544" y="524" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">B</tspan><tspan dy="-4"> = 24.18 kN</tspan></text>
+  </g>
+
+  <!-- ===== Caption ===== -->
+  <text x="433" y="576" text-anchor="middle" fill="#5f6368" font-size="13">Z-frame — ceiling roller at A, pinned at B; UDLs on both columns,</text>
+  <text x="433" y="593" text-anchor="middle" fill="#5f6368" font-size="13">midspan load + clockwise moment + inclined 5 kN. Loads (red), reactions (blue); kN.</text>
+</svg>

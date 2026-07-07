@@ -33,6 +33,9 @@ const EN = {
   "controls.scale": "Scale:",
 
   "preset.examples": "Examples ▾",
+  "preset.cat_beams": "Beams",
+  "preset.cat_frames": "Frames",
+  "preset.cat_trusses": "Trusses",
   "preset.simply_supported": "Simply Supported Beam",
   "preset.cantilever": "Cantilever",
   "preset.portal_fixed": "Portal Frame (fixed)",
@@ -48,10 +51,14 @@ const EN = {
   "preset.truss_cantilever": "Cantilever Truss",
   "preset.truss_tower": "Tower Truss",
   "preset.truss_triangular": "Triangular Truss",
+  "preset.truss_three_panel": "Three-Panel Triangle Truss",
   "preset.symmetric_truss": "Symmetric Truss",
   "preset.fixed_beam_hinge_overhang": "Fixed Beam w/ Hinge & Overhang",
   "preset.fixed_beam_udl_hinge": "Fixed Beam (UDL + Hinge)",
   "preset.t_frame_fixed": "T-Frame (fixed base)",
+  "preset.symmetric_two_bay": "Symmetric Two-Bay Portal",
+  "preset.portal_moment": "Portal w/ Moment",
+  "preset.z_frame": "Z-Frame (ceiling roller)",
 
   "forces.member": "Member",
   "forces.state": "State",
@@ -238,6 +245,112 @@ const EN = {
   "claudeQuiz.result.great": "Solid — ready for the theory part.",
   "claudeQuiz.result.ok": "On track — review the misses and retry.",
   "claudeQuiz.result.low": "Review the weak topics and retry.",
+
+  // ── Local-triad method (N/Q/M) ──
+  "terna.link": "Local triad → N/Q/M",
+  "terna.title": "The Local Triad — N, Q & M",
+  "terna.lead":
+    "Each member carries its own set of axes. Projecting loads and cuts onto that triad is what gives “normal”, “shear” and “bending” a single, unambiguous sign — whether the member is a beam, a column or a diagonal.",
+
+  "terna.s1.kicker": "01 — The axes",
+  "terna.s1.title": "What the local triad is",
+  "terna.s1.p1":
+    "We “glue” three axes to each member; they travel with it. Once fixed, everything — loads, cuts, forces — is measured against them, so a vertical column and a horizontal beam are solved exactly the same way.",
+  "terna.s1.x": "axis of the member, from node i to node j",
+  "terna.s1.y": "perpendicular, at +90° from x′",
+  "terna.s1.z": "out of the plane; gives the sign of M",
+  "terna.s1.p2":
+    "You choose the i → j direction, but once chosen it does not change: it fixes which is the “positive face” of the cut, and with it the signs of the three internal forces.",
+
+  "terna.s2.kicker": "02 — The three components",
+  "terna.s2.title": "N, Q and M at a section",
+  "terna.s2.p1":
+    "Cut the member at a distance s from node i and look at the resultant of everything left on one side, expressed in the local triad. Its components are the three internal forces:",
+  "terna.s2.th1": "Force",
+  "terna.s2.th2": "Projection onto…",
+  "terna.s2.th3": "Positive when…",
+  "terna.s2.n": "normal",
+  "terna.s2.q": "shear",
+  "terna.s2.m": "bending",
+  "terna.s2.n.proj": "x′ (member axis)",
+  "terna.s2.q.proj": "y′ (transverse)",
+  "terna.s2.m.proj": "z′ (in-plane rotation)",
+  "terna.s2.n.pos": "it tensions the section — pulls the faces apart",
+  "terna.s2.q.pos": "on the +x′ face it acts along +y′",
+  "terna.s2.m.pos": "it tensions the fibre on the −y′ side (concave toward +y′)",
+  "terna.s2.p2":
+    "This is the simulator’s own convention: N > 0 is tension and N < 0 is compression.",
+
+  "terna.s3.kicker": "03 — Signs",
+  "terna.s3.title": "The positive-face rule",
+  "terna.s3.p1":
+    "A cut face is positive if its outward normal points in +x′. On that face, each force is positive if it acts along +x′, +y′ or +z′. On the opposite face everything flips by action–reaction — that is why N, Q and M at the section are unique.",
+  "terna.s3.cap.n": "Axial: faces pull apart.",
+  "terna.s3.cap.q": "Shear: couple rotating clockwise.",
+  "terna.s3.cap.m": "Bending: concave toward +y′.",
+  "terna.s3.n": "tension",
+  "terna.s3.q": "+x′ face toward +y′",
+  "terna.s3.m": "tension below (−y′)",
+  "terna.s3.callout":
+    "Rule of thumb: dQ/ds = −q and dM/ds = Q. Without transverse load, shear is constant and bending is linear; with a uniform load, shear is linear and bending is parabolic. And M is an extremum exactly where Q = 0.",
+
+  "terna.s4.kicker": "04 — The procedure",
+  "terna.s4.title": "From the structure to the three diagrams",
+  "terna.s4.step1.t": "Reactions",
+  "terna.s4.step1.d":
+    "Solve the global equilibrium (ΣFx, ΣFy, ΣM). They are the starting point of every cut.",
+  "terna.s4.step2.t": "Fix each member’s triad",
+  "terna.s4.step2.d": "Choose the i → j direction and with it x′; y′ at +90°.",
+  "terna.s4.step3.t": "Project the loads to local axes",
+  "terna.s4.step3.d":
+    "A global force (Fx, Fy) contributes N = Fx·cosα + Fy·sinα and Q = −Fx·sinα + Fy·cosα, with α the member angle.",
+  "terna.s4.step4.t": "Write N(s), Q(s), M(s)",
+  "terna.s4.step4.d":
+    "By equilibrium of the segment [i, s]. They change wherever there is a point load, a support or the start/end of a distributed load.",
+  "terna.s4.step5.t": "Check with the differential relations",
+  "terna.s4.step5.d":
+    "dQ/ds = −q and dM/ds = Q give the expected shape of each segment.",
+  "terna.s4.step6.t": "Draw on the triad and match at the joints",
+  "terna.s4.step6.d":
+    "Each diagram is drawn on its own member. At a rigid joint the bending moments balance; at a hinge, M = 0.",
+
+  "terna.s5.kicker": "05 — Worked example",
+  "terna.s5.title": "L-frame, fixed at the base",
+  "terna.s5.p1":
+    "Column A–B of 3 m, beam B–C of 4 m, a fixed support at A and a load P = 10 kN downward at the free tip C. This is where the local triad shines: the column has no obvious “up”.",
+  "terna.s5.reac.cap":
+    "Reactions at the fixed support. The load is 4 m from the column axis — hence the 40 kN·m moment.",
+  "terna.s5.cut.t": "The cut, member by member",
+  "terna.s5.cut.p":
+    "Beam B→C (x′ to the right). Cut at distance s and isolate the right piece, which only carries the load P at C:",
+  "terna.s5.cut.cap":
+    "The load tensions the top fibre of the beam (M < 0, hogging). In the column the same reasoning gives N = −10 (compression), Q = 0 and M = −40 constant, because the load is always 4 m from the axis.",
+  "terna.s5.diag.t": "The three diagrams",
+  "terna.s5.diag.n":
+    "Normal. Column in compression (−10 kN); beam with N = 0.",
+  "terna.s5.diag.q":
+    "Shear. Constant +10 kN in the beam; zero in the column.",
+  "terna.s5.diag.m":
+    "Bending. −40 kN·m constant in the column, linear to 0 at the tip. Continuous at joint B.",
+  "terna.s5.th.bar": "Member",
+  "terna.s5.th.axis": "Triad x′",
+  "terna.s5.th.state": "Axial state",
+  "terna.s5.bar.col": "A→B (column)",
+  "terna.s5.bar.beam": "B→C (beam)",
+  "terna.s5.axis.up": "upward",
+  "terna.s5.axis.right": "to the right",
+  "terna.state.compression": "Compression",
+  "terna.state.zero": "Zero",
+
+  "terna.s6.kicker": "06 — Special case",
+  "terna.s6.title": "The truss: only N remains",
+  "terna.s6.p1":
+    "In an ideal truss — pin-jointed members with loads applied only at the nodes — the local triad collapses to a single axis: every member works in axial force only. Shear and bending are zero along its whole length, so the N diagram is a rectangle (one value per member) and the Q and M diagrams do not exist.",
+  "terna.s6.callout":
+    "That is why a truss force table has a single number per member: tension or compression. It is exactly what the simulator reports for the three-panel truss.",
+
+  "terna.footer":
+    "The three diagrams in this example are what the simulator computes in the results tab via the direct stiffness method — this page explains the sign convention behind them. It complements the Tangent Method (Mohr) guide, which covers deflections.",
 } as const;
 
 export type TranslationKey = keyof typeof EN;
@@ -262,6 +375,9 @@ const ES: Record<TranslationKey, string> = {
   "controls.scale": "Escala:",
 
   "preset.examples": "Ejemplos ▾",
+  "preset.cat_beams": "Vigas",
+  "preset.cat_frames": "Pórticos",
+  "preset.cat_trusses": "Reticulados",
   "preset.simply_supported": "Viga simplemente apoyada",
   "preset.cantilever": "Ménsula",
   "preset.portal_fixed": "Pórtico (empotrado)",
@@ -277,10 +393,14 @@ const ES: Record<TranslationKey, string> = {
   "preset.truss_cantilever": "Reticulado con voladizo",
   "preset.truss_tower": "Reticulado en torre",
   "preset.truss_triangular": "Reticulado triangular",
+  "preset.truss_three_panel": "Reticulado de tres paños triangular",
   "preset.symmetric_truss": "Reticulado simétrico",
   "preset.fixed_beam_hinge_overhang": "Viga empotrada con rótula y voladizo",
   "preset.fixed_beam_udl_hinge": "Viga empotrada (distribuida + rótula)",
   "preset.t_frame_fixed": "Pórtico en T (empotrado)",
+  "preset.symmetric_two_bay": "Pórtico simétrico de dos vanos",
+  "preset.portal_moment": "Pórtico con momento",
+  "preset.z_frame": "Pórtico en Z (rodillo en el techo)",
 
   "forces.member": "Barra",
   "forces.state": "Estado",
@@ -467,6 +587,112 @@ const ES: Record<TranslationKey, string> = {
   "claudeQuiz.result.great": "Muy sólido. Estás listo para la parte teórica.",
   "claudeQuiz.result.ok": "Bien encaminado. Repasá las que fallaste y reintentá.",
   "claudeQuiz.result.low": "Repasá los temas flojos y reintentá.",
+
+  // ── Método de la terna local (N/Q/M) ──
+  "terna.link": "Terna local → N/Q/M",
+  "terna.title": "La terna local — N, Q y M",
+  "terna.lead":
+    "Cada barra lleva su propio sistema de ejes. Proyectar cargas y cortes sobre esa terna es lo que hace que “normal”, “corte” y “flector” tengan un signo único — sin importar si la barra es una viga, una columna o una diagonal.",
+
+  "terna.s1.kicker": "01 — El sistema de ejes",
+  "terna.s1.title": "Qué es la terna local",
+  "terna.s1.p1":
+    "A cada barra le “pegamos” tres ejes que viajan con ella. Una vez fijados, todo — cargas, cortes, esfuerzos — se mide respecto de ellos, así que una columna vertical y una viga horizontal se resuelven exactamente igual.",
+  "terna.s1.x": "eje de la barra, del nudo i al nudo j",
+  "terna.s1.y": "perpendicular, a +90° de x′",
+  "terna.s1.z": "sale del plano; da el signo de M",
+  "terna.s1.p2":
+    "El sentido i → j lo elegís vos, pero una vez elegido no se cambia: fija cuál es la “cara positiva” del corte y con eso quedan definidos los signos de los tres esfuerzos.",
+
+  "terna.s2.kicker": "02 — Las tres componentes",
+  "terna.s2.title": "N, Q y M en una sección",
+  "terna.s2.p1":
+    "Cortamos la barra a una distancia s del nudo i y miramos la resultante de todo lo que quedó de un lado, expresada en la terna local. Sus componentes son los tres esfuerzos internos:",
+  "terna.s2.th1": "Esfuerzo",
+  "terna.s2.th2": "Proyección sobre…",
+  "terna.s2.th3": "Positivo cuando…",
+  "terna.s2.n": "normal",
+  "terna.s2.q": "corte",
+  "terna.s2.m": "flector",
+  "terna.s2.n.proj": "x′ (eje de la barra)",
+  "terna.s2.q.proj": "y′ (transversal)",
+  "terna.s2.m.proj": "z′ (giro en el plano)",
+  "terna.s2.n.pos": "tracciona la sección — tira de las caras hacia afuera",
+  "terna.s2.q.pos": "en la cara +x′ actúa según +y′",
+  "terna.s2.m.pos": "tracciona la fibra del lado −y′ (concavidad hacia +y′)",
+  "terna.s2.p2":
+    "Es la misma convención del simulador: N > 0 es tracción y N < 0 es compresión.",
+
+  "terna.s3.kicker": "03 — Signos",
+  "terna.s3.title": "La regla de la cara positiva",
+  "terna.s3.p1":
+    "Una cara del corte es positiva si su normal saliente apunta en +x′. En esa cara, cada esfuerzo es positivo si va en +x′, +y′ o +z′. En la cara opuesta todo se invierte por acción–reacción — por eso el valor de N, Q y M en la sección es único.",
+  "terna.s3.cap.n": "Axil: las caras se separan.",
+  "terna.s3.cap.q": "Corte: par que rota horario.",
+  "terna.s3.cap.m": "Flector: concavidad hacia +y′.",
+  "terna.s3.n": "tracción",
+  "terna.s3.q": "cara +x′ hacia +y′",
+  "terna.s3.m": "tracción abajo (−y′)",
+  "terna.s3.callout":
+    "Regla práctica: dQ/ds = −q y dM/ds = Q. Sin carga transversal el corte es constante y el flector es lineal; con carga uniforme el corte es lineal y el flector parabólico. Y M es extremo justo donde Q = 0.",
+
+  "terna.s4.kicker": "04 — El procedimiento",
+  "terna.s4.title": "De la estructura a los tres diagramas",
+  "terna.s4.step1.t": "Reacciones",
+  "terna.s4.step1.d":
+    "Resolvé el equilibrio global (ΣFx, ΣFy, ΣM). Son el punto de partida de todo corte.",
+  "terna.s4.step2.t": "Fijar la terna de cada barra",
+  "terna.s4.step2.d": "Elegí el sentido i → j y con él x′; y′ a +90°.",
+  "terna.s4.step3.t": "Proyectar las cargas a ejes locales",
+  "terna.s4.step3.d":
+    "Una fuerza global (Fx, Fy) aporta N = Fx·cosα + Fy·senα y Q = −Fx·senα + Fy·cosα, con α el ángulo de la barra.",
+  "terna.s4.step4.t": "Escribir N(s), Q(s), M(s)",
+  "terna.s4.step4.d":
+    "Por equilibrio del tramo [i, s]. Cambian donde hay una carga puntual, un apoyo o el arranque/fin de una distribuida.",
+  "terna.s4.step5.t": "Chequear con las relaciones diferenciales",
+  "terna.s4.step5.d":
+    "dQ/ds = −q y dM/ds = Q te dan la forma esperada de cada tramo.",
+  "terna.s4.step6.t": "Dibujar en la terna y empalmar en los nudos",
+  "terna.s4.step6.d":
+    "Cada diagrama se grafica sobre su barra. En un nudo rígido los flectores se equilibran; en una rótula, M = 0.",
+
+  "terna.s5.kicker": "05 — Ejemplo resuelto",
+  "terna.s5.title": "Pórtico en L, empotrado en la base",
+  "terna.s5.p1":
+    "Columna A–B de 3 m, viga B–C de 4 m, empotramiento en A y una carga P = 10 kN hacia abajo en el extremo libre C. Es el caso donde la terna local se luce: la columna no tiene un “arriba” obvio.",
+  "terna.s5.reac.cap":
+    "Reacciones en el empotramiento. La carga está a 4 m del eje de la columna, de ahí el momento de 40 kN·m.",
+  "terna.s5.cut.t": "El corte, barra por barra",
+  "terna.s5.cut.p":
+    "Viga B→C (x′ hacia la derecha). Cortamos a distancia s y aislamos el trozo derecho, que sólo tiene la carga P en C:",
+  "terna.s5.cut.cap":
+    "La carga tracciona la fibra superior de la viga (M < 0, hogging). En la columna el mismo razonamiento da N = −10 (compresión), Q = 0 y M = −40 constante, porque la carga está siempre a 4 m del eje.",
+  "terna.s5.diag.t": "Los tres diagramas",
+  "terna.s5.diag.n":
+    "Normal. Columna comprimida (−10 kN); viga con N = 0.",
+  "terna.s5.diag.q":
+    "Corte. Constante +10 kN en la viga; nulo en la columna.",
+  "terna.s5.diag.m":
+    "Flector. −40 kN·m constante en la columna, lineal a 0 en la punta. Continuo en el nudo B.",
+  "terna.s5.th.bar": "Barra",
+  "terna.s5.th.axis": "Terna x′",
+  "terna.s5.th.state": "Estado del axil",
+  "terna.s5.bar.col": "A→B (columna)",
+  "terna.s5.bar.beam": "B→C (viga)",
+  "terna.s5.axis.up": "hacia arriba",
+  "terna.s5.axis.right": "hacia la derecha",
+  "terna.state.compression": "Compresión",
+  "terna.state.zero": "Nulo",
+
+  "terna.s6.kicker": "06 — Caso particular",
+  "terna.s6.title": "El reticulado: sólo queda N",
+  "terna.s6.p1":
+    "En un reticulado ideal — barras biarticuladas y cargas aplicadas sólo en los nudos — la terna local se reduce a un solo eje: cada barra trabaja únicamente a esfuerzo axil. El corte y el flector son cero en toda su longitud, así que el diagrama de N es un rectángulo (un valor por barra) y los de Q y M no existen.",
+  "terna.s6.callout":
+    "Por eso la tabla de esfuerzos de un reticulado tiene un solo número por barra: tracción o compresión. Es exactamente lo que reporta el simulador para el reticulado de tres paños.",
+
+  "terna.footer":
+    "Los tres diagramas de este ejemplo son los que el simulador calcula en la pestaña de resultados mediante el método directo de rigidez — esta página explica la convención de signos que hay detrás. Complementa la guía del Método de la Tangente (Mohr), que trata las deformaciones.",
 };
 
 const translations: Record<Language, Record<TranslationKey, string>> = {

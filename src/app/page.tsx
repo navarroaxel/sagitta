@@ -168,6 +168,12 @@ export default function Home() {
           {t("learn.link")}
         </Link>
         <Link
+          href="/learn/terna-local"
+          className="text-xs text-stone-400 transition-colors hover:text-stone-600 dark:text-stone-500 dark:hover:text-stone-300"
+        >
+          {t("terna.link")}
+        </Link>
+        <Link
           href="/quiz"
           className="text-xs text-stone-400 transition-colors hover:text-stone-600 dark:text-stone-500 dark:hover:text-stone-300"
         >

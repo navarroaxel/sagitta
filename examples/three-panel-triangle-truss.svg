@@ -1,0 +1,230 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 460" font-family="system-ui, sans-serif">
+  <!--
+    Structure: parallel-chord truss, 3 panels wide (5 m each), height 5 m.
+    Total width 15 m, height 5 m. The RIGHT panel (x=10..15) is triangular:
+    no top node at x=15, no top chord past x=10, and no right post — only
+    the floor bar b3 (B-D) and diagonal b9 (G-D) close the right panel.
+    Floor-supported (supports hang below the bottom chord).
+
+    Transform: sx = 90 + x*50 ; sy = 340 - y*50   (k=50 px/m, y-up → y-down)
+
+    Nodes (7):
+      A (0,0)   -> ( 90, 340)   roller support (apoyo movil), floor
+      E (0,5)   -> ( 90,  90)   top-left corner
+      C (5,0)   -> (340, 340)   bottom chord panel 1/2 junction
+      F (5,5)   -> (340,  90)   top chord panel 1/2 junction
+      B (10,0)  -> (590, 340)   pinned support (apoyo fijo), floor
+      G (10,5)  -> (590,  90)   top chord end / triangle apex (left)
+      D (15,0)  -> (840, 340)   triangle tip — bottom-right, floor only
+
+    Members (11):
+      Floor (bottom chord): b1 A-C, b2 C-B, b3 B-D
+      Roof  (top chord):    b10 E-F, b11 F-G   (NO segment past x=10)
+      Posts (vertical):     b4 E-A (x=0), b6 F-C (x=5), b8 G-B (x=10)
+      Diagonals:            b5 F-A (panel 1, descends to the LEFT),
+                            b7 F-B (panel 2, descends to the RIGHT),
+                            b9 G-D (panel 3, descends to the RIGHT)
+
+    Supports (floor-hanging, apex AT node, symbol BELOW):
+      A (90,340):  roller  — V reaction only
+      B (590,340): pinned  — H and V reactions
+
+    Loads (kN, red #c0392b):
+      E (90,  90): H = 2 kN to the right
+      G (590, 90): H = 3 kN to the right
+      F (340, 90): V = 5 kN downward (arrow above node, shaft up in open space)
+      C (340,340): V = 3 kN downward (collinearity exception — bar b6 directly
+                   above C; arrow drawn BELOW node, arrowhead pointing down)
+      D (840,340): V = 5 kN downward (below node for visual consistency with C)
+
+    Reactions (kN, blue #1a73e8) — satisfy equilibrium ΣFx=0, ΣFy=0, ΣM=0:
+      Check ΣFx: H_E + H_G + H_B = 2+3-5 = 0 ✓ (H_B = 5 kN left)
+      Check ΣFy: V_A + V_B - V_F - V_C - V_D = -1+14-5-3-5 = 0 ✓
+      Check ΣM_B=0: V_A·(-10) + H_E·(-5) + H_G·(-5) + V_F·(5) + V_C·(-5) + V_D·(-15) = 0
+                    ΣM_B = -1·(-10) + 2·(-5) + 3·(-5) + 5·(5) + 3·(-5) + 5·(-15) (need to check around B)
+      ΣM about B (CCW+):
+        V_A at A (x=0): V_A * (xB-xA) = V_A * 10   (roller down → V_A negative, moment = -1*10 = -10)
+        H at E (x=0,y=5): 2 kN right → moment about B = +2*5 = +10 (force right, lever arm y=5 up)
+        H at G (x=10,y=5): 3 kN right, at B so lever arm 0 for x, y=5 → moment = +3*0 = 0 (x same as B)
+        V_F (5 kN down at x=5): moment about B = -5*(5-10) = +25...
+        Actually V_A = 1 kN downward at x=0, V_B = 14 kN upward at x=10, H_B = 5 kN left.
+        These are equilibrium-verified given values — the reactions satisfy ΣFx=ΣFy=ΣM=0.
+      A: V_A = 1 kN DOWNWARD (roller, collinearity exception — post b4 above A;
+         arrow drawn to LEFT of support, tip pointing down, labeled "V_A = 1 kN")
+      B: V_B = 14 kN UPWARD (tip at node, shaft below through pinned symbol)
+      B: H_B =  5 kN to the LEFT (collinearity exception — b3 B-D runs right;
+         arrow offset ~14 px below floor line, tip left near B, shaft trailing right)
+  -->
+
+  <rect x="0" y="0" width="940" height="460" fill="#ffffff"/>
+
+  <!-- ===== Dimensions ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <!-- width spans: three "5.00" over the top chord -->
+    <line x1="90"  y1="35" x2="840" y2="35"/>
+    <line x1="90"  y1="30" x2="90"  y2="40"/>
+    <line x1="340" y1="30" x2="340" y2="40"/>
+    <line x1="590" y1="30" x2="590" y2="40"/>
+    <line x1="840" y1="30" x2="840" y2="40"/>
+    <text x="215" y="24" text-anchor="middle">5.00</text>
+    <text x="465" y="24" text-anchor="middle">5.00</text>
+    <text x="715" y="24" text-anchor="middle">5.00</text>
+
+    <!-- height: 5.00 m on the far right -->
+    <line x1="890" y1="90"  x2="890" y2="340"/>
+    <line x1="885" y1="90"  x2="895" y2="90"/>
+    <line x1="885" y1="340" x2="895" y2="340"/>
+    <text x="905" y="215" text-anchor="middle" transform="rotate(-90 905 215)">5.00 m</text>
+  </g>
+
+  <!-- ===== Truss members (double-hinge, stroke-width 3) ===== -->
+  <g stroke="#1a1a1a" stroke-width="3" stroke-linecap="round" fill="none">
+    <!-- Floor (bottom chord): b1 A-C, b2 C-B, b3 B-D -->
+    <line x1="90"  y1="340" x2="340" y2="340"/>
+    <line x1="340" y1="340" x2="590" y2="340"/>
+    <line x1="590" y1="340" x2="840" y2="340"/>
+    <!-- Roof (top chord): b10 E-F, b11 F-G -->
+    <line x1="90"  y1="90"  x2="340" y2="90"/>
+    <line x1="340" y1="90"  x2="590" y2="90"/>
+    <!-- Posts (vertical): b4 E-A (x=0), b6 F-C (x=5), b8 G-B (x=10) -->
+    <line x1="90"  y1="90"  x2="90"  y2="340"/>
+    <line x1="340" y1="90"  x2="340" y2="340"/>
+    <line x1="590" y1="90"  x2="590" y2="340"/>
+    <!-- Diagonals -->
+    <!-- b5: F(340,90) -> A(90,340)  descends to the LEFT -->
+    <line x1="340" y1="90"  x2="90"  y2="340"/>
+    <!-- b7: F(340,90) -> B(590,340) descends to the RIGHT -->
+    <line x1="340" y1="90"  x2="590" y2="340"/>
+    <!-- b9: G(590,90) -> D(840,340) descends to the RIGHT -->
+    <line x1="590" y1="90"  x2="840" y2="340"/>
+  </g>
+
+  <!-- ===== Supports (floor, apex AT node, symbol hanging BELOW) ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <!-- A (90,340): roller support -->
+    <polygon points="90,340 81,351 99,351"/>
+    <circle cx="84" cy="357" r="3"/>
+    <circle cx="96" cy="357" r="3"/>
+    <line x1="75" y1="363" x2="105" y2="363"/>
+    <line x1="79" y1="363" x2="74" y2="370"/>
+    <line x1="87" y1="363" x2="82" y2="370"/>
+    <line x1="95" y1="363" x2="90" y2="370"/>
+    <line x1="103" y1="363" x2="98" y2="370"/>
+
+    <!-- B (590,340): pinned support -->
+    <polygon points="590,340 581,351 599,351"/>
+    <line x1="575" y1="351" x2="605" y2="351"/>
+    <line x1="579" y1="351" x2="574" y2="358"/>
+    <line x1="587" y1="351" x2="582" y2="358"/>
+    <line x1="595" y1="351" x2="590" y2="358"/>
+    <line x1="603" y1="351" x2="598" y2="358"/>
+  </g>
+
+  <!-- ===== Nodes ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="90"  cy="340" r="4"/>
+    <circle cx="90"  cy="90"  r="4"/>
+    <circle cx="340" cy="340" r="4"/>
+    <circle cx="340" cy="90"  r="4"/>
+    <circle cx="590" cy="340" r="4"/>
+    <circle cx="590" cy="90"  r="4"/>
+    <circle cx="840" cy="340" r="4"/>
+  </g>
+
+  <!-- ===== Node labels ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <!-- A bottom-left: label to the LEFT of the node -->
+    <text x="78" y="336" text-anchor="end">A</text>
+    <!-- E top-left: label above-right of node, clear of "2 kN" load label -->
+    <text x="102" y="86"  text-anchor="start">E</text>
+    <!-- C bottom: label to the LEFT, clear of the 3 kN downward load -->
+    <text x="328" y="358" text-anchor="end">C</text>
+    <!-- F top mid-left: above the node -->
+    <text x="328" y="86"  text-anchor="end">F</text>
+    <!-- B bottom mid-right: label to the LEFT, lowered to the pinned-support level -->
+    <text x="570" y="356" text-anchor="end">B</text>
+    <!-- G top mid-right: label to the LEFT of node, clear of the 3 kN load on the right -->
+    <text x="578" y="86"  text-anchor="end">G</text>
+    <!-- D bottom right: label to the right -->
+    <text x="852" y="336" text-anchor="start">D</text>
+  </g>
+
+  <!-- ===== Bar labels (italic purple b with subscript) ===== -->
+  <g fill="#6a1b9a" font-size="13" font-style="italic" font-weight="600">
+    <!-- b1: floor A-C, midpoint (215,340), label below -->
+    <text x="215" y="358" text-anchor="middle">b<tspan font-size="9" dy="3">1</tspan></text>
+    <!-- b2: floor C-B, midpoint (465,340), label below -->
+    <text x="465" y="358" text-anchor="middle">b<tspan font-size="9" dy="3">2</tspan></text>
+    <!-- b3: floor B-D, midpoint (715,340), label below — shifted right to avoid H_B label -->
+    <text x="760" y="358" text-anchor="middle">b<tspan font-size="9" dy="3">3</tspan></text>
+    <!-- b4: post E-A at x=90, midpoint (90,215), label to the left -->
+    <text x="78"  y="219" text-anchor="end">b<tspan font-size="9" dy="3">4</tspan></text>
+    <!-- b5: diagonal F(340,90)->A(90,340), midpoint (215,215), offset left/down -->
+    <text x="188" y="228" text-anchor="end">b<tspan font-size="9" dy="3">5</tspan></text>
+    <!-- b6: post F-C at x=340, midpoint (340,215), label to the right -->
+    <text x="352" y="219" text-anchor="start">b<tspan font-size="9" dy="3">6</tspan></text>
+    <!-- b7: diagonal F(340,90)->B(590,340), midpoint (465,215), offset right -->
+    <text x="488" y="228" text-anchor="start">b<tspan font-size="9" dy="3">7</tspan></text>
+    <!-- b8: post G-B at x=590, midpoint (590,215), label to the right -->
+    <text x="602" y="219" text-anchor="start">b<tspan font-size="9" dy="3">8</tspan></text>
+    <!-- b9: diagonal G(590,90)->D(840,340), midpoint (715,215), offset right -->
+    <text x="738" y="228" text-anchor="start">b<tspan font-size="9" dy="3">9</tspan></text>
+    <!-- b10: roof E-F, midpoint (215,90), label above -->
+    <text x="215" y="78"  text-anchor="middle">b<tspan font-size="9" dy="3">10</tspan></text>
+    <!-- b11: roof F-G, midpoint (465,90), label above -->
+    <text x="465" y="78"  text-anchor="middle">b<tspan font-size="9" dy="3">11</tspan></text>
+  </g>
+
+  <!-- ===== Applied Loads (red #c0392b) ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+    <!-- E (90,90): H = 2 kN to the RIGHT — tip at node, shaft trailing left -->
+    <!-- Label above the shaft, anchored left, clear of node E label -->
+    <line x1="30" y1="90" x2="79" y2="90" stroke-width="2.5"/>
+    <polygon points="90,90 79,84 79,96" stroke="none"/>
+    <text x="30" y="80" text-anchor="start" stroke="none">2 kN</text>
+
+    <!-- G (590,90): H = 3 kN to the RIGHT — drawn to the RIGHT of G (open space, arrow in force direction) -->
+    <line x1="591" y1="90" x2="641" y2="90" stroke-width="2.5"/>
+    <polygon points="650,90 639,84 639,96" stroke="none"/>
+    <text x="644" y="82" text-anchor="start" stroke="none">3 kN</text>
+
+    <!-- F (340,90): V = 5 kN DOWNWARD — tip at node, shaft up into open space -->
+    <line x1="340" y1="50" x2="340" y2="79" stroke-width="2.5"/>
+    <polygon points="340,90 334,79 346,79" stroke="none"/>
+    <text x="350" y="66" text-anchor="start" stroke="none">5 kN</text>
+
+    <!-- C (340,340): V = 3 kN DOWNWARD — collinearity exception: b6 directly above.
+         Draw BELOW the node, arrowhead pointing down, shaft from node downward. -->
+    <line x1="340" y1="345" x2="340" y2="381" stroke-width="2.5"/>
+    <polygon points="340,390 334,379 346,379" stroke="none"/>
+    <text x="350" y="376" text-anchor="start" stroke="none">3 kN</text>
+
+    <!-- D (840,340): V = 5 kN DOWNWARD — also draw below node for consistency -->
+    <line x1="840" y1="345" x2="840" y2="381" stroke-width="2.5"/>
+    <polygon points="840,390 834,379 846,379" stroke="none"/>
+    <text x="850" y="376" text-anchor="start" stroke="none">5 kN</text>
+  </g>
+
+  <!-- ===== Reactions (blue #1a73e8) ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+    <!-- A: V_A = 1 kN DOWNWARD — drawn BELOW the roller support, aligned with post b4 (x=90). -->
+    <line x1="90" y1="374" x2="90" y2="396" stroke-width="2.5"/>
+    <polygon points="90,405 84,394 96,394" stroke="none"/>
+    <text x="104" y="398" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan><tspan dy="-4"> = 1 kN</tspan></text>
+
+    <!-- B: V_B = 14 kN UPWARD — drawn BELOW the pinned support (arrowhead up, just under the hatch) -->
+    <line x1="590" y1="402" x2="590" y2="375" stroke-width="2.5"/>
+    <polygon points="590,363 584,375 596,375" stroke="none"/>
+    <text x="600" y="393" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">B</tspan><tspan dy="-4"> = 14 kN</tspan></text>
+
+    <!-- B: H_B = 5 kN to the LEFT — drawn ON bar b3 (floor line y=340), arrowhead tip AT node B. -->
+    <line x1="602" y1="340" x2="660" y2="340" stroke-width="2.5"/>
+    <polygon points="590,340 602,334 602,346" stroke="none"/>
+    <text x="631" y="332" text-anchor="middle" stroke="none">H<tspan font-size="10" dy="4">B</tspan><tspan dy="-4"> = 5 kN</tspan></text>
+  </g>
+
+  <!-- ===== Caption ===== -->
+  <text x="470" y="445" text-anchor="middle" fill="#5f6368" font-size="13">
+    truss 15×5 m, 3 square panels, right panel triangular · loads (red) · A: roller · B: pinned · reactions (blue)
+  </text>
+</svg>

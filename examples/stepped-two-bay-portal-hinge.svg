@@ -1,0 +1,257 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="55 130 730 435" font-family="system-ui, sans-serif">
+  <!--
+    Structure: stepped two-bay portal frame (solid web, rigid joints) with one
+    internal hinge at the right-roof level of the central column; units in T and T/m.
+    World in metres, y up.
+
+    Transform: sx = 150 + x*50 ; sy = 430 - y*50
+
+    Nodes:
+      A     (0,0)   roller support (base of left column, V only)     -> (150,430)
+      G     (0,5)   top-left rigid corner                            -> (150,180)
+      Btop  (6,5)   top of central column (rigid corner)             -> (450,180)
+      A12   (6,3)   internal hinge — right-roof level of column B,
+                    where the right roof member attaches             -> (450,280)
+      B     (6,0)   pinned support (base of central column, H+V)     -> (450,430)
+      F     (10,3)  top of right column (rigid corner)               -> (650,280)
+      C     (10,0)  roller support (base of right column, V only)    -> (650,430)
+
+    Members:
+      A-G      left column     (5 m, vertical)
+      G-Btop   left roof       (6 m, horizontal at y=5)
+      B-Btop   central column  (5 m, vertical, continuous through hinge A12 at y=3)
+      A12-F    right roof      (4 m, horizontal at y=3) — hinged at A12 end
+      F-C      right column    (3 m, vertical)
+
+    Supports:
+      A — roller (vertical reaction only)
+      B — pinned (horizontal + vertical reactions)
+      C — roller (vertical reaction only)
+
+    Determinacy: 4 reactions (V_A, H_B, V_B, V_C), 3 global equilibrium equations
+      + 1 hinge condition (M=0 at the A12 end of the right roof member) = 4 equations
+      -> statically determinate.
+
+    Loads:
+      1. q1 = 1 T/m horizontal to the RIGHT (wind from the left) over the full 5 m
+         left column A-G. Resultant: 5 T rightward at (0, 2.5).
+      2. 4 T vertical downward at the midpoint of the left roof G-Btop, at (3, 5).
+         Resultant: 4 T down at (3, 5).
+      3. q2 = 2 T/m vertical downward over the full 4 m right roof A12-F, span x=6..10
+         at y=3. Resultant: 8 T down at (8, 3).
+
+    Support reactions (computed from equilibrium):
+      A: V_A = 0.08 T downward
+      B: H_B = 5 T to the left ; V_B = 8.08 T upward
+      C: V_C = 4 T upward
+
+    Equilibrium check (world coords, y-up, CCW positive):
+      SumFx: -H_B + q1_resultant = -5 + 5 = 0 T  OK
+      SumFy: -V_A + V_B + V_C - 4T - q2_resultant = -(-0.08) + 8.08 + 4 - 4 - 8 = 0 T  OK
+        (V_A is downward so contributes -0.08 upward; with sign: +(-0.08) + 8.08 + 4 - 4 - 8 = 0)
+      SumM_A about A=(0,0) [CCW positive]:
+        q1 resultant (5T rightward) at y=2.5:      moment arm y=2.5,  -2.5 * 5  = -12.50 T.m
+        4T down at x=3:                             moment arm x=3,    -3  * 4   = -12.00 T.m
+        q2 resultant (8T down) at x=8:              moment arm x=8,    -8  * 8   = -64.00 T.m
+        H_B = 5T left at y=0:                       moment arm y=0,    0              0.00 T.m
+        V_B = 8.08T up at x=6:                      moment arm x=6,   +6  * 8.08 = +48.48 T.m
+        V_C = 4T up at x=10:                        moment arm x=10,  +10 * 4    = +40.00 T.m
+        Total: -12.50 - 12.00 - 64.00 + 0 + 48.48 + 40.00 = -0.02 ≈ 0  OK (rounding of 0.08)
+      These reactions satisfy SumFx=0, SumFy=0, SumM_A=0 (to two decimal places).
+  -->
+
+  <rect x="55" y="130" width="730" height="435" fill="#ffffff"/>
+
+  <!-- ===== Dimensions ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+
+    <!-- Top horizontal dim line at y=150: spans x=150 to x=650 (nodes A..C projected) -->
+    <!-- Ticks at x=150 (A, x=0m), x=300 (x=3m, midspan left roof), x=450 (B, x=6m), x=650 (C, x=10m) -->
+    <line x1="150" y1="152" x2="650" y2="152"/>
+    <line x1="150" y1="147" x2="150" y2="157"/>
+    <line x1="300" y1="147" x2="300" y2="157"/>
+    <line x1="450" y1="147" x2="450" y2="157"/>
+    <line x1="650" y1="147" x2="650" y2="157"/>
+    <!-- segment labels above the dim line -->
+    <text x="225" y="144" text-anchor="middle">3.00</text>
+    <text x="375" y="144" text-anchor="middle">3.00</text>
+    <text x="550" y="144" text-anchor="middle">4.00</text>
+
+    <!-- Left column height on the LEFT side: vertical dim at x=110, y=180..430 -->
+    <!-- Ticks at y=180 (G, y=5m), y=280 (A12 level, y=3m), y=430 (A, y=0m) -->
+    <line x1="110" y1="180" x2="110" y2="430"/>
+    <line x1="105" y1="180" x2="115" y2="180"/>
+    <line x1="105" y1="280" x2="115" y2="280"/>
+    <line x1="105" y1="430" x2="115" y2="430"/>
+    <!-- rotated labels: "2.00" for upper segment (y=3..5, sy=280..180, center sy=230) -->
+    <text x="98" y="230" text-anchor="middle" transform="rotate(-90 98 230)">2.00</text>
+    <!-- "3.00" for lower segment (y=0..3, sy=430..280, center sy=355) -->
+    <text x="98" y="355" text-anchor="middle" transform="rotate(-90 98 355)">3.00</text>
+
+    <!-- Right column height on the RIGHT side: vertical dim at x=690, y=280..430 -->
+    <line x1="690" y1="280" x2="690" y2="430"/>
+    <line x1="685" y1="280" x2="695" y2="280"/>
+    <line x1="685" y1="430" x2="695" y2="430"/>
+    <!-- "3.00" centered at sy=355 -->
+    <text x="702" y="355" text-anchor="middle" transform="rotate(-90 702 355)">3.00</text>
+
+  </g>
+
+  <!-- ===== Solid-web frame (rigid joints) ===== -->
+  <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
+    <line x1="150" y1="430" x2="150" y2="180"/> <!-- left column A-G -->
+    <line x1="150" y1="180" x2="450" y2="180"/> <!-- left roof G-Btop -->
+    <line x1="450" y1="430" x2="450" y2="180"/> <!-- central column B-Btop (continuous through A12) -->
+    <line x1="450" y1="280" x2="650" y2="280"/> <!-- right roof A12-F -->
+    <line x1="650" y1="280" x2="650" y2="430"/> <!-- right column F-C -->
+  </g>
+
+  <!-- ===== Roller support at A (150,430) ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <polygon points="150,430 141,443 159,443"/>
+    <circle cx="145" cy="447" r="3"/>
+    <circle cx="155" cy="447" r="3"/>
+    <line x1="135" y1="451" x2="165" y2="451"/>
+    <line x1="139" y1="451" x2="133" y2="458"/>
+    <line x1="147" y1="451" x2="141" y2="458"/>
+    <line x1="155" y1="451" x2="149" y2="458"/>
+    <line x1="163" y1="451" x2="157" y2="458"/>
+  </g>
+
+  <!-- ===== Pinned support at B (450,430) ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <polygon points="450,430 441,441 459,441"/>
+    <line x1="435" y1="441" x2="465" y2="441"/>
+    <line x1="439" y1="441" x2="433" y2="448"/>
+    <line x1="447" y1="441" x2="441" y2="448"/>
+    <line x1="455" y1="441" x2="449" y2="448"/>
+    <line x1="463" y1="441" x2="457" y2="448"/>
+  </g>
+
+  <!-- ===== Roller support at C (650,430) ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <polygon points="650,430 641,443 659,443"/>
+    <circle cx="645" cy="447" r="3"/>
+    <circle cx="655" cy="447" r="3"/>
+    <line x1="635" y1="451" x2="665" y2="451"/>
+    <line x1="639" y1="451" x2="633" y2="458"/>
+    <line x1="647" y1="451" x2="641" y2="458"/>
+    <line x1="655" y1="451" x2="649" y2="458"/>
+    <line x1="663" y1="451" x2="657" y2="458"/>
+  </g>
+
+  <!-- ===== Internal hinge at A12 (450,280) ===== -->
+  <circle cx="450" cy="280" r="6" fill="#ffffff" stroke="#1a1a1a" stroke-width="2"/>
+
+  <!-- ===== Nodes (rigid joints; hinge stays open circle) ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="150" cy="430" r="4"/> <!-- A -->
+    <circle cx="150" cy="180" r="4"/> <!-- G -->
+    <circle cx="450" cy="180" r="4"/> <!-- Btop -->
+    <circle cx="450" cy="430" r="4"/> <!-- B -->
+    <circle cx="650" cy="280" r="4"/> <!-- F -->
+    <circle cx="650" cy="430" r="4"/> <!-- C -->
+  </g>
+
+  <!-- ===== Node labels ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <text x="163" y="421" text-anchor="start">A</text>
+    <text x="438" y="421" text-anchor="end">B</text>
+    <text x="638" y="421" text-anchor="end">C</text>
+    <text x="438" y="272" text-anchor="end">A<tspan font-size="10" dy="4">1-2</tspan></text>
+  </g>
+
+  <!-- ===== Loads (red) ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+
+    <!-- Load 1: q1 = 1 T/m horizontal to the RIGHT on the full left column A-G -->
+    <!-- Rail line at x=120 from sy=180 to sy=430 (full column height) -->
+    <!-- 6 shafts with arrowhead tips on the column at x=150 -->
+    <!-- Shaft y positions spaced over the column: 205,245,285,325,365,405 -->
+    <line x1="120" y1="180" x2="120" y2="430" stroke-width="2"/>
+    <g stroke-width="1.5">
+      <line x1="120" y1="205" x2="140" y2="205"/>
+      <line x1="120" y1="245" x2="140" y2="245"/>
+      <line x1="120" y1="285" x2="140" y2="285"/>
+      <line x1="120" y1="325" x2="140" y2="325"/>
+      <line x1="120" y1="365" x2="140" y2="365"/>
+      <line x1="120" y1="405" x2="140" y2="405"/>
+    </g>
+    <!-- Arrowheads: tips at x=150, pointing right -->
+    <g stroke="none">
+      <polygon points="150,205 138,199 138,211"/>
+      <polygon points="150,245 138,239 138,251"/>
+      <polygon points="150,285 138,279 138,291"/>
+      <polygon points="150,325 138,319 138,331"/>
+      <polygon points="150,365 138,359 138,371"/>
+      <polygon points="150,405 138,399 138,411"/>
+    </g>
+    <!-- Label "q = 1 T/m" rotated, to the left of the rail, centered vertically -->
+    <text x="106" y="305" text-anchor="middle" transform="rotate(-90 106 305)" stroke="none">q = 1 T/m</text>
+
+    <!-- Load 2: 4 T vertical downward at middle of left roof, at (3,5) -> (300,180) -->
+    <!-- Shaft above roof from sy=160 to sy=178, tip arrowhead at (300,180) -->
+    <line x1="300" y1="160" x2="300" y2="172" stroke-width="2.5"/>
+    <polygon points="300,180 294,168 306,168" stroke="none"/>
+    <text x="310" y="168" text-anchor="start" stroke="none">4 T</text>
+
+    <!-- Load 3: q2 = 2 T/m vertical downward on the full right roof A12-F -->
+    <!-- Screen x=450..650 at roof y=280. Rail line at sy=250 from x=450 to x=650 -->
+    <!-- 5 shafts with arrowhead tips on the roof at sy=280 -->
+    <!-- Shaft x positions: 470,510,550,590,630 -->
+    <line x1="450" y1="250" x2="650" y2="250" stroke-width="2"/>
+    <g stroke-width="1.5">
+      <line x1="470" y1="250" x2="470" y2="270"/>
+      <line x1="510" y1="250" x2="510" y2="270"/>
+      <line x1="550" y1="250" x2="550" y2="270"/>
+      <line x1="590" y1="250" x2="590" y2="270"/>
+      <line x1="630" y1="250" x2="630" y2="270"/>
+    </g>
+    <!-- Arrowheads: tips on roof at sy=280, pointing down -->
+    <g stroke="none">
+      <polygon points="470,280 464,268 476,268"/>
+      <polygon points="510,280 504,268 516,268"/>
+      <polygon points="550,280 544,268 556,268"/>
+      <polygon points="590,280 584,268 596,268"/>
+      <polygon points="630,280 624,268 636,268"/>
+    </g>
+    <!-- Label centered above rail -->
+    <text x="550" y="242" text-anchor="middle" stroke="none">q = 2 T/m</text>
+
+  </g>
+
+  <!-- ===== Support reactions (blue) ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+
+    <!-- A: V_A = 0.08 T DOWNWARD -->
+    <!-- Collinearity exception: left column is directly above A, so draw arrow BELOW -->
+    <!-- the roller pointing DOWN (tip below the roller, shaft above pointing downward) -->
+    <!-- tip at (150,468), shaft from (150,460) to (150,468) -->
+    <line x1="150" y1="460" x2="150" y2="466" stroke-width="2.5"/>
+    <polygon points="150,474 144,462 156,462" stroke="none"/>
+    <text x="163" y="472" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan><tspan dy="-4"> = 0.08 T</tspan></text>
+
+    <!-- B: H_B = 5 T to the LEFT; tip at B (450,430), shaft trailing to the right -->
+    <line x1="462" y1="430" x2="495" y2="430" stroke-width="2.5"/>
+    <polygon points="450,430 462,424 462,436" stroke="none"/>
+    <text x="499" y="425" text-anchor="start" stroke="none">H<tspan font-size="10" dy="4">B</tspan><tspan dy="-4"> = 5 T</tspan></text>
+
+    <!-- B: V_B = 8.08 T UPWARD; below the pinned support, tip at node (450,430) -->
+    <!-- shaft from sy=470 to sy=513, tip arrowhead pointing up -->
+    <line x1="450" y1="470" x2="450" y2="513" stroke-width="2.5"/>
+    <polygon points="450,462 444,474 456,474" stroke="none"/>
+    <text x="466" y="497" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">B</tspan><tspan dy="-4"> = 8.08 T</tspan></text>
+
+    <!-- C: V_C = 4 T UPWARD; below the roller, tip at node (650,430) -->
+    <line x1="650" y1="470" x2="650" y2="513" stroke-width="2.5"/>
+    <polygon points="650,462 644,474 656,474" stroke="none"/>
+    <text x="666" y="492" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">C</tspan><tspan dy="-4"> = 4 T</tspan></text>
+
+  </g>
+
+  <!-- ===== Caption ===== -->
+  <text x="400" y="548" text-anchor="middle" fill="#5f6368" font-size="13">
+    Stepped two-bay portal — A/C rollers, B pinned; hinge A&#x2081;&#x208B;&#x2082; on central column B. Loads (red), reactions (blue).
+  </text>
+
+</svg>

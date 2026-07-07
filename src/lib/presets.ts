@@ -548,6 +548,147 @@ const tFrameFixed: FrameModel = {
 };
 // Expected reactions: A: H=10 ←, V=20 ↑, M=110 T·m CCW
 
+// Symmetric two-bay portal, internal hinge A1-2 (examples/symmetric-two-bay-portal-hinge.svg)
+// Left bay symmetric (columns A & B both 5 m, horizontal roof, 8 m wide); right bay
+// 3 m tall, 4 m wide, hung from the hinge at mid-height of the continuous column B.
+// Supports: A pinned, B & C roller-v -> 4 reactions + 1 hinge = determinate. Loads in kN.
+const symmetricTwoBayPortal: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 0, support: "pinned" },
+    { id: "G", x: 0, y: 5, support: "free" }, // top-left corner
+    { id: "Btop", x: 8, y: 5, support: "free" }, // top of central column
+    { id: "A12", x: 8, y: 3, support: "free" }, // internal hinge (mid-height of col B)
+    { id: "B", x: 8, y: 0, support: "roller-v" },
+    { id: "F", x: 12, y: 3, support: "free" }, // top of right column
+    { id: "C", x: 12, y: 0, support: "roller-v" },
+  ],
+  members: [
+    { id: "A-G", n1: "A", n2: "G" }, // left column (5 m)
+    { id: "G-Btop", n1: "G", n2: "Btop" }, // left roof (8 m, horizontal)
+    { id: "Btop-A12", n1: "Btop", n2: "A12" }, // upper central column
+    { id: "A12-B", n1: "A12", n2: "B" }, // lower central column (continuous through A12)
+    { id: "A12-F", n1: "A12", n2: "F", relI: true }, // right roof, hinge at A12 end
+    { id: "F-C", n1: "F", n2: "C" }, // right column (3 m)
+  ],
+  loads: [
+    { id: "p1", type: "mpoint", member: "A-G", dist: 1, gx: 2, gy: 0 }, // 2 kN → at (0,1)
+    { id: "p2", type: "mpoint", member: "A-G", dist: 4, gx: -4, gy: 0 }, // 4 kN ← at (0,4)
+    { id: "p3", type: "mpoint", member: "G-Btop", dist: 4, gx: 0, gy: 6 }, // 6 kN ↑ at (4,5)
+    { id: "p4", type: "mpoint", member: "A12-F", dist: 2, gx: 0, gy: -8 }, // 8 kN ↓ at (10,3)
+    { id: "p5", type: "nodal", node: "F", fx: 10, fy: 0, m: 0 }, // 10 kN → at (12,3)
+  ],
+  material: defaultMat,
+  unit: "kN",
+};
+// Expected reactions: A: H=8 ←, V=5 ↓ ; B: V=3 ↑ ; C: V=4 ↑
+
+// Asymmetric two-bay portal with a concentrated moment (examples/asymmetric-two-bay-portal-hinge.svg)
+// Left bay 6 m tall, right bay 10 m tall; both 8 m wide. Central column B continuous to 10 m
+// with internal hinge A1-2 at 6 m (where the low left roof attaches). Supports: A & B roller-v,
+// C pinned -> 4 reactions + 1 hinge = determinate. Loads in kN.
+// Expected reactions: A: V=7.25 up ; B: V=13.5 down ; C: H=17 left, V=17.25 up.
+const portalMoment: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 0, support: "roller-v" },
+    { id: "G", x: 0, y: 6, support: "free" }, // top-left corner
+    { id: "Lm", x: 4, y: 6, support: "free" }, // mid left roof (moment applied here)
+    { id: "A12", x: 8, y: 6, support: "free" }, // internal hinge
+    { id: "Btop", x: 8, y: 10, support: "free" }, // top of central column
+    { id: "B", x: 8, y: 0, support: "roller-v" },
+    { id: "F", x: 16, y: 10, support: "free" }, // top of right column
+    { id: "C", x: 16, y: 0, support: "pinned" },
+  ],
+  members: [
+    { id: "A-G", n1: "A", n2: "G" }, // left column (6 m)
+    { id: "G-Lm", n1: "G", n2: "Lm" }, // left roof, first half
+    { id: "Lm-A12", n1: "Lm", n2: "A12", relJ: true }, // left roof, hinge at A12 end
+    { id: "A12-Btop", n1: "A12", n2: "Btop" }, // upper central column
+    { id: "A12-B", n1: "A12", n2: "B" }, // lower central column (continuous through A12)
+    { id: "Btop-F", n1: "Btop", n2: "F" }, // right roof (8 m)
+    { id: "F-C", n1: "F", n2: "C" }, // right column (10 m)
+  ],
+  loads: [
+    { id: "q", type: "mudl", member: "A-G", gx: 2, gy: 0 }, // 2 kN/m -> (perp. to left column)
+    { id: "pG", type: "nodal", node: "G", fx: 0, fy: -3, m: 0 }, // 3 kN down at top-left
+    { id: "mo", type: "nodal", node: "Lm", fx: 0, fy: 0, m: -2 }, // 2 kNm clockwise at mid roof
+    { id: "pBt", type: "nodal", node: "Btop", fx: 0, fy: -5, m: 0 }, // 5 kN down at top of col B
+    { id: "pF", type: "nodal", node: "F", fx: 0, fy: -3, m: 0 }, // 3 kN down at top of col C
+    { id: "pH", type: "nodal", node: "A12", fx: 7, fy: 0, m: 0 }, // 7 kN right at hinge (6 m up col B)
+    { id: "pB", type: "nodal", node: "B", fx: -2, fy: 0, m: 0 }, // 2 kN left at node B
+  ],
+  material: defaultMat,
+  unit: "kN",
+};
+
+// Z / crank frame — ceiling roller at A, pinned at B (examples/z-frame-ceiling-roller.svg)
+// Left column 5 m rises from the bar's left end D to A (roller on a ceiling -> vertical reaction);
+// horizontal bar 8 m (D-E); right column 5 m drops from E to the pinned base B. The bar is split
+// at its midspan Mid=(4,5) to carry the concentrated 8 kN load + 3 kN·m clockwise moment there.
+// Supports: A roller-v, B pinned -> 3 reactions = 3 equations, statically determinate. Loads in kN.
+// Expected reactions: A: V=12.65 down ; B: H=28.54 left, V=24.18 up.
+const zFrame: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 10, support: "roller-v" }, // ceiling roller -> vertical reaction
+    { id: "D", x: 0, y: 5, support: "free" }, // rigid corner (bar left end)
+    { id: "Mid", x: 4, y: 5, support: "free" }, // bar midspan (point load + moment)
+    { id: "E", x: 8, y: 5, support: "free" }, // rigid corner (bar right end / top of right column)
+    { id: "B", x: 8, y: 0, support: "pinned" },
+  ],
+  members: [
+    { id: "colL", n1: "A", n2: "D" }, // left column (5 m)
+    { id: "barDM", n1: "D", n2: "Mid" }, // bar, left half
+    { id: "barME", n1: "Mid", n2: "E" }, // bar, right half (continuous through Mid)
+    { id: "colR", n1: "E", n2: "B" }, // right column (5 m)
+  ],
+  loads: [
+    { id: "q1", type: "mudl", member: "colL", gx: 2, gy: 0 }, // 2 kN/m -> (perp. to left column)
+    { id: "p8", type: "nodal", node: "Mid", fx: 0, fy: -8, m: -3 }, // 8 kN down + 3 kN·m clockwise at midspan
+    { id: "q2", type: "mudl", member: "colR", gx: 3, gy: 0 }, // 3 kN/m -> (perp. to right column)
+    { id: "pE", type: "nodal", node: "E", fx: 3.5355, fy: -3.5355, m: 0 }, // 5 kN at 45° down-right
+  ],
+  material: defaultMat,
+  unit: "kN",
+};
+
+// Three-panel triangle truss — parallel-chord truss 15x5 m (3 square panels),
+// right panel triangular (no top node at x=15). Diagonal b5 descends to the LEFT,
+// b7/b9 descend to the RIGHT. Floor-supported: A roller-v, B pinned.
+// (examples/three-panel-triangle-truss.svg) Loads in kN.
+// Expected reactions: A: V=1 down ; B: H=5 left, V=14 up.
+const threePanelTriangleTruss: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 0, support: "roller-v" }, // roller on floor -> vertical reaction
+    { id: "C", x: 5, y: 0, support: "free" },
+    { id: "B", x: 10, y: 0, support: "pinned" }, // pinned support (H+V)
+    { id: "D", x: 15, y: 0, support: "free" }, // triangle tip
+    { id: "E", x: 0, y: 5, support: "free" }, // top-left corner
+    { id: "F", x: 5, y: 5, support: "free" },
+    { id: "G", x: 10, y: 5, support: "free" }, // triangle apex (left)
+  ],
+  members: [
+    { id: "b1", n1: "A", n2: "C", relI: true, relJ: true }, // floor (bottom chord)
+    { id: "b2", n1: "C", n2: "B", relI: true, relJ: true },
+    { id: "b3", n1: "B", n2: "D", relI: true, relJ: true },
+    { id: "b4", n1: "E", n2: "A", relI: true, relJ: true }, // posts (verticals)
+    { id: "b5", n1: "F", n2: "A", relI: true, relJ: true }, // diagonal panel 1 (descends left)
+    { id: "b6", n1: "F", n2: "C", relI: true, relJ: true },
+    { id: "b7", n1: "F", n2: "B", relI: true, relJ: true }, // diagonal panel 2 (descends right)
+    { id: "b8", n1: "G", n2: "B", relI: true, relJ: true },
+    { id: "b9", n1: "G", n2: "D", relI: true, relJ: true }, // diagonal panel 3 (descends right)
+    { id: "b10", n1: "E", n2: "F", relI: true, relJ: true }, // roof (top chord)
+    { id: "b11", n1: "F", n2: "G", relI: true, relJ: true },
+  ],
+  loads: [
+    { id: "p1", type: "nodal", node: "E", fx: 2, fy: 0, m: 0 }, // 2 kN → at top-left
+    { id: "p2", type: "nodal", node: "F", fx: 0, fy: -5, m: 0 }, // 5 kN ↓
+    { id: "p3", type: "nodal", node: "C", fx: 0, fy: -3, m: 0 }, // 3 kN ↓
+    { id: "p4", type: "nodal", node: "G", fx: 3, fy: 0, m: 0 }, // 3 kN → at triangle apex
+    { id: "p5", type: "nodal", node: "D", fx: 0, fy: -5, m: 0 }, // 5 kN ↓ at tip
+  ],
+  material: defaultMat,
+  unit: "kN",
+};
+
 export const PRESETS: Preset[] = [
   { name: "Simply Supported Beam", model: simplySupported },
   { name: "Cantilever", model: cantilever },
@@ -564,8 +705,12 @@ export const PRESETS: Preset[] = [
   { name: "Cantilever Truss", model: cantileverTruss },
   { name: "Tower Truss", model: towerTruss },
   { name: "Triangular Truss", model: triangularTruss },
+  { name: "Three-Panel Triangle Truss", model: threePanelTriangleTruss },
   { name: "Portico + Reticulado", model: frameTruss },
   { name: "Fixed Beam w/ Hinge & Overhang", model: fixedBeamHingeOverhang },
   { name: "Fixed Beam (UDL + Hinge)", model: fixedBeamUdlHinge },
   { name: "T-Frame (fixed base)", model: tFrameFixed },
+  { name: "Symmetric Two-Bay Portal", model: symmetricTwoBayPortal },
+  { name: "Portal w/ Moment", model: portalMoment },
+  { name: "Z-Frame (ceiling roller)", model: zFrame },
 ];
