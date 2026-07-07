@@ -5,6 +5,8 @@ import { FrameModel } from "@/lib/types";
 import { SolveOutput } from "@/lib/solve";
 import { clean, equilibrium, EQ_TOL, peak } from "@/lib/results";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { usePrefs } from "@/contexts/PrefsContext";
+import { diagramSigns } from "@/lib/conventions";
 
 interface Props {
   model: FrameModel;
@@ -47,6 +49,9 @@ const rowCls = "border-t border-stone-100 dark:border-stone-700";
 
 export default function ResultsPanel({ model, solved }: Props) {
   const { t } = useLanguage();
+  const { signConvention } = usePrefs();
+  const { dispSign: qSign } = diagramSigns(signConvention, "Q");
+  const { dispSign: mSign } = diagramSigns(signConvention, "M");
 
   if (!solved || !solved.result.stable) {
     return (
@@ -92,9 +97,9 @@ export default function ResultsPanel({ model, solved }: Props) {
       badge,
       state: t(stateKey),
       stateShort,
-      Q: clean(qPeak ? qPeak.Q : 0),
+      Q: clean((qPeak ? qPeak.Q : 0) * qSign),
       Qx: qPeak ? qPeak.x : null,
-      M: clean(mPeak ? mPeak.M : 0),
+      M: clean((mPeak ? mPeak.M : 0) * mSign),
       Mx: mPeak ? mPeak.x : null,
     };
   });

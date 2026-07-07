@@ -286,7 +286,7 @@ export function SettingsPanel() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className="mb-2 flex items-center justify-between">
               <span className="text-xs text-stone-600 dark:text-stone-300">
                 {t("settings.snap")}
               </span>
@@ -299,6 +299,28 @@ export function SettingsPanel() {
                     className={`${segBtn(prefs.snap === v)} font-mono`}
                   >
                     {v}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-stone-600 dark:text-stone-300">
+                {t("settings.sign_convention")}
+              </span>
+              <div className="flex overflow-hidden rounded-md border border-stone-300 dark:border-stone-600">
+                {(["argentina", "international"] as const).map((v) => (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => setPref("signConvention", v)}
+                    className={segBtn(prefs.signConvention === v)}
+                  >
+                    {t(
+                      v === "argentina"
+                        ? "settings.sign_convention.argentina"
+                        : "settings.sign_convention.international",
+                    )}
                   </button>
                 ))}
               </div>

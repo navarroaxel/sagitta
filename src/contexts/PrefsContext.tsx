@@ -12,6 +12,8 @@ export interface Prefs {
   showLoadUnits: boolean;
   /** Show automatic dimension lines (cotas) between distinct node coordinates. */
   showDimensions: boolean;
+  /** Sign convention for N/Q/M diagrams. "argentina" = UTN FRBA criterion (default). */
+  signConvention: "international" | "argentina";
 }
 
 export const DEFAULT_PREFS: Prefs = {
@@ -19,6 +21,7 @@ export const DEFAULT_PREFS: Prefs = {
   snap: 0.25,
   showLoadUnits: true,
   showDimensions: false,
+  signConvention: "argentina",
 };
 
 export const SNAP_OPTIONS = [0.25, 0.5, 1] as const;

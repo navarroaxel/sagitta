@@ -68,7 +68,7 @@ function TriadSVG() {
 
 // ─── Page ───────────────────────────────────────────────────────────────────
 
-export default function TernaLocalPage() {
+export default function EsfuerzosCaracteristicosPage() {
   const { t } = useLanguage();
 
   return (
@@ -82,15 +82,8 @@ export default function TernaLocalPage() {
           {t("learn.back")}
         </Link>
         <span className="text-stone-300 dark:text-stone-600">|</span>
-        <Link
-          href="/learn"
-          className="text-sm text-stone-500 transition-colors hover:text-stone-800 dark:text-stone-400 dark:hover:text-stone-100"
-        >
-          {t("learn.title")}
-        </Link>
-        <span className="text-stone-300 dark:text-stone-600">|</span>
         <h1 className="text-base font-semibold tracking-tight text-stone-800 dark:text-stone-100">
-          {t("terna.title")}
+          {t("esf.title")}
         </h1>
         <div className="flex-1" />
         <SettingsPanel />
@@ -100,91 +93,87 @@ export default function TernaLocalPage() {
       <main className="flex-1 overflow-auto">
         <article className="mx-auto max-w-3xl px-6 py-12">
           {/* Hero */}
-          <Kicker>{t("terna.s1.kicker").split("—")[0].trim()} · N · Q · M</Kicker>
+          <Kicker>N · Q · M</Kicker>
           <h2 className="mb-4 text-4xl font-bold leading-tight tracking-tight text-balance">
-            {t("terna.title")}
+            {t("esf.title")}
           </h2>
           <p className="mb-6 max-w-[60ch] text-lg leading-relaxed text-stone-600 dark:text-stone-300">
-            {t("terna.lead")}
+            {t("esf.lead")}
           </p>
-          <div className="mx-auto max-w-sm">
-            <Figure>
-              <TriadSVG />
-            </Figure>
-          </div>
 
-          {/* 01 — what it is */}
+          {/* 01 — Definition */}
           <section className="mt-12 border-t border-stone-200 pt-8 dark:border-stone-800">
-            <Kicker>{t("terna.s1.kicker")}</Kicker>
-            <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("terna.s1.title")}</h3>
+            <Kicker>{t("esf.s1.kicker")}</Kicker>
+            <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("esf.s1.title")}</h3>
             <p className="mb-4 max-w-[66ch] leading-relaxed text-stone-700 dark:text-stone-300">
-              {t("terna.s1.p1")}
+              {t("esf.s1.p1")}
             </p>
+            <p className="max-w-[66ch] leading-relaxed text-stone-700 dark:text-stone-300">
+              {t("esf.s1.p2")}
+            </p>
+          </section>
+
+          {/* 02 — Local triad */}
+          <section className="mt-12 border-t border-stone-200 pt-8 dark:border-stone-800">
+            <Kicker>{t("esf.s2.kicker")}</Kicker>
+            <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("esf.s2.title")}</h3>
+            <p className="mb-4 max-w-[66ch] leading-relaxed text-stone-700 dark:text-stone-300">
+              {t("esf.s2.p1")}
+            </p>
+            <div className="mx-auto max-w-sm">
+              <Figure>
+                <TriadSVG />
+              </Figure>
+            </div>
             <ul className="mb-4 space-y-2 text-[15px] text-stone-600 dark:text-stone-400">
               <li>
-                <span className="font-mono font-semibold text-[#7A2A9A]">x′</span> — {t("terna.s1.x")}
+                <span className="font-mono font-semibold text-[#7A2A9A]">x′</span> — {t("esf.s2.x")}
               </li>
               <li>
-                <span className="font-mono font-semibold text-[#7A2A9A]">y′</span> — {t("terna.s1.y")}
+                <span className="font-mono font-semibold text-[#7A2A9A]">y′</span> — {t("esf.s2.y")}
               </li>
               <li>
-                <span className="font-mono font-semibold text-[#7A2A9A]">z′</span> — {t("terna.s1.z")}
+                <span className="font-mono font-semibold text-[#7A2A9A]">z′</span> — {t("esf.s2.z")}
               </li>
             </ul>
             <p className="max-w-[66ch] leading-relaxed text-stone-700 dark:text-stone-300">
-              {t("terna.s1.p2")}
+              {t("esf.s2.p2")}
             </p>
           </section>
 
-          {/* 02 — three components */}
+          {/* 03 — The three forces */}
           <section className="mt-12 border-t border-stone-200 pt-8 dark:border-stone-800">
-            <Kicker>{t("terna.s2.kicker")}</Kicker>
-            <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("terna.s2.title")}</h3>
-            <p className="mb-4 max-w-[66ch] leading-relaxed text-stone-700 dark:text-stone-300">
-              {t("terna.s2.p1")}
+            <Kicker>{t("esf.s3.kicker")}</Kicker>
+            <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("esf.s3.title")}</h3>
+            <p className="mb-6 max-w-[66ch] leading-relaxed text-stone-700 dark:text-stone-300">
+              {t("esf.s3.intro")}
             </p>
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-[15px]">
-                <thead>
-                  <tr className="border-b-2 border-stone-800 text-left font-mono text-xs uppercase tracking-wide text-stone-500 dark:border-stone-300 dark:text-stone-400">
-                    <th className="py-2 pr-3 font-medium">{t("terna.s2.th1")}</th>
-                    <th className="py-2 pr-3 font-medium">{t("terna.s2.th2")}</th>
-                    <th className="py-2 font-medium">{t("terna.s2.th3")}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-b border-stone-200 dark:border-stone-800">
-                    <td className="py-2.5 pr-3"><span className="font-mono font-semibold text-[#0B8A8A]">N</span> {t("terna.s2.n")}</td>
-                    <td className="py-2.5 pr-3">x′</td>
-                    <td className="py-2.5">{t("terna.s2.n.pos")}</td>
-                  </tr>
-                  <tr className="border-b border-stone-200 dark:border-stone-800">
-                    <td className="py-2.5 pr-3"><span className="font-mono font-semibold text-[#3A6B8C]">Q</span> {t("terna.s2.q")}</td>
-                    <td className="py-2.5 pr-3">y′</td>
-                    <td className="py-2.5">{t("terna.s2.q.pos")}</td>
-                  </tr>
-                  <tr>
-                    <td className="py-2.5 pr-3"><span className="font-mono font-semibold text-[#7A2A9A]">M</span> {t("terna.s2.m")}</td>
-                    <td className="py-2.5 pr-3">z′</td>
-                    <td className="py-2.5">{t("terna.s2.m.pos")}</td>
-                  </tr>
-                </tbody>
-              </table>
+
+            {/* Three cards */}
+            <div className="mb-6 space-y-4">
+              {/* N card */}
+              <div className="rounded-lg border border-stone-200 bg-white p-5 shadow-sm dark:border-stone-700 dark:bg-stone-900">
+                <h4 className="mb-1 font-semibold text-[#0B8A8A]">{t("esf.s3.n.name")}</h4>
+                <p className="mb-1 text-[15px] leading-relaxed text-stone-700 dark:text-stone-300">{t("esf.s3.n.def")}</p>
+                <p className="text-[14px] text-stone-500 dark:text-stone-400"><span className="font-semibold">Sign:</span> {t("esf.s3.n.sign")}</p>
+              </div>
+              {/* Q card */}
+              <div className="rounded-lg border border-stone-200 bg-white p-5 shadow-sm dark:border-stone-700 dark:bg-stone-900">
+                <h4 className="mb-1 font-semibold text-[#3A6B8C]">{t("esf.s3.q.name")}</h4>
+                <p className="mb-1 text-[15px] leading-relaxed text-stone-700 dark:text-stone-300">{t("esf.s3.q.def")}</p>
+                <p className="text-[14px] text-stone-500 dark:text-stone-400"><span className="font-semibold">Sign:</span> {t("esf.s3.q.sign")}</p>
+              </div>
+              {/* M card */}
+              <div className="rounded-lg border border-stone-200 bg-white p-5 shadow-sm dark:border-stone-700 dark:bg-stone-900">
+                <h4 className="mb-1 font-semibold text-[#7A2A9A]">{t("esf.s3.m.name")}</h4>
+                <p className="mb-1 text-[15px] leading-relaxed text-stone-700 dark:text-stone-300">{t("esf.s3.m.def")}</p>
+                <p className="text-[14px] text-stone-500 dark:text-stone-400"><span className="font-semibold">Sign:</span> {t("esf.s3.m.sign")}</p>
+              </div>
             </div>
-            <p className="mt-4 max-w-[66ch] leading-relaxed text-stone-700 dark:text-stone-300">
-              {t("terna.s2.p2")}
-            </p>
-          </section>
 
-          {/* 03 — signs */}
-          <section className="mt-12 border-t border-stone-200 pt-8 dark:border-stone-800">
-            <Kicker>{t("terna.s3.kicker")}</Kicker>
-            <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("terna.s3.title")}</h3>
-            <p className="mb-2 max-w-[66ch] leading-relaxed text-stone-700 dark:text-stone-300">
-              {t("terna.s3.p1")}
-            </p>
+            {/* Sign SVGs */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              <Figure caption={t("terna.s3.cap.n")}>
+              <Figure caption={t("esf.s3.cap.n")}>
                 <svg viewBox="0 0 150 110" className="h-auto w-full" role="img" aria-label="N>0">
                   <rect x="40" y="42" width="70" height="26" fill="rgba(11,138,138,.12)" stroke={TENSION} strokeWidth="1.5" />
                   <line x1="40" y1="55" x2="12" y2="55" stroke={TENSION} strokeWidth="2.5" />
@@ -192,10 +181,10 @@ export default function TernaLocalPage() {
                   <line x1="110" y1="55" x2="138" y2="55" stroke={TENSION} strokeWidth="2.5" />
                   <polygon points="144,55 132,50 132,60" fill={TENSION} />
                   <text x="75" y="24" fontSize="13" fontWeight="700" fill={TENSION} textAnchor="middle">N &gt; 0</text>
-                  <text x="75" y="92" fontSize="12" fill="#5C6B77" textAnchor="middle">{t("terna.s3.n")}</text>
+                  <text x="75" y="92" fontSize="12" fill="#5C6B77" textAnchor="middle">{t("esf.s3.n")}</text>
                 </svg>
               </Figure>
-              <Figure caption={t("terna.s3.cap.q")}>
+              <Figure caption={t("esf.s3.cap.q")}>
                 <svg viewBox="0 0 150 110" className="h-auto w-full" role="img" aria-label="Q>0">
                   <rect x="45" y="34" width="60" height="42" fill="rgba(58,107,140,.12)" stroke={SHEAR} strokeWidth="1.5" />
                   <line x1="105" y1="30" x2="105" y2="80" stroke={SHEAR} strokeWidth="2.5" />
@@ -203,10 +192,10 @@ export default function TernaLocalPage() {
                   <line x1="45" y1="80" x2="45" y2="30" stroke={SHEAR} strokeWidth="2.5" />
                   <polygon points="45,26 40,38 50,38" fill={SHEAR} />
                   <text x="75" y="20" fontSize="13" fontWeight="700" fill={SHEAR} textAnchor="middle">Q &gt; 0</text>
-                  <text x="75" y="101" fontSize="11" fill="#5C6B77" textAnchor="middle">{t("terna.s3.q")}</text>
+                  <text x="75" y="101" fontSize="11" fill="#5C6B77" textAnchor="middle">{t("esf.s3.q")}</text>
                 </svg>
               </Figure>
-              <Figure caption={t("terna.s3.cap.m")}>
+              <Figure caption={t("esf.s3.cap.m")}>
                 <svg viewBox="0 0 150 110" className="h-auto w-full" role="img" aria-label="M>0">
                   <path d="M20,50 Q75,84 130,50" fill="none" stroke={MOMENT} strokeWidth="2.5" />
                   <path d="M20,42 Q75,76 130,42" fill="none" stroke={MOMENT} strokeWidth="2.5" opacity=".35" />
@@ -215,21 +204,28 @@ export default function TernaLocalPage() {
                   <path d="M122,52 A40,40 0 0 0 104,45" fill="none" stroke={MOMENT} strokeWidth="2" />
                   <polygon points="104,45 113,44 108,52" fill={MOMENT} />
                   <text x="75" y="24" fontSize="13" fontWeight="700" fill={MOMENT} textAnchor="middle">M &gt; 0</text>
-                  <text x="75" y="101" fontSize="11" fill="#5C6B77" textAnchor="middle">{t("terna.s3.m")}</text>
+                  <text x="75" y="101" fontSize="11" fill="#5C6B77" textAnchor="middle">{t("esf.s3.m")}</text>
                 </svg>
               </Figure>
             </div>
-            <div className="mt-4 rounded-lg border border-stone-200 border-l-4 border-l-teal-700 bg-white px-5 py-4 dark:border-stone-700 dark:border-l-teal-500 dark:bg-stone-900">
-              <p className="text-[15px] leading-relaxed text-stone-700 dark:text-stone-300">
-                {t("terna.s3.callout")}
-              </p>
-            </div>
           </section>
 
-          {/* 04 — procedure */}
+          {/* 04 — The diagrams */}
           <section className="mt-12 border-t border-stone-200 pt-8 dark:border-stone-800">
-            <Kicker>{t("terna.s4.kicker")}</Kicker>
-            <h3 className="mb-5 text-2xl font-semibold tracking-tight">{t("terna.s4.title")}</h3>
+            <Kicker>{t("esf.s4.kicker")}</Kicker>
+            <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("esf.s4.title")}</h3>
+            <p className="mb-4 max-w-[66ch] leading-relaxed text-stone-700 dark:text-stone-300">
+              {t("esf.s4.p1")}
+            </p>
+            <p className="max-w-[66ch] leading-relaxed text-stone-700 dark:text-stone-300">
+              {t("esf.s4.p2")}
+            </p>
+          </section>
+
+          {/* 05 — Analytical procedure */}
+          <section className="mt-12 border-t border-stone-200 pt-8 dark:border-stone-800">
+            <Kicker>{t("esf.s5.kicker")}</Kicker>
+            <h3 className="mb-5 text-2xl font-semibold tracking-tight">{t("esf.s5.title")}</h3>
             <ol className="space-y-5">
               {[1, 2, 3, 4, 5, 6].map((n) => (
                 <li key={n} className="flex gap-4">
@@ -237,9 +233,9 @@ export default function TernaLocalPage() {
                     {String(n).padStart(2, "0")}
                   </span>
                   <div>
-                    <h4 className="font-semibold">{t(`terna.s4.step${n}.t` as never)}</h4>
+                    <h4 className="font-semibold">{t(`esf.s5.step${n}.t` as never)}</h4>
                     <p className="text-[15px] leading-relaxed text-stone-600 dark:text-stone-400">
-                      {t(`terna.s4.step${n}.d` as never)}
+                      {t(`esf.s5.step${n}.d` as never)}
                     </p>
                   </div>
                 </li>
@@ -247,15 +243,15 @@ export default function TernaLocalPage() {
             </ol>
           </section>
 
-          {/* 05 — worked example */}
+          {/* 06 — Worked example (L-frame) */}
           <section className="mt-12 border-t border-stone-200 pt-8 dark:border-stone-800">
-            <Kicker>{t("terna.s5.kicker")}</Kicker>
-            <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("terna.s5.title")}</h3>
+            <Kicker>{t("esf.s6.kicker")}</Kicker>
+            <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("esf.s6.title")}</h3>
             <p className="mb-4 max-w-[66ch] leading-relaxed text-stone-700 dark:text-stone-300">
-              {t("terna.s5.p1")}
+              {t("esf.s6.p1")}
             </p>
 
-            <Figure caption={t("terna.s5.reac.cap")}>
+            <Figure caption={t("esf.s6.reac.cap")}>
               <div className="grid grid-cols-1 items-center gap-2 sm:grid-cols-2">
                 <svg viewBox="0 0 300 250" className="h-auto w-full" role="img" aria-label="L-frame geometry">
                   <line x1="56" y1="205" x2="56" y2="60" stroke={INK} strokeWidth="4" strokeLinecap="round" />
@@ -291,12 +287,12 @@ export default function TernaLocalPage() {
               </div>
             </Figure>
 
-            <h4 className="mb-2 mt-8 text-lg font-semibold">{t("terna.s5.cut.t")}</h4>
+            <h4 className="mb-2 mt-8 text-lg font-semibold">{t("esf.s6.cut.t")}</h4>
             <p className="mb-3 max-w-[66ch] leading-relaxed text-stone-700 dark:text-stone-300">
-              {t("terna.s5.cut.p")}
+              {t("esf.s6.cut.p")}
             </p>
 
-            <Figure caption={t("terna.s5.cut.cap")}>
+            <Figure caption={t("esf.s6.cut.cap")}>
               <svg viewBox="0 0 340 170" className="h-auto w-full" role="img" aria-label="Cut free body">
                 <line x1="40" y1="70" x2="300" y2="70" stroke={FAINT} strokeWidth="4" strokeLinecap="round" />
                 <line x1="190" y1="70" x2="300" y2="70" stroke={INK} strokeWidth="4" strokeLinecap="round" />
@@ -325,9 +321,9 @@ export default function TernaLocalPage() {
               </div>
             </Figure>
 
-            <h4 className="mb-2 mt-8 text-lg font-semibold">{t("terna.s5.diag.t")}</h4>
+            <h4 className="mb-2 mt-8 text-lg font-semibold">{t("esf.s6.diag.t")}</h4>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              <Figure caption={t("terna.s5.diag.n")}>
+              <Figure caption={t("esf.s6.diag.n")}>
                 <svg viewBox="0 0 190 250" className="h-auto w-full" role="img" aria-label="N diagram">
                   <g stroke={FAINT} strokeWidth="3" strokeLinecap="round">
                     <line x1="96" y1="205" x2="96" y2="60" /><line x1="96" y1="60" x2="176" y2="60" />
@@ -337,7 +333,7 @@ export default function TernaLocalPage() {
                   <text x="20" y="52" fontSize="13" fontWeight="700" fill={INK}>N</text>
                 </svg>
               </Figure>
-              <Figure caption={t("terna.s5.diag.q")}>
+              <Figure caption={t("esf.s6.diag.q")}>
                 <svg viewBox="0 0 190 250" className="h-auto w-full" role="img" aria-label="Q diagram">
                   <g stroke={FAINT} strokeWidth="3" strokeLinecap="round">
                     <line x1="40" y1="205" x2="40" y2="60" /><line x1="40" y1="60" x2="176" y2="60" />
@@ -347,7 +343,7 @@ export default function TernaLocalPage() {
                   <text x="160" y="230" fontSize="13" fontWeight="700" fill={INK} textAnchor="end">Q</text>
                 </svg>
               </Figure>
-              <Figure caption={t("terna.s5.diag.m")}>
+              <Figure caption={t("esf.s6.diag.m")}>
                 <svg viewBox="0 0 190 250" className="h-auto w-full" role="img" aria-label="M diagram">
                   <g stroke={FAINT} strokeWidth="3" strokeLinecap="round">
                     <line x1="56" y1="205" x2="56" y2="60" /><line x1="56" y1="60" x2="176" y2="60" />
@@ -366,36 +362,36 @@ export default function TernaLocalPage() {
               <table className="w-full border-collapse text-[15px]">
                 <thead>
                   <tr className="border-b-2 border-stone-800 text-left font-mono text-xs uppercase tracking-wide text-stone-500 dark:border-stone-300 dark:text-stone-400">
-                    <th className="py-2 pr-3 font-medium">{t("terna.s5.th.bar")}</th>
-                    <th className="py-2 pr-3 font-medium">{t("terna.s5.th.axis")}</th>
+                    <th className="py-2 pr-3 font-medium">{t("esf.s6.th.bar")}</th>
+                    <th className="py-2 pr-3 font-medium">{t("esf.s6.th.axis")}</th>
                     <th className="py-2 pr-3 text-right font-medium tabular-nums">N</th>
                     <th className="py-2 pr-3 text-right font-medium tabular-nums">Q</th>
                     <th className="py-2 pr-3 text-right font-medium tabular-nums">M</th>
-                    <th className="py-2 font-medium">{t("terna.s5.th.state")}</th>
+                    <th className="py-2 font-medium">{t("esf.s6.th.state")}</th>
                   </tr>
                 </thead>
                 <tbody className="font-mono tabular-nums">
                   <tr className="border-b border-stone-200 dark:border-stone-800">
-                    <td className="py-2.5 pr-3">{t("terna.s5.bar.col")}</td>
-                    <td className="py-2.5 pr-3 font-sans">{t("terna.s5.axis.up")}</td>
+                    <td className="py-2.5 pr-3">{t("esf.s6.bar.col")}</td>
+                    <td className="py-2.5 pr-3 font-sans">{t("esf.s6.axis.up")}</td>
                     <td className="py-2.5 pr-3 text-right">−10</td>
                     <td className="py-2.5 pr-3 text-right">0</td>
                     <td className="py-2.5 pr-3 text-right">−40</td>
                     <td className="py-2.5 font-sans">
                       <span className="rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-semibold text-red-800 dark:bg-red-950 dark:text-red-300">
-                        {t("terna.state.compression")}
+                        {t("esf.state.compression")}
                       </span>
                     </td>
                   </tr>
                   <tr>
-                    <td className="py-2.5 pr-3">{t("terna.s5.bar.beam")}</td>
-                    <td className="py-2.5 pr-3 font-sans">{t("terna.s5.axis.right")}</td>
+                    <td className="py-2.5 pr-3">{t("esf.s6.bar.beam")}</td>
+                    <td className="py-2.5 pr-3 font-sans">{t("esf.s6.axis.right")}</td>
                     <td className="py-2.5 pr-3 text-right">0</td>
                     <td className="py-2.5 pr-3 text-right">+10</td>
                     <td className="py-2.5 pr-3 text-right">−40→0</td>
                     <td className="py-2.5 font-sans">
                       <span className="rounded-full bg-stone-200 px-2.5 py-0.5 text-xs font-semibold text-stone-600 dark:bg-stone-800 dark:text-stone-400">
-                        {t("terna.state.zero")}
+                        {t("esf.state.zero")}
                       </span>
                     </td>
                   </tr>
@@ -404,23 +400,9 @@ export default function TernaLocalPage() {
             </div>
           </section>
 
-          {/* 06 — truss */}
-          <section className="mt-12 border-t border-stone-200 pt-8 dark:border-stone-800">
-            <Kicker>{t("terna.s6.kicker")}</Kicker>
-            <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("terna.s6.title")}</h3>
-            <p className="mb-4 max-w-[66ch] leading-relaxed text-stone-700 dark:text-stone-300">
-              {t("terna.s6.p1")}
-            </p>
-            <div className="rounded-lg border border-stone-200 border-l-4 border-l-teal-700 bg-white px-5 py-4 dark:border-stone-700 dark:border-l-teal-500 dark:bg-stone-900">
-              <p className="text-[15px] leading-relaxed text-stone-700 dark:text-stone-300">
-                {t("terna.s6.callout")}
-              </p>
-            </div>
-          </section>
-
           {/* Footer */}
           <footer className="mt-12 border-t border-stone-200 pt-6 text-sm leading-relaxed text-stone-500 dark:border-stone-800 dark:text-stone-400">
-            <p className="max-w-[64ch]">{t("terna.footer")}</p>
+            <p className="max-w-[64ch]">{t("esf.footer")}</p>
           </footer>
         </article>
       </main>

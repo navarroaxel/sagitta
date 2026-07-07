@@ -81,9 +81,28 @@ export function buildMemberDiagram(opts: BuildDiagramOptions): MemberDiagram {
   const L = Math.hypot(wjX - wiX, wjY - wiY);
   const ax = (wjX - wiX) / L;
   const ay = (wjY - wiY) / L;
-  // normal: 90° CCW from axis
-  const nx = -ay;
-  const ny = ax;
+  // Normal direction.
+  //
+  // N and Q use a CANONICAL axis so the SIDE they are drawn on does not depend
+  // on how the member's i→j nodes happen to be ordered: a member defined
+  // "backwards" (axis pointing left, or straight down) is treated as if drawn up
+  // / to the right, so the normal always points the same way (left for columns,
+  // up for beams). Their sampled value is not altered; the drawn side follows
+  // the displayed sign (e.g. under Argentina a negative label lands left/above).
+  //
+  // M uses the RAW i→j normal. The bending moment is drawn on the tension fibre,
+  // which is continuous around a rigid joint. The sampled local M sign flips
+  // with the axis and the raw normal flips with it too, so the two cancel and
+  // the diagram stays on the physical tension side — continuous across the
+  // beam↔column corner. Canonicalising M's normal would break that continuity
+  // (the moment would appear to jump to the other side / flip sign at a joint).
+  const EPS = 1e-9;
+  const flipAxis =
+    key !== "M" && (ax < -EPS || (Math.abs(ax) < EPS && ay < 0));
+  const cax = flipAxis ? -ax : ax;
+  const cay = flipAxis ? -ay : ay;
+  const nx = -cay;
+  const ny = cax;
 
   // Scale factor: globalMax reaches 0.17 * diagLen * scale pixels
   const pixelPerUnit =
