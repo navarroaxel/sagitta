@@ -231,6 +231,7 @@ const EN = {
   "quiz.false": "False",
   "quiz.more.title": "More theory exams",
   "quiz.more.claude": "Estabilidad — Theory (1st partial), 49 Q",
+  "quiz.more.parcial": "Estabilidad — 1st partial (Jul 7, 2026)",
   "parcial.back": "← Simulator",
   "parcial.title": "True/False Exam — Stability (partial)",
 
@@ -579,6 +580,7 @@ const ES: Record<TranslationKey, string> = {
   "quiz.false": "Falso",
   "quiz.more.title": "Más exámenes teóricos",
   "quiz.more.claude": "Estabilidad — Teoría (1.º parcial), 49 preguntas",
+  "quiz.more.parcial": "Estabilidad — 1.º parcial (7/7/2026)",
   "parcial.back": "← Simulador",
   "parcial.title": "Parcial V/F — Estabilidad",
 
