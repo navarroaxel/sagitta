@@ -181,6 +181,7 @@ const EN = {
   "footer.kinelab_teaser": "Circular motion kinematics & dynamics",
   "footer.resonara_teaser": "RLC circuits in AC",
 
+  "nav.guides": "Guides",
   "learn.link": "Learn the method",
   "learn.back": "← Simulator",
   "learn.title": "Tangent Method (Mohr's Theorems)",
@@ -530,6 +531,7 @@ const ES: Record<TranslationKey, string> = {
   "footer.kinelab_teaser": "Mecánica Técnica",
   "footer.resonara_teaser": "Electrotécnica I",
 
+  "nav.guides": "Guías",
   "learn.link": "Aprendé el método",
   "learn.back": "← Simulador",
   "learn.title": "Método de las Tangentes (Teoremas de Mohr)",
