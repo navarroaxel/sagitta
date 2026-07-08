@@ -8,11 +8,11 @@ import React, {
   useEffect,
   useLayoutEffect,
 } from "react";
-import Link from "next/link";
 import FrameCanvas, { ViewOptions } from "@/components/FrameCanvas";
 import ModelEditor from "@/components/ModelEditor";
 import DiagramControls from "@/components/DiagramControls";
 import PresetMenu from "@/components/PresetMenu";
+import NavMenu from "@/components/NavMenu";
 import { SettingsPanel } from "@/components/SettingsPanel";
 import { GitHubLink } from "@/components/GitHubLink";
 import { Footer } from "@/components/Footer";
@@ -196,29 +196,12 @@ export default function Home() {
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100">
       {/* Top toolbar */}
-      <header className="z-10 flex items-center gap-3 border-b border-stone-200 bg-white px-4 py-2 shadow-sm dark:border-stone-700 dark:bg-stone-900">
-        <h1 className="text-base font-semibold tracking-tight text-stone-800 dark:text-stone-100">
+      <header className="z-10 flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-stone-200 bg-white px-4 py-2 shadow-sm dark:border-stone-700 dark:bg-stone-900">
+        <h1 className="text-sm font-semibold tracking-tight text-stone-800 sm:text-base dark:text-stone-100">
           {t("app.title")}
         </h1>
-        <Link
-          href="/learn"
-          className="text-xs text-stone-400 transition-colors hover:text-stone-600 dark:text-stone-500 dark:hover:text-stone-300"
-        >
-          {t("learn.link")}
-        </Link>
-        <Link
-          href="/esfuerzos-caracteristicos"
-          className="text-xs text-stone-400 transition-colors hover:text-stone-600 dark:text-stone-500 dark:hover:text-stone-300"
-        >
-          {t("esf.link")}
-        </Link>
-        <Link
-          href="/quiz"
-          className="text-xs text-stone-400 transition-colors hover:text-stone-600 dark:text-stone-500 dark:hover:text-stone-300"
-        >
-          {t("quiz.link")}
-        </Link>
-        <div className="flex-1" />
+        <NavMenu />
+        <div className="hidden flex-1 sm:block" />
         <PresetMenu
           onLoad={(m) => {
             setModel(m);
