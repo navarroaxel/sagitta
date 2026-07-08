@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="86 12 669 570" font-family="system-ui, sans-serif">
+  <!--
+    Structure: portal with a HORIZONTAL roof, a left cantilever overhang, and a
+    stepped foundation - support B sits 4 m higher than support A, so the columns
+    are unequal (8 m left, 4 m right) yet share one horizontal roof. Solid web,
+    rigid joints. Units in T and T/m.
+    World in metres, y up. Transform: sx = 318 + x*42 ; sy = 448 - y*42
+    Nodes:
+      A  (0,0)   roller support (base of the 8 m left column)  -> (318,448)
+      B  (8,4)   pinned support (base of the 4 m right column, 4 m above A) -> (654,280)
+      C  (0,8)   top-left corner (rigid, roof-column joint)    -> (318,112)
+      D  (8,8)   top-right corner (rigid, roof-column joint)   -> (654,112)
+      E  (-4,8)  free tip of the left overhang                 -> (150,112)
+    Members (solid web, rigid joints):
+      A-C  left column   (8 m, vertical)
+      B-D  right column  (4 m, vertical)
+      E-C-D  roof        (horizontal: overhang E-C 4 m + span C-D 8 m)
+    Determinacy: 3 reactions (roller 1 + pinned 2) and no hinges -> statically determinate (3 eqs).
+    Loads:
+      q   = 6 T/m vertical (downward) on the overhang, x=-4 to x=0 (4 m) -> resultant 24 T at (-2,8)
+      M   = 12 T*m clockwise at the middle of the roof span (4,8)
+      P_A = 5 T horizontal to the left at A (base of the left column)
+      P_D = 4 T horizontal to the right at D (top of the right column)
+    Support reactions (given):
+      A: V_A = 24.00 T (up)
+      B: H_B = 1 T (to the right) ; V_B = 0
+    These reactions DO satisfy global equilibrium (SumFx=0, SumFy=0, SumM_A=0);
+    the vertical reaction at B works out to exactly zero.
+  -->
+
+  <rect x="86" y="12" width="669" height="570" fill="#ffffff"/>
+
+  <!-- ===== Dimensions ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <!-- top (horizontal): overhang 4.00 | roof span 4.00 + 4.00 -->
+    <line x1="150" y1="48" x2="654" y2="48"/>
+    <line x1="150" y1="43" x2="150" y2="53"/>
+    <line x1="318" y1="43" x2="318" y2="53"/>
+    <line x1="486" y1="43" x2="486" y2="53"/>
+    <line x1="654" y1="43" x2="654" y2="53"/>
+    <text x="234" y="40" text-anchor="middle">4.00</text>
+    <text x="402" y="40" text-anchor="middle">4.00</text>
+    <text x="570" y="40" text-anchor="middle">4.00</text>
+
+    <!-- right side (exterior right): column 4.00 m (D-B) + support elevation 4.00 m (B-ground) -->
+    <line x1="715" y1="112" x2="715" y2="448"/>
+    <line x1="710" y1="112" x2="720" y2="112"/>
+    <line x1="710" y1="280" x2="720" y2="280"/>
+    <line x1="710" y1="448" x2="720" y2="448"/>
+    <text x="727" y="196" text-anchor="middle" transform="rotate(-90 727 196)">4.00 m</text>
+    <text x="727" y="364" text-anchor="middle" transform="rotate(-90 727 364)">4.00 m</text>
+  </g>
+
+  <!-- ===== Solid-web frame (rigid joints) ===== -->
+  <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
+    <line x1="318" y1="448" x2="318" y2="112"/> <!-- left column A-C -->
+    <line x1="654" y1="280" x2="654" y2="112"/> <!-- right column B-D -->
+    <line x1="150" y1="112" x2="654" y2="112"/> <!-- horizontal roof E-C-D -->
+  </g>
+
+  <!-- ===== Roller support at A ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <polygon points="318,448 309,461 327,461"/>
+    <circle cx="313" cy="465" r="3"/>
+    <circle cx="323" cy="465" r="3"/>
+    <line x1="303" y1="469" x2="333" y2="469"/>
+    <line x1="307" y1="469" x2="301" y2="476"/>
+    <line x1="315" y1="469" x2="309" y2="476"/>
+    <line x1="323" y1="469" x2="317" y2="476"/>
+    <line x1="331" y1="469" x2="325" y2="476"/>
+  </g>
+
+  <!-- ===== Pinned support at B (on a foundation 4 m above A) ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <polygon points="654,280 645,291 663,291"/>
+    <line x1="639" y1="291" x2="669" y2="291"/>
+    <line x1="643" y1="291" x2="637" y2="298"/>
+    <line x1="651" y1="291" x2="645" y2="298"/>
+    <line x1="659" y1="291" x2="653" y2="298"/>
+    <line x1="667" y1="291" x2="661" y2="298"/>
+  </g>
+
+  <!-- ===== Nodes (rigid) ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="318" cy="448" r="4"/> <!-- A -->
+    <circle cx="654" cy="280" r="4"/> <!-- B -->
+    <circle cx="318" cy="112" r="4"/> <!-- C -->
+    <circle cx="654" cy="112" r="4"/> <!-- D -->
+    <circle cx="150" cy="112" r="4"/> <!-- E -->
+  </g>
+
+  <!-- ===== Node labels ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <text x="302" y="444" text-anchor="end">A</text>
+    <text x="668" y="284" text-anchor="start">B</text>
+    <text x="324" y="105" text-anchor="start">C</text>
+    <text x="646" y="106" text-anchor="end">D</text>
+    <text x="140" y="108" text-anchor="end">E</text>
+  </g>
+
+  <!-- ===== Loads ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+    <!-- q = 6 T/m vertical (downward) on the overhang, x=-4 to x=0 -->
+    <line x1="150" y1="72" x2="318" y2="72" stroke-width="2"/>
+    <g stroke-width="1.5">
+      <line x1="165" y1="72" x2="165" y2="106"/>
+      <line x1="185" y1="72" x2="185" y2="106"/>
+      <line x1="205" y1="72" x2="205" y2="106"/>
+      <line x1="225" y1="72" x2="225" y2="106"/>
+      <line x1="245" y1="72" x2="245" y2="106"/>
+      <line x1="265" y1="72" x2="265" y2="106"/>
+      <line x1="285" y1="72" x2="285" y2="106"/>
+      <line x1="305" y1="72" x2="305" y2="106"/>
+    </g>
+    <g stroke="none">
+      <polygon points="165,111 162,105 168,105"/>
+      <polygon points="185,111 182,105 188,105"/>
+      <polygon points="205,111 202,105 208,105"/>
+      <polygon points="225,111 222,105 228,105"/>
+      <polygon points="245,111 242,105 248,105"/>
+      <polygon points="265,111 262,105 268,105"/>
+      <polygon points="285,111 282,105 288,105"/>
+      <polygon points="305,111 302,105 308,105"/>
+    </g>
+    <text x="234" y="64" text-anchor="middle" stroke="none">q = 6 T/m</text>
+
+    <!-- M = 12 T*m clockwise at the middle of the roof span (4,8) -->
+    <circle cx="486" cy="112" r="2" stroke="none"/>
+    <path d="M 492 101.6 A 12 12 0 1 1 480 101.6" fill="none" stroke-width="2.5"/>
+    <polygon points="484.16,99.2 478.4,98.8 481.6,104.4" stroke="none"/>
+    <text x="504" y="108" text-anchor="start" stroke="none">M = 12 Tm</text>
+
+    <!-- P_A = 5 T horizontal to the left at A (tip at the node, shaft trailing right) -->
+    <line x1="330" y1="448" x2="356" y2="448" stroke-width="2.5"/>
+    <polygon points="318,448 330,442 330,454" stroke="none"/>
+    <text x="360" y="444" text-anchor="start" stroke="none">5 T</text>
+
+    <!-- P_D = 4 T horizontal to the right at D; drawn outside the node (trailing left
+         would be collinear with the horizontal roof) -->
+    <line x1="654" y1="112" x2="680" y2="112" stroke-width="2.5"/>
+    <polygon points="692,112 680,106 680,118" stroke="none"/>
+    <text x="672" y="100" text-anchor="middle" stroke="none">4 T</text>
+  </g>
+
+  <!-- ===== Support reactions (blue) ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+    <!-- A: V_A = 24.00 T upward; drawn below the roller pointing up (column directly above) -->
+    <line x1="318" y1="491" x2="318" y2="533" stroke-width="2.5"/>
+    <polygon points="318,483 312,495 324,495" stroke="none"/>
+    <text x="330" y="516" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan> = 24.00 T</text>
+
+    <!-- B: H_B = 1 T to the right (tip at B, shaft trailing to the left) -->
+    <line x1="616" y1="280" x2="642" y2="280" stroke-width="2.5"/>
+    <polygon points="654,280 642,274 642,286" stroke="none"/>
+    <text x="612" y="276" text-anchor="end" stroke="none">H<tspan font-size="10" dy="4">B</tspan> = 1 T</text>
+
+    <!-- B: V_B = 0 (no vertical reaction) - stated, no arrow -->
+    <text x="654" y="324" text-anchor="middle" stroke="none">V<tspan font-size="10" dy="4">B</tspan> = 0</text>
+  </g>
+
+  <text x="420" y="555" text-anchor="middle" fill="#5f6368" font-size="13">
+    Horizontal-roof portal, left overhang, B raised 4 m — A roller, B pinned; loads (red), reactions (blue).
+  </text>
+</svg>

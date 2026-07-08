@@ -18,7 +18,8 @@ import { GitHubLink } from "@/components/GitHubLink";
 import { Footer } from "@/components/Footer";
 import { FrameModel } from "@/lib/types";
 import { solveModel, SolveOutput } from "@/lib/solve";
-import { PRESETS } from "@/lib/presets";
+import { PRESETS, presetSlug, findPresetBySlug } from "@/lib/presets";
+import { encodeModel, decodeModel } from "@/lib/share";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePrefs, getPrefs } from "@/contexts/PrefsContext";
 
@@ -56,12 +57,33 @@ export default function Home() {
     null,
   );
   const svgRef = useRef<SVGSVGElement>(null);
+  const [shareCopied, setShareCopied] = useState(false);
 
-  // ── "Remember my work" persistence ──────────────────────────────────────
+  // ── "Remember my work" persistence + shared-link restore ────────────────
   // Restore is gated behind a post-hydration effect (not a useState
   // initializer) so the prerendered HTML matches the first client render.
   const [loaded, setLoaded] = useState(false);
   useIsomorphicLayoutEffect(() => {
+    // A shared link (?preset=<slug> or ?model=<base64url>) takes precedence
+    // over remembered work; strip it from the address bar once applied.
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const modelParam = params.get("model");
+      const presetParam = params.get("preset");
+      const shared = modelParam
+        ? decodeModel(modelParam)
+        : presetParam
+          ? (findPresetBySlug(presetParam)?.model ?? null)
+          : null;
+      if (shared) {
+        setModel(shared);
+        window.history.replaceState(null, "", window.location.pathname);
+        setLoaded(true);
+        return;
+      }
+    } catch {
+      /* malformed URL — fall through to the normal restore */
+    }
     if (getPrefs().rememberWork) {
       try {
         const savedModel = localStorage.getItem(MODEL_KEY);
@@ -152,6 +174,23 @@ export default function Home() {
     img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(source);
   }, []);
 
+  const handleShare = useCallback(async () => {
+    const url = new URL(window.location.origin + window.location.pathname);
+    // A pristine preset (loaded, not edited) is still the same object reference,
+    // so we can share the short ?preset= form; otherwise encode the full model.
+    const preset = PRESETS.find((p) => p.model === model);
+    if (preset) url.searchParams.set("preset", presetSlug(preset.name));
+    else url.searchParams.set("model", encodeModel(model));
+    const link = url.toString();
+    try {
+      await navigator.clipboard.writeText(link);
+    } catch {
+      window.prompt("", link); // clipboard blocked — let the user copy manually
+    }
+    setShareCopied(true);
+    window.setTimeout(() => setShareCopied(false), 1800);
+  }, [model]);
+
   const hasError = solved && !solved.result.stable;
 
   return (
@@ -202,6 +241,46 @@ export default function Home() {
           className="rounded bg-stone-700 px-3 py-1.5 text-sm text-white transition-colors hover:bg-stone-800 dark:bg-stone-600 dark:hover:bg-stone-500"
         >
           {t("app.export_png")}
+        </button>
+        <button
+          onClick={handleShare}
+          aria-label={t("app.share")}
+          title={shareCopied ? t("app.share_copied") : t("app.share_title")}
+          className="flex items-center justify-center rounded bg-sky-700 px-2.5 py-1.5 text-white transition-colors hover:bg-sky-800 dark:bg-sky-600 dark:hover:bg-sky-500"
+        >
+          {shareCopied ? (
+            <svg
+              viewBox="0 0 24 24"
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          ) : (
+            <svg
+              viewBox="0 0 24 24"
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="18" cy="5" r="3" />
+              <circle cx="6" cy="12" r="3" />
+              <circle cx="18" cy="19" r="3" />
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+            </svg>
+          )}
         </button>
         <GitHubLink />
         <SettingsPanel />

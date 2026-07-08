@@ -5,6 +5,19 @@ export interface Preset {
   model: FrameModel;
 }
 
+// Stable URL slug derived from a preset name (e.g. "Wall Truss (2 panels)" ->
+// "wall-truss-2-panels"). Used by the share-link feature.
+export function presetSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+export function findPresetBySlug(slug: string): Preset | undefined {
+  return PRESETS.find((p) => presetSlug(p.name) === slug);
+}
+
 const defaultMat = { E: 2.1e8, A: 0.01, I: 8.3e-5 };
 
 // 1. Simply supported beam
@@ -418,6 +431,34 @@ const lFrameHinge: FrameModel = {
   unit: "kN",
 };
 
+// L-frame, Gerber beam with hinge + inclined load (examples/l-frame-hinge-inclined.svg)
+// Spans K-B 3 m | B-A12 4 m | A12-C 6 m; column 2 m. Loads in T.
+// Expected reactions: A: H=1.93 →, V=21.81 ↓ ; B: V=37.88 ↑ ; C: V=9 ↑.
+const lFrameHingeInclined: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 0, support: "pinned" },
+    { id: "K", x: 0, y: 2, support: "free" }, // rigid corner (column top)
+    { id: "B", x: 3, y: 2, support: "roller-v" },
+    { id: "A12", x: 7, y: 2, support: "free" }, // internal hinge
+    { id: "C", x: 13, y: 2, support: "roller-v" },
+  ],
+  members: [
+    { id: "col", n1: "A", n2: "K" },
+    { id: "beamKB", n1: "K", n2: "B" },
+    { id: "beamB", n1: "B", n2: "A12", relJ: true }, // hinge at A12
+    { id: "beamC", n1: "A12", n2: "C", relI: true }, // hinge at A12
+  ],
+  loads: [
+    { id: "pK", type: "nodal", node: "K", fx: -4, fy: 0, m: 0 }, // 4 T ← at corner
+    { id: "mB", type: "nodal", node: "B", fx: 0, fy: 0, m: -5 }, // 5 T·m clockwise
+    { id: "pA12", type: "nodal", node: "A12", fx: 7.071, fy: -7.071, m: 0 }, // 10 T at 45° down-right
+    { id: "q", type: "mudl", member: "beamC", gx: 0, gy: -3 }, // 3 T/m ↓ on A12–C
+    { id: "pC", type: "nodal", node: "C", fx: -5, fy: 0, m: 0 }, // 5 T ← at C
+  ],
+  material: defaultMat,
+  unit: "T",
+};
+
 // L-frame, cantilever roof / overhang, all rigid joints (examples/l-frame-overhang.svg)
 const lFrameOverhang: FrameModel = {
   nodes: [
@@ -689,6 +730,69 @@ const threePanelTriangleTruss: FrameModel = {
   unit: "kN",
 };
 
+// Asymmetric portal, horizontal roof, stepped supports (B 4 m above A), left overhang.
+// (examples/asymmetric-portal-overhang.svg) Unequal columns (A 8 m, B 4 m) share one
+// horizontal roof. Supports: A roller-v, B pinned -> 3 reactions = determinate. Loads in T.
+// Expected reactions: A: V=24 up ; B: H=1 right, V=0.
+const asymmetricPortalOverhang: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 0, support: "roller-v" }, // base of the 8 m left column
+    { id: "C", x: 0, y: 8, support: "free" }, // top-left corner
+    { id: "E", x: -4, y: 8, support: "free" }, // overhang free tip
+    { id: "Mid", x: 4, y: 8, support: "free" }, // mid roof (moment applied here)
+    { id: "D", x: 8, y: 8, support: "free" }, // top-right corner
+    { id: "B", x: 8, y: 4, support: "pinned" }, // base of the 4 m right column (4 m above A)
+  ],
+  members: [
+    { id: "colA", n1: "A", n2: "C" }, // left column (8 m)
+    { id: "colB", n1: "B", n2: "D" }, // right column (4 m)
+    { id: "overhang", n1: "E", n2: "C" }, // overhang  x -4..0
+    { id: "roofCM", n1: "C", n2: "Mid" }, // roof  x 0..4
+    { id: "roofMD", n1: "Mid", n2: "D" }, // roof  x 4..8
+  ],
+  loads: [
+    { id: "q", type: "mudl", member: "overhang", gx: 0, gy: -6 }, // 6 T/m ↓ on overhang
+    { id: "pA", type: "nodal", node: "A", fx: -5, fy: 0, m: 0 }, // 5 T ← at A
+    { id: "mMid", type: "nodal", node: "Mid", fx: 0, fy: 0, m: -12 }, // 12 T·m clockwise at mid-roof
+    { id: "pD", type: "nodal", node: "D", fx: 4, fy: 0, m: 0 }, // 4 T → at top of right column
+  ],
+  material: defaultMat,
+  unit: "T",
+};
+
+// Wall-cantilever parallel-chord truss, 2 panels of 6x6 m (examples/wall-truss-two-panel.svg).
+// Both supports on the LEFT wall: B pinned (bottom), A vertical roller (top, horizontal reaction).
+// Diagonals spring from the top-middle node D: b4 descends left, b6 descends right. Loads in T.
+// Expected reactions: A: H=34 left ; B: H=32 right, V=22 up.
+const wallTrussTwoPanel: FrameModel = {
+  nodes: [
+    { id: "B", x: 0, y: 0, support: "pinned" }, // pinned to the wall (H + V)
+    { id: "C", x: 6, y: 0, support: "free" },
+    { id: "F", x: 12, y: 0, support: "free" }, // bottom free tip
+    { id: "A", x: 0, y: 6, support: "roller-h" }, // vertical roller on the wall -> horizontal reaction
+    { id: "D", x: 6, y: 6, support: "free" },
+    { id: "E", x: 12, y: 6, support: "free" }, // top free tip
+  ],
+  members: [
+    { id: "b1", n1: "B", n2: "C", relI: true, relJ: true }, // bottom chord
+    { id: "b2", n1: "C", n2: "F", relI: true, relJ: true },
+    { id: "b3", n1: "A", n2: "B", relI: true, relJ: true }, // posts + diagonals (middle)
+    { id: "b4", n1: "D", n2: "B", relI: true, relJ: true }, // diagonal (descends left)
+    { id: "b5", n1: "D", n2: "C", relI: true, relJ: true },
+    { id: "b6", n1: "D", n2: "F", relI: true, relJ: true }, // diagonal (descends right)
+    { id: "b7", n1: "E", n2: "F", relI: true, relJ: true },
+    { id: "b8", n1: "A", n2: "D", relI: true, relJ: true }, // top chord
+    { id: "b9", n1: "D", n2: "E", relI: true, relJ: true },
+  ],
+  loads: [
+    { id: "pD", type: "nodal", node: "D", fx: 0, fy: -12, m: 0 }, // 12 T ↓
+    { id: "pF", type: "nodal", node: "F", fx: 0, fy: -5, m: 0 }, //  5 T ↓
+    { id: "pE", type: "nodal", node: "E", fx: 2, fy: -5, m: 0 }, //  5 T ↓ + 2 T →
+  ],
+  material: defaultMat,
+  unit: "T",
+};
+
 export const PRESETS: Preset[] = [
   { name: "Simply Supported Beam", model: simplySupported },
   { name: "Cantilever", model: cantilever },
@@ -713,4 +817,7 @@ export const PRESETS: Preset[] = [
   { name: "Symmetric Two-Bay Portal", model: symmetricTwoBayPortal },
   { name: "Portal w/ Moment", model: portalMoment },
   { name: "Z-Frame (ceiling roller)", model: zFrame },
+  { name: "L-Frame w/ Hinge (inclined load)", model: lFrameHingeInclined },
+  { name: "Asymmetric Portal w/ Overhang", model: asymmetricPortalOverhang },
+  { name: "Wall Truss (2 panels)", model: wallTrussTwoPanel },
 ];

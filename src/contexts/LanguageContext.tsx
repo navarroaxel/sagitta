@@ -20,6 +20,9 @@ const EN = {
   "app.reset": "Reset",
   "app.export_svg": "Export SVG",
   "app.export_png": "Export PNG",
+  "app.share": "Share",
+  "app.share_copied": "Link copied!",
+  "app.share_title": "Copy a link to this model",
   "app.error_unstable":
     "⚠ Unstable or singular model — check supports and connectivity. Diagrams cannot be computed.",
 
@@ -59,6 +62,9 @@ const EN = {
   "preset.symmetric_two_bay": "Symmetric Two-Bay Portal",
   "preset.portal_moment": "Portal w/ Moment",
   "preset.z_frame": "Z-Frame (ceiling roller)",
+  "preset.l_frame_hinge_inclined": "L-Frame w/ Hinge (inclined load)",
+  "preset.asymmetric_portal_overhang": "Asymmetric Portal w/ Overhang",
+  "preset.wall_truss_two_panel": "Wall Truss (2 panels)",
 
   "forces.member": "Member",
   "forces.state": "State",
@@ -225,6 +231,8 @@ const EN = {
   "quiz.false": "False",
   "quiz.more.title": "More theory exams",
   "quiz.more.claude": "Estabilidad — Theory (1st partial), 49 Q",
+  "parcial.back": "← Simulator",
+  "parcial.title": "True/False Exam — Stability (partial)",
 
   "claudeQuiz.link": "Estabilidad theory",
   "claudeQuiz.title": "Estabilidad — Theory exam (T/F & multiple choice)",
@@ -360,6 +368,9 @@ const ES: Record<TranslationKey, string> = {
   "app.reset": "Reiniciar",
   "app.export_svg": "Exportar SVG",
   "app.export_png": "Exportar PNG",
+  "app.share": "Compartir",
+  "app.share_copied": "¡Enlace copiado!",
+  "app.share_title": "Copiar un enlace a este modelo",
   "app.error_unstable":
     "⚠ Modelo inestable o singular — verificá los vínculos y la conectividad. No es posible calcular los diagramas.",
 
@@ -399,6 +410,9 @@ const ES: Record<TranslationKey, string> = {
   "preset.symmetric_two_bay": "Pórtico simétrico de dos vanos",
   "preset.portal_moment": "Pórtico con momento",
   "preset.z_frame": "Pórtico en Z (rodillo en el techo)",
+  "preset.l_frame_hinge_inclined": "Pórtico en L con rótula (carga inclinada)",
+  "preset.asymmetric_portal_overhang": "Pórtico asimétrico con voladizo",
+  "preset.wall_truss_two_panel": "Reticulado en muro (2 paños)",
 
   "forces.member": "Barra",
   "forces.state": "Estado",
@@ -565,6 +579,8 @@ const ES: Record<TranslationKey, string> = {
   "quiz.false": "Falso",
   "quiz.more.title": "Más exámenes teóricos",
   "quiz.more.claude": "Estabilidad — Teoría (1.º parcial), 49 preguntas",
+  "parcial.back": "← Simulador",
+  "parcial.title": "Parcial V/F — Estabilidad",
 
   "claudeQuiz.link": "Teoría de Estabilidad",
   "claudeQuiz.title": "Estabilidad — Examen teórico (V/F y opción múltiple)",
