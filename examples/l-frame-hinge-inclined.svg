@@ -1,0 +1,182 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="18 98 730 340" font-family="system-ui, sans-serif">
+  <!--
+    Structure: L-frame (column + continuous Gerber-type beam with internal hinge),
+    a variant of l-frame-hinge.svg with different geometry and loads. Units in T.
+    World in metres, y up. Transform: sx = 90 + x*42 ; sy = 280 - y*42
+    Nodes:
+      A     (0,0)   pinned support                 -> ( 90,280)
+      K     (0,2)   rigid corner (top of column)   -> ( 90,196)
+      B     (3,2)   roller support                 -> (216,196)
+      A1-2  (7,2)   internal hinge                 -> (384,196)
+      C     (13,2)  roller support                 -> (636,196)
+    Members (solid web, rigid joints except the hinge):
+      A-K column (2 m) ; K-B-A1-2-C beam (spans 3 m | 4 m | 6 m = 13 m)
+    The hinge A1-2 separates the left plate from the right plate (1 condition).
+    Determinacy: 4 reactions (1 pinned + 2 rollers) + 1 condition = 4 eqs.
+    Loads:
+      P_K = 4 T horizontal to the left, at corner K (2 m above node A)
+      M_B = 5 Tm clockwise at B
+      P_incl = 10 T at A1-2, 45 deg depression below the beam, pointing DOWN-RIGHT
+               (components: 7.071 T right, 7.071 T down)
+      q   = 3 T/m vertical (downward) over A1-2 -> C (6 m, total 18 T)
+      P_C = 5 T horizontal to the left at C
+    Support reactions (satisfy equilibrium: SumFx = SumFy = SumM = 0):
+      A: H_A = 1.93 T (right) ; V_A = 21.81 T (down)
+      B: V_B = 37.88 T (up)
+      C: V_C = 9.00 T (up)
+    Derivation: hinge (right plate, SumM about A1-2) -> 6*V_C - 18*3 = 0 -> V_C = 9.
+    SumM_A -> 3*V_B + 13*V_C = 230.64 -> V_B = 37.88. SumFy -> V_A = -21.81 (down).
+    SumFx -> H_A = 4 + 5 - 10*cos45 = 1.93 (right).
+  -->
+
+  <rect x="18" y="98" width="730" height="340" fill="#ffffff"/>
+
+  <!-- ===== Dimensions ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <!-- beam spans (top): 3.00 | 4.00 | 6.00 -->
+    <line x1="90" y1="120" x2="636" y2="120"/>
+    <line x1="90"  y1="115" x2="90"  y2="125"/>
+    <line x1="216" y1="115" x2="216" y2="125"/>
+    <line x1="384" y1="115" x2="384" y2="125"/>
+    <line x1="636" y1="115" x2="636" y2="125"/>
+    <text x="153" y="112" text-anchor="middle">3.00</text>
+    <text x="300" y="112" text-anchor="middle">4.00</text>
+    <text x="510" y="112" text-anchor="middle">6.00</text>
+
+    <!-- column (left): 2.00 m -->
+    <line x1="44" y1="196" x2="44" y2="280"/>
+    <line x1="39" y1="196" x2="49" y2="196"/>
+    <line x1="39" y1="280" x2="49" y2="280"/>
+    <text x="34" y="238" text-anchor="middle" transform="rotate(-90 34 238)">2.00 m</text>
+  </g>
+
+  <!-- ===== Solid-web frame (rigid joints) ===== -->
+  <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
+    <line x1="90" y1="280" x2="90"  y2="196"/> <!-- column A-K -->
+    <line x1="90" y1="196" x2="636" y2="196"/> <!-- beam K-B-A1-2-C -->
+  </g>
+
+  <!-- ===== Pinned support at A ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <polygon points="90,280 81,291 99,291"/>
+    <line x1="75" y1="291" x2="105" y2="291"/>
+    <line x1="79"  y1="291" x2="73" y2="298"/>
+    <line x1="87"  y1="291" x2="81" y2="298"/>
+    <line x1="95"  y1="291" x2="89" y2="298"/>
+    <line x1="103" y1="291" x2="97" y2="298"/>
+  </g>
+
+  <!-- ===== Roller supports at B and C ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <!-- B -->
+    <polygon points="216,196 207,209 225,209"/>
+    <circle cx="211" cy="213" r="3"/>
+    <circle cx="221" cy="213" r="3"/>
+    <line x1="201" y1="217" x2="231" y2="217"/>
+    <line x1="205" y1="217" x2="199" y2="224"/>
+    <line x1="213" y1="217" x2="207" y2="224"/>
+    <line x1="221" y1="217" x2="215" y2="224"/>
+    <line x1="229" y1="217" x2="223" y2="224"/>
+    <!-- C -->
+    <polygon points="636,196 627,209 645,209"/>
+    <circle cx="631" cy="213" r="3"/>
+    <circle cx="641" cy="213" r="3"/>
+    <line x1="621" y1="217" x2="651" y2="217"/>
+    <line x1="625" y1="217" x2="619" y2="224"/>
+    <line x1="633" y1="217" x2="627" y2="224"/>
+    <line x1="641" y1="217" x2="635" y2="224"/>
+    <line x1="649" y1="217" x2="643" y2="224"/>
+  </g>
+
+  <!-- ===== Internal hinge at A1-2 ===== -->
+  <circle cx="384" cy="196" r="6" fill="#ffffff" stroke="#1a1a1a" stroke-width="2"/>
+
+  <!-- ===== Nodes (rigid) ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="90"  cy="280" r="4"/> <!-- A -->
+    <circle cx="90"  cy="196" r="4"/> <!-- K corner -->
+    <circle cx="216" cy="196" r="4"/> <!-- B -->
+    <circle cx="636" cy="196" r="4"/> <!-- C -->
+  </g>
+
+  <!-- ===== Node labels ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <text x="76"  y="286" text-anchor="end">A</text>
+    <text x="216" y="170" text-anchor="middle">B</text>
+    <text x="642" y="184" text-anchor="start">C</text>
+    <text x="374" y="214" text-anchor="end">A<tspan font-size="10" dy="4">1-2</tspan></text>
+  </g>
+
+  <!-- ===== Loads ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+    <!-- P_K = 4 T horizontal to the left, at corner K -->
+    <line x1="90" y1="196" x2="70" y2="196" stroke-width="2.5"/>
+    <polygon points="58,196 70,190 70,202" stroke="none"/>
+    <text x="74" y="187" text-anchor="middle" stroke="none">4 T</text>
+
+    <!-- M_B = 5 Tm clockwise at B -->
+    <circle cx="216" cy="196" r="2" stroke="none"/>
+    <path d="M 222 185.6 A 12 12 0 1 1 210 185.6" fill="none" stroke-width="2.5"/>
+    <polygon points="214.16,183.2 208.4,182.8 211.6,188.4" stroke="none"/>
+    <text x="192" y="184" text-anchor="end" stroke="none">M<tspan font-size="10" dy="4">B</tspan> = 5 Tm</text>
+
+    <!-- P_incl = 10 T at A1-2, 45 deg depression, down-right -->
+    <line x1="391" y1="203" x2="424" y2="236" stroke-width="3"/>
+    <polygon points="432,244 427.7,231.3 419.3,239.7" stroke="none"/>
+    <text x="440" y="246" text-anchor="start" stroke="none">10 T</text>
+
+    <!-- q = 3 T/m vertical (downward) over A1-2 -> C -->
+    <line x1="384" y1="158" x2="636" y2="158" stroke-width="2"/>
+    <g stroke-width="1.5">
+      <line x1="396" y1="158" x2="396" y2="190"/>
+      <line x1="432" y1="158" x2="432" y2="190"/>
+      <line x1="468" y1="158" x2="468" y2="190"/>
+      <line x1="504" y1="158" x2="504" y2="190"/>
+      <line x1="540" y1="158" x2="540" y2="190"/>
+      <line x1="576" y1="158" x2="576" y2="190"/>
+      <line x1="612" y1="158" x2="612" y2="190"/>
+    </g>
+    <g stroke="none">
+      <polygon points="396,195 393,189 399,189"/>
+      <polygon points="432,195 429,189 435,189"/>
+      <polygon points="468,195 465,189 471,189"/>
+      <polygon points="504,195 501,189 507,189"/>
+      <polygon points="540,195 537,189 543,189"/>
+      <polygon points="576,195 573,189 579,189"/>
+      <polygon points="612,195 609,189 615,189"/>
+    </g>
+    <text x="510" y="150" text-anchor="middle" stroke="none">q = 3 T/m</text>
+
+    <!-- P_C = 5 T horizontal to the left at C -->
+    <line x1="676" y1="196" x2="649" y2="196" stroke-width="2.5"/>
+    <polygon points="636,196 648,190 648,202" stroke="none"/>
+    <text x="680" y="200" text-anchor="start" stroke="none">5 T</text>
+  </g>
+
+  <!-- ===== Support reactions (blue) ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+    <!-- A: H_A = 1.93 T to the right (drawn emanating right for clarity) -->
+    <line x1="101" y1="280" x2="117" y2="280" stroke-width="2.5"/>
+    <polygon points="128,280 116,274 116,286" stroke="none"/>
+    <text x="132" y="284" text-anchor="start" stroke="none">H<tspan font-size="10" dy="4">A</tspan> = 1.93 T</text>
+
+    <!-- A: V_A = 21.81 T downward (below the support, tip pointing down) -->
+    <line x1="90" y1="302" x2="90" y2="334" stroke-width="2.5"/>
+    <polygon points="90,346 84,334 96,334" stroke="none"/>
+    <text x="100" y="330" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan> = 21.81 T</text>
+
+    <!-- B: V_B = 37.88 T upward (shifted down, below the roller) -->
+    <line x1="216" y1="278" x2="216" y2="233" stroke-width="2.5"/>
+    <polygon points="216,224 210,236 222,236" stroke="none"/>
+    <text x="228" y="272" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">B</tspan> = 37.88 T</text>
+
+    <!-- C: V_C = 9 T upward (shifted down, below the roller) -->
+    <line x1="636" y1="278" x2="636" y2="233" stroke-width="2.5"/>
+    <polygon points="636,224 630,236 642,236" stroke="none"/>
+    <text x="648" y="272" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">C</tspan> = 9 T</text>
+  </g>
+
+  <text x="363" y="420" text-anchor="middle" fill="#5f6368" font-size="13">
+    L-frame, hinge A1-2 — A pinned, B/C rollers; loads in red, reactions in blue. Units in T.
+  </text>
+</svg>

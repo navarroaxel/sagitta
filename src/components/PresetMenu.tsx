@@ -37,6 +37,9 @@ const PRESET_META: { key: TranslationKey; cat: Category }[] = [
   { key: "preset.symmetric_two_bay", cat: "frames" },
   { key: "preset.portal_moment", cat: "frames" },
   { key: "preset.z_frame", cat: "frames" },
+  { key: "preset.l_frame_hinge_inclined", cat: "frames" },
+  { key: "preset.asymmetric_portal_overhang", cat: "frames" },
+  { key: "preset.wall_truss_two_panel", cat: "trusses" },
 ];
 
 const CATEGORY_ORDER: { cat: Category; titleKey: TranslationKey }[] = [

@@ -1,0 +1,165 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 770 470" font-family="system-ui, sans-serif">
+  <!--
+    Structure: parallel-chord truss cantilevering off a LEFT wall (2 panels of 6x6 m).
+    Derived from simple-truss.svg keeping only panels 2 and 3, rescaled to 6 m panels.
+    Width 12 m (2 panels of 6 m), height 6 m. Loads in T.
+    World in metres, y up. Transform: sx = 90 + x*45 ; sy = 350 - y*45
+    Nodes:
+      B (0,0)   -> ( 90,350)  pinned to the wall (H + V)
+      C (6,0)   -> (360,350)
+      F (12,0)  -> (630,350)  free tip (bottom)
+      A (0,6)   -> ( 90, 80)  vertical roller on the wall -> HORIZONTAL reaction
+      D (6,6)   -> (360, 80)
+      E (12,6)  -> (630, 80)  free tip (top)
+    Bars (two-force members, pin-jointed):
+      b1 B-C, b2 C-F           -> bottom chord (floor)
+      b3 A-B, b5 D-C, b7 E-F   -> posts (verticals)
+      b4 D-B (descends left), b6 D-F (descends right) -> diagonals
+      b8 A-D, b9 D-E           -> top chord (roof)
+    Determinacy: m=9, r=3 (pinned=2 + roller=1), j=6 -> 9+3 = 12 = 2*6. Determinate.
+    Supports (both on the LEFT wall):
+      B (0,0) -> pinned to the wall: reactions H and V
+      A (0,6) -> vertical roller (slides on the wall): HORIZONTAL reaction only
+    Loads:
+      D (6,6)  : 12 T downward
+      F (12,0) :  5 T downward
+      E (12,6) :  5 T downward + 2 T to the right
+    Support reactions (satisfy SumFx = SumFy = SumM = 0):
+      A: H_A = 34 T to the left
+      B: H_B = 32 T to the right ; V_B = 22 T upward
+    Derivation: SumFy -> V_B = 22. SumM_B -> 6*H_A = 12*6 + 5*12 + (5*12 + 2*6) = 204
+      -> H_A = 34 (left). SumFx -> H_B = 34 - 2 = 32 (right).
+  -->
+
+  <rect x="0" y="0" width="770" height="470" fill="#ffffff"/>
+
+  <!-- ===== Dimensions ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <!-- width: 6 | 6 -->
+    <line x1="90"  y1="40" x2="630" y2="40"/>
+    <line x1="90"  y1="35" x2="90"  y2="45"/>
+    <line x1="360" y1="35" x2="360" y2="45"/>
+    <line x1="630" y1="35" x2="630" y2="45"/>
+    <text x="225" y="33" text-anchor="middle">6.00</text>
+    <text x="495" y="33" text-anchor="middle">6.00</text>
+
+    <!-- height: 6.00 m -->
+    <line x1="705" y1="80"  x2="705" y2="350"/>
+    <line x1="700" y1="80"  x2="710" y2="80"/>
+    <line x1="700" y1="350" x2="710" y2="350"/>
+    <text x="718" y="215" text-anchor="middle" transform="rotate(-90 718 215)">6.00 m</text>
+  </g>
+
+  <!-- ===== Truss: two-force members (pinned both ends) ===== -->
+  <g stroke="#1a1a1a" stroke-width="3" stroke-linecap="round">
+    <!-- bottom chord (floor): b1, b2 -->
+    <line x1="90"  y1="350" x2="360" y2="350"/>
+    <line x1="360" y1="350" x2="630" y2="350"/>
+    <!-- top chord (roof): b3, b4 -->
+    <line x1="90"  y1="80"  x2="360" y2="80"/>
+    <line x1="360" y1="80"  x2="630" y2="80"/>
+    <!-- posts: b5, b6, b7 -->
+    <line x1="90"  y1="80"  x2="90"  y2="350"/>
+    <line x1="360" y1="80"  x2="360" y2="350"/>
+    <line x1="630" y1="80"  x2="630" y2="350"/>
+    <!-- diagonals: b8 descends to the LEFT (D->B), b9 descends to the RIGHT (D->F) -->
+    <line x1="360" y1="80"  x2="90"  y2="350"/>
+    <line x1="360" y1="80"  x2="630" y2="350"/>
+  </g>
+
+  <!-- ===== Nodes ===== -->
+  <g fill="#000000">
+    <circle cx="90"  cy="350" r="4"/>
+    <circle cx="360" cy="350" r="4"/>
+    <circle cx="630" cy="350" r="4"/>
+    <circle cx="90"  cy="80"  r="4"/>
+    <circle cx="360" cy="80"  r="4"/>
+    <circle cx="630" cy="80"  r="4"/>
+  </g>
+
+  <!-- ===== Node labels ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <text x="101" y="367" text-anchor="start">B</text>
+    <text x="360" y="369" text-anchor="middle">C</text>
+    <text x="642" y="366" text-anchor="start">F</text>
+    <text x="100" y="74"  text-anchor="start">A</text>
+    <text x="346" y="74"  text-anchor="end">D</text>
+    <text x="614" y="74"  text-anchor="end">E</text>
+  </g>
+
+  <!-- ===== Bar names (b with subscript) ===== -->
+  <g fill="#6a1b9a" font-size="13" font-style="italic" font-weight="600">
+    <!-- floor -->
+    <text x="225" y="368" text-anchor="middle">b<tspan font-size="9" dy="3">1</tspan></text>
+    <text x="495" y="368" text-anchor="middle">b<tspan font-size="9" dy="3">2</tspan></text>
+    <!-- posts and diagonals (middle, left -> right: 3..7) -->
+    <text x="80"  y="219" text-anchor="end">b<tspan font-size="9" dy="3">3</tspan></text>
+    <text x="250" y="205" text-anchor="start">b<tspan font-size="9" dy="3">4</tspan></text>
+    <text x="370" y="219" text-anchor="start">b<tspan font-size="9" dy="3">5</tspan></text>
+    <text x="470" y="205" text-anchor="end">b<tspan font-size="9" dy="3">6</tspan></text>
+    <text x="638" y="219" text-anchor="start">b<tspan font-size="9" dy="3">7</tspan></text>
+    <!-- roof (top chord) -->
+    <text x="225" y="72" text-anchor="middle">b<tspan font-size="9" dy="3">8</tspan></text>
+    <text x="495" y="72" text-anchor="middle">b<tspan font-size="9" dy="3">9</tspan></text>
+  </g>
+
+  <!-- ===== Supports (both on the LEFT wall) ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <!-- B: pinned support against the wall -> triangle bearing on the wall -->
+    <polygon points="90,350 77,341 77,359"/>
+    <line x1="77" y1="335" x2="77" y2="365"/>
+    <line x1="77" y1="341" x2="70" y2="335"/>
+    <line x1="77" y1="349" x2="70" y2="343"/>
+    <line x1="77" y1="357" x2="70" y2="351"/>
+    <line x1="77" y1="365" x2="70" y2="359"/>
+    <!-- A: vertical roller support (rollers on the wall) -> horizontal reaction -->
+    <polygon points="90,80 77,71 77,89"/>
+    <circle cx="73" cy="75" r="3"/>
+    <circle cx="73" cy="85" r="3"/>
+    <line x1="69" y1="65" x2="69" y2="95"/>
+    <line x1="69" y1="69" x2="62" y2="63"/>
+    <line x1="69" y1="77" x2="62" y2="71"/>
+    <line x1="69" y1="85" x2="62" y2="79"/>
+    <line x1="69" y1="93" x2="62" y2="87"/>
+  </g>
+
+  <!-- ===== Loads ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+    <!-- D: 12 T downward -->
+    <line x1="360" y1="50" x2="360" y2="70" stroke-width="2.5"/>
+    <polygon points="360,78 355,67 365,67" stroke="none"/>
+    <text x="368" y="63" text-anchor="start" stroke="none">12 T</text>
+    <!-- E: 5 T downward -->
+    <line x1="630" y1="50" x2="630" y2="70" stroke-width="2.5"/>
+    <polygon points="630,78 625,67 635,67" stroke="none"/>
+    <text x="640" y="58" text-anchor="start" stroke="none">5 T</text>
+    <!-- E: 2 T to the right (drawn outside the node; a shaft trailing left would lie on the roof member) -->
+    <line x1="630" y1="80" x2="675" y2="80" stroke-width="2.5"/>
+    <polygon points="680,80 669,75 669,85" stroke="none"/>
+    <text x="654" y="96" text-anchor="middle" stroke="none">2 T</text>
+    <!-- F: 5 T downward -->
+    <line x1="630" y1="350" x2="630" y2="392" stroke-width="2.5"/>
+    <polygon points="630,398 625,387 635,387" stroke="none"/>
+    <text x="640" y="382" text-anchor="start" stroke="none">5 T</text>
+  </g>
+
+  <!-- ===== Support reactions (applied on the nodes: tip at the node) ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+    <!-- A: H_A = 34 T to the left (in the far-left margin, just left of the wall) -->
+    <line x1="58" y1="80" x2="26" y2="80" stroke-width="2.5"/>
+    <polygon points="16,80 28,74 28,86" stroke="none"/>
+    <text x="2" y="100" text-anchor="start" stroke="none">H<tspan font-size="10" dy="4">A</tspan> = 34 T</text>
+    <!-- B: V_B = 22 T upward (tip at B, shaft trailing downward) -->
+    <line x1="90" y1="400" x2="90" y2="361" stroke-width="2.5"/>
+    <polygon points="90,350 84,362 96,362" stroke="none"/>
+    <text x="99" y="384" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">B</tspan> = 22 T</text>
+    <!-- B: H_B = 32 T to the right (in the far-left margin, just left of the wall) -->
+    <line x1="16" y1="350" x2="48" y2="350" stroke-width="2.5"/>
+    <polygon points="58,350 46,344 46,356" stroke="none"/>
+    <text x="2" y="372" text-anchor="start" stroke="none">H<tspan font-size="10" dy="4">B</tspan> = 32 T</text>
+  </g>
+
+  <text x="385" y="448" text-anchor="middle" fill="#5f6368" font-size="12">
+    truss 12×6 m (2 panels) cantilevered off a left wall · B: pinned · A: vertical roller · loads (red), reactions (blue). Units in T.
+  </text>
+</svg>

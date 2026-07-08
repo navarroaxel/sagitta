@@ -1,24 +1,23 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getPrefs, usePrefs } from "@/contexts/PrefsContext";
 import { gradeQuiz, QuizAnswer } from "@/lib/quiz";
-import { quizQuestions } from "@/lib/quizData";
+import { parcialQuestions } from "@/lib/parcialData";
 import { QuestionCard } from "./QuestionCard";
 import { ScoreBar } from "./ScoreBar";
 
-const ANSWERS_KEY = "sagitta-quiz-answers";
-const GRADED_KEY = "sagitta-quiz-graded";
+const ANSWERS_KEY = "sagitta-parcial-answers";
+const GRADED_KEY = "sagitta-parcial-graded";
 
-const EMPTY_ANSWERS: QuizAnswer[] = quizQuestions.map(() => null);
+const EMPTY_ANSWERS: QuizAnswer[] = parcialQuestions.map(() => null);
 
 // useLayoutEffect warns during SSR; fall back to useEffect on the server.
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
-export function QuizView() {
+export function ParcialView() {
   const { t } = useLanguage();
   const prefs = usePrefs();
   const [answers, setAnswers] = useState<QuizAnswer[]>(EMPTY_ANSWERS);
@@ -34,7 +33,7 @@ export function QuizView() {
         const savedAnswers = localStorage.getItem(ANSWERS_KEY);
         if (savedAnswers) {
           const a = JSON.parse(savedAnswers) as QuizAnswer[];
-          if (Array.isArray(a) && a.length === quizQuestions.length) {
+          if (Array.isArray(a) && a.length === parcialQuestions.length) {
             setAnswers(a);
           }
         }
@@ -64,7 +63,7 @@ export function QuizView() {
   }, [answers, graded, prefs.rememberWork, loaded]);
 
   const result = useMemo(
-    () => gradeQuiz(answers, quizQuestions),
+    () => gradeQuiz(answers, parcialQuestions),
     [answers],
   );
 
@@ -103,7 +102,7 @@ export function QuizView() {
         {graded && <ScoreBar correct={result.correct} total={result.total} />}
       </div>
 
-      {quizQuestions.map((question, i) => (
+      {parcialQuestions.map((question, i) => (
         <QuestionCard
           key={question.id}
           question={question}
@@ -113,24 +112,6 @@ export function QuizView() {
           onAnswer={(value) => handleAnswer(i, value)}
         />
       ))}
-
-      <div className="rounded-lg border border-stone-200 bg-white p-4 dark:border-stone-700 dark:bg-stone-900">
-        <p className="text-xs font-semibold tracking-wide text-stone-400 uppercase dark:text-stone-500">
-          {t("quiz.more.title")}
-        </p>
-        <Link
-          href="/claude-quiz"
-          className="mt-1 block text-sm text-stone-700 underline decoration-stone-300 underline-offset-2 transition-colors hover:text-stone-900 dark:text-stone-200 dark:decoration-stone-600 dark:hover:text-stone-50"
-        >
-          {t("quiz.more.claude")}
-        </Link>
-        <Link
-          href="/parcial"
-          className="mt-1 block text-sm text-stone-700 underline decoration-stone-300 underline-offset-2 transition-colors hover:text-stone-900 dark:text-stone-200 dark:decoration-stone-600 dark:hover:text-stone-50"
-        >
-          {t("quiz.more.parcial")}
-        </Link>
-      </div>
     </div>
   );
 }
