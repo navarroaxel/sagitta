@@ -177,6 +177,6 @@
   </g>
 
   <text x="363" y="420" text-anchor="middle" fill="#5f6368" font-size="13">
-    L-frame, hinge A1-2 — A pinned, B/C rollers; loads in red, reactions in blue. Units in T.
+    L-frame, hinge A<tspan font-size="10" dy="4">1-2</tspan><tspan dy="-4"> — A pinned, B/C rollers; loads in red, reactions in blue. Units in T.</tspan>
   </text>
 </svg>

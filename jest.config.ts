@@ -6,7 +6,7 @@ const common = {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   transform: {
-    '^.+\\.tsx?$': ['ts-jest', { tsconfig: { module: 'commonjs' } }],
+    '^.+\\.tsx?$': ['ts-jest', { tsconfig: { module: 'commonjs', rootDir: '.' } }],
   } as Config['transform'],
 };
 
