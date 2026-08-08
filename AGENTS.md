@@ -13,13 +13,13 @@ A Next.js 16 + React 19 client-side app that renders structural internal force d
 ```bash
 npm install     # required: installs jsdom + testing-library for the component tests
 npm run dev     # dev server on localhost:3000
-npm test        # full Jest suite (213 checks, 2 projects — must stay green)
+npm test        # full Vitest suite (217 checks, 2 projects — must stay green)
 npm run build   # production build (must stay clean)
 npm run lint    # ESLint
 npx tsc --noEmit  # TypeScript check
 ```
 
-`npm test` runs two Jest projects (see `jest.config.ts`): **lib** (node env, pure math/logic in `src/lib/__tests__/*.test.ts`) and **components** (jsdom env, React render tests in `src/components/__tests__/*.test.tsx`). The component project needs `jest-environment-jsdom` + `@testing-library/*`, which are in `devDependencies` — run `npm install` first or `npm test` fails to start.
+`npm test` runs two Vitest projects (see `vitest.config.mts`): **lib** (node env, pure math/logic in `src/lib/__tests__/*.test.ts`) and **components** (jsdom env, React render tests in `src/components/__tests__/*.test.tsx`). The component project needs `jsdom` + `@testing-library/*`, which are in `devDependencies` — run `npm install` first or `npm test` fails to start. The `test` script sets `NODE_OPTIONS=--no-experimental-webstorage` because Node's own built-in `localStorage` global otherwise shadows jsdom's implementation.
 
 ## Critical rules
 
@@ -79,7 +79,7 @@ How diagrams are *drawn and labelled* is selected by the **sign-convention setti
 | `src/app/learn/page.tsx`                             | `/learn` — Tangent Method (Mohr) step-by-step guide                                                                                              |
 | `src/app/esfuerzos-caracteristicos/page.tsx`         | `/esfuerzos-caracteristicos` — internal forces guide (N/Q/M, local triad, diagrams), bilingual                                                  |
 | `src/contexts/PrefsContext.tsx`                      | Persistent prefs incl. `signConvention` (argentina/international), remember-work, grid snap                                                      |
-| `jest.config.ts`                                     | Jest + ts-jest, 2 projects (lib=node, components=jsdom), `@/*` alias                                                                             |
+| `vitest.config.mts`                                  | Vitest, 2 projects (lib=node, components=jsdom), `@/*` alias                                                                                     |
 
 ## Testing
 

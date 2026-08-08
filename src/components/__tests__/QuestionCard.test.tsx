@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
+import { vi } from "vitest";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { QuestionCard } from "../quiz/QuestionCard";
 import { QuizAnswer, QuizQuestion } from "@/lib/quiz";
@@ -10,7 +11,7 @@ const question: QuizQuestion = {
   explanation: { en: "Because reasons.", es: "Porque sí." },
 };
 
-function setup(answer: QuizAnswer, graded: boolean, onAnswer = jest.fn()) {
+function setup(answer: QuizAnswer, graded: boolean, onAnswer = vi.fn()) {
   render(
     <LanguageProvider>
       <QuestionCard
