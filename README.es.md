@@ -32,7 +32,7 @@ Simulador interactivo de pórticos planos 2D que calcula y representa los tres d
 | Estilos      | Tailwind CSS v4                            |
 | Estado       | React `useState` / `useMemo`               |
 | i18n / tema  | React context (ES/EN, claro/oscuro)        |
-| Tests        | Jest + ts-jest (entorno node + jsdom)      |
+| Tests        | Vitest (entorno node + jsdom)              |
 
 Toda la interfaz interactiva es un componente cliente (`'use client'`). Sin rutas de API ni estado en servidor — todas las páginas se prerenderizan estáticamente.
 
@@ -41,7 +41,7 @@ Toda la interfaz interactiva es un componente cliente (`'use client'`). Sin ruta
 ```bash
 npm install        # instala también jsdom + testing-library usados en los tests de componentes
 npm run dev        # http://localhost:3000
-npm test           # suite Jest completa (2 proyectos: lib + components)
+npm test           # suite Vitest completa (2 proyectos: lib + components)
 npm run build      # build de producción
 npm run lint       # ESLint
 ```

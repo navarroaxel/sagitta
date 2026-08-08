@@ -32,7 +32,7 @@ Interactive 2D plane frame simulator that computes and renders the three charact
 | Styling    | Tailwind CSS v4                     |
 | State      | React `useState` / `useMemo`        |
 | i18n/theme | React context (EN/ES, light/dark)   |
-| Tests      | Jest + ts-jest (node + jsdom)       |
+| Tests      | Vitest (node + jsdom)              |
 
 The entire interactive surface is a client component (`'use client'`). No API routes, no server state — all pages are statically prerendered.
 
@@ -41,7 +41,7 @@ The entire interactive surface is a client component (`'use client'`). No API ro
 ```bash
 npm install        # also installs jsdom + testing-library used by the component tests
 npm run dev        # http://localhost:3000
-npm test           # full Jest suite (2 projects: lib + components)
+npm test           # full Vitest suite (2 projects: lib + components)
 npm run build      # production build
 npm run lint       # ESLint
 ```
