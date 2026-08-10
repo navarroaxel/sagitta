@@ -134,3 +134,7 @@ Exposed as `E`, `A`, `I` on the model with engineering defaults (`E = 2.1×10⁸
 6. Frame + Truss — solid-web frame joined to a pin-jointed truss, pinned supports
 7. Truss — 12 m × 4 m parallel-chord truss (3 panels), roller + pinned supports
 8. Frame w/ Hinge — two-pinned portal with an internal hinge in the roof beam
+
+## License
+
+[MIT](LICENSE) © Axel Navarro

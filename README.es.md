@@ -134,4 +134,7 @@ Expuestas como `E`, `A`, `I` en el modelo con valores por defecto de ingeniería
 6. **Pórtico + Reticulado** — pórtico de alma llena unido a un reticulado biarticulado, apoyos articulados
 7. **Reticulado** — reticulado de cordones paralelos de 12 m × 4 m (3 paneles), apoyo móvil + fijo
 8. **Pórtico articulado** — pórtico biapoyado con articulación interna en el dintel
-```
+
+## Licencia
+
+[MIT](LICENSE) © Axel Navarro
