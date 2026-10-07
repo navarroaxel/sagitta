@@ -61,6 +61,8 @@ export function solveModel3D(model: FrameModel3D): SolveOutput3D | null {
               gx: l.gx,
               gy: l.gy,
               gz: l.gz,
+              from: l.from,
+              to: l.to,
             },
     ),
   };

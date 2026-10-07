@@ -315,6 +315,25 @@ export default function Model3DEditor({
                       {t("editor.loads.remove")}
                     </button>
                   </div>
+                  {l.type === "mudl" &&
+                    (() => {
+                      const mem = model.members.find((x) => x.id === l.member);
+                      const n1 = model.nodes.find((n) => n.id === mem?.n1);
+                      const n2 = model.nodes.find((n) => n.id === mem?.n2);
+                      const len = n1 && n2 ? Math.hypot(n2.x - n1.x, n2.y - n1.y, n2.z - n1.z) : 0;
+                      return (
+                        <div className="mb-1 grid grid-cols-2 gap-1">
+                          <label className="flex items-center gap-1 text-xs">
+                            {t("f3d.loads.from")}
+                            <Num label={`${l.id} from`} value={l.from ?? 0} onChange={(v) => setLoad(i, { ...l, from: v })} />
+                          </label>
+                          <label className="flex items-center gap-1 text-xs">
+                            {t("f3d.loads.to")}
+                            <Num label={`${l.id} to`} value={l.to ?? Number(len.toFixed(4))} onChange={(v) => setLoad(i, { ...l, to: v })} />
+                          </label>
+                        </div>
+                      );
+                    })()}
                   {l.type === "mpoint" && (
                     <label className="mb-1 flex items-center gap-2 text-xs">
                       {t("editor.loads.dist")}

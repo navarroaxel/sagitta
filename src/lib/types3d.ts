@@ -46,6 +46,8 @@ export type Load3D =
       gx: number;
       gy: number;
       gz: number;
+      from?: number; // loaded span, distances from n1 (default: the whole member)
+      to?: number;
     };
 
 export interface Material3D {

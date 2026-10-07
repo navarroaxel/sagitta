@@ -101,3 +101,19 @@ describe("oblique projection", () => {
     });
   });
 });
+
+describe("T-frame preset uses a partial load on a single hat member", () => {
+  const model = PRESETS_3D.find((p) => p.key === "t_frame")!.model;
+  test("3 members, no helper node", () => {
+    expect(model.members).toHaveLength(3);
+    expect(model.nodes.map((n) => n.id)).toEqual(["A", "B", "C", "D"]);
+  });
+  test("q_z spans 1..5 m of B-D", () => {
+    expect(model.loads.find((l) => l.id === "L2")).toMatchObject({ member: "M3", from: 1, to: 5 });
+  });
+  test("the hat moment at B is the same −24 + 5 as with the split model", () => {
+    const solved = solveModel3D(model)!;
+    const atB = solved.stations[2][0]; // start of M3
+    near(atB.My, -24);
+  });
+});

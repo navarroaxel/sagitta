@@ -4,7 +4,7 @@ import { SolveOutput3D } from "@/lib/solve3d";
 import { Projection3D } from "@/lib/projection3d";
 import { useColors } from "@/contexts/ColorContext";
 import { ForceArrow3D, MomentArrow3D, P2 } from "./arrows3d";
-import type { Vec3 } from "@/lib/solver3d";
+import { udlSpan, type Vec3 } from "@/lib/solver3d";
 
 const TOL = 1e-6;
 const f = (v: number) => v.toFixed(2);
@@ -85,13 +85,15 @@ export function Loads3DLayer({
       );
       return;
     }
-    const n = Math.max(3, Math.round(L / 1.5) + 1);
+    const span = udlSpan(load, L);
+    if (!span) return;
+    const n = Math.max(3, Math.round((span.b - span.a) / 1.5) + 1);
     for (let k = 0; k < n; k++)
       els.push(
         <ForceArrow3D
           key={`${load.id}-${k}`}
           testId={k === 0 ? `load-${load.id}` : undefined}
-          at={at((k / (n - 1)) * L)}
+          at={at(span.a + (k / (n - 1)) * (span.b - span.a))}
           dir={dir}
           len={30}
           color={colors.loads}

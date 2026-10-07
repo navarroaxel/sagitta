@@ -130,6 +130,21 @@ describe("Frame3DCanvas stress view", () => {
     );
     const layer = container.querySelector("[data-testid=diagram3d-S]")!;
     expect(layer).toBeTruthy();
-    expect(layer.querySelectorAll("polygon").length).toBe(3); // M1, M3, M4
+    expect(layer.querySelectorAll("polygon").length).toBe(2); // M1, M3
+  });
+});
+
+describe("partial UDL on the canvas", () => {
+  test("the arrows of q_z stay inside 1..5 m of the hat (first arrow is right of B)", () => {
+    render(<Frame3DCanvas model={tFrame} solved={solveModel3D(tFrame)} viewOpts={opts} />);
+    const hat = screen.getByTestId("member3d-M3");
+    const bx = parseFloat(hat.getAttribute("x1")!);
+    const dx = parseFloat(hat.getAttribute("x2")!);
+    const tipX = parseFloat(
+      screen.getByTestId("load-L2").querySelector("polygon")!.getAttribute("points")!.split(" ")[0],
+    );
+    expect(tipX).toBeGreaterThan(bx + 5);
+    expect(tipX).toBeLessThan(dx);
+    expect(tipX).toBeCloseTo(bx + (dx - bx) / 5, 0); // 1 m of 5 m
   });
 });

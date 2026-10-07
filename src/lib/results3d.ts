@@ -2,6 +2,7 @@
 import { FrameModel3D } from "./types3d";
 import { SolveOutput3D } from "./solve3d";
 import { Station3D } from "./sampling3d";
+import { udlSpan } from "./solver3d";
 
 export type Diagram3D = "N" | "Qy" | "Qz" | "T" | "My" | "Mz";
 export const DIAGRAMS_3D: Diagram3D[] = ["N", "Qy", "Qz", "T", "My", "Mz"];
@@ -57,7 +58,12 @@ export function equilibrium3D(
       a.z + s * ex[2],
     ];
     if (load.type === "mpoint") add(at(load.dist), [load.gx, load.gy, load.gz]);
-    else add(at(L / 2), [load.gx * L, load.gy * L, load.gz * L]);
+    else {
+      const span = udlSpan(load, L);
+      if (!span) continue;
+      const len = span.b - span.a;
+      add(at((span.a + span.b) / 2), [load.gx * len, load.gy * len, load.gz * len]);
+    }
   }
 
   for (const n of model.nodes) {

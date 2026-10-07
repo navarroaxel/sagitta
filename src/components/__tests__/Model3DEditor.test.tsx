@@ -91,3 +91,18 @@ describe("Results3DPanel stress table", () => {
     expect(screen.getByTestId("stress-section").textContent).toContain("Assign an IPN/IPB");
   });
 });
+
+describe("partial distributed load", () => {
+  test("from/to are editable and default to the whole member", () => {
+    let last = base;
+    render(<Harness onModel={(m) => (last = m)} />);
+    fireEvent.click(screen.getByText("loads"));
+    expect((screen.getByLabelText("L2 from") as HTMLInputElement).value).toBe("1");
+    expect((screen.getByLabelText("L2 to") as HTMLInputElement).value).toBe("5");
+    // L1 (column, 6 m) has no span set: shows 0 .. 6
+    expect((screen.getByLabelText("L1 from") as HTMLInputElement).value).toBe("0");
+    expect((screen.getByLabelText("L1 to") as HTMLInputElement).value).toBe("6");
+    fireEvent.change(screen.getByLabelText("L2 to"), { target: { value: "4" } });
+    expect(last.loads.find((l) => l.id === "L2")).toMatchObject({ from: 1, to: 4 });
+  });
+});

@@ -290,3 +290,96 @@ describe("mechanism detection", () => {
     expect(res.stable).toBe(false);
   });
 });
+
+// ─── Partial distributed loads ───────────────────────────────────────────────
+describe("partial UDL (from/to)", () => {
+  // skewed member so every local axis is exercised
+  const nodes = [
+    { x: 0, y: 0, z: 0, support: "fixed" as const },
+    { x: 2, y: 2, z: 1, support: "pinned" as const },
+  ];
+  const lenOf = Math.hypot(2, 2, 1); // 3
+  const g = { gx: 2, gy: -3, gz: -5 };
+  const a = 0.7,
+    b = 2.1;
+
+  // one member with the partial load ...
+  const single: Solver3DModel = {
+    nodes: [...nodes, { x: 5, y: 1, z: 3, support: "free" }],
+    members: [
+      { i: 0, j: 1, ...mat },
+      { i: 1, j: 2, ...mat },
+    ],
+    loads: [{ type: "mudl", member: 0, ...g, from: a, to: b }],
+  };
+  // ... and the same member cut at the load ends, full-span load on the middle piece
+  const f = (s: number) => [(2 * s) / lenOf, (2 * s) / lenOf, s / lenOf] as const;
+  const mesh: Solver3DModel = {
+    nodes: [
+      nodes[0],
+      { x: f(a)[0], y: f(a)[1], z: f(a)[2], support: "free" },
+      { x: f(b)[0], y: f(b)[1], z: f(b)[2], support: "free" },
+      nodes[1],
+      { x: 5, y: 1, z: 3, support: "free" },
+    ],
+    members: [
+      { i: 0, j: 1, ...mat },
+      { i: 1, j: 2, ...mat },
+      { i: 2, j: 3, ...mat },
+      { i: 3, j: 4, ...mat },
+    ],
+    loads: [{ type: "mudl", member: 1, ...g }],
+  };
+  const r1 = solveFrame3D(single);
+  const r2 = solveFrame3D(mesh);
+
+  test("same reactions as the meshed model", () => {
+    [
+      [0, 0],
+      [1, 3],
+    ].forEach(([i, j]) => {
+      (["fx", "fy", "fz", "mx", "my", "mz"] as const).forEach((k) =>
+        close(r1.reactions[i][k], r2.reactions[j][k], 1e-6),
+      );
+    });
+  });
+  test("same displacements at the shared nodes and the free tip", () => {
+    close(r1.U[6 * 2 + 0], r2.U[6 * 4 + 0], 1e-7);
+    close(r1.U[6 * 2 + 1], r2.U[6 * 4 + 1], 1e-7);
+    close(r1.U[6 * 2 + 2], r2.U[6 * 4 + 2], 1e-7);
+  });
+  test("internal forces match the meshed model along the loaded member", () => {
+    const sSingle = sampleMember3D(single, r1, 0, 60);
+    const pieces = [0, 1, 2].map((e) => sampleMember3D(mesh, r2, e, 20));
+    const offsets = [0, a, b];
+    const ref = pieces.flatMap((st, e) => st.map((p) => ({ ...p, x: p.x + offsets[e] })));
+    sSingle.forEach((s) => {
+      const q = ref.reduce((best, p) => (Math.abs(p.x - s.x) < Math.abs(best.x - s.x) ? p : best));
+      if (Math.abs(q.x - s.x) > 1e-3) return;
+      (["N", "Qy", "Qz", "T", "My", "Mz"] as const).forEach((k) => close(s[k], q[k], 1e-4));
+    });
+  });
+  test("global equilibrium: reactions balance the resultant g·(b−a)", () => {
+    const fx = r1.reactions[0].fx + r1.reactions[1].fx;
+    const fz = r1.reactions[0].fz + r1.reactions[1].fz;
+    close(fx, -g.gx * (b - a), 1e-9);
+    close(fz, -g.gz * (b - a), 1e-9);
+  });
+  test("from/to covering the whole member is the same as no span", () => {
+    const m = (extra: object): Solver3DModel => ({
+      ...single,
+      loads: [{ type: "mudl", member: 0, ...g, ...extra }],
+    });
+    const full = solveFrame3D(m({}));
+    const spanned = solveFrame3D(m({ from: 0, to: lenOf }));
+    full.U.forEach((u, i) => close(spanned.U[i], u, 1e-10));
+  });
+  test("an empty or reversed span carries no load", () => {
+    const m: Solver3DModel = {
+      ...single,
+      loads: [{ type: "mudl", member: 0, ...g, from: 2, to: 1 }],
+    };
+    const res = solveFrame3D(m);
+    res.reactions.forEach((r) => close(r.fx + r.fy + r.fz, 0, 1e-9));
+  });
+});

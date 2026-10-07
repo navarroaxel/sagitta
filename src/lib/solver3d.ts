@@ -5,7 +5,8 @@
 // members: [{i, j, E, G, A, Iy, Iz, J, ref?}]   prismatic, rigid end connections
 // loads:   {type:'nodal',  node, fx, fy, fz, mx, my, mz}   global components
 //          {type:'mpoint', member, dist, gx, gy, gz}        global force, dist along member
-//          {type:'mudl',   member, gx, gy, gz}              global force/length, full span
+//          {type:'mudl',   member, gx, gy, gz, from?, to?}  global force/length over [from, to]
+//                                                           (distances from i; default the full span)
 //
 // Local member axes: x' runs i -> j. z' is the component of `ref` perpendicular to x'
 // (default ref = global Z, or ∓X for a member parallel to Z, up/down); y' = z' × x'.
@@ -58,7 +59,25 @@ export type Solver3DLoad =
       gy: number;
       gz: number;
     }
-  | { type: "mudl"; member: number; gx: number; gy: number; gz: number };
+  | {
+      type: "mudl";
+      member: number;
+      gx: number;
+      gy: number;
+      gz: number;
+      from?: number;
+      to?: number;
+    };
+
+// Loaded span of a distributed load, clamped to the member; null when empty.
+export function udlSpan(
+  load: { from?: number; to?: number },
+  L: number,
+): { a: number; b: number } | null {
+  const a = Math.min(Math.max(load.from ?? 0, 0), L);
+  const b = Math.min(Math.max(load.to ?? L, 0), L);
+  return b - a > 1e-12 ? { a, b } : null;
+}
 
 export interface Solver3DModel {
   nodes: Solver3DNode[];
@@ -217,36 +236,63 @@ const toLocal = (g: Solver3DGeo, v: Vec3): Vec3 => [
   dot(v, g.ez),
 ];
 
-// Fixed-end forces (local, reactions of the clamped ends on the member) for the member loads.
+// Fixed-end forces (local, reactions of the clamped ends on the member) of a point load
+// (px, py, pz local components) at distance a from i.
 // Same sign convention as the 2D solver's `fefLocal`.
+function pointFef(L: number, px: number, py: number, pz: number, a: number): number[] {
+  const b = L - a;
+  const fef = zeros(12);
+  fef[0] = (-px * b) / L;
+  fef[6] = (-px * a) / L;
+  fef[1] = (-py * b * b * (L + 2 * a)) / L ** 3;
+  fef[7] = (-py * a * a * (L + 2 * b)) / L ** 3;
+  fef[5] = (-py * a * b * b) / L ** 2;
+  fef[11] = (py * a * a * b) / L ** 2;
+  fef[2] = (-pz * b * b * (L + 2 * a)) / L ** 3;
+  fef[8] = (-pz * a * a * (L + 2 * b)) / L ** 3;
+  fef[4] = (pz * a * b * b) / L ** 2;
+  fef[10] = (-pz * a * a * b) / L ** 2;
+  return fef;
+}
+
+// 3-point Gauss-Legendre: exact for the cubic integrands of a partial uniform load
+const GAUSS: [number, number][] = [
+  [-Math.sqrt(3 / 5), 5 / 9],
+  [0, 8 / 9],
+  [Math.sqrt(3 / 5), 5 / 9],
+];
+
 function fefLocal(load: Solver3DLoad, g: Solver3DGeo): number[] {
   const L = g.L;
-  const fef = zeros(12);
   if (load.type === "mudl") {
+    const span = udlSpan(load, L);
+    if (!span) return zeros(12);
     const [qx, qy, qz] = toLocal(g, [load.gx, load.gy, load.gz]);
-    fef[0] = fef[6] = (-qx * L) / 2;
-    fef[1] = fef[7] = (-qy * L) / 2;
-    fef[5] = (-qy * L * L) / 12;
-    fef[11] = (qy * L * L) / 12;
-    fef[2] = fef[8] = (-qz * L) / 2;
-    fef[4] = (qz * L * L) / 12;
-    fef[10] = (-qz * L * L) / 12;
-  } else if (load.type === "mpoint") {
-    const [px, py, pz] = toLocal(g, [load.gx, load.gy, load.gz]);
-    const a = load.dist,
-      b = L - a;
-    fef[0] = (-px * b) / L;
-    fef[6] = (-px * a) / L;
-    fef[1] = (-py * b * b * (L + 2 * a)) / L ** 3;
-    fef[7] = (-py * a * a * (L + 2 * b)) / L ** 3;
-    fef[5] = (-py * a * b * b) / L ** 2;
-    fef[11] = (py * a * a * b) / L ** 2;
-    fef[2] = (-pz * b * b * (L + 2 * a)) / L ** 3;
-    fef[8] = (-pz * a * a * (L + 2 * b)) / L ** 3;
-    fef[4] = (pz * a * b * b) / L ** 2;
-    fef[10] = (-pz * a * a * b) / L ** 2;
+    const fef = zeros(12);
+    if (span.a === 0 && span.b === L) {
+      fef[0] = fef[6] = (-qx * L) / 2;
+      fef[1] = fef[7] = (-qy * L) / 2;
+      fef[5] = (-qy * L * L) / 12;
+      fef[11] = (qy * L * L) / 12;
+      fef[2] = fef[8] = (-qz * L) / 2;
+      fef[4] = (qz * L * L) / 12;
+      fef[10] = (-qz * L * L) / 12;
+      return fef;
+    }
+    // partial span: integrate the point-load fixed-end forces over [a, b]
+    const half = (span.b - span.a) / 2;
+    for (const [t, w] of GAUSS) {
+      const dw = w * half;
+      const pf = pointFef(L, qx * dw, qy * dw, qz * dw, span.a + half * (1 + t));
+      for (let k = 0; k < 12; k++) fef[k] += pf[k];
+    }
+    return fef;
   }
-  return fef;
+  if (load.type === "mpoint") {
+    const [px, py, pz] = toLocal(g, [load.gx, load.gy, load.gz]);
+    return pointFef(L, px, py, pz, load.dist);
+  }
+  return zeros(12);
 }
 
 const SUPPORT_RESTRAINT: Record<Solver3DNode["support"], Restraint> = {

@@ -214,6 +214,8 @@ const EN = {
   "f3d.results.stress_note":
     "σ = N/A − My·z/Iy − Mz·y/Iz at the most stressed corner of the section. Assumes kN and m. Profiles: CIRSOC tables (IPN, IPB).",
   "f3d.view.stress_colors": "Color by σ/σ adm",
+  "f3d.loads.from": "from (m)",
+  "f3d.loads.to": "to (m)",
   "f3d.cut.toggle": "Section cut",
   "f3d.cut.title": "Section cut",
   "f3d.cut.member": "Member",
@@ -606,6 +608,8 @@ const ES: Record<TranslationKey, string> = {
   "f3d.results.stress_note":
     "σ = N/A − My·z/Iy − Mz·y/Iz en la esquina más exigida de la sección. Supone kN y m. Perfiles: tablas CIRSOC (IPN, IPB).",
   "f3d.view.stress_colors": "Colorear por σ/σ adm",
+  "f3d.loads.from": "desde (m)",
+  "f3d.loads.to": "hasta (m)",
   "f3d.cut.toggle": "Corte de sección",
   "f3d.cut.title": "Corte de sección",
   "f3d.cut.member": "Barra",

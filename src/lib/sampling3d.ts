@@ -1,4 +1,4 @@
-import type { Solver3DModel, Solver3DResult } from "./solver3d";
+import { udlSpan, type Solver3DModel, type Solver3DResult } from "./solver3d";
 
 export interface Station3D {
   x: number;
@@ -24,9 +24,8 @@ export function sampleMember3D(
   const fl = res.memForces[e];
   const [Fx1, Fy1, Fz1, Mx1, My1, Mz1] = fl;
 
-  let qx = 0,
-    qy = 0,
-    qz = 0;
+  // distributed loads over [a, b] (local components per unit length)
+  const udls: { a: number; b: number; qx: number; qy: number; qz: number }[] = [];
   const pts: { a: number; px: number; py: number; pz: number }[] = [];
   const loc = (gx: number, gy: number, gz: number): [number, number, number] => [
     gx * g.ex[0] + gy * g.ex[1] + gz * g.ex[2],
@@ -35,10 +34,10 @@ export function sampleMember3D(
   ];
   model.loads.forEach((load) => {
     if (load.type === "mudl" && load.member === e) {
-      const [x, y, z] = loc(load.gx, load.gy, load.gz);
-      qx += x;
-      qy += y;
-      qz += z;
+      const span = udlSpan(load, L);
+      if (!span) return;
+      const [qx, qy, qz] = loc(load.gx, load.gy, load.gz);
+      udls.push({ ...span, qx, qy, qz });
     } else if (load.type === "mpoint" && load.member === e) {
       const [px, py, pz] = loc(load.gx, load.gy, load.gz);
       pts.push({ a: load.dist, px, py, pz });
@@ -47,6 +46,10 @@ export function sampleMember3D(
 
   const xs = new Set<number>();
   for (let k = 0; k <= nStations; k++) xs.add((k / nStations) * L);
+  udls.forEach((u) => {
+    xs.add(u.a);
+    xs.add(u.b);
+  });
   pts.forEach((p) => {
     xs.add(Math.max(0, p.a - 1e-6));
     xs.add(Math.min(L, p.a + 1e-6));
@@ -54,11 +57,22 @@ export function sampleMember3D(
   const sorted = [...xs].sort((a, b) => a - b);
 
   return sorted.map((x) => {
-    let N = -Fx1 - qx * x;
-    let Qy = Fy1 + qy * x;
-    let Qz = Fz1 + qz * x;
-    let Mz = -Mz1 + x * Fy1 + (qy * x * x) / 2;
-    let My = My1 + x * Fz1 + (qz * x * x) / 2;
+    let N = -Fx1;
+    let Qy = Fy1;
+    let Qz = Fz1;
+    let Mz = -Mz1 + x * Fy1;
+    let My = My1 + x * Fz1;
+    udls.forEach((u) => {
+      // part of the load to the left of the cut and the lever arm of its resultant
+      const len = Math.min(Math.max(x - u.a, 0), u.b - u.a);
+      if (len === 0) return;
+      const arm = x - (u.a + len / 2);
+      N -= u.qx * len;
+      Qy += u.qy * len;
+      Qz += u.qz * len;
+      Mz += u.qy * len * arm;
+      My += u.qz * len * arm;
+    });
     pts.forEach((p) => {
       if (x > p.a) {
         N += -p.px;
