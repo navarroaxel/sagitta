@@ -301,6 +301,8 @@ const EN = {
   "prof.tab.rolled": "Rolled profiles",
   "prof.tab.chs": "Circular tubes",
   "prof.tab.shs": "Square tubes",
+  "prof.tab.rhs": "Rectangular tubes",
+  "prof.tube.H": "outer depth",
   "prof.tube.search": "Search: 168 6.35, 100…",
   "prof.tube.title": "Steel tubes (IRAM-IAS U 500-218 / 2592)",
   "prof.tube.D": "outer diameter",
@@ -314,9 +316,9 @@ const EN = {
   "prof.tube.r": "= Radius of gyration",
   "prof.tube.Z": "= Plastic section modulus.",
   "prof.tube.J": "= Torsion constant.",
-  "prof.tube.C": "= Torsional modulus (J / ((D − t)/2)).",
+  "prof.tube.C": "= Torsional constant (2·A·t, A enclosed by the mid-line).",
   "prof.tube.units":
-    "Units: mm for dimensions · cm² · kg/m · cm⁴ · cm³ · cm. Circular rows are computed from D and t; square rows are transcribed from the table.",
+    "Units: mm for dimensions · cm² · kg/m · cm⁴ · cm³ · cm. Circular rows are computed from D and t; square and rectangular rows are transcribed from the table (rectangular: Ix, Sx, rx, Zx about X-X, depth H).",
   "prof.units":
     "Units: mm for dimensions · cm² · cm³ · cm · cm⁴. X-X is the strong axis.",
   "quiz.title": "True/False Exam — Statics",
@@ -757,6 +759,8 @@ const ES: Record<TranslationKey, string> = {
   "prof.tab.rolled": "Perfiles laminados",
   "prof.tab.chs": "Tubos circulares",
   "prof.tab.shs": "Tubos cuadrados",
+  "prof.tab.rhs": "Tubos rectangulares",
+  "prof.tube.H": "alto exterior",
   "prof.tube.search": "Buscar: 168 6.35, 100…",
   "prof.tube.title": "Tubos de acero (IRAM-IAS U 500-218 / 2592)",
   "prof.tube.D": "diámetro exterior",
@@ -770,9 +774,10 @@ const ES: Record<TranslationKey, string> = {
   "prof.tube.r": "= Radio de giro",
   "prof.tube.Z": "= Módulo plástico.",
   "prof.tube.J": "= Módulo de torsión.",
-  "prof.tube.C": "= Constante torsional (J / ((D − t)/2)).",
+  "prof.tube.C":
+    "= Constante torsional (2·A·t, A encerrada por la línea media).",
   "prof.tube.units":
-    "Unidades: mm en dimensiones · cm² · kg/m · cm⁴ · cm³ · cm. Los circulares se calculan desde D y t; los cuadrados están transcriptos de la tabla.",
+    "Unidades: mm en dimensiones · cm² · kg/m · cm⁴ · cm³ · cm. Los circulares se calculan desde D y t; los cuadrados y rectangulares están transcriptos de la tabla (rectangulares: Ix, Sx, rx, Zx respecto de X-X, alto H).",
   "prof.units":
     "Unidades: mm en dimensiones · cm² · cm³ · cm · cm⁴. X-X es el eje fuerte.",
   "quiz.title": "Examen V/F — Estática",

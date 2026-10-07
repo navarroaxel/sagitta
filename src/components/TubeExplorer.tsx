@@ -5,22 +5,55 @@ import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 import {
   ALL_TUBES,
   filterTubes,
-  type Tube,
+  type AnyTube,
+  type TubeKind,
   type TubeSortKey,
 } from "@/lib/tubes";
 
-const COLUMNS: { key: TubeSortKey; unit: string }[] = [
-  { key: "D", unit: "mm" },
-  { key: "t", unit: "mm" },
-  { key: "A", unit: "cm²" },
-  { key: "g", unit: "kg/m" },
-  { key: "I", unit: "cm⁴" },
-  { key: "S", unit: "cm³" },
-  { key: "r", unit: "cm" },
-  { key: "Z", unit: "cm³" },
-  { key: "J", unit: "cm⁴" },
-  { key: "C", unit: "cm³" },
-];
+type Column = { key: TubeSortKey; label: string; unit: string };
+
+const round_ = (key: string, unit: string): Column => ({
+  key,
+  label: key,
+  unit,
+});
+
+// circular / square: one dimension D (or B) and one I; rectangular: B, H and both axes.
+function columnsFor(kind: TubeKind): Column[] {
+  if (kind === "RHS")
+    return [
+      round_("B", "mm"),
+      round_("H", "mm"),
+      round_("t", "mm"),
+      round_("A", "cm²"),
+      round_("g", "kg/m"),
+      round_("Ix", "cm⁴"),
+      round_("Sx", "cm³"),
+      round_("rx", "cm"),
+      round_("Zx", "cm³"),
+      round_("Iy", "cm⁴"),
+      round_("Sy", "cm³"),
+      round_("ry", "cm"),
+      round_("Zy", "cm³"),
+      round_("J", "cm⁴"),
+      round_("C", "cm³"),
+    ];
+  return [
+    { key: "D", label: kind === "CHS" ? "D" : "B", unit: "mm" },
+    round_("t", "mm"),
+    round_("A", "cm²"),
+    round_("g", "kg/m"),
+    round_("I", "cm⁴"),
+    round_("S", "cm³"),
+    round_("r", "cm"),
+    round_("Z", "cm³"),
+    round_("J", "cm⁴"),
+    round_("C", "cm³"),
+  ];
+}
+
+const val = (x: AnyTube, key: string) =>
+  (x as unknown as Record<string, number>)[key];
 
 const num = (s: string) => {
   const v = parseFloat(s.replace(",", "."));
@@ -32,7 +65,7 @@ const inputCls =
 const LINE = "stroke-stone-500 dark:stroke-stone-400";
 const TEXT = "fill-stone-700 dark:fill-stone-200";
 
-export function TubeExplorer({ kind }: { kind: Tube["kind"] }) {
+export function TubeExplorer({ kind }: { kind: TubeKind }) {
   const { t } = useLanguage();
   const [text, setText] = useState("");
   const [minI, setMinI] = useState("");
@@ -45,8 +78,8 @@ export function TubeExplorer({ kind }: { kind: Tube["kind"] }) {
   const [selected, setSelected] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
 
-  const label = (key: TubeSortKey) =>
-    key === "D" ? (kind === "CHS" ? "D" : "B") : key;
+  const columns = useMemo(() => columnsFor(kind), [kind]);
+  const rect = kind === "RHS";
 
   const rows = useMemo(
     () =>
@@ -97,8 +130,8 @@ export function TubeExplorer({ kind }: { kind: Tube["kind"] }) {
           <legend className="sr-only">{t("prof.min_label")}</legend>
           {(
             [
-              ["I ≥", "cm⁴", minI, setMinI],
-              ["S ≥", "cm³", minS, setMinS],
+              [rect ? "Ix ≥" : "I ≥", "cm⁴", minI, setMinI],
+              [rect ? "Sx ≥" : "S ≥", "cm³", minS, setMinS],
               ["A ≥", "cm²", minA, setMinA],
             ] as const
           ).map(([lab, unit, val, set]) => (
@@ -139,6 +172,7 @@ export function TubeExplorer({ kind }: { kind: Tube["kind"] }) {
       {sel && (
         <TubeDetail
           x={sel}
+          columns={columns}
           copied={copied}
           onCopy={copy}
           onClose={() => setSelected(null)}
@@ -152,7 +186,7 @@ export function TubeExplorer({ kind }: { kind: Tube["kind"] }) {
               <th className="sticky left-0 z-20 bg-stone-100 px-3 py-2 text-left dark:bg-stone-800">
                 {t("prof.profile")}
               </th>
-              {COLUMNS.map((c) => {
+              {columns.map((c) => {
                 const active = sort?.key === c.key;
                 return (
                   <th
@@ -171,7 +205,7 @@ export function TubeExplorer({ kind }: { kind: Tube["kind"] }) {
                       onClick={() => toggleSort(c.key)}
                       className="w-full px-3 py-2 text-right font-semibold hover:bg-stone-200 dark:hover:bg-stone-700"
                     >
-                      {label(c.key)}
+                      {c.label}
                       {active && (sort!.dir === "asc" ? " ▲" : " ▼")}
                       <div className="text-[10px] font-normal text-stone-400">
                         {c.unit}
@@ -206,12 +240,12 @@ export function TubeExplorer({ kind }: { kind: Tube["kind"] }) {
                   >
                     {x.name}
                   </th>
-                  {COLUMNS.map((c) => (
+                  {columns.map((c) => (
                     <td
                       key={c.key}
                       className={`px-3 py-1.5 ${sort?.key === c.key ? "bg-stone-50 dark:bg-stone-800/40" : ""}`}
                     >
-                      {x[c.key]}
+                      {val(x, c.key)}
                     </td>
                   ))}
                 </tr>
@@ -220,7 +254,7 @@ export function TubeExplorer({ kind }: { kind: Tube["kind"] }) {
             {rows.length === 0 && (
               <tr>
                 <td
-                  colSpan={COLUMNS.length + 1}
+                  colSpan={columns.length + 1}
                   className="px-3 py-8 text-center text-stone-500"
                 >
                   {t("prof.none")}
@@ -239,44 +273,59 @@ export function TubeExplorer({ kind }: { kind: Tube["kind"] }) {
 
 function TubeDetail({
   x,
+  columns,
   copied,
   onCopy,
   onClose,
 }: {
-  x: Tube;
+  x: AnyTube;
+  columns: Column[];
   copied: string | null;
   onCopy: (key: string, v: number) => void;
   onClose: () => void;
 }) {
   const { t } = useLanguage();
+  const rect = x.kind === "RHS";
   const sq = x.kind === "SHS";
-  const dims: [string, TranslationKey, string][] = [
-    [sq ? "B" : "D", sq ? "prof.tube.B" : "prof.tube.D", `${x.D} mm`],
+  type Dim = [string, TranslationKey, string];
+  const dims: Dim[] = [
+    ...(rect
+      ? ([
+          ["B", "prof.tube.B", `${x.B} mm`],
+          ["H", "prof.tube.H", `${x.H} mm`],
+        ] as Dim[])
+      : ([
+          [sq ? "B" : "D", sq ? "prof.tube.B" : "prof.tube.D", `${x.D} mm`],
+        ] as Dim[])),
     ["t", "prof.tube.t", `${x.t} mm`],
-    ...(sq
-      ? ([["R", "prof.tube.R", `${2 * x.t} mm`]] as [
-          string,
-          TranslationKey,
-          string,
-        ][])
-      : []),
+    ...(rect || sq ? ([["R", "prof.tube.R", `${2 * x.t} mm`]] as Dim[]) : []),
     ["g", "prof.tube.g", `${x.g} kg/m`],
   ];
-  const props: [string, TranslationKey][] = [
-    ["A", "prof.tube.A"],
-    ["I", "prof.tube.I"],
-    ["S", "prof.tube.S"],
-    ["r", "prof.tube.r"],
-    ["Z", "prof.tube.Z"],
-    ["J", "prof.tube.J"],
-    ["C", "prof.tube.C"],
-  ];
+  const props: [string, TranslationKey][] = rect
+    ? [
+        ["A", "prof.tube.A"],
+        ["I", "prof.tube.I"],
+        ["S", "prof.tube.S"],
+        ["r", "prof.tube.r"],
+        ["Z", "prof.tube.Z"],
+        ["J", "prof.tube.J"],
+        ["C", "prof.tube.C"],
+      ]
+    : [
+        ["A", "prof.tube.A"],
+        ["I", "prof.tube.I"],
+        ["S", "prof.tube.S"],
+        ["r", "prof.tube.r"],
+        ["Z", "prof.tube.Z"],
+        ["J", "prof.tube.J"],
+        ["C", "prof.tube.C"],
+      ];
   return (
     <section
       aria-label={t("prof.detail")}
       className="flex flex-wrap items-start gap-4 rounded border border-teal-300 bg-white p-3 dark:border-teal-800 dark:bg-stone-900"
     >
-      <div className="w-full sm:w-[340px] sm:max-w-full">
+      <div className="w-full sm:w-[360px] sm:max-w-full">
         <TubeDrawing x={x} />
       </div>
       <div className="min-w-0 flex-1 basis-72 space-y-3">
@@ -292,20 +341,20 @@ function TubeDetail({
           </button>
         </div>
         <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-4 lg:grid-cols-5">
-          {COLUMNS.map((c) => (
+          {columns.map((c) => (
             <button
               key={c.key}
               type="button"
               title={t("prof.copy")}
-              onClick={() => onCopy(c.key, x[c.key])}
+              onClick={() => onCopy(c.key, val(x, c.key))}
               className="rounded border border-stone-200 px-2 py-1 text-left text-sm hover:bg-teal-50 dark:border-stone-700 dark:hover:bg-teal-950"
             >
               <span className="text-xs text-stone-500 dark:text-stone-400">
-                {c.key === "D" ? (sq ? "B" : "D") : c.key} [{c.unit}]
+                {c.label} [{c.unit}]
               </span>
               <br />
               <span className="font-semibold tabular-nums">
-                {copied === c.key ? t("prof.copied") : x[c.key]}
+                {copied === c.key ? t("prof.copied") : val(x, c.key)}
               </span>
             </button>
           ))}
@@ -339,32 +388,42 @@ function TubeDetail({
 }
 
 // Tube section to scale with its dimension marks and the two principal axes (X-X, Y-Y).
-function TubeDrawing({ x }: { x: Tube }) {
+// X-X is the horizontal axis (parallel to B); for the rectangular tube the depth H is vertical.
+function TubeDrawing({ x }: { x: AnyTube }) {
+  const rect = x.kind === "RHS";
   const sq = x.kind === "SHS";
-  const VB = 320;
+  const w0 = rect ? x.B : x.D; // outer width
+  const h0 = rect ? x.H : x.D; // outer depth
+  const VB = 360;
   const C = VB / 2;
-  const k = 150 / x.D;
-  const S = x.D * k; // outer size
+  const k = 170 / Math.max(w0, h0);
+  const W = w0 * k;
+  const H = h0 * k;
   const t = Math.max(x.t * k, 2);
-  const o = C - S / 2;
+  const ox = C - W / 2;
+  const oy = C - H / 2;
   const R = 2 * x.t * k;
 
-  // wall position at x = tx (the circle's wall curves away from the flat bottom of the square)
-  const tx = C + S * 0.22;
+  // wall position at tx (a circle's wall curves away from the flat bottom of a square/rectangle)
+  const tx = C + W * 0.22;
   const dx = tx - C;
-  const yOut = sq ? o + S : C + Math.sqrt((S / 2) ** 2 - dx ** 2);
-  const yIn = sq ? o + S - t : C + Math.sqrt((S / 2 - t) ** 2 - dx ** 2);
+  const flat = sq || rect;
+  const yOut = flat ? oy + H : C + Math.sqrt((H / 2) ** 2 - dx ** 2);
+  const yIn = flat ? oy + H - t : C + Math.sqrt((H / 2 - t) ** 2 - dx ** 2);
 
-  const ring = sq
-    ? `${rrect(o, o, S, R)} ${rrect(o + t, o + t, S - 2 * t, Math.max(R - t, 0.01))}`
-    : `${circle(C, C, S / 2)} ${circle(C, C, S / 2 - t)}`;
+  const ring = flat
+    ? `${rrect(ox, oy, W, H, R)} ${rrect(ox + t, oy + t, W - 2 * t, H - 2 * t, Math.max(R - t, 0.01))}`
+    : `${circle(C, C, W / 2)} ${circle(C, C, W / 2 - t)}`;
+
+  const labelW = rect ? `B = ${x.B}` : `${sq ? "B" : "D"} = ${x.D}`;
+  const dimX = ox + W + 46; // H dimension line
 
   return (
     <svg
       viewBox={`0 0 ${VB} ${VB}`}
       role="img"
       aria-label={x.name}
-      className="h-auto w-full max-w-[340px]"
+      className="h-auto w-full max-w-[360px]"
     >
       <defs>
         <marker
@@ -390,8 +449,8 @@ function TubeDrawing({ x }: { x: Tube }) {
       />
       {/* axes */}
       <line
-        x1={o - 14}
-        x2={o + S + 14}
+        x1={ox - 14}
+        x2={ox + W + 14}
         y1={C}
         y2={C}
         className="stroke-teal-600 dark:stroke-teal-400"
@@ -399,7 +458,7 @@ function TubeDrawing({ x }: { x: Tube }) {
         strokeWidth="1.2"
       />
       <text
-        x={o + S + 16}
+        x={ox + W + 16}
         y={C - 6}
         fontSize="14"
         fontWeight="700"
@@ -410,15 +469,15 @@ function TubeDrawing({ x }: { x: Tube }) {
       <line
         x1={C}
         x2={C}
-        y1={o - 14}
-        y2={o + S + 14}
+        y1={oy - 14}
+        y2={oy + H + 14}
         className="stroke-amber-600 dark:stroke-amber-400"
         strokeDasharray="6 3"
         strokeWidth="1.2"
       />
       <text
         x={C}
-        y={o + S + 30}
+        y={oy + H + 30}
         textAnchor="middle"
         fontSize="14"
         fontWeight="700"
@@ -426,22 +485,48 @@ function TubeDrawing({ x }: { x: Tube }) {
       >
         Y-Y
       </text>
-      {/* D / B */}
+      {/* B / D */}
       <g className={LINE} strokeWidth="0.8">
-        <line x1={o} x2={o} y1={o - 2} y2={o - 24} />
-        <line x1={o + S} x2={o + S} y1={o - 2} y2={o - 24} />
+        <line x1={ox} x2={ox} y1={oy - 2} y2={oy - 24} />
+        <line x1={ox + W} x2={ox + W} y1={oy - 2} y2={oy - 24} />
         <line
-          x1={o}
-          x2={o + S}
-          y1={o - 20}
-          y2={o - 20}
+          x1={ox}
+          x2={ox + W}
+          y1={oy - 20}
+          y2={oy - 20}
           markerStart="url(#dim-arrow)"
           markerEnd="url(#dim-arrow)"
         />
       </g>
-      <text x={C} y={o - 25} textAnchor="middle" fontSize="12" className={TEXT}>
-        {sq ? "B" : "D"} = {x.D}
+      <text
+        x={C}
+        y={oy - 25}
+        textAnchor="middle"
+        fontSize="12"
+        className={TEXT}
+      >
+        {labelW}
       </text>
+      {/* H (rectangular tubes only) */}
+      {rect && (
+        <>
+          <g className={LINE} strokeWidth="0.8">
+            <line x1={ox + W + 2} x2={dimX + 4} y1={oy} y2={oy} />
+            <line x1={ox + W + 2} x2={dimX + 4} y1={oy + H} y2={oy + H} />
+            <line
+              x1={dimX}
+              x2={dimX}
+              y1={oy}
+              y2={oy + H}
+              markerStart="url(#dim-arrow)"
+              markerEnd="url(#dim-arrow)"
+            />
+          </g>
+          <text x={dimX + 6} y={C + 4} fontSize="12" className={TEXT}>
+            H = {x.H}
+          </text>
+        </>
+      )}
       {/* t: arrows onto both faces of the bottom wall */}
       <g className={LINE} strokeWidth="0.8">
         <line
@@ -462,15 +547,27 @@ function TubeDrawing({ x }: { x: Tube }) {
       <text x={tx + 8} y={yOut + 20} fontSize="12" className={TEXT}>
         t = {x.t}
       </text>
-      {sq && (
-        <text
-          x={o + R * 0.45}
-          y={o + R * 0.45 + 14}
-          fontSize="11"
-          className={TEXT}
-        >
-          R = {2 * x.t}
-        </text>
+      {(sq || rect) && (
+        <>
+          {/* R: leader from the top-left corner arc out to the left, clear of the axes */}
+          <line
+            x1={ox + R * 0.29}
+            y1={oy + R * 0.29}
+            x2={ox - 6}
+            y2={oy + 4}
+            className={LINE}
+            strokeWidth="0.8"
+          />
+          <text
+            x={ox - 8}
+            y={oy + 8}
+            textAnchor="end"
+            fontSize="11"
+            className={TEXT}
+          >
+            R = {+(2 * x.t).toFixed(2)}
+          </text>
+        </>
       )}
     </svg>
   );
@@ -479,7 +576,7 @@ function TubeDrawing({ x }: { x: Tube }) {
 function circle(cx: number, cy: number, r: number) {
   return `M${cx - r},${cy}a${r} ${r} 0 1 0 ${2 * r} 0a${r} ${r} 0 1 0 ${-2 * r} 0Z`;
 }
-function rrect(x: number, y: number, s: number, r: number) {
-  const q = Math.min(r, s / 2);
-  return `M${x + q},${y}H${x + s - q}a${q} ${q} 0 0 1 ${q} ${q}V${y + s - q}a${q} ${q} 0 0 1 ${-q} ${q}H${x + q}a${q} ${q} 0 0 1 ${-q} ${-q}V${y + q}a${q} ${q} 0 0 1 ${q} ${-q}Z`;
+function rrect(x: number, y: number, w: number, h: number, r: number) {
+  const q = Math.min(r, w / 2, h / 2);
+  return `M${x + q},${y}H${x + w - q}a${q} ${q} 0 0 1 ${q} ${q}V${y + h - q}a${q} ${q} 0 0 1 ${-q} ${q}H${x + q}a${q} ${q} 0 0 1 ${-q} ${-q}V${y + q}a${q} ${q} 0 0 1 ${q} ${-q}Z`;
 }

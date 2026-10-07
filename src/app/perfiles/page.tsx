@@ -7,10 +7,11 @@ import { ProfileExplorer } from "@/components/ProfileExplorer";
 import { TubeExplorer } from "@/components/TubeExplorer";
 import type { TranslationKey } from "@/contexts/LanguageContext";
 
-const TABS: { id: "rolled" | "CHS" | "SHS"; key: TranslationKey }[] = [
+const TABS: { id: "rolled" | "CHS" | "SHS" | "RHS"; key: TranslationKey }[] = [
   { id: "rolled", key: "prof.tab.rolled" },
   { id: "CHS", key: "prof.tab.chs" },
   { id: "SHS", key: "prof.tab.shs" },
+  { id: "RHS", key: "prof.tab.rhs" },
 ];
 
 export default function PerfilesPage() {

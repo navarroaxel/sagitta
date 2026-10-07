@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { TubeExplorer } from "../TubeExplorer";
 
-const setup = (kind: "CHS" | "SHS") =>
+const setup = (kind: "CHS" | "SHS" | "RHS") =>
   render(
     <LanguageProvider>
       <TubeExplorer kind={kind} />
@@ -40,5 +40,27 @@ describe("TubeExplorer", () => {
     expect(
       screen.getByRole("group", { name: /leyenda|legend/i }).textContent,
     ).toMatch(/2[.,]00 t/);
+  });
+
+  test("rectangular list, search and detail with B, H, t, R", () => {
+    setup("RHS");
+    expect(rowNames()[0]).toBe("RHS 10×20×0.7");
+    expect(
+      screen.getAllByRole("columnheader").map((h) => h.textContent),
+    ).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("Zy"),
+        expect.stringContaining("Ix"),
+      ]),
+    );
+    fireEvent.change(screen.getByRole("searchbox"), {
+      target: { value: "100 250" },
+    });
+    expect(rowNames()).toHaveLength(5);
+    fireEvent.click(screen.getByText("RHS 100×250×12"));
+    const svg = screen.getByRole("img", { name: "RHS 100×250×12" });
+    for (const m of ["B = 100", "H = 250", "t = 12", "R = 24", "X-X", "Y-Y"]) {
+      expect(svg.textContent).toContain(m);
+    }
   });
 });
