@@ -39,21 +39,15 @@
 
   <!-- ===== Dimensions ===== -->
   <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
-    <!-- hat (top): 2.00 | 5.00 -->
+    <!-- hat (top): 2.00 | 1.00 | 4.00 -->
     <line x1="160" y1="96" x2="440" y2="96"/>
     <line x1="160" y1="91" x2="160" y2="101"/>
     <line x1="240" y1="91" x2="240" y2="101"/>
+    <line x1="280" y1="91" x2="280" y2="101"/>
     <line x1="440" y1="91" x2="440" y2="101"/>
     <text x="200" y="88" text-anchor="middle" stroke="none">2.00</text>
-    <text x="340" y="88" text-anchor="middle" stroke="none">5.00</text>
-
-    <!-- load start / extent under the hat: 1.00 | 4.00 -->
-    <line x1="240" y1="212" x2="440" y2="212"/>
-    <line x1="240" y1="207" x2="240" y2="217"/>
-    <line x1="280" y1="207" x2="280" y2="217"/>
-    <line x1="440" y1="207" x2="440" y2="217"/>
-    <text x="260" y="230" text-anchor="middle" stroke="none">1.00</text>
-    <text x="360" y="230" text-anchor="middle" stroke="none">4.00</text>
+    <text x="260" y="88" text-anchor="middle" stroke="none">1.00</text>
+    <text x="360" y="88" text-anchor="middle" stroke="none">4.00</text>
 
     <!-- column (left): 6.00 m -->
     <line x1="112" y1="160" x2="112" y2="400"/>
@@ -62,18 +56,18 @@
     <text x="100" y="280" text-anchor="middle" stroke="none" transform="rotate(-90 100 280)">6.00 m</text>
   </g>
 
-  <!-- ===== Solid-web frame (rigid joints) ===== -->
-  <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
-    <line x1="240" y1="400" x2="240" y2="160"/> <!-- column A-B -->
-    <line x1="160" y1="160" x2="440" y2="160"/> <!-- hat C-B-D -->
-  </g>
-
   <!-- ===== Fixed / built-in base at A (ground plate in the xy plane + hatch) ===== -->
   <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff" fill-opacity="0.85">
     <polygon points="186,410 266,410 294,390 214,390"/>
   </g>
   <g stroke="#1a1a1a" stroke-width="2" fill="none">
     <line x1="194" y1="410" x2="186" y2="418"/><line x1="204" y1="410" x2="196" y2="418"/><line x1="214" y1="410" x2="206" y2="418"/><line x1="224" y1="410" x2="216" y2="418"/><line x1="234" y1="410" x2="226" y2="418"/><line x1="244" y1="410" x2="236" y2="418"/><line x1="254" y1="410" x2="246" y2="418"/><line x1="264" y1="410" x2="256" y2="418"/>
+  </g>
+
+  <!-- ===== Solid-web frame (rigid joints) ===== -->
+  <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
+    <line x1="240" y1="400" x2="240" y2="160"/> <!-- column A-B -->
+    <line x1="160" y1="160" x2="440" y2="160"/> <!-- hat C-B-D -->
   </g>
 
   <!-- ===== Nodes ===== -->
@@ -142,27 +136,27 @@
 
   <!-- ===== Support reactions (blue) ===== -->
   <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
-    <!-- F_y = 18 kN along -y; drawn offset 24 px to the right of the column axis, tip at the ground plate -->
-    <line x1="299.8" y1="378.4" x2="272.1" y2="398.2" stroke-width="2.5"/>
-    <polygon points="264,404 270.3,392.1 277.3,401.9" stroke="none"/>
-    <text x="316" y="388" text-anchor="start" stroke="none">F<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 18 kN</tspan></text>
+    <!-- F_y = 18 kN along -y; line of action through A (centre of the column-support joint), tip pulled back ~32 px along it to keep the support clear -->
+    <line x1="301.8" y1="355.8" x2="274.1" y2="375.6" stroke-width="2.5"/>
+    <polygon points="266,381.4 272.3,369.5 279.3,379.3" stroke="none"/>
+    <text x="318" y="359" text-anchor="start" stroke="none">F<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 18 kN</tspan></text>
 
     <!-- F_z = 8 kN upward at A (tip at the node, shaft trailing below) -->
     <line x1="240" y1="440" x2="240" y2="412" stroke-width="2.5"/>
     <polygon points="240,402 234,414 246,414" stroke="none"/>
     <text x="250" y="428" text-anchor="start" stroke="none">F<tspan font-size="10" dy="4">z</tspan><tspan dy="-4"> = 8 kN</tspan></text>
 
-    <!-- M_x = 54 kN.m: moment vector along +x (double arrow) -->
-    <line x1="240" y1="452" x2="312" y2="452" stroke-width="2.5"/>
-    <polygon points="330,452 320,457 320,447" stroke="none"/>
-    <polygon points="320,452 310,457 310,447" stroke="none"/>
-    <text x="340" y="456" text-anchor="start" stroke="none">M<tspan font-size="10" dy="4">x</tspan><tspan dy="-4"> = 54 kN&#183;m</tspan></text>
+    <!-- M_x = 54 kN.m: moment vector along +x (double arrow), line of action through A -->
+    <line x1="240" y1="400" x2="312" y2="400" stroke-width="2.5"/>
+    <polygon points="330,400 320,405 320,395" stroke="none"/>
+    <polygon points="320,400 310,405 310,395" stroke="none"/>
+    <text x="340" y="404" text-anchor="start" stroke="none">M<tspan font-size="10" dy="4">x</tspan><tspan dy="-4"> = 54 kN&#183;m</tspan></text>
 
-    <!-- M_y = 5 kN.m: moment vector along -y (double arrow) -->
-    <line x1="222" y1="424" x2="200.8" y2="439.1" stroke-width="2.5"/>
-    <polygon points="186.2,449.6 191.4,439.7 197.2,447.8" stroke="none"/>
-    <polygon points="194.3,443.8 199.6,433.9 205.4,442" stroke="none"/>
-    <text x="176" y="462" text-anchor="end" stroke="none">M<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 29 kN&#183;m</tspan></text>
+    <!-- M_y = 29 kN.m: moment vector along -y (double arrow), collinear with F_y (line of action through A), drawn beyond the plate -->
+    <line x1="210.7" y1="420.9" x2="189.6" y2="436" stroke-width="2.5"/>
+    <polygon points="174.9,446.5 179.5,435.8 186.5,445.6" stroke="none"/>
+    <polygon points="183,440.7 187.7,430 194.7,439.8" stroke="none"/>
+    <text x="165" y="459" text-anchor="end" stroke="none">M<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 29 kN&#183;m</tspan></text>
   </g>
 
   <text x="355" y="496" text-anchor="middle" fill="#5f6368" font-size="13">

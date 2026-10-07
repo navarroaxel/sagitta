@@ -182,6 +182,23 @@ const EN = {
   "footer.resonara_teaser": "RLC circuits in AC",
 
   "nav.guides": "Guides",
+
+  "f3d.title": "3D Frame Simulator",
+  "f3d.link": "3D frames",
+  "f3d.back_2d": "← 2D simulator",
+  "f3d.reset": "Reset",
+  "f3d.example.t_frame": "3D T-frame (fixed)",
+  "f3d.example.l_torsion": "L space frame (torsion)",
+  "f3d.diagram": "Diagram:",
+  "f3d.diagram_none": "None",
+  "f3d.note":
+    "Oblique view: x right, z up, y receding. Moments are drawn on the tension side; other diagrams along the member's local axis.",
+  "f3d.nodes.z": "z",
+  "f3d.material.note":
+    "E, G in kN/m², A in m², Iy/Iz/J in m⁴. Local axes: x' along the member (n1→n2), Iy is bending in the x'-z' plane, Iz in x'-y'.",
+  "f3d.error":
+    "⚠ Unstable, singular or malformed 3D model — check supports, members and loads. Diagrams cannot be computed.",
+  "f3d.results.peaks": "Peak internal forces",
   "learn.link": "Learn the method",
   "learn.back": "← Simulator",
   "learn.title": "Tangent Method (Mohr's Theorems)",
@@ -532,6 +549,23 @@ const ES: Record<TranslationKey, string> = {
   "footer.resonara_teaser": "Electrotécnica I",
 
   "nav.guides": "Guías",
+
+  "f3d.title": "Simulador de Pórticos 3D",
+  "f3d.link": "Pórticos 3D",
+  "f3d.back_2d": "← Simulador 2D",
+  "f3d.reset": "Reiniciar",
+  "f3d.example.t_frame": "Pórtico T 3D (empotrado)",
+  "f3d.example.l_torsion": "Pórtico en L espacial (torsión)",
+  "f3d.diagram": "Diagrama:",
+  "f3d.diagram_none": "Ninguno",
+  "f3d.note":
+    "Vista oblicua: x a la derecha, z arriba, y en profundidad. Los momentos se dibujan del lado traccionado; los demás diagramas, sobre el eje local de la barra.",
+  "f3d.nodes.z": "z",
+  "f3d.material.note":
+    "E, G en kN/m², A en m², Iy/Iz/J en m⁴. Ejes locales: x' a lo largo de la barra (n1→n2), Iy es la flexión en el plano x'-z' e Iz en x'-y'.",
+  "f3d.error":
+    "⚠ Modelo 3D inestable, singular o mal formado — revisá apoyos, barras y cargas. No se pueden calcular los diagramas.",
+  "f3d.results.peaks": "Esfuerzos máximos",
   "learn.link": "Aprendé el método",
   "learn.back": "← Simulador",
   "learn.title": "Método de las Tangentes (Teoremas de Mohr)",

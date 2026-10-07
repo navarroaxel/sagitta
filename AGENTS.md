@@ -58,6 +58,9 @@ How diagrams are *drawn and labelled* is selected by the **sign-convention setti
 | File                                                 | Purpose                                                                                                                                          |
 | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `src/lib/types.ts`                                   | `FrameModel`, `FrameNode`, `Member`, `Load`, `Material`, `Support`                                                                               |
+| `src/lib/solver3d.ts`, `sampling3d.ts` | 3D frame solver (6 DOF/node, 12×12 beam) + N/Qy/Qz/T/My/Mz sampling — independent of the 2D solver; same don't-touch-the-math rule once verified |
+| `src/lib/{types3d,solve3d,results3d,presets3d,projection3d}.ts` | 3D id-based model, adapter, derived results/equilibrium, 2 presets, oblique projection (x right, z up, y receding) |
+| `src/app/frame3d/page.tsx` + `Frame3DCanvas`, `Model3DEditor`, `Results3DPanel`, `canvas3d/*` | `/frame3d` — 3D simulator page (separate from the 2D app) |
 | `src/lib/solver.ts`                                  | `solveFrame` — direct stiffness method, Gaussian elimination                                                                                     |
 | `src/lib/sampling.ts`                                | `sampleMember` — N/Q/M at 64+ stations along a member                                                                                            |
 | `src/lib/solve.ts`                                   | Adapter: id-based model → solver input + `sampleMember` calls                                                                                    |
@@ -101,4 +104,4 @@ Total ~213 checks. Component tests render with `@testing-library/react`; remembe
 
 ## Out of scope (v1)
 
-Dynamic/modal analysis, second-order effects, member self-weight, 3D frames, inclined supports, temperature loads, member-internal concentrated moments. Leave hook slots but do not build.
+Dynamic/modal analysis, second-order effects, member self-weight, 3D hinges/releases, 3D drag-to-move, 3D share links (the 3D solver + `/frame3d` page exist and are tested in `solver3d.test.ts`, `frame3d.test.ts`, `Frame3DCanvas.test.tsx`), inclined supports, temperature loads, member-internal concentrated moments. Leave hook slots but do not build.
