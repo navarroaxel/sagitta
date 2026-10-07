@@ -164,6 +164,15 @@ export function Diagram3DLayer({
                     stroke={colors.paper}
                     strokeWidth={1.5}
                   />
+                  {/* the value where the shape changes (the peak already has its own label) */}
+                  {showValues && k !== kPk && (
+                    <ValueLabel
+                      x={cx + ud[0] * side * Math.sign(v[k] || 1) * 12}
+                      y={cy + ud[1] * side * Math.sign(v[k] || 1) * 12}
+                      v={v[k]}
+                      unit={unit}
+                    />
+                  )}
                 </g>
               );
             })}
