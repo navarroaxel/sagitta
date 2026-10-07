@@ -32,7 +32,7 @@ describe("circular tubes are computed from D and t", () => {
       { A: 359.76, g: 282.41, I: 365706, S: 7999, r: 31.88, Z: 10329 },
     ],
     [1828.8, 19.05, { A: 1083.09, I: 4434609, S: 48497, r: 63.99, Z: 62407 }],
-  ])("Ø%s×%s", (D, t, printed) => {
+  ])("CHS %s×%s", (D, t, printed) => {
     const c = circularTube(D, t);
     for (const [k, v] of Object.entries(printed)) {
       // printed values are rounded to 2 decimals (or fewer digits for the big ones)
@@ -42,8 +42,8 @@ describe("circular tubes are computed from D and t", () => {
   });
   test("size and ordering", () => {
     expect(CHS_TUBES).toHaveLength(168);
-    expect(CHS_TUBES[0].name).toBe("Ø12.7×0.7");
-    expect(CHS_TUBES.at(-1)!.name).toBe("Ø1828.8×19.05");
+    expect(CHS_TUBES[0].name).toBe("CHS 12.7×0.7");
+    expect(CHS_TUBES.at(-1)!.name).toBe("CHS 1828.8×19.05");
   });
 });
 
@@ -103,7 +103,7 @@ describe("filterTubes", () => {
   test("by kind and number", () => {
     expect(
       filterTubes({ text: "168 6.35", kind: "CHS" }).map((x) => x.name),
-    ).toEqual(["Ø168.3×6.35"]);
+    ).toEqual(["CHS 168.3×6.35"]);
     expect(
       filterTubes({ text: "100", kind: "SHS" }).every((x) => x.D === 100),
     ).toBe(true);

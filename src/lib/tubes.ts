@@ -3,7 +3,7 @@
 // Not used by the 3D solver — a reference table only.
 
 export interface Tube {
-  name: string; // "Ø168.3×6.35", "□100×4.76"
+  name: string; // "CHS 168.3×6.35", "SHS 100×4.76"
   kind: "CHS" | "SHS";
   D: number; // outer diameter (circular) or outer width B (square), mm
   t: number; // wall thickness, mm
@@ -22,7 +22,7 @@ const r2 = (x: number) => Math.round(x * 100) / 100;
 
 // ── circular: every property follows from D and t and the table agrees with the formulas
 // (J = 2I; the torsional modulus is C = J / ((D − t)/2), the same rule the square rows follow;
-// one printed value, Ø219.1×12.7, has C = 2S instead and is not reproduced), so only the
+// one printed value, CHS 219.1×12.7, has C = 2S instead and is not reproduced), so only the
 // (D, t) pairs were read from the scan. ──
 const CHS_PAIRS: [number, number[]][] = [
   [12.7, [0.7, 0.9, 1.25, 1.6]],
@@ -66,7 +66,7 @@ export function circularTube(D: number, t: number): Tube {
   const I = ((Math.PI / 64) * (D ** 4 - d ** 4)) / 1e4;
   const S = I / (D / 20);
   return {
-    name: `Ø${D}×${t}`,
+    name: `CHS ${D}×${t}`,
     kind: "CHS",
     D,
     t,
@@ -192,7 +192,7 @@ const SQ_ROWS: SqRow[] = [
 ];
 
 export const SHS_TUBES: Tube[] = SQ_ROWS.map(([B, t, A, I, S, r, Z, J, C]) => ({
-  name: `□${B}×${t}`,
+  name: `SHS ${B}×${t}`,
   kind: "SHS",
   D: B,
   t,
@@ -221,7 +221,7 @@ export interface TubeQuery {
   sortDir?: "asc" | "desc";
 }
 
-// "168 6.35" finds Ø168.3×6.35; "100" finds every 100 mm tube; numbers must each prefix the
+// "168 6.35" finds CHS 168.3×6.35; "100" finds every 100 mm tube; numbers must each prefix the
 // outer dimension or the thickness.
 export function filterTubes(q: TubeQuery, all: Tube[] = ALL_TUBES): Tube[] {
   const nums =

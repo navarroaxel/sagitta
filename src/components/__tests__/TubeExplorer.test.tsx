@@ -18,22 +18,22 @@ const rowNames = () =>
 describe("TubeExplorer", () => {
   test("circular list and search", () => {
     setup("CHS");
-    expect(rowNames()[0]).toBe("Ø12.7×0.7");
+    expect(rowNames()[0]).toBe("CHS 12.7×0.7");
     fireEvent.change(screen.getByRole("searchbox"), {
       target: { value: "168 6.35" },
     });
-    expect(rowNames()).toEqual(["Ø168.3×6.35"]);
+    expect(rowNames()).toEqual(["CHS 168.3×6.35"]);
   });
 
   test("square list only has square tubes", () => {
     setup("SHS");
-    expect(rowNames().every((n) => n?.startsWith("□"))).toBe(true);
+    expect(rowNames().every((n) => n?.startsWith("SHS"))).toBe(true);
   });
 
   test("detail draws the marks and the legend", () => {
     setup("SHS");
-    fireEvent.click(screen.getByText("□100×4.76"));
-    const svg = screen.getByRole("img", { name: "□100×4.76" });
+    fireEvent.click(screen.getByText("SHS 100×4.76"));
+    const svg = screen.getByRole("img", { name: "SHS 100×4.76" });
     for (const m of ["B = 100", "t = 4.76", "R = 9.52", "X-X", "Y-Y"]) {
       expect(svg.textContent).toContain(m);
     }
