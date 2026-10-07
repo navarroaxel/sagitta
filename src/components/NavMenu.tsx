@@ -11,6 +11,7 @@ const LINKS: { href: string; labelKey: TranslationKey }[] = [
   { href: "/esfuerzos-caracteristicos", labelKey: "esf.link" },
   { href: "/quiz", labelKey: "quiz.link" },
   { href: "/frame3d", labelKey: "f3d.link" },
+  { href: "/perfiles", labelKey: "prof.link" },
 ];
 
 export default function NavMenu() {

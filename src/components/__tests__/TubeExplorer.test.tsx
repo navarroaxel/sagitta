@@ -1,0 +1,66 @@
+import { fireEvent, render, screen } from "@testing-library/react";
+import { LanguageProvider } from "@/contexts/LanguageContext";
+import { TubeExplorer } from "../TubeExplorer";
+
+const setup = (kind: "CHS" | "SHS" | "RHS") =>
+  render(
+    <LanguageProvider>
+      <TubeExplorer kind={kind} />
+    </LanguageProvider>,
+  );
+
+const rowNames = () =>
+  screen
+    .getAllByRole("row")
+    .slice(1)
+    .map((r) => r.querySelector("th")?.textContent);
+
+describe("TubeExplorer", () => {
+  test("circular list and search", () => {
+    setup("CHS");
+    expect(rowNames()[0]).toBe("CHS 12.7×0.7");
+    fireEvent.change(screen.getByRole("searchbox"), {
+      target: { value: "168 6.35" },
+    });
+    expect(rowNames()).toEqual(["CHS 168.3×6.35"]);
+  });
+
+  test("square list only has square tubes", () => {
+    setup("SHS");
+    expect(rowNames().every((n) => n?.startsWith("SHS"))).toBe(true);
+  });
+
+  test("detail draws the marks and the legend", () => {
+    setup("SHS");
+    fireEvent.click(screen.getByText("SHS 100×4.76"));
+    const svg = screen.getByRole("img", { name: "SHS 100×4.76" });
+    for (const m of ["B = 100", "t = 4.76", "R = 9.52", "X-X", "Y-Y"]) {
+      expect(svg.textContent).toContain(m);
+    }
+    expect(
+      screen.getByRole("group", { name: /leyenda|legend/i }).textContent,
+    ).toMatch(/2[.,]00 t/);
+  });
+
+  test("rectangular list, search and detail with B, H, t, R", () => {
+    setup("RHS");
+    expect(rowNames()[0]).toBe("RHS 10×20×0.7");
+    expect(
+      screen.getAllByRole("columnheader").map((h) => h.textContent),
+    ).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("Zy"),
+        expect.stringContaining("Ix"),
+      ]),
+    );
+    fireEvent.change(screen.getByRole("searchbox"), {
+      target: { value: "100 250" },
+    });
+    expect(rowNames()).toHaveLength(5);
+    fireEvent.click(screen.getByText("RHS 100×250×12"));
+    const svg = screen.getByRole("img", { name: "RHS 100×250×12" });
+    for (const m of ["B = 100", "H = 250", "t = 12", "R = 24", "X-X", "Y-Y"]) {
+      expect(svg.textContent).toContain(m);
+    }
+  });
+});

@@ -4,8 +4,8 @@
 // Units here are the table's: mm for dimensions, cm² for A, cm³ for S, cm for r, cm⁴ for I and J.
 
 export interface Profile {
-  name: string; // "IPN 200", "IPB 300"
-  series: "IPN" | "IPB";
+  name: string; // "IPN 200", "IPB 300", "IPE 270" (designation, not always = h in the extra series)
+  series: "IPN" | "IPB" | "IPBl" | "IPBv" | "IPE" | "UPN";
   h: number; // total depth (= the designation), mm
   bf: number; // flange width, mm
   tf: number; // flange thickness, mm
@@ -18,10 +18,26 @@ export interface Profile {
   Sy: number; // cm³
   ry: number; // cm
   J: number; // cm⁴ (torsion constant)
+  hw: number; // clear web height between the root fillets (as printed in the table), mm
+  r: number; // root fillet radius r1, mm
+  r2?: number; // flange-toe radius, mm (only the tapered-flange series: IPN, UPN)
 }
 
 // h, bf, tf, tw, A, Ix, Sx, rx, Iy, Sy, ry, J
-type Row = [number, number, number, number, number, number, number, number, number, number, number, number];
+type Row = [
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+];
 
 const IPN_ROWS: Row[] = [
   [80, 42, 5.9, 3.9, 7.57, 77.8, 19.5, 3.2, 6.29, 3.0, 0.91, 0.71],
@@ -69,10 +85,45 @@ const IPB_ROWS: Row[] = [
   [500, 300, 28, 14.5, 239, 107200, 4290, 21.2, 12620, 842, 7.27, 484],
   [550, 300, 29, 15, 254, 136700, 4970, 23.2, 13080, 872, 7.18, 543],
   [600, 300, 30, 15.5, 270, 171000, 5700, 25.2, 13530, 902, 7.08, 607],
+  [650, 300, 31, 16, 286, 210600, 6480, 27.1, 13980, 932, 6.99, 676],
+  [700, 300, 32, 17, 306, 256900, 7340, 29.0, 14440, 963, 6.87, 760],
+  [800, 300, 33, 17.5, 334, 359100, 8980, 32.8, 14900, 994, 6.68, 850],
+  [900, 300, 35, 18.5, 371, 494100, 10980, 36.5, 15820, 1050, 6.53, 1033],
+  [1000, 300, 36, 19, 400, 644700, 12890, 40.1, 16280, 1090, 6.38, 1145],
 ];
 
-function build(series: Profile["series"], rows: Row[]): Profile[] {
-  return rows.map(([h, bf, tf, tw, A, Ix, Sx, rx, Iy, Sy, ry, J]) => ({
+// hw, r (r1) and, for the tapered-flange series, r2 — one entry per row, same order.
+export type Geo = [number, number, number?];
+
+// IPN: r1 = tw (the table's "tw=r1"); r2 is the toe radius.
+const IPN_HW = [
+  59, 75, 92, 109, 125, 142, 159, 176, 192, 208, 225, 241, 258, 274, 290, 306,
+  323, 343, 363, 384, 404, 445, 485,
+];
+const IPN_R2 = [
+  2.3, 2.7, 3.1, 3.4, 3.8, 4.1, 4.5, 4.9, 5.2, 5.6, 6.1, 6.5, 6.9, 7.3, 7.8,
+  8.2, 8.6, 9.2, 9.7, 10.3, 10.8, 11.9, 13.0,
+];
+const IPN_GEO: Geo[] = IPN_HW.map((hw, i) => [hw, IPN_ROWS[i][3], IPN_R2[i]]);
+
+// IPB: r = (h − 2tf − hw)/2 (the printed "tw=r1" column is tw; the fillet itself is the
+// standard 12/15/18/21/24/27/30 mm of the parallel-flange series).
+const IPB_HW = [
+  56, 74, 92, 104, 122, 134, 152, 164, 177, 196, 208, 225, 243, 261, 298, 344,
+  390, 438, 486, 534, 582, 674, 770, 868,
+];
+const IPB_R = [
+  12, 12, 12, 15, 15, 18, 18, 21, 24, 24, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+  27, 27, 30, 30, 30,
+];
+const IPB_GEO: Geo[] = IPB_HW.map((hw, i) => [hw, IPB_R[i]]);
+
+export function build(
+  series: Profile["series"],
+  rows: Row[],
+  geo: Geo[],
+): Profile[] {
+  return rows.map(([h, bf, tf, tw, A, Ix, Sx, rx, Iy, Sy, ry, J], i) => ({
     name: `${series} ${h}`,
     series,
     h,
@@ -87,11 +138,14 @@ function build(series: Profile["series"], rows: Row[]): Profile[] {
     Sy,
     ry,
     J,
+    hw: geo[i][0],
+    r: geo[i][1],
+    ...(geo[i][2] !== undefined && { r2: geo[i][2] }),
   }));
 }
 
-export const IPN_PROFILES: Profile[] = build("IPN", IPN_ROWS);
-export const IPB_PROFILES: Profile[] = build("IPB", IPB_ROWS);
+export const IPN_PROFILES: Profile[] = build("IPN", IPN_ROWS, IPN_GEO);
+export const IPB_PROFILES: Profile[] = build("IPB", IPB_ROWS, IPB_GEO);
 export const PROFILES: Profile[] = [...IPN_PROFILES, ...IPB_PROFILES];
 
 const BY_NAME = new Map(PROFILES.map((p) => [p.name, p]));
