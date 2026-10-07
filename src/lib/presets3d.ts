@@ -12,7 +12,8 @@ const tFrame: FrameModel3D = {
     { id: "D", x: 5, y: 0, z: 6, support: "free" },
   ],
   members: [
-    { id: "M1", n1: "A", n2: "B", profile: "IPB 300" },
+    // IPB 260 with the strong axis against q_y (54 kN·m): ~12.1 kN/cm²; IPB 240 would not pass.
+    { id: "M1", n1: "A", n2: "B", profile: "IPB 260", rotated: true },
     { id: "M2", n1: "C", n2: "B", profile: "IPB 200" },
     { id: "M3", n1: "B", n2: "E", profile: "IPB 200" },
     { id: "M4", n1: "E", n2: "D", profile: "IPB 200" },
@@ -24,7 +25,7 @@ const tFrame: FrameModel3D = {
   ],
   material,
   unit: "kN",
-  sigmaAdm: 140, // MPa (≈ 0.6 · Fy, steel F-24)
+  sigmaAdm: 14, // kN/cm² (= 140 MPa)
 };
 
 // Horizontal L in the xy plane, fixed at A, vertical load at the free end: the first arm
@@ -42,7 +43,7 @@ const lTorsion: FrameModel3D = {
   loads: [{ id: "L1", type: "nodal", node: "C", fx: 0, fy: 0, fz: -10, mx: 0, my: 0, mz: 0 }],
   material,
   unit: "kN",
-  sigmaAdm: 140, // MPa (≈ 0.6 · Fy, steel F-24)
+  sigmaAdm: 14, // kN/cm² (= 140 MPa)
 };
 
 export interface Preset3D {

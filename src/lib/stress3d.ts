@@ -2,7 +2,7 @@
 //   σ(y', z') = N/A − My·z'/Iy − Mz·y'/Iz
 // (positive My / Mz put tension on the −z' / −y' side, see sampling3d.ts). For a doubly
 // symmetric I section the extreme values are at the four corners of the bounding box.
-// Forces in kN and lengths in m give kN/m²; results are reported in MPa.
+// Forces in kN and lengths in m give kN/m²; results are reported in kN/cm² (1 kN/cm² = 10 MPa).
 import { FrameModel3D, Member3D, Material3D } from "./types3d";
 import { SolveOutput3D } from "./solve3d";
 import { getProfile } from "./profiles";
@@ -31,7 +31,7 @@ export function memberSection(material: Material3D, member: Member3D): Section {
 
 export interface MemberStress {
   profile: string;
-  sigma: number[]; // governing signed σ (MPa) at every station
+  sigma: number[]; // governing signed σ (kN/cm²) at every station
   max: { sigma: number; x: number; y: number; z: number }; // largest |σ|, y'/z' of its corner
   ratio: number; // |σ|max / σ adm
   ok: boolean;
@@ -58,7 +58,7 @@ export function computeStress(model: FrameModel3D, solved: SolveOutput3D): Stres
       for (const [sy, sz] of CORNERS) {
         const y = sy * sec.cy!,
           z = sz * sec.cz!;
-        const s = (st.N / sec.A - (st.My * z) / sec.Iy - (st.Mz * y) / sec.Iz) / 1000; // MPa
+        const s = (st.N / sec.A - (st.My * z) / sec.Iy - (st.Mz * y) / sec.Iz) / 1e4; // kN/cm²
         if (Math.abs(s) > Math.abs(gov) + 1e-12) {
           gov = s;
           gy = y;

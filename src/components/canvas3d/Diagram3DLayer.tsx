@@ -51,7 +51,7 @@ export function Diagram3DLayer({
         : diagram === "T"
           ? colors.loads
           : colors.moment;
-  const unit = isStress ? "MPa" : diagram === "T" || diagram[0] === "M" ? `${model.unit}·m` : model.unit;
+  const unit = isStress ? "kN/cm²" : diagram === "T" || diagram[0] === "M" ? `${model.unit}·m` : model.unit;
 
   // value of the drawn quantity at every station of every member (σ: only members with a profile)
   const vals: number[][] = solved.stations.map((st, e) =>

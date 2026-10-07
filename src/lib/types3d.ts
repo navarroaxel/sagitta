@@ -63,5 +63,5 @@ export interface FrameModel3D {
   loads: Load3D[];
   material: Material3D;
   unit: string; // force unit label only, e.g. 'kN'
-  sigmaAdm: number; // allowable normal stress, MPa (stresses assume kN and m)
+  sigmaAdm: number; // allowable normal stress, kN/cm² (stresses assume kN and m)
 }

@@ -21,7 +21,7 @@ const cantilever = (
   loads: [{ id: "L1", type: "nodal", node: "B", fx: 0, fy: 0, fz: 0, mx: 0, my: 0, mz: 0, ...load }],
   material: mat,
   unit: "kN",
-  sigmaAdm: 140,
+  sigmaAdm: 14,
 });
 
 const stressOf = (m: FrameModel3D) => computeStress(m, solveModel3D(m)!)[0]!;
@@ -52,29 +52,29 @@ describe("computeStress", () => {
   test("strong-axis bending: σ = M / Sx, tension on top for a downward tip load", () => {
     const st = stressOf(cantilever({ fz: -10 }));
     const sx = getProfile("IPB 200")!.Sx * 1e-6; // m³
-    near(st.max.sigma, 40 / sx / 1000, 1e-3); // 40 kN·m
+    near(st.max.sigma, 40 / sx / 1e4, 1e-3); // 40 kN·m
     expect(st.max.sigma).toBeGreaterThan(0); // tension at the top fibre
     near(st.max.x, 0);
     near(st.max.z, 0.1);
-    near(st.ratio, st.max.sigma / 140, 1e-9);
+    near(st.ratio, st.max.sigma / 14, 1e-9);
   });
 
   test("rotated section bends about the weak axis: σ = M / Sy", () => {
     const st = stressOf(cantilever({ fz: -10 }, { rotated: true }));
-    near(Math.abs(st.max.sigma), 40 / (getProfile("IPB 200")!.Sy * 1e-6) / 1000, 1e-3);
-    expect(st.ok).toBe(false); // 200 MPa > 140 MPa
+    near(Math.abs(st.max.sigma), 40 / (getProfile("IPB 200")!.Sy * 1e-6) / 1e4, 1e-3);
+    expect(st.ok).toBe(false); // 20 kN/cm² > 14 kN/cm²
   });
 
   test("axial load: σ = N / A, uniform along the member", () => {
     const st = stressOf(cantilever({ fx: 100 }));
-    near(st.max.sigma, 100 / 78.1e-4 / 1000, 1e-6);
+    near(st.max.sigma, 100 / 78.1e-4 / 1e4, 1e-6);
     st.sigma.forEach((s) => near(s, st.max.sigma, 1e-6));
   });
 
   test("biaxial bending adds both contributions at the governing corner", () => {
     const st = stressOf(cantilever({ fz: -10, fy: 5 }));
     const p = getProfile("IPB 200")!;
-    const expected = (40 / (p.Sx * 1e-6) + 20 / (p.Sy * 1e-6)) / 1000;
+    const expected = (40 / (p.Sx * 1e-6) + 20 / (p.Sy * 1e-6)) / 1e4;
     near(Math.abs(st.max.sigma), expected, 1e-3);
   });
 

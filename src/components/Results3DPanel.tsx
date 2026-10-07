@@ -119,7 +119,7 @@ export default function Results3DPanel({
                   <tr key={m.id} data-testid={`stress-row-${m.id}`}>
                     <td className={td}>{m.id}</td>
                     <td className={td}>{r ? r.profile : "—"}</td>
-                    <td className={td}>{r ? r.max.sigma.toFixed(1) : "—"}</td>
+                    <td className={td}>{r ? r.max.sigma.toFixed(2) : "—"}</td>
                     <td className={td} style={r ? { color: ratioColor(r.ratio) } : undefined}>
                       {r ? r.ratio.toFixed(2) : "—"}
                     </td>
@@ -133,7 +133,7 @@ export default function Results3DPanel({
           <p className="text-xs text-stone-500 dark:text-stone-400">{t("f3d.results.no_profile")}</p>
         )}
         <p className="mt-1 text-xs text-stone-500 dark:text-stone-400">
-          σ adm = {model.sigmaAdm} MPa. {t("f3d.results.stress_note")}
+          σ adm = {model.sigmaAdm} kN/cm². {t("f3d.results.stress_note")}
         </p>
       </section>
 

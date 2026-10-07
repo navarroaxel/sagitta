@@ -11,6 +11,7 @@ import { SettingsPanel } from "@/components/SettingsPanel";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { solveModel3D } from "@/lib/solve3d";
 import { computeStress } from "@/lib/stress3d";
+import SectionCut, { CutState, resolveCut } from "@/components/SectionCut";
 import { PRESETS_3D } from "@/lib/presets3d";
 import { DIAGRAMS_3D, Diagram3D } from "@/lib/results3d";
 import { FrameModel3D } from "@/lib/types3d";
@@ -31,12 +32,16 @@ export default function Frame3DPage() {
     colorByStress: false,
     scale: 1,
   });
+  const [cut, setCut] = useState<CutState>({ on: false, member: "", t: 0 });
   const svgRef = useRef<SVGSVGElement>(null);
   const solved = useMemo(() => solveModel3D(model), [model]);
   const stress = useMemo(
     () => (solved && solved.result.stable ? computeStress(model, solved) : null),
     [model, solved],
   );
+  const cutRes = cut.on ? resolveCut(model, solved, cut) : null;
+  const cutMarker =
+    cutRes && solved ? { member: cutRes.e, x: solved.stations[cutRes.e][cutRes.station].x } : null;
   const hasError = !solved || !solved.result.stable;
   const toggle = (
     k: "showLoads" | "showReactions" | "showValues" | "showMemberLabels" | "colorByStress",
@@ -124,6 +129,15 @@ export default function Frame3DPage() {
           </label>
         ))}
         <label className="flex items-center gap-1 text-stone-600 dark:text-stone-300">
+          <input
+            type="checkbox"
+            aria-label={t("f3d.cut.toggle")}
+            checked={cut.on}
+            onChange={() => setCut((c) => ({ ...c, on: !c.on }))}
+          />
+          {t("f3d.cut.toggle")}
+        </label>
+        <label className="flex items-center gap-1 text-stone-600 dark:text-stone-300">
           {t("controls.scale")}
           <input
             type="range"
@@ -148,9 +162,15 @@ export default function Frame3DPage() {
         </aside>
         <main className="flex flex-1 flex-col items-center justify-center gap-2 overflow-auto bg-stone-100 p-2 dark:bg-stone-800">
           <div className="overflow-hidden rounded border border-stone-200 shadow-sm dark:border-stone-600">
-            <Frame3DCanvas model={model} solved={solved} stress={stress} viewOpts={opts} svgRef={svgRef} />
+            <Frame3DCanvas model={model} solved={solved} stress={stress} cut={cutMarker} viewOpts={opts} svgRef={svgRef} />
           </div>
           <p className="max-w-[900px] text-xs text-stone-500 dark:text-stone-400">{t("f3d.note")}</p>
+          {cut.on && (
+            <section className="w-full max-w-[900px] rounded border border-stone-200 bg-white p-3 dark:border-stone-600 dark:bg-stone-900">
+              <h2 className="mb-2 text-sm font-semibold">{t("f3d.cut.title")}</h2>
+              <SectionCut model={model} solved={solved} stress={stress} cut={cut} onChange={setCut} />
+            </section>
+          )}
         </main>
       </div>
       <Footer />

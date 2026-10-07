@@ -35,6 +35,9 @@ describe("Model3DEditor", () => {
     fireEvent.click(screen.getByText("members"));
     fireEvent.change(screen.getByLabelText("M1 profile"), { target: { value: "IPN 300" } });
     expect(last.members[0].profile).toBe("IPN 300");
+    expect(last.members[0].rotated).toBe(true); // the preset's column is already rotated
+    fireEvent.click(screen.getByLabelText("M1 rotated"));
+    expect(last.members[0].rotated).toBe(false);
     fireEvent.click(screen.getByLabelText("M1 rotated"));
     expect(last.members[0].rotated).toBe(true);
     fireEvent.change(screen.getByLabelText("M1 profile"), { target: { value: "" } });
@@ -55,8 +58,8 @@ describe("Model3DEditor", () => {
     let last = base;
     render(<Harness onModel={(m) => (last = m)} />);
     fireEvent.click(screen.getByText("material"));
-    fireEvent.change(screen.getByLabelText("sigma adm"), { target: { value: "160" } });
-    expect(last.sigmaAdm).toBe(160);
+    fireEvent.change(screen.getByLabelText("sigma adm"), { target: { value: "16" } });
+    expect(last.sigmaAdm).toBe(16);
   });
 });
 
@@ -65,7 +68,7 @@ describe("Results3DPanel stress table", () => {
     const solved = solveModel3D(base)!;
     render(<Results3DPanel model={base} solved={solved} stress={computeStress(base, solved)} />);
     base.members.forEach((m) => expect(screen.getByTestId(`stress-row-${m.id}`)).toBeTruthy());
-    expect(screen.getByTestId("stress-row-M1").textContent).toContain("IPB 300");
+    expect(screen.getByTestId("stress-row-M1").textContent).toContain("IPB 260");
     expect(screen.getByTestId("stress-row-M1").textContent).toContain("✓");
   });
 

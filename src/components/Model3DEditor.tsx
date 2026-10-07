@@ -407,7 +407,7 @@ export default function Model3DEditor({
                 className={`${inputCls} w-24`}
                 value={model.sigmaAdm}
                 min={0}
-                step={1}
+                step={0.5}
                 onChange={(e) => onChange({ ...model, sigmaAdm: parseFloat(e.target.value) || 0 })}
               />
             </label>
