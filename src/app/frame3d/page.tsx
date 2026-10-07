@@ -160,13 +160,15 @@ export default function Frame3DPage() {
         <aside className="w-[380px] flex-shrink-0 overflow-auto border-r border-stone-200 bg-white dark:border-stone-700 dark:bg-stone-900">
           <Model3DEditor model={model} onChange={setModel} solved={solved} stress={stress} />
         </aside>
-        <main className="flex flex-1 flex-col items-center justify-center gap-2 overflow-auto bg-stone-100 p-2 dark:bg-stone-800">
-          <div className="overflow-hidden rounded border border-stone-200 shadow-sm dark:border-stone-600">
-            <Frame3DCanvas model={model} solved={solved} stress={stress} cut={cutMarker} viewOpts={opts} svgRef={svgRef} />
+        <main className="flex flex-1 flex-wrap content-start items-start justify-center gap-3 overflow-auto bg-stone-100 p-2 dark:bg-stone-800">
+          <div className="min-w-[420px] flex-1 basis-[560px]" style={{ maxWidth: 900 }}>
+            <div className="overflow-hidden rounded border border-stone-200 shadow-sm dark:border-stone-600">
+              <Frame3DCanvas model={model} solved={solved} stress={stress} cut={cutMarker} viewOpts={opts} svgRef={svgRef} />
+            </div>
+            <p className="mt-2 text-xs text-stone-500 dark:text-stone-400">{t("f3d.note")}</p>
           </div>
-          <p className="max-w-[900px] text-xs text-stone-500 dark:text-stone-400">{t("f3d.note")}</p>
           {cut.on && (
-            <section className="w-full max-w-[900px] rounded border border-stone-200 bg-white p-3 dark:border-stone-600 dark:bg-stone-900">
+            <section className="min-w-[380px] flex-1 basis-[420px] rounded border border-stone-200 bg-white p-3 dark:border-stone-600 dark:bg-stone-900" style={{ maxWidth: 580 }}>
               <h2 className="mb-2 text-sm font-semibold">{t("f3d.cut.title")}</h2>
               <SectionCut model={model} solved={solved} stress={stress} cut={cut} onChange={setCut} />
             </section>

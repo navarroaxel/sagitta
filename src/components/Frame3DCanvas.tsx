@@ -88,10 +88,15 @@ export default function Frame3DCanvas({
     <svg
       ref={svgRef}
       data-testid="frame3d-canvas"
-      width={SVG_W}
-      height={SVG_H}
       viewBox={`0 0 ${SVG_W} ${SVG_H}`}
-      style={{ background: colors.paper, userSelect: "none", display: "block" }}
+      style={{
+        background: colors.paper,
+        userSelect: "none",
+        display: "block",
+        width: "100%",
+        height: "auto",
+        maxWidth: SVG_W,
+      }}
     >
       <Supports3D model={model} proj={proj} />
 
