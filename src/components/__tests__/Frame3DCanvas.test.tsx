@@ -283,3 +283,35 @@ describe("zoom and pan (as in the 2D canvas)", () => {
     expect(Array.from(svg.children).some((c) => c.tagName === "g" && c !== group && c.querySelector("line"))).toBe(true);
   });
 });
+
+describe("load markers on the diagrams", () => {
+  const draw = (diagram: View3DOptions["diagram"], model = tFrame) =>
+    render(<Frame3DCanvas model={model} solved={solveModel3D(model)} viewOpts={{ ...opts, diagram }} />);
+
+  test("the partial q_z of the hat is marked where it starts and ends (M3 only)", () => {
+    draw("Mx");
+    expect(screen.getByTestId("diagram-mark-M3-0")).toBeTruthy();
+    expect(screen.getByTestId("diagram-mark-M3-1")).toBeTruthy();
+    expect(screen.queryByTestId("diagram-mark-M3-2")).toBeNull();
+    // full-span loads (the column's q_y) and unloaded members get no marker
+    expect(screen.queryByTestId("diagram-mark-M1-0")).toBeNull();
+    expect(screen.queryByTestId("diagram-mark-M2-0")).toBeNull();
+  });
+
+  test("the first marker sits 1 m of 5 along the hat, on the curve", () => {
+    draw("Mx");
+    const hat = screen.getByTestId("member3d-M3");
+    const [x1, x2] = [parseFloat(hat.getAttribute("x1")!), parseFloat(hat.getAttribute("x2")!)];
+    const guide = screen.getByTestId("diagram-mark-M3-0").querySelector("line")!;
+    expect(parseFloat(guide.getAttribute("x1")!)).toBeCloseTo(x1 + (x2 - x1) / 5, 3);
+  });
+
+  test("point loads on a member are marked too", () => {
+    const m: FrameModel3D = {
+      ...tFrame,
+      loads: [{ id: "P", type: "mpoint", member: "M3", dist: 2, gx: 0, gy: 0, gz: -5 }],
+    };
+    draw("Qy", m);
+    expect(screen.getByTestId("diagram-mark-M3-0")).toBeTruthy();
+  });
+});
