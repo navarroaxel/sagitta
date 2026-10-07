@@ -117,3 +117,41 @@ describe("T-frame preset uses a partial load on a single hat member", () => {
     near(atB.Mx, -24); // hogging: tension on top, which is −y for the hat (y points down)
   });
 });
+
+describe("T-frame hat M3 (partial load q_z = 2 kN/m on 1..5 m): shape of Qy and Mx", () => {
+  const model = PRESETS_3D.find((p) => p.key === "t_frame")!.model;
+  const st = solveModel3D(model)!.stations[2]; // B -> D, x from B
+  const at = (x: number) => st.reduce((m, s) => (Math.abs(s.x - x) < Math.abs(m.x - x) ? s : m));
+
+  test("Qy is a constant −8 up to x = 1 m, then falls linearly to 0 at D", () => {
+    st.filter((s) => s.x <= 1 + 1e-9).forEach((s) => near(s.Qy, -8));
+    st.filter((s) => s.x >= 1 + 1e-6).forEach((s) => near(s.Qy, -8 + 2 * (s.x - 1)));
+    near(at(5).Qy, 0);
+  });
+
+  test("Mx is linear (slope 8) on 0..1 m and a parabola (curvature −2) on 1..5 m", () => {
+    const d2 = (a: number, b: number) => {
+      const pts = st.filter((s) => s.x >= a && s.x <= b);
+      const k = Math.floor(pts.length / 2);
+      const [p0, p1, p2] = [pts[k - 1], pts[k], pts[k + 1]];
+      const s1 = (p1.Mx - p0.Mx) / (p1.x - p0.x),
+        s2 = (p2.Mx - p1.Mx) / (p2.x - p1.x);
+      return { slope: s1, curv: (s2 - s1) / ((p2.x - p0.x) / 2) };
+    };
+    const lin = d2(0, 1 - 1e-6);
+    near(lin.slope, 8);
+    near(lin.curv, 0);
+    const par = d2(1 + 1e-6, 5);
+    near(par.curv, -2, 1e-3);
+  });
+
+  test("there is no kink at x = 1 m: the slope of Mx is continuous (8 on both sides) and only the curvature changes", () => {
+    const k = st.findIndex((s) => s.x >= 1 - 1e-9);
+    const before = (st[k].Mx - st[k - 1].Mx) / (st[k].x - st[k - 1].x);
+    const after = (st[k + 1].Mx - st[k].Mx) / (st[k + 1].x - st[k].x);
+    near(before, 8);
+    expect(Math.abs(after - 8)).toBeLessThan(0.05); // 8 − q·Δx for the next, 1/64-of-the-span, station
+    near(at(1).Mx, -16);
+    near(at(5).Mx, 0);
+  });
+});
