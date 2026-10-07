@@ -46,12 +46,15 @@ describe("3D T-frame, fixed base", () => {
   test("My = -29 (29 kN·m along -y)", () => close(R.my, -29));
   test("Mz = 0", () => close(R.mz, 0));
 
-  test("column: Mz goes 54 -> 0 (UDL), My is a constant 29 kN·m (hat moment)", () => {
+  test("column: My goes 54 -> 0 (UDL), Mx is a constant 29 kN·m (hat moment)", () => {
     const st = sampleMember3D(model, res, 0, 64);
-    close(Math.abs(st[0].Mz), 54, 1e-6); // q_y·L²/2 (local y' = global y)
-    close(Math.abs(st[0].My), 29, 1e-6); // carried over from the hat
-    close(st[st.length - 1].Mz, 0, 1e-6);
-    close(Math.abs(st[st.length - 1].My), 29, 1e-6);
+    // course triad of the column: z down, x = −Y (out of the page), y = −X
+    const base = st.reduce((b, p) => (p.z > b.z ? p : b)); // z runs downwards: the base has the largest z
+    const top = st.reduce((b, p) => (p.z < b.z ? p : b));
+    close(Math.abs(base.My), 54, 1e-6); // q_y·L²/2, about the in-plane axis y
+    close(Math.abs(base.Mx), 29, 1e-6); // carried over from the hat, about the out-of-plane axis x
+    close(top.My, 0, 1e-6);
+    close(Math.abs(top.Mx), 29, 1e-6);
   });
 });
 
@@ -126,15 +129,30 @@ describe("planar portal in x-z == 2D solver", () => {
       close(r3.U[6 * i + 4], -r2.U[3 * i + 2], 1e-7);
     });
   });
-  test("N, V and M diagrams match for every member", () => {
+  test("N, Q and M diagrams match for every member (same magnitude, one sign per member)", () => {
+    // The 2D solver uses the engineering convention of the member's own axes; the 3D one the
+    // course triad (z down / left, x out of the plane), so Q and M agree up to a sign that is
+    // constant along each member.
     m2.members.forEach((_, e) => {
       const s2 = sampleMember(m2, r2, e, 32);
       const s3 = sampleMember3D(m3, r3, e, 32);
       expect(s3.length).toBe(s2.length);
+      let sq = 0,
+        sm = 0;
       s2.forEach((s, k) => {
         close(s3[k].N, s.N, 1e-6);
-        close(s3[k].Qz, s.Q, 1e-6);
-        close(s3[k].My, s.M, 1e-6);
+        close(Math.abs(s3[k].Qy), Math.abs(s.Q), 1e-6);
+        close(Math.abs(s3[k].Mx), Math.abs(s.M), 1e-6);
+        if (Math.abs(s.Q) > 1e-6) {
+          const f = Math.sign(s3[k].Qy * s.Q);
+          if (sq === 0) sq = f;
+          expect(f).toBe(sq);
+        }
+        if (Math.abs(s.M) > 1e-6) {
+          const f = Math.sign(s3[k].Mx * s.M);
+          if (sm === 0) sm = f;
+          expect(f).toBe(sm);
+        }
       });
     });
   });
@@ -153,25 +171,27 @@ describe("cantilever along x", () => {
     loads: [],
   };
 
-  test("tip load in z: PL³/(3·E·Iy), reaction and hogging My", () => {
+  test("tip load in z: PL³/(3·E·Iy), reaction, Mx = +PL (tension on top) at the support", () => {
     const m: Solver3DModel = { ...base, loads: [{ type: "nodal", node: 1, fz: -P }] };
     const res = solveFrame3D(m);
     close(res.U[6 + 2], (-P * L ** 3) / (3 * E * 2e-4), 1e-9);
     close(res.reactions[0].fz, P);
     close(res.reactions[0].my, -P * L);
     const st = sampleMember3D(m, res, 0);
-    close(st[0].My, -P * L);
-    close(st[st.length - 1].My, 0);
-    close(st[0].Qz, P);
+    // course triad of a beam along +x: z = −X, y = Z, x = −Y
+    close(st[0].Mx, P * L);
+    close(st[st.length - 1].Mx, 0);
+    close(st[0].Qy, P);
+    close(st[0].z, L); // z runs from the tip (z = 0) towards the support
   });
-  test("tip load in y: PL³/(3·E·Iz), reaction and hogging Mz", () => {
+  test("tip load in y: PL³/(3·E·Iz), reaction, My = +PL and Qx = −P at the support", () => {
     const m: Solver3DModel = { ...base, loads: [{ type: "nodal", node: 1, fy: -P }] };
     const res = solveFrame3D(m);
     close(res.U[6 + 1], (-P * L ** 3) / (3 * E * 5e-5), 1e-9);
     close(res.reactions[0].mz, P * L);
     const st = sampleMember3D(m, res, 0);
-    close(st[0].Mz, -P * L);
-    close(st[0].Qy, P);
+    close(st[0].My, P * L);
+    close(st[0].Qx, -P); // x = −Y: the face carries +Y, i.e. −x
   });
   test("tip torque: twist T·L/(G·J), constant torsor", () => {
     const m: Solver3DModel = { ...base, loads: [{ type: "nodal", node: 1, mx: 7 }] };
@@ -194,9 +214,9 @@ describe("cantilever along x", () => {
     };
     const res = solveFrame3D(m);
     const st = sampleMember3D(m, res, 0);
-    close(st[0].Qz, P);
-    close(st[st.length - 1].Qz, 0);
-    close(st[0].My, -P * L * 0.5);
+    close(st[0].Qy, P);
+    close(st[st.length - 1].Qy, 0);
+    close(st[0].Mx, P * L * 0.5);
   });
 });
 
@@ -356,7 +376,7 @@ describe("partial UDL (from/to)", () => {
     sSingle.forEach((s) => {
       const q = ref.reduce((best, p) => (Math.abs(p.x - s.x) < Math.abs(best.x - s.x) ? p : best));
       if (Math.abs(q.x - s.x) > 1e-3) return;
-      (["N", "Qy", "Qz", "T", "My", "Mz"] as const).forEach((k) => close(s[k], q[k], 1e-4));
+      (["N", "Qx", "Qy", "T", "Mx", "My"] as const).forEach((k) => close(s[k], q[k], 1e-4));
     });
   });
   test("global equilibrium: reactions balance the resultant g·(b−a)", () => {

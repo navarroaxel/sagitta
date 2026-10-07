@@ -192,10 +192,10 @@ const EN = {
   "f3d.diagram": "Diagram:",
   "f3d.diagram_none": "None",
   "f3d.note":
-    "Oblique view: x right, z up, y receding. Moments are drawn on the tension side; other diagrams along the member's local axis.",
+    "Oblique view: x right, z up, y receding (global axes). Local triad of each member: z along the member (down or to the left), x out of the plane, y completing the right-handed triad. Moments are drawn on the tension side.",
   "f3d.nodes.z": "z",
   "f3d.material.note":
-    "E, G in kN/m², A in m², Iy/Iz/J in m⁴. Local axes: x' along the member (n1→n2), Iy is bending in the x'-z' plane, Iz in x'-y'.",
+    "E, G in kN/m², A in m², Ix/Iy/J in m⁴. Local axes: z along the member, x out of the plane, y in the section; Ix is the inertia about x (bending in the y-z plane), Iy about y.",
   "f3d.error":
     "⚠ Unstable, singular or malformed 3D model — check supports, members and loads. Diagrams cannot be computed.",
   "f3d.results.peaks": "Peak internal forces",
@@ -203,7 +203,7 @@ const EN = {
   "f3d.members.profile_none": "— (material tab)",
   "f3d.members.rotate": "Rotate 90°",
   "f3d.members.rotate_title":
-    "The strong axis bends the member in the x'-y' plane instead of x'-z'",
+    "The strong axis bends the member in the x-z plane instead of the y-z plane",
   "f3d.material.sigma_adm": "σ adm (kN/cm²)",
   "f3d.results.stress": "Normal stress",
   "f3d.results.profile": "Profile",
@@ -212,7 +212,7 @@ const EN = {
   "f3d.results.no_profile":
     "Assign an IPN/IPB profile to a member (members tab) to check its stress.",
   "f3d.results.stress_note":
-    "σ = N/A − My·z/Iy − Mz·y/Iz at the most stressed corner of the section. Assumes kN and m. Profiles: CIRSOC tables (IPN, IPB).",
+    "σ = N/A + Mx·y/Ix − My·x/Iy at the most stressed corner of the section. Assumes kN and m. Profiles: CIRSOC tables (IPN, IPB).",
   "f3d.view.stress_colors": "Color by σ/σ adm",
   "f3d.view.local_axes": "Local axes",
   "f3d.loads.from": "from (m)",
@@ -224,7 +224,7 @@ const EN = {
   "f3d.cut.peak": "Go to σ max",
   "f3d.cut.no_profile": "Assign an IPN/IPB profile to a member (members tab) to see its section cut.",
   "f3d.cut.view_note":
-    "Seen from +x' towards the member: y' to the right, z' up. The 'Z' diagrams are σ from N, My and Mz; the corner values are their sum. Fillets are not drawn.",
+    "Seen from +z (towards you): x to the right, y up. The 'Z' diagrams are σ from N, Mx and My; the corner values are their sum. Fillets are not drawn.",
   "f3d.cut.neutral": "neutral axis",
   "f3d.cut.forces": "Forces at the cut",
   "f3d.cut.corner": "Corner",
@@ -588,10 +588,10 @@ const ES: Record<TranslationKey, string> = {
   "f3d.diagram": "Diagrama:",
   "f3d.diagram_none": "Ninguno",
   "f3d.note":
-    "Vista oblicua: x a la derecha, z arriba, y en profundidad. Los momentos se dibujan del lado traccionado; los demás diagramas, sobre el eje local de la barra.",
+    "Vista oblicua: x a la derecha, z arriba, y en profundidad (ejes globales). Terna local de cada barra: z a lo largo de la barra (hacia abajo o hacia la izquierda), x saliente al plano e y completa la terna derecha. Los momentos se dibujan del lado traccionado.",
   "f3d.nodes.z": "z",
   "f3d.material.note":
-    "E, G en kN/m², A en m², Iy/Iz/J en m⁴. Ejes locales: x' a lo largo de la barra (n1→n2), Iy es la flexión en el plano x'-z' e Iz en x'-y'.",
+    "E, G en kN/m², A en m², Ix/Iy/J en m⁴. Ejes locales: z a lo largo de la barra, x saliente al plano, y en la sección; Ix es la inercia respecto de x (flexión en el plano y-z) e Iy respecto de y.",
   "f3d.error":
     "⚠ Modelo 3D inestable, singular o mal formado — revisá apoyos, barras y cargas. No se pueden calcular los diagramas.",
   "f3d.results.peaks": "Esfuerzos máximos",
@@ -599,7 +599,7 @@ const ES: Record<TranslationKey, string> = {
   "f3d.members.profile_none": "— (pestaña material)",
   "f3d.members.rotate": "Girar 90°",
   "f3d.members.rotate_title":
-    "El eje fuerte flexa la barra en el plano x'-y' en vez de x'-z'",
+    "El eje fuerte flexa la barra en el plano x-z en vez del plano y-z",
   "f3d.material.sigma_adm": "σ adm (kN/cm²)",
   "f3d.results.stress": "Tensión normal",
   "f3d.results.profile": "Perfil",
@@ -608,7 +608,7 @@ const ES: Record<TranslationKey, string> = {
   "f3d.results.no_profile":
     "Asigná un perfil IPN/IPB a una barra (pestaña barras) para verificar su tensión.",
   "f3d.results.stress_note":
-    "σ = N/A − My·z/Iy − Mz·y/Iz en la esquina más exigida de la sección. Supone kN y m. Perfiles: tablas CIRSOC (IPN, IPB).",
+    "σ = N/A + Mx·y/Ix − My·x/Iy en la esquina más exigida de la sección. Supone kN y m. Perfiles: tablas CIRSOC (IPN, IPB).",
   "f3d.view.stress_colors": "Colorear por σ/σ adm",
   "f3d.view.local_axes": "Ternas locales",
   "f3d.loads.from": "desde (m)",
@@ -620,7 +620,7 @@ const ES: Record<TranslationKey, string> = {
   "f3d.cut.peak": "Ir a σ máx",
   "f3d.cut.no_profile": "Asigná un perfil IPN/IPB a una barra (pestaña barras) para ver su corte de sección.",
   "f3d.cut.view_note":
-    "Visto desde +x' hacia la barra: y' a la derecha, z' arriba. Los diagramas en 'Z' son σ por N, My y Mz; los valores en las esquinas son su suma. No se dibujan los radios de acuerdo.",
+    "Visto desde +z (hacia vos): x a la derecha, y arriba. Los diagramas en 'Z' son σ por N, Mx y My; los valores en las esquinas son su suma. No se dibujan los radios de acuerdo.",
   "f3d.cut.neutral": "eje neutro",
   "f3d.cut.forces": "Esfuerzos en el corte",
   "f3d.cut.corner": "Esquina",

@@ -54,8 +54,8 @@ export interface Material3D {
   E: number;
   G: number;
   A: number;
-  Iy: number;
-  Iz: number;
+  Ix: number; // moment of inertia about the section x axis (bending in the y-z plane)
+  Iy: number; // about the section y axis
   J: number;
 }
 

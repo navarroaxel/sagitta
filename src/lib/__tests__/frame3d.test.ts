@@ -38,8 +38,8 @@ describe("3D presets", () => {
     const model = PRESETS_3D.find((p) => p.key === "l_torsion")!.model;
     const solved = solveModel3D(model)!;
     near(Math.abs(peak3D(solved.stations[0], "T")!.T), 30);
-    near(Math.abs(peak3D(solved.stations[0], "My")!.My) + Math.abs(peak3D(solved.stations[0], "Mz")!.Mz), 40);
-    near(Math.abs(peak3D(solved.stations[1], "My")!.My) + Math.abs(peak3D(solved.stations[1], "Mz")!.Mz), 30);
+    near(Math.abs(peak3D(solved.stations[0], "Mx")!.Mx) + Math.abs(peak3D(solved.stations[0], "My")!.My), 40);
+    near(Math.abs(peak3D(solved.stations[1], "Mx")!.Mx) + Math.abs(peak3D(solved.stations[1], "My")!.My), 30);
   });
 });
 
@@ -114,6 +114,6 @@ describe("T-frame preset uses a partial load on a single hat member", () => {
   test("the hat moment at B is the same −24 + 5 as with the split model", () => {
     const solved = solveModel3D(model)!;
     const atB = solved.stations[2][0]; // start of M3
-    near(atB.My, -24);
+    near(atB.Mx, 24); // hogging: tension on top (+y of the hat)
   });
 });

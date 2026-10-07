@@ -31,8 +31,9 @@ export function solveModel3D(model: FrameModel3D): SolveOutput3D | null {
   const solverModel: Solver3DModel = {
     nodes: model.nodes.map(({ x, y, z, support }) => ({ x, y, z, support })),
     members: model.members.map((m) => {
-      const { A, Iy, Iz, J } = memberSection(model.material, m);
-      return { i: nodeIndex.get(m.n1)!, j: nodeIndex.get(m.n2)!, E, G, A, Iy, Iz, J };
+      // course Ix (about x, bending in the y-z plane) is the solver's Iy (about y')
+      const { A, Ix, Iy, J } = memberSection(model.material, m);
+      return { i: nodeIndex.get(m.n1)!, j: nodeIndex.get(m.n2)!, E, G, A, Iy: Ix, Iz: Iy, J };
     }),
     loads: model.loads.map((l) =>
       l.type === "nodal"

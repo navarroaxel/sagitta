@@ -7,7 +7,7 @@ import type { FrameModel3D } from "../types3d";
 const near = (a: number, b: number, tol = 1e-6) =>
   expect(Math.abs(a - b)).toBeLessThan(tol * Math.max(1, Math.abs(b)));
 
-const mat = { E: 2.1e8, G: 8.1e7, A: 0.01, Iy: 8.3e-5, Iz: 8.3e-5, J: 1.6e-4 };
+const mat = { E: 2.1e8, G: 8.1e7, A: 0.01, Ix: 8.3e-5, Iy: 8.3e-5, J: 1.6e-4 };
 const cantilever = (load: object, member: object = {}): FrameModel3D => ({
   nodes: [
     { id: "A", x: 0, y: 0, z: 0, support: "fixed" },
@@ -19,9 +19,10 @@ const cantilever = (load: object, member: object = {}): FrameModel3D => ({
   unit: "kN",
   sigmaAdm: 14,
 });
-const cut = (m: FrameModel3D, x = 0) => {
+// z runs from the free end (z = 0) towards the support (z = 4 m) for this cantilever
+const cut = (m: FrameModel3D, z = 4) => {
   const s = solveModel3D(m)!;
-  return cutAt(m, s, 0, nearestStation(s, 0, x))!;
+  return cutAt(m, s, 0, nearestStation(s, 0, z))!;
 };
 
 describe("cutAt", () => {
@@ -30,30 +31,28 @@ describe("cutAt", () => {
   const c = cut(model);
 
   test("the four corners add up the three contributions", () => {
-    c.corners.forEach((k) => near(k.sigma, k.sN + k.sMy + k.sMz, 1e-12));
+    c.corners.forEach((k) => near(k.sigma, k.sN + k.sMx + k.sMy, 1e-12));
     near(c.corners[0].sN, 50 / (p.A * 1e-4) / 1e4);
   });
-  test("My stress is antisymmetric in z, Mz stress antisymmetric in y (the 'Z' shapes)", () => {
-    const [pp, pm, mp, mm] = c.corners; // (+y,+z) (+y,−z) (−y,+z) (−y,−z)
-    near(pp.sMy, -pm.sMy);
-    near(pp.sMz, -mp.sMz);
-    near(pp.sMy, mp.sMy);
-    near(mm.sMz, -pm.sMz);
-    near(pp.sMy, 40 / (p.Sx * 1e-6) / 1e4, 1e-3); // hogging My = −40 → tension on top
+  test("Mx stress is antisymmetric in y, My stress antisymmetric in x (the 'Z' shapes)", () => {
+    const [pp, pm, mp, mm] = c.corners; // (+x,+y) (+x,−y) (−x,+y) (−x,−y)
+    near(pp.sMx, -pm.sMx);
+    near(pp.sMy, -mp.sMy);
+    near(pp.sMx, mp.sMx);
+    near(mm.sMy, -pm.sMy);
+    near(pp.sMx, 40 / (p.Sx * 1e-6) / 1e4, 1e-3); // Mx = +40 kN·m → tension on top (+y)
+    near(pp.sMy, 20 / (p.Sy * 1e-6) / 1e4, 1e-3); // fy = +5 → My = −20 → tension at +x
   });
   test("the critical corner matches the member's σ max", () => {
     near(Math.abs(c.critical.sigma), Math.abs(Math.max(...c.corners.map((k) => Math.abs(k.sigma)))));
   });
   test("neutral axis: σ = 0 at both of its end points", () => {
     expect(c.neutral).not.toBeNull();
-    // evaluate σ(y,z) = a + b y + c z with the same corner data
-    const cz = c.corners[0],
-      ref = c.corners[3];
-    const a = cz.sN;
-    const bCoef = cz.sMz / cz.y;
-    const cCoef = cz.sMy / cz.z;
-    void ref;
-    c.neutral!.forEach(([y, z]) => near(a + bCoef * y + cCoef * z, 0, 1e-6));
+    const k = c.corners[0]; // (+x,+y)
+    const a = k.sN,
+      bCoef = k.sMy / k.x, // σ = a + b·x + c·y
+      cCoef = k.sMx / k.y;
+    c.neutral!.forEach(([x, y]) => near(a + bCoef * x + cCoef * y, 0, 1e-6));
   });
   test("pure axial load has no neutral axis inside the box", () => {
     expect(cut(cantilever({ fx: 50 })).neutral).toBeNull();
@@ -65,14 +64,14 @@ describe("cutAt", () => {
   test("stress changes along the member: zero moment at the free end", () => {
     const m = cantilever({ fz: -10 });
     const s = solveModel3D(m)!;
-    const tip = cutAt(m, s, 0, nearestStation(s, 0, 4))!;
-    near(tip.My, 0);
+    const tip = cutAt(m, s, 0, nearestStation(s, 0, 0))!;
+    near(tip.Mx, 0);
     near(tip.critical.sigma, 0);
   });
   test("preset cut reproduces the member peak", () => {
     const t = PRESETS_3D[0].model;
     const s = solveModel3D(t)!;
-    const col = cutAt(t, s, 0, nearestStation(s, 0, 0))!; // column base, IPB 260 rotated
+    const col = cutAt(t, s, 0, nearestStation(s, 0, 6))!; // column base (z runs downwards), IPB 260 rotated
     const p = getProfile("IPB 260")!;
     const bending = (54 / (p.Ix * 1e-8 / (p.h / 2000)) + 29 / (p.Iy * 1e-8 / (p.bf / 2000))) / 1e4;
     near(Math.abs(col.critical.sigma), bending + 8 / (p.A * 1e-4) / 1e4, 1e-3); // compression corner

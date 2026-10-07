@@ -6,20 +6,21 @@ import { Diagram3D } from "@/lib/results3d";
 import { StressResult } from "@/lib/stress3d";
 import { useColors } from "@/contexts/ColorContext";
 import { ValueLabel } from "@/components/canvas/ValueLabel";
+import { courseFrame } from "@/lib/localFrame";
 import { unit2, P2 } from "./arrows3d";
 
 export type DiagramKind = Diagram3D | "S";
 
-// Which local axis a diagram is drawn along, and on which side. Moments go on the tension
-// side (-axis for positive M); N, V, T and σ are drawn along +axis.
-const AXIS: Record<DiagramKind, { axis: "ey" | "ez"; side: 1 | -1 }> = {
-  N: { axis: "ez", side: 1 },
-  Qy: { axis: "ey", side: 1 },
-  Qz: { axis: "ez", side: 1 },
-  T: { axis: "ez", side: 1 },
-  My: { axis: "ez", side: -1 },
-  Mz: { axis: "ey", side: -1 },
-  S: { axis: "ez", side: 1 },
+// Which course axis a diagram is drawn along, and on which side. Moments go on the tension
+// side (Mx > 0: +y; My > 0: −x); N, Q, T and σ are drawn along +axis.
+const AXIS: Record<DiagramKind, { axis: "x" | "y"; side: 1 | -1 }> = {
+  N: { axis: "y", side: 1 },
+  Qx: { axis: "x", side: 1 },
+  Qy: { axis: "y", side: 1 },
+  T: { axis: "y", side: 1 },
+  Mx: { axis: "y", side: 1 },
+  My: { axis: "x", side: -1 },
+  S: { axis: "y", side: 1 },
 };
 
 export function Diagram3DLayer({
@@ -46,7 +47,7 @@ export function Diagram3DLayer({
     ? colors.compression
     : diagram === "N"
       ? colors.tension
-      : diagram === "Qy" || diagram === "Qz"
+      : diagram === "Qx" || diagram === "Qy"
         ? colors.shear
         : diagram === "T"
           ? colors.loads
@@ -77,7 +78,7 @@ export function Diagram3DLayer({
       {model.members.map((m, e) => {
         const a = nodeById.get(m.n1)!;
         const g = solved.result.geo[e];
-        const ud = unit2(proj.dir(g[axis]));
+        const ud = unit2(proj.dir(courseFrame(g)[axis]));
         if (!ud) return null;
         if (isStress && !stress?.[e]) return null;
         const base = (x: number): P2 =>

@@ -4,7 +4,7 @@ import { PRESETS_3D } from "../presets3d";
 import { getProfile } from "../profiles";
 import type { FrameModel3D } from "../types3d";
 
-const mat = { E: 2.1e8, G: 8.1e7, A: 0.01, Iy: 8.3e-5, Iz: 8.3e-5, J: 1.6e-4 };
+const mat = { E: 2.1e8, G: 8.1e7, A: 0.01, Ix: 8.3e-5, Iy: 8.3e-5, J: 1.6e-4 };
 const near = (a: number, b: number, tol = 1e-6) =>
   expect(Math.abs(a - b)).toBeLessThan(tol * Math.max(1, Math.abs(b)));
 
@@ -29,22 +29,22 @@ const stressOf = (m: FrameModel3D) => computeStress(m, solveModel3D(m)!)[0]!;
 describe("memberSection", () => {
   test("no profile -> global material, no fibre distances", () => {
     const s = memberSection(mat, { id: "M", n1: "A", n2: "B" });
-    expect(s).toEqual({ A: 0.01, Iy: 8.3e-5, Iz: 8.3e-5, J: 1.6e-4 });
+    expect(s).toEqual({ A: 0.01, Ix: 8.3e-5, Iy: 8.3e-5, J: 1.6e-4 });
   });
-  test("profile -> table values in m, strong axis about y' by default", () => {
+  test("profile -> table values in m, strong axis about x by default", () => {
     const s = memberSection(mat, { id: "M", n1: "A", n2: "B", profile: "IPB 200" });
     near(s.A, 78.1e-4);
-    near(s.Iy, 5700e-8);
-    near(s.Iz, 2000e-8);
-    near(s.cz!, 0.1);
-    near(s.cy!, 0.1);
+    near(s.Ix, 5700e-8);
+    near(s.Iy, 2000e-8);
+    near(s.halfY!, 0.1); // depth along y
+    near(s.halfX!, 0.1);
   });
   test("rotated swaps the axes (IPN 200: depth 200, width 90)", () => {
     const s = memberSection(mat, { id: "M", n1: "A", n2: "B", profile: "IPN 200", rotated: true });
-    near(s.Iy, 117e-8);
-    near(s.Iz, 2140e-8);
-    near(s.cz!, 0.045);
-    near(s.cy!, 0.1);
+    near(s.Ix, 117e-8);
+    near(s.Iy, 2140e-8);
+    near(s.halfY!, 0.045); // the 90 mm flanges now run along y
+    near(s.halfX!, 0.1);
   });
 });
 
@@ -54,8 +54,8 @@ describe("computeStress", () => {
     const sx = getProfile("IPB 200")!.Sx * 1e-6; // m³
     near(st.max.sigma, 40 / sx / 1e4, 1e-3); // 40 kN·m
     expect(st.max.sigma).toBeGreaterThan(0); // tension at the top fibre
-    near(st.max.x, 0);
-    near(st.max.z, 0.1);
+    near(st.max.z, 4); // z runs from the tip (0) towards the support (4 m)
+    near(st.max.cy, 0.1); // top fibre, +y
     near(st.ratio, st.max.sigma / 14, 1e-9);
   });
 

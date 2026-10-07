@@ -405,7 +405,7 @@ export default function Model3DEditor({
         {tab === "material" && (
           <div className="space-y-2">
             <div className="grid grid-cols-2 gap-2">
-              {(["E", "G", "A", "Iy", "Iz", "J"] as const).map((k) => (
+              {(["E", "G", "A", "Ix", "Iy", "J"] as const).map((k) => (
                 <label key={k} className="flex items-center gap-2 text-xs">
                   <span className="w-5 font-mono">{k}</span>
                   <input

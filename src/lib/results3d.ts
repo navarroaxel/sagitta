@@ -4,8 +4,8 @@ import { SolveOutput3D } from "./solve3d";
 import { Station3D } from "./sampling3d";
 import { udlSpan } from "./solver3d";
 
-export type Diagram3D = "N" | "Qy" | "Qz" | "T" | "My" | "Mz";
-export const DIAGRAMS_3D: Diagram3D[] = ["N", "Qy", "Qz", "T", "My", "Mz"];
+export type Diagram3D = "N" | "Qx" | "Qy" | "T" | "Mx" | "My";
+export const DIAGRAMS_3D: Diagram3D[] = ["N", "Qx", "Qy", "T", "Mx", "My"];
 
 export function peak3D(stations: Station3D[], key: Diagram3D): Station3D | null {
   if (!stations.length) return null;

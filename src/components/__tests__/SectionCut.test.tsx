@@ -20,8 +20,8 @@ function Harness({ model: m = model, start = 0 }: { model?: FrameModel3D; start?
 }
 
 describe("SectionCut", () => {
-  test("column base: corner totals match the member's σ max and are the sum of the parts", () => {
-    render(<Harness />);
+  test("column base (z = L, the column's z runs downwards): corner totals match the member's σ max and are the sum of the parts", () => {
+    render(<Harness start={1} />);
     const corners = [0, 1, 2, 3].map((i) => parseFloat(screen.getByTestId(`cut-corner-${i}`).textContent!));
     const max = Math.max(...corners.map(Math.abs));
     expect(max).toBeCloseTo(Math.abs(stress[0]!.max.sigma), 1);
@@ -33,35 +33,35 @@ describe("SectionCut", () => {
   });
 
   test("draws the three 'Z' diagrams and the neutral axis", () => {
-    render(<Harness />);
-    ["N", "My", "Mz"].forEach((d) => expect(screen.getByTestId(`cut-diagram-${d}`)).toBeTruthy());
+    render(<Harness start={1} />);
+    ["N", "Mx", "My"].forEach((d) => expect(screen.getByTestId(`cut-diagram-${d}`)).toBeTruthy());
     expect(screen.getByTestId("cut-neutral")).toBeTruthy();
   });
 
-  test("moving the slider changes the cut and the forces; top of the column has no Mz", () => {
-    render(<Harness />);
-    expect(screen.getByTestId("cut-x").textContent).toContain("x = 0.00");
+  test("moving the slider changes the cut and the forces; the top of the column has no My", () => {
+    render(<Harness start={1} />);
+    expect(screen.getByTestId("cut-x").textContent).toContain("z = 6.00");
     const row = (k: string) =>
       Array.from(screen.getByTestId("cut-forces").querySelectorAll("tr"))
         .find((r) => r.querySelector("td")!.textContent === k)!
         .querySelectorAll("td")[1].textContent;
-    const mzBase = parseFloat(row("Mz")!);
-    fireEvent.change(screen.getByLabelText("cut position"), { target: { value: "1" } });
-    expect(screen.getByTestId("cut-x").textContent).toContain("x = 6.00");
-    expect(Math.abs(mzBase)).toBeCloseTo(54, 1);
-    expect(parseFloat(row("Mz")!)).toBeCloseTo(0, 1);
+    const myBase = parseFloat(row("My")!);
+    fireEvent.change(screen.getByLabelText("cut position"), { target: { value: "0" } });
+    expect(screen.getByTestId("cut-x").textContent).toContain("z = 0.00");
+    expect(Math.abs(myBase)).toBeCloseTo(54, 1);
+    expect(parseFloat(row("My")!)).toBeCloseTo(0, 1);
   });
 
   test("'go to σ max' jumps to the most stressed section", () => {
-    render(<Harness start={1} />);
+    render(<Harness start={0} />);
     fireEvent.click(screen.getByText("Go to σ max"));
-    expect(screen.getByTestId("cut-x").textContent).toContain("x = 0.00");
+    expect(screen.getByTestId("cut-x").textContent).toContain("z = 6.00"); // the base
   });
 
   test("writes out the check with the critical corner's numbers", () => {
-    render(<Harness />);
+    render(<Harness start={1} />);
     const eq = screen.getByTestId("cut-equation");
-    expect(eq.textContent).toContain("σ = N/A − My·z'/Iy − Mz·y'/Iz ≤ σ adm");
+    expect(eq.textContent).toContain("σ = N/A + Mx·y/Ix − My·x/Iy ≤ σ adm");
     // terms add up to the member's σ max (column base) and the verdict is shown
     const sigma = stress[0]!.max.sigma;
     expect(screen.getByTestId("cut-equation-terms").textContent).toContain(`= ${sigma.toFixed(2)} kN/cm²`);
@@ -75,7 +75,7 @@ describe("SectionCut", () => {
       ...model,
       members: model.members.map((m) => (m.id === "M1" ? { ...m, profile: "IPN 80" } : m)),
     };
-    render(<Harness model={weak} />);
+    render(<Harness model={weak} start={1} />);
     const res = screen.getByTestId("cut-equation-result").textContent!;
     expect(res).toContain(">");
     expect(res).toContain("✗");

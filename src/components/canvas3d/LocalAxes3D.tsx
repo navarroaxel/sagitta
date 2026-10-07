@@ -2,15 +2,17 @@ import React from "react";
 import { FrameModel3D } from "@/lib/types3d";
 import { SolveOutput3D } from "@/lib/solve3d";
 import { Projection3D } from "@/lib/projection3d";
+import { courseFrame } from "@/lib/localFrame";
 import { Head, unit2, P2 } from "./arrows3d";
 
 const AXES = [
-  { key: "x", vec: "ex", color: "#dc2626" },
-  { key: "y", vec: "ey", color: "#16a34a" },
-  { key: "z", vec: "ez", color: "#2563eb" },
+  { key: "x", color: "#dc2626" },
+  { key: "y", color: "#16a34a" },
+  { key: "z", color: "#2563eb" },
 ] as const;
 
-// Local triad (x' along the member i -> j, y', z') of every member, drawn a quarter of
+// Local triad (course convention: z' along the member, down or to the left; x' out of the
+// plane; y') of every member, drawn a quarter of
 // the way along it so it does not collide with the nodes.
 export function LocalAxes3D({
   model,
@@ -37,8 +39,8 @@ export function LocalAxes3D({
         ]);
         return (
           <g key={m.id} data-testid={`local-axes-${m.id}`}>
-            {AXES.map(({ key, vec, color }) => {
-              const d = unit2(proj.dir(g[vec]));
+            {AXES.map(({ key, color }) => {
+              const d = unit2(proj.dir(courseFrame(g)[key]));
               if (!d) return null;
               const tip: P2 = [o[0] + d[0] * LEN, o[1] + d[1] * LEN];
               return (

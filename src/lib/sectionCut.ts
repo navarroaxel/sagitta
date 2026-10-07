@@ -1,17 +1,17 @@
 // Stress state of one cross-section of a member (pure, unit-testable).
-// Axes follow the member's local frame: y' to the right, z' up, x' out of the page
-// (looking from the j end back towards i). Stresses in kN/cm²; forces in kN and m.
+// Course triad: x to the right, y up, z out of the page towards the viewer (along the member).
+// Stresses in kN/cm²; forces in kN and m.
 import { FrameModel3D } from "./types3d";
 import { SolveOutput3D } from "./solve3d";
 import { getProfile, Profile } from "./profiles";
 import { memberSection } from "./stress3d";
 
 export interface CutCorner {
+  x: number; // m
   y: number; // m
-  z: number; // m
   sN: number; // σ from N (uniform)
-  sMy: number; // σ from My: −My·z/Iy
-  sMz: number; // σ from Mz: −Mz·y/Iz
+  sMx: number; // σ from Mx: Mx·y/Ix
+  sMy: number; // σ from My: −My·x/Iy
   sigma: number; // sum
 }
 
@@ -19,24 +19,24 @@ export interface SectionCutData {
   profile: Profile;
   rotated: boolean;
   station: number; // index into solved.stations[e]
-  x: number; // position along the member, m
+  z: number; // position along the member's z axis, m
   N: number;
+  Mx: number;
   My: number;
-  Mz: number;
   T: number;
+  Qx: number;
   Qy: number;
-  Qz: number;
   A: number; // m²
+  Ix: number; // m⁴
   Iy: number; // m⁴
-  Iz: number; // m⁴
-  cy: number; // half width along y', m
-  cz: number; // half depth along z', m
-  corners: CutCorner[]; // (+y,+z), (+y,−z), (−y,+z), (−y,−z)
+  halfX: number; // half width along x, m
+  halfY: number; // half depth along y, m
+  corners: CutCorner[]; // (+x,+y), (+x,−y), (−x,+y), (−x,−y)
   critical: CutCorner; // largest |σ|
   neutral: [[number, number], [number, number]] | null; // σ = 0 line, clipped to a box 1.25× the section
 }
 
-// Outline of the I section in (y', z') mm, centred, flanges parallel to y' unless rotated.
+// Outline of the I section in (x, y) mm, centred, flanges parallel to x unless rotated.
 export function sectionOutline(p: Profile, rotated: boolean): [number, number][] {
   const H = p.h / 2,
     B = p.bf / 2,
@@ -59,12 +59,12 @@ export function sectionOutline(p: Profile, rotated: boolean): [number, number][]
   return rotated ? pts.map(([a, b]) => [b, a]) : pts;
 }
 
-// Index of the station closest to position x (m) on member e.
-export function nearestStation(solved: SolveOutput3D, e: number, x: number): number {
+// Index of the station closest to position z (m, along the member's z axis) on member e.
+export function nearestStation(solved: SolveOutput3D, e: number, z: number): number {
   const st = solved.stations[e];
   let best = 0;
   st.forEach((s, k) => {
-    if (Math.abs(s.x - x) < Math.abs(st[best].x - x)) best = k;
+    if (Math.abs(s.z - z) < Math.abs(st[best].z - z)) best = k;
   });
   return best;
 }
@@ -80,8 +80,8 @@ export function cutAt(
   if (!m || !p) return null;
   const sec = memberSection(model.material, m);
   const st = solved.stations[e][station];
-  if (!st || sec.cy === undefined || sec.cz === undefined) return null;
-  const { cy, cz } = sec;
+  if (!st || sec.halfX === undefined || sec.halfY === undefined) return null;
+  const { halfX, halfY } = sec;
   const corners: CutCorner[] = (
     [
       [1, 1],
@@ -89,36 +89,35 @@ export function cutAt(
       [-1, 1],
       [-1, -1],
     ] as [number, number][]
-  ).map(([sy, sz]) => {
-    const y = sy * cy,
-      z = sz * cz;
+  ).map(([sx, sy]) => {
+    const x = sx * halfX,
+      y = sy * halfY;
     const sN = st.N / sec.A / 1e4;
-    const sMy = (-st.My * z) / sec.Iy / 1e4;
-    const sMz = (-st.Mz * y) / sec.Iz / 1e4;
-    return { y, z, sN, sMy, sMz, sigma: sN + sMy + sMz };
+    const sMx = (st.Mx * y) / sec.Ix / 1e4;
+    const sMy = (-st.My * x) / sec.Iy / 1e4;
+    return { x, y, sN, sMx, sMy, sigma: sN + sMx + sMy };
   });
   const critical = corners.reduce((b, c) => (Math.abs(c.sigma) > Math.abs(b.sigma) + 1e-12 ? c : b));
 
-  // σ(y,z) = a + b·y + c·z = 0, clipped to the box [−k·cy, k·cy] × [−k·cz, k·cz]
+  // σ(x,y) = a + b·x + c·y = 0, clipped to the box [−k·halfX, k·halfX] × [−k·halfY, k·halfY]
   const a = st.N / sec.A / 1e4;
-  const b = -st.Mz / sec.Iz / 1e4;
-  const c = -st.My / sec.Iy / 1e4;
+  const b = -st.My / sec.Iy / 1e4;
+  const c = st.Mx / sec.Ix / 1e4;
   const k = 1.25;
-  const Y = k * cy,
-    Z = k * cz;
+  const X = k * halfX,
+    Y = k * halfY;
   const hits: [number, number][] = [];
-  const push = (y: number, z: number) => {
-    if (Math.abs(y) <= Y + 1e-9 && Math.abs(z) <= Z + 1e-9) hits.push([y, z]);
+  const push = (x: number, y: number) => {
+    if (Math.abs(x) <= X + 1e-9 && Math.abs(y) <= Y + 1e-9) hits.push([x, y]);
   };
   if (Math.abs(c) > 1e-12) {
-    push(-Y, (-a - b * -Y) / c);
-    push(Y, (-a - b * Y) / c);
+    push(-X, (-a - b * -X) / c);
+    push(X, (-a - b * X) / c);
   }
   if (Math.abs(b) > 1e-12) {
-    push((-a - c * -Z) / b, -Z);
-    push((-a - c * Z) / b, Z);
+    push((-a - c * -Y) / b, -Y);
+    push((-a - c * Y) / b, Y);
   }
-  // keep two distinct end points
   const distinct = hits.filter(
     (h, i) => hits.findIndex((g) => Math.hypot(g[0] - h[0], g[1] - h[1]) < 1e-9) === i,
   );
@@ -129,18 +128,18 @@ export function cutAt(
     profile: p,
     rotated: !!m.rotated,
     station,
-    x: st.x,
+    z: st.z,
     N: st.N,
+    Mx: st.Mx,
     My: st.My,
-    Mz: st.Mz,
     T: st.T,
+    Qx: st.Qx,
     Qy: st.Qy,
-    Qz: st.Qz,
     A: sec.A,
+    Ix: sec.Ix,
     Iy: sec.Iy,
-    Iz: sec.Iz,
-    cy,
-    cz,
+    halfX,
+    halfY,
     corners,
     critical,
     neutral,

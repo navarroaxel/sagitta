@@ -11,7 +11,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 export interface CutState {
   on: boolean;
   member: string; // "" = first member with a profile
-  t: number; // 0..1 along the member
+  t: number; // 0..1 along the member's z axis
 }
 
 const W = 560,
@@ -27,7 +27,7 @@ export function resolveCut(model: FrameModel3D, solved: SolveOutput3D | null, cu
   if (e < 0 || !model.members[e].profile) e = model.members.findIndex((m) => !!m.profile);
   if (e < 0) return null;
   const L = solved.result.geo[e].L;
-  const station = nearestStation(solved, e, cut.t * L);
+  const station = nearestStation(solved, e, cut.t * L); // t runs along the member's z axis
   return { e, L, station };
 }
 
@@ -81,12 +81,12 @@ function CheckEquation({ data, sigmaAdm }: { data: SectionCutData; sigmaAdm: num
   const { t } = useLanguage();
   const c = data.critical;
   const A = data.A * 1e4, // cm²
-    Iy = data.Iy * 1e8, // cm⁴
-    Iz = data.Iz * 1e8;
-  const My = data.My * 100, // kN·cm
-    Mz = data.Mz * 100;
-  const y = c.y * 100,
-    z = c.z * 100; // cm
+    Ix = data.Ix * 1e8, // cm⁴
+    Iy = data.Iy * 1e8;
+  const Mx = data.Mx * 100, // kN·cm
+    My = data.My * 100;
+  const x = c.x * 100,
+    y = c.y * 100; // cm
   const ratio = sigmaAdm > 0 ? Math.abs(c.sigma) / sigmaAdm : Infinity;
   const ok = ratio <= 1;
   return (
@@ -97,20 +97,20 @@ function CheckEquation({ data, sigmaAdm }: { data: SectionCutData; sigmaAdm: num
       <div className="mb-1 font-sans font-bold text-stone-600 uppercase dark:text-stone-300">
         {t("f3d.cut.check")}
       </div>
-      <div>σ = N/A − My·z&apos;/Iy − Mz·y&apos;/Iz ≤ σ adm</div>
+      <div>σ = N/A + Mx·y/Ix − My·x/Iy ≤ σ adm</div>
       <div>
-        σ = {num(data.N)}/{A.toFixed(1)} − {num(My)}·{num(z, 1)}/{Iy.toFixed(0)} − {num(Mz)}·{num(y, 1)}/
-        {Iz.toFixed(0)}
+        σ = {num(data.N)}/{A.toFixed(1)} + {num(Mx)}·{num(y, 1)}/{Ix.toFixed(0)} − {num(My)}·{num(x, 1)}/
+        {Iy.toFixed(0)}
       </div>
       <div data-testid="cut-equation-terms">
-        σ = {c.sN.toFixed(2)} {sg(c.sMy)} {sg(c.sMz)} = {c.sigma.toFixed(2)} kN/cm²
+        σ = {c.sN.toFixed(2)} {sg(c.sMx)} {sg(c.sMy)} = {c.sigma.toFixed(2)} kN/cm²
       </div>
       <div data-testid="cut-equation-result" className={ok ? "text-emerald-700 dark:text-emerald-400" : "text-red-600"}>
         |σ| = {Math.abs(c.sigma).toFixed(2)} {ok ? "≤" : ">"} σ adm = {sigmaAdm} kN/cm² → {ok ? "✓" : "✗"} (
         {(ratio * 100).toFixed(0)} %)
       </div>
       <div className="font-sans text-stone-500 dark:text-stone-400">
-        N [kN], M [kN·cm], A [cm²], I [cm⁴], y&apos;, z&apos; [cm]
+        N [kN], M [kN·cm], A [cm²], I [cm⁴], x, y [cm]
       </div>
     </div>
   );
@@ -149,18 +149,18 @@ export default function SectionCut({
   const s = 190 / Math.max(wMm, hMm);
   const hw = (wMm / 2) * s,
     hh = (hMm / 2) * s; // half extents in px
-  const toPx = (y: number, z: number): [number, number] => [CX + y * 1000 * s, CY - z * 1000 * s];
+  const toPx = (x: number, y: number): [number, number] => [CX + x * 1000 * s, CY - y * 1000 * s];
   const maxContrib = Math.max(
     1e-9,
-    ...data.corners.flatMap((c) => [Math.abs(c.sN), Math.abs(c.sMy), Math.abs(c.sMz)]),
+    ...data.corners.flatMap((c) => [Math.abs(c.sN), Math.abs(c.sMx), Math.abs(c.sMy)]),
   );
   const ps = 55 / maxContrib;
   const pos = colors.tension,
     neg = colors.compression;
   const col = (v: number) => (v >= 0 ? pos : neg);
-  const ccorner = data.corners[0]; // (+y, +z)
+  const ccorner = data.corners[0]; // (+x, +y)
   const outline = sectionOutline(p, data.rotated)
-    .map(([y, z]) => `${CX + y * s},${CY - z * s}`)
+    .map(([x, y]) => `${CX + x * s},${CY - y * s}`)
     .join(" ");
   const labelPos: [number, number, "start" | "end"][] = [
     [hw + 8, -hh - 6, "start"],
@@ -169,8 +169,8 @@ export default function SectionCut({
     [-hw - 8, hh + 14, "end"],
   ];
   const stationsOf = solved.stations[r.e];
-  const xVal = stationsOf[r.station].x;
-  const peakT = stress?.[r.e] ? stress[r.e]!.max.x / r.L : 0;
+  const zVal = stationsOf[r.station].z;
+  const peakT = stress?.[r.e] ? stress[r.e]!.max.z / r.L : 0;
 
   return (
     <div className="space-y-2" data-testid="section-cut">
@@ -192,7 +192,7 @@ export default function SectionCut({
         </label>
         <label className="flex flex-1 items-center gap-2">
           <span className="font-mono text-xs whitespace-nowrap" data-testid="cut-x">
-            x = {xVal.toFixed(2)} / {r.L.toFixed(2)} m
+            z = {zVal.toFixed(2)} / {r.L.toFixed(2)} m
           </span>
           <input
             type="range"
@@ -265,29 +265,29 @@ export default function SectionCut({
           </g>
         )}
 
-        {/* axes: y' right, z' up, x' toward the viewer */}
+        {/* axes: x right, y up, z towards the viewer (along the member) */}
         <g stroke={colors.dimensions} fill={colors.dimensions} fontSize={11} fontWeight={600}>
           <line x1={CX} y1={CY} x2={CX + hw + 40} y2={CY} />
           <polygon points={`${CX + hw + 48},${CY} ${CX + hw + 40},${CY - 3} ${CX + hw + 40},${CY + 3}`} stroke="none" />
           <text x={CX + hw + 52} y={CY - 6} stroke="none">
-            y&apos;
+            x
           </text>
           <line x1={CX} y1={CY} x2={CX} y2={CY - hh - 40} />
           <polygon points={`${CX},${CY - hh - 48} ${CX - 3},${CY - hh - 40} ${CX + 3},${CY - hh - 40}`} stroke="none" />
           <text x={CX + 6} y={CY - hh - 44} stroke="none">
-            z&apos;
+            y
           </text>
           <circle cx={CX} cy={CY} r={5} fill="none" />
           <circle cx={CX} cy={CY} r={1.6} stroke="none" />
           <text x={CX - 16} y={CY + 16} stroke="none">
-            x&apos;
+            z
           </text>
         </g>
 
         {/* corner totals */}
         {data.corners.map((c, i) => {
           const [lx, ly, anchor] = labelPos[i];
-          const [px, py] = toPx(c.y, c.z);
+          const [px, py] = toPx(c.x, c.y);
           return (
             <g key={i}>
               <circle cx={px} cy={py} r={3} fill={col(c.sigma)} />
@@ -309,40 +309,40 @@ export default function SectionCut({
           );
         })}
 
-        {/* σ from My: vertical "Z", on the right */}
+        {/* σ from Mx: varies along y, vertical "Z" on the right */}
         <text x={CX + hw + 78} y={CY - hh - 14} fontSize={11} fill={colors.ink}>
-          σ(My)
+          σ(Mx)
         </text>
         <Bowtie
           vertical
           origin={[CX + hw + 100, CY]}
           half={hh}
+          a={ccorner.sMx}
+          scale={ps}
+          pos={pos}
+          neg={neg}
+          testId="cut-diagram-Mx"
+        />
+        <text x={CX + hw + 100 + ccorner.sMx * ps + (ccorner.sMx >= 0 ? 4 : -4)} y={CY - hh + 4} fontSize={10} fontFamily="monospace" textAnchor={ccorner.sMx >= 0 ? "start" : "end"} fill={col(ccorner.sMx)}>
+          {f1(ccorner.sMx)}
+        </text>
+
+        {/* σ from My: varies along x, horizontal "Z" below */}
+        <text x={CX - hw} y={CY + hh + 54} fontSize={11} fill={colors.ink}>
+          σ(My)
+        </text>
+        <Bowtie
+          vertical={false}
+          origin={[CX, CY + hh + 85]}
+          half={hw}
           a={ccorner.sMy}
           scale={ps}
           pos={pos}
           neg={neg}
           testId="cut-diagram-My"
         />
-        <text x={CX + hw + 100 + ccorner.sMy * ps + (ccorner.sMy >= 0 ? 4 : -4)} y={CY - hh + 4} fontSize={10} fontFamily="monospace" textAnchor={ccorner.sMy >= 0 ? "start" : "end"} fill={col(ccorner.sMy)}>
+        <text x={CX + hw + 6} y={CY + hh + 85 + ccorner.sMy * ps + 4} fontSize={10} fontFamily="monospace" fill={col(ccorner.sMy)}>
           {f1(ccorner.sMy)}
-        </text>
-
-        {/* σ from Mz: horizontal "Z", below */}
-        <text x={CX - hw} y={CY + hh + 54} fontSize={11} fill={colors.ink}>
-          σ(Mz)
-        </text>
-        <Bowtie
-          vertical={false}
-          origin={[CX, CY + hh + 85]}
-          half={hw}
-          a={ccorner.sMz}
-          scale={ps}
-          pos={pos}
-          neg={neg}
-          testId="cut-diagram-Mz"
-        />
-        <text x={CX + hw + 6} y={CY + hh + 85 + ccorner.sMz * ps + 4} fontSize={10} fontFamily="monospace" fill={col(ccorner.sMz)}>
-          {f1(ccorner.sMz)}
         </text>
       </svg>
 
@@ -358,11 +358,11 @@ export default function SectionCut({
               {(
                 [
                   ["N", data.N, model.unit],
+                  ["Mx", data.Mx, `${model.unit}·m`],
                   ["My", data.My, `${model.unit}·m`],
-                  ["Mz", data.Mz, `${model.unit}·m`],
                   ["T", data.T, `${model.unit}·m`],
+                  ["Qx", data.Qx, model.unit],
                   ["Qy", data.Qy, model.unit],
-                  ["Qz", data.Qz, model.unit],
                 ] as [string, number, string][]
               ).map(([k, v, u]) => (
                 <tr key={k}>
@@ -379,10 +379,10 @@ export default function SectionCut({
           <table className="font-mono" data-testid="cut-corners">
             <thead>
               <tr className="text-stone-500">
-                <th className="pr-2 text-left">{t("f3d.cut.corner")} (y&apos;, z&apos;)</th>
+                <th className="pr-2 text-left">{t("f3d.cut.corner")} (x, y)</th>
                 <th className="px-1">N</th>
+                <th className="px-1">Mx</th>
                 <th className="px-1">My</th>
-                <th className="px-1">Mz</th>
                 <th className="px-1">Σ</th>
               </tr>
             </thead>
@@ -390,11 +390,11 @@ export default function SectionCut({
               {data.corners.map((c, i) => (
                 <tr key={i}>
                   <td className="pr-2">
-                    ({c.y > 0 ? "+" : "−"}, {c.z > 0 ? "+" : "−"})
+                    ({c.x > 0 ? "+" : "−"}, {c.y > 0 ? "+" : "−"})
                   </td>
                   <td className="px-1 text-right">{f1(c.sN)}</td>
+                  <td className="px-1 text-right">{f1(c.sMx)}</td>
                   <td className="px-1 text-right">{f1(c.sMy)}</td>
-                  <td className="px-1 text-right">{f1(c.sMz)}</td>
                   <td className="px-1 text-right font-bold">{f1(c.sigma)}</td>
                 </tr>
               ))}

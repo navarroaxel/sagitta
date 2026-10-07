@@ -55,14 +55,14 @@ describe("Frame3DCanvas", () => {
 
   test("diagram layer renders for the selected diagram only", () => {
     const { rerender } = render(
-      <Frame3DCanvas model={tFrame} solved={solveModel3D(tFrame)} viewOpts={{ ...opts, diagram: "My" }} />,
+      <Frame3DCanvas model={tFrame} solved={solveModel3D(tFrame)} viewOpts={{ ...opts, diagram: "Mx" }} />,
     );
-    expect(screen.getByTestId("diagram3d-My")).toBeTruthy();
-    expect(screen.queryByTestId("diagram3d-Mz")).toBeNull();
+    expect(screen.getByTestId("diagram3d-Mx")).toBeTruthy();
+    expect(screen.queryByTestId("diagram3d-My")).toBeNull();
     rerender(
       <Frame3DCanvas model={tFrame} solved={solveModel3D(tFrame)} viewOpts={{ ...opts, diagram: null }} />,
     );
-    expect(screen.queryByTestId("diagram3d-My")).toBeNull();
+    expect(screen.queryByTestId("diagram3d-Mx")).toBeNull();
   });
 
   test("hides loads/reactions/diagrams when the model is unstable", () => {
@@ -170,26 +170,46 @@ describe("local axes", () => {
     );
   });
 
-  test("column A->B: x' points up the page, y' is global y (up-right), z' is global -x (left)", () => {
+  // Course convention: z along the member (down / to the left), x out of the page, y completing
+  // the right-handed triad. Screen vectors have y pointing down.
+  test("column: z' points down, y' to the left, x' out of the page (down-left on the oblique view)", () => {
     render(<Frame3DCanvas model={tFrame} solved={solveModel3D(tFrame)} viewOpts={on} />);
-    const [xx, xy] = axis("M1", "x");
-    expect(Math.abs(xx)).toBeLessThan(1e-6);
-    expect(xy).toBeLessThan(0);
-    const [yx, yy] = axis("M1", "y");
-    expect(yx).toBeGreaterThan(0);
-    expect(yy).toBeLessThan(0);
     const [zx, zy] = axis("M1", "z");
-    expect(zx).toBeLessThan(0);
-    expect(Math.abs(zy)).toBeLessThan(1e-6);
+    expect(Math.abs(zx)).toBeLessThan(1e-6);
+    expect(zy).toBeGreaterThan(0);
+    const [yx, yy] = axis("M1", "y");
+    expect(yx).toBeLessThan(0);
+    expect(Math.abs(yy)).toBeLessThan(1e-6);
+    const [xx, xy] = axis("M1", "x");
+    expect(xx).toBeLessThan(0);
+    expect(xy).toBeGreaterThan(0);
   });
 
-  test("hat B->D: x' right, z' up, y' receding up-right", () => {
+  test("hat: z' points to the left, y' up, x' out of the page", () => {
     render(<Frame3DCanvas model={tFrame} solved={solveModel3D(tFrame)} viewOpts={on} />);
-    expect(axis("M3", "x")[0]).toBeGreaterThan(0);
-    expect(axis("M3", "z")[1]).toBeLessThan(0);
+    const [zx, zy] = axis("M3", "z");
+    expect(zx).toBeLessThan(0);
+    expect(Math.abs(zy)).toBeLessThan(1e-6);
     const [yx, yy] = axis("M3", "y");
-    expect(yx).toBeGreaterThan(0);
+    expect(Math.abs(yx)).toBeLessThan(1e-6);
     expect(yy).toBeLessThan(0);
+    const [xx, xy] = axis("M3", "x");
+    expect(xx).toBeLessThan(0);
+    expect(xy).toBeGreaterThan(0);
+  });
+
+  test("the triad does not depend on the direction in which the member was defined", () => {
+    const flipped: FrameModel3D = {
+      ...tFrame,
+      members: tFrame.members.map((m) => ({ ...m, n1: m.n2, n2: m.n1 })),
+    };
+    render(<Frame3DCanvas model={flipped} solved={solveModel3D(flipped)} viewOpts={on} />);
+    ["x", "y", "z"].forEach((k) => {
+      const [fx, fy] = axis("M3", k);
+      expect(Math.hypot(fx, fy)).toBeCloseTo(30, 3); // length of the drawn arrows
+    });
+    expect(axis("M3", "z")[0]).toBeLessThan(0);
+    expect(axis("M3", "y")[1]).toBeLessThan(0);
   });
 
   test("not drawn when the model is unstable", () => {

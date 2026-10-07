@@ -1,6 +1,6 @@
 import { FrameModel3D } from "./types3d";
 
-const material = { E: 2.1e8, G: 8.1e7, A: 0.01, Iy: 8.3e-5, Iz: 8.3e-5, J: 1.66e-4 };
+const material = { E: 2.1e8, G: 8.1e7, A: 0.01, Ix: 8.3e-5, Iy: 8.3e-5, J: 1.66e-4 };
 
 // examples/t-frame-3d-fixed.svg — hat 2 m | 5 m, q_z acts on the right arm from 1 m to 5 m.
 const tFrame: FrameModel3D = {
