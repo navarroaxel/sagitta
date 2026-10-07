@@ -12,14 +12,14 @@ import { unit2, P2 } from "./arrows3d";
 export type DiagramKind = Diagram3D | "S";
 
 // Which course axis a diagram is drawn along, and on which side. Moments go on the tension
-// side (Mx > 0: +y; My > 0: −x); N, Q, T and σ are drawn along +axis.
+// side (Mx > 0: +y; My > 0: +x); N, Q, T and σ are drawn along +axis.
 const AXIS: Record<DiagramKind, { axis: "x" | "y"; side: 1 | -1 }> = {
   N: { axis: "y", side: 1 },
   Qx: { axis: "x", side: 1 },
   Qy: { axis: "y", side: 1 },
   T: { axis: "y", side: 1 },
   Mx: { axis: "y", side: 1 },
-  My: { axis: "x", side: -1 },
+  My: { axis: "x", side: 1 },
   S: { axis: "y", side: 1 },
 };
 

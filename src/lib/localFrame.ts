@@ -2,9 +2,9 @@
 // frame, see solver3d.ts):
 //   z: along the member, pointing down (or to the left when the member is horizontal),
 //   x: out of the plane (towards the viewer, −Y, for a frame in the x-z plane),
-//   y: completes the right-handed triad (x × y = z); it is the depth direction of the section.
-// For the planar frame in the x-z plane this gives, for a column: z down, x out of the page,
-// y to the left; for a beam: z to the left, x out of the page, y up.
+//   y: to the right (columns) or down (horizontal members); it is the depth direction of the
+//      section. NOTE: this triad is left-handed (x × y = −z), as the professor draws it.
+// For the planar frame in the x-z plane: column → z down, y right; beam → z left, y down.
 import type { Solver3DGeo, Vec3 } from "./solver3d";
 
 export interface CourseFrame {
@@ -34,10 +34,10 @@ export function courseFrame(g: Solver3DGeo): CourseFrame {
   else if (Math.abs(e[0]) > EPS) z = e[0] > 0 ? neg(e) : e; // horizontal: to the left (−X)
   else z = e[1] > 0 ? neg(e) : e; // along Y: −Y
   const vertical = Math.abs(z[2]) > 1 - EPS;
-  const ref: Vec3 = vertical ? [-1, 0, 0] : [0, 0, 1];
+  const ref: Vec3 = vertical ? [1, 0, 0] : [0, 0, -1]; // right for vertical members, else down
   const k = dot(ref, z);
   const y = unit([ref[0] - k * z[0], ref[1] - k * z[1], ref[2] - k * z[2]]);
-  const x = cross(y, z);
+  const x = cross(z, y); // left-handed: x × y = −z
   return { x, y, z, flip: dot(z, e) < 0 };
 }
 

@@ -49,14 +49,21 @@ describe("memberSection", () => {
 });
 
 describe("computeStress", () => {
-  test("strong-axis bending: σ = M / Sx, tension on top for a downward tip load", () => {
-    const st = stressOf(cantilever({ fz: -10 }));
+  test("strong-axis bending: σ = M / Sx at the top and bottom fibres for a downward tip load", () => {
+    const m = cantilever({ fz: -10 });
+    const st = stressOf(m);
     const sx = getProfile("IPB 200")!.Sx * 1e-6; // m³
-    near(st.max.sigma, 40 / sx / 1e4, 1e-3); // 40 kN·m
-    expect(st.max.sigma).toBeGreaterThan(0); // tension at the top fibre
+    near(Math.abs(st.max.sigma), 40 / sx / 1e4, 1e-3); // 40 kN·m
     near(st.max.z, 4); // z runs from the tip (0) towards the support (4 m)
-    near(st.max.cy, 0.1); // top fibre, +y
-    near(st.ratio, st.max.sigma / 14, 1e-9);
+    near(Math.abs(st.max.cy), 0.1); // an extreme fibre of the depth (y)
+    near(st.ratio, Math.abs(st.max.sigma) / 14, 1e-9);
+    // y points down for a horizontal member: the top fibre (y = −0.1) is in tension, the bottom in compression
+    const s = solveModel3D(m)!;
+    const support = s.stations[0].find((p) => Math.abs(p.z - 4) < 1e-9)!;
+    const sec = memberSection(m.material, m.members[0]);
+    const at = (y: number) => (support.Mx * y) / sec.Ix / 1e4;
+    expect(at(-0.1)).toBeGreaterThan(0);
+    expect(at(0.1)).toBeLessThan(0);
   });
 
   test("rotated section bends about the weak axis: σ = M / Sy", () => {

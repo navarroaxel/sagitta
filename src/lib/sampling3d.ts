@@ -2,9 +2,10 @@ import { udlSpan, type Solver3DModel, type Solver3DResult } from "./solver3d";
 import { courseFrame, inSolverBasis } from "./localFrame";
 
 // Internal forces in the course convention (see localFrame.ts): local triad with z along the
-// member, forces and moments given on the face whose outward normal is +z, positive when they
-// point along +x / +y / +z. So N > 0 is tension, T is the moment about z, and Mx, My are the
-// bending moments about x and y; the stress they produce is σ = N/A + Mx·y/Ix − My·x/Iy.
+// member. Axial force and shears are the components of the force on the face whose outward
+// normal is +z (N > 0 is tension); T is the torque, the component of the moment along z.
+// The bending moments follow the tension-side rule: Mx > 0 tensions the +y fibres and
+// My > 0 the +x fibres, so the stress is σ = N/A + Mx·y/Ix + My·x/Iy.
 export interface Station3D {
   x: number; // distance from node n1 (used to place the station on the member), m
   z: number; // coordinate along the course z axis, m (z = x, or L − x when z points to n1)
@@ -12,8 +13,8 @@ export interface Station3D {
   Qx: number; // shear along x
   Qy: number; // shear along y
   T: number; // torque (moment about z)
-  Mx: number; // moment about x: tension on the +y side when positive
-  My: number; // moment about y: tension on the −x side when positive
+  Mx: number; // bending moment: tension on the +y side when positive
+  My: number; // bending moment: tension on the +x side when positive
 }
 
 // Internal force sampling along member `e`.
@@ -106,7 +107,9 @@ export function sampleMember3D(
       Qx: sgn * d(force, lx),
       Qy: sgn * d(force, ly),
       T: sgn * d(moment, lz),
-      Mx: sgn * d(moment, lx),
+      // moment-vector components on the +z face, turned into "tension on the +side" moments:
+      // in this left-handed triad that is −component for x and +component for y
+      Mx: -sgn * d(moment, lx),
       My: sgn * d(moment, ly),
     };
   });

@@ -170,29 +170,29 @@ describe("local axes", () => {
     );
   });
 
-  // Course convention: z along the member (down / to the left), x out of the page, y completing
-  // the right-handed triad. Screen vectors have y pointing down.
-  test("column: z' points down, y' to the left, x' out of the page (down-left on the oblique view)", () => {
+  // Course convention (left-handed): z along the member (down / to the left), x out of the page,
+  // y to the right (columns) or down (beams). Screen vectors have y pointing down.
+  test("column: z' points down, y' to the right, x' out of the page (down-left on the oblique view)", () => {
     render(<Frame3DCanvas model={tFrame} solved={solveModel3D(tFrame)} viewOpts={on} />);
     const [zx, zy] = axis("M1", "z");
     expect(Math.abs(zx)).toBeLessThan(1e-6);
     expect(zy).toBeGreaterThan(0);
     const [yx, yy] = axis("M1", "y");
-    expect(yx).toBeLessThan(0);
+    expect(yx).toBeGreaterThan(0);
     expect(Math.abs(yy)).toBeLessThan(1e-6);
     const [xx, xy] = axis("M1", "x");
     expect(xx).toBeLessThan(0);
     expect(xy).toBeGreaterThan(0);
   });
 
-  test("hat: z' points to the left, y' up, x' out of the page", () => {
+  test("hat: z' points to the left, y' down, x' out of the page", () => {
     render(<Frame3DCanvas model={tFrame} solved={solveModel3D(tFrame)} viewOpts={on} />);
     const [zx, zy] = axis("M3", "z");
     expect(zx).toBeLessThan(0);
     expect(Math.abs(zy)).toBeLessThan(1e-6);
     const [yx, yy] = axis("M3", "y");
     expect(Math.abs(yx)).toBeLessThan(1e-6);
-    expect(yy).toBeLessThan(0);
+    expect(yy).toBeGreaterThan(0);
     const [xx, xy] = axis("M3", "x");
     expect(xx).toBeLessThan(0);
     expect(xy).toBeGreaterThan(0);
@@ -209,7 +209,7 @@ describe("local axes", () => {
       expect(Math.hypot(fx, fy)).toBeCloseTo(30, 3); // length of the drawn arrows
     });
     expect(axis("M3", "z")[0]).toBeLessThan(0);
-    expect(axis("M3", "y")[1]).toBeLessThan(0);
+    expect(axis("M3", "y")[1]).toBeGreaterThan(0);
   });
 
   test("not drawn when the model is unstable", () => {

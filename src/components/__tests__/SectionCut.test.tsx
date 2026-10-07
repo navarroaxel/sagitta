@@ -61,7 +61,7 @@ describe("SectionCut", () => {
   test("writes out the check with the critical corner's numbers", () => {
     render(<Harness start={1} />);
     const eq = screen.getByTestId("cut-equation");
-    expect(eq.textContent).toContain("σ = N/A + Mx·y/Ix − My·x/Iy ≤ σ adm");
+    expect(eq.textContent).toContain("σ = N/A + Mx·y/Ix + My·x/Iy ≤ σ adm");
     // terms add up to the member's σ max (column base) and the verdict is shown
     const sigma = stress[0]!.max.sigma;
     expect(screen.getByTestId("cut-equation-terms").textContent).toContain(`= ${sigma.toFixed(2)} kN/cm²`);

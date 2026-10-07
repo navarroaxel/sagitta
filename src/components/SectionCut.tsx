@@ -97,9 +97,9 @@ function CheckEquation({ data, sigmaAdm }: { data: SectionCutData; sigmaAdm: num
       <div className="mb-1 font-sans font-bold text-stone-600 uppercase dark:text-stone-300">
         {t("f3d.cut.check")}
       </div>
-      <div>σ = N/A + Mx·y/Ix − My·x/Iy ≤ σ adm</div>
+      <div>σ = N/A + Mx·y/Ix + My·x/Iy ≤ σ adm</div>
       <div>
-        σ = {num(data.N)}/{A.toFixed(1)} + {num(Mx)}·{num(y, 1)}/{Ix.toFixed(0)} − {num(My)}·{num(x, 1)}/
+        σ = {num(data.N)}/{A.toFixed(1)} + {num(Mx)}·{num(y, 1)}/{Ix.toFixed(0)} + {num(My)}·{num(x, 1)}/
         {Iy.toFixed(0)}
       </div>
       <div data-testid="cut-equation-terms">
@@ -265,7 +265,7 @@ export default function SectionCut({
           </g>
         )}
 
-        {/* axes: x right, y up, z towards the viewer (along the member) */}
+        {/* axes: x right, y up, z into the page (left-handed triad, z along the member) */}
         <g stroke={colors.dimensions} fill={colors.dimensions} fontSize={11} fontWeight={600}>
           <line x1={CX} y1={CY} x2={CX + hw + 40} y2={CY} />
           <polygon points={`${CX + hw + 48},${CY} ${CX + hw + 40},${CY - 3} ${CX + hw + 40},${CY + 3}`} stroke="none" />
@@ -278,7 +278,8 @@ export default function SectionCut({
             y
           </text>
           <circle cx={CX} cy={CY} r={5} fill="none" />
-          <circle cx={CX} cy={CY} r={1.6} stroke="none" />
+          <line x1={CX - 3.5} y1={CY - 3.5} x2={CX + 3.5} y2={CY + 3.5} />
+          <line x1={CX - 3.5} y1={CY + 3.5} x2={CX + 3.5} y2={CY - 3.5} />
           <text x={CX - 16} y={CY + 16} stroke="none">
             z
           </text>

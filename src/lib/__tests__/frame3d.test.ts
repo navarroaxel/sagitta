@@ -114,6 +114,6 @@ describe("T-frame preset uses a partial load on a single hat member", () => {
   test("the hat moment at B is the same −24 + 5 as with the split model", () => {
     const solved = solveModel3D(model)!;
     const atB = solved.stations[2][0]; // start of M3
-    near(atB.Mx, 24); // hogging: tension on top (+y of the hat)
+    near(atB.Mx, -24); // hogging: tension on top, which is −y for the hat (y points down)
   });
 });

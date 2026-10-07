@@ -192,7 +192,7 @@ const EN = {
   "f3d.diagram": "Diagram:",
   "f3d.diagram_none": "None",
   "f3d.note":
-    "Oblique view: x right, z up, y receding (global axes). Local triad of each member: z along the member (down or to the left), x out of the plane, y completing the right-handed triad. Moments are drawn on the tension side.",
+    "Oblique view: x right, z up, y receding (global axes). Local triad of each member: z along the member (down or to the left), x out of the plane, y to the right (columns) or down (beams). Moments are drawn on the tension side.",
   "f3d.nodes.z": "z",
   "f3d.material.note":
     "E, G in kN/m², A in m², Ix/Iy/J in m⁴. Local axes: z along the member, x out of the plane, y in the section; Ix is the inertia about x (bending in the y-z plane), Iy about y.",
@@ -212,7 +212,7 @@ const EN = {
   "f3d.results.no_profile":
     "Assign an IPN/IPB profile to a member (members tab) to check its stress.",
   "f3d.results.stress_note":
-    "σ = N/A + Mx·y/Ix − My·x/Iy at the most stressed corner of the section. Assumes kN and m. Profiles: CIRSOC tables (IPN, IPB).",
+    "σ = N/A + Mx·y/Ix + My·x/Iy at the most stressed corner of the section (Mx, My > 0 tension the +y, +x fibres). Assumes kN and m. Profiles: CIRSOC tables (IPN, IPB).",
   "f3d.view.stress_colors": "Color by σ/σ adm",
   "f3d.view.local_axes": "Local axes",
   "f3d.loads.from": "from (m)",
@@ -224,7 +224,7 @@ const EN = {
   "f3d.cut.peak": "Go to σ max",
   "f3d.cut.no_profile": "Assign an IPN/IPB profile to a member (members tab) to see its section cut.",
   "f3d.cut.view_note":
-    "Seen from +z (towards you): x to the right, y up. The 'Z' diagrams are σ from N, Mx and My; the corner values are their sum. Fillets are not drawn.",
+    "Section seen with z into the page: x to the right, y up. The 'Z' diagrams are σ from N, Mx and My; the corner values are their sum. Fillets are not drawn.",
   "f3d.cut.neutral": "neutral axis",
   "f3d.cut.forces": "Forces at the cut",
   "f3d.cut.corner": "Corner",
@@ -588,7 +588,7 @@ const ES: Record<TranslationKey, string> = {
   "f3d.diagram": "Diagrama:",
   "f3d.diagram_none": "Ninguno",
   "f3d.note":
-    "Vista oblicua: x a la derecha, z arriba, y en profundidad (ejes globales). Terna local de cada barra: z a lo largo de la barra (hacia abajo o hacia la izquierda), x saliente al plano e y completa la terna derecha. Los momentos se dibujan del lado traccionado.",
+    "Vista oblicua: x a la derecha, z arriba, y en profundidad (ejes globales). Terna local de cada barra: z a lo largo de la barra (hacia abajo o hacia la izquierda), x saliente al plano, y hacia la derecha (columnas) o hacia abajo (vigas). Los momentos se dibujan del lado traccionado.",
   "f3d.nodes.z": "z",
   "f3d.material.note":
     "E, G en kN/m², A en m², Ix/Iy/J en m⁴. Ejes locales: z a lo largo de la barra, x saliente al plano, y en la sección; Ix es la inercia respecto de x (flexión en el plano y-z) e Iy respecto de y.",
@@ -608,7 +608,7 @@ const ES: Record<TranslationKey, string> = {
   "f3d.results.no_profile":
     "Asigná un perfil IPN/IPB a una barra (pestaña barras) para verificar su tensión.",
   "f3d.results.stress_note":
-    "σ = N/A + Mx·y/Ix − My·x/Iy en la esquina más exigida de la sección. Supone kN y m. Perfiles: tablas CIRSOC (IPN, IPB).",
+    "σ = N/A + Mx·y/Ix + My·x/Iy en la esquina más exigida de la sección (Mx, My > 0 traccionan las fibras +y, +x). Supone kN y m. Perfiles: tablas CIRSOC (IPN, IPB).",
   "f3d.view.stress_colors": "Colorear por σ/σ adm",
   "f3d.view.local_axes": "Ternas locales",
   "f3d.loads.from": "desde (m)",
@@ -620,7 +620,7 @@ const ES: Record<TranslationKey, string> = {
   "f3d.cut.peak": "Ir a σ máx",
   "f3d.cut.no_profile": "Asigná un perfil IPN/IPB a una barra (pestaña barras) para ver su corte de sección.",
   "f3d.cut.view_note":
-    "Visto desde +z (hacia vos): x a la derecha, y arriba. Los diagramas en 'Z' son σ por N, Mx y My; los valores en las esquinas son su suma. No se dibujan los radios de acuerdo.",
+    "Sección vista con z entrando al plano: x a la derecha, y arriba. Los diagramas en 'Z' son σ por N, Mx y My; los valores en las esquinas son su suma. No se dibujan los radios de acuerdo.",
   "f3d.cut.neutral": "eje neutro",
   "f3d.cut.forces": "Esfuerzos en el corte",
   "f3d.cut.corner": "Esquina",

@@ -171,26 +171,26 @@ describe("cantilever along x", () => {
     loads: [],
   };
 
-  test("tip load in z: PL³/(3·E·Iy), reaction, Mx = +PL (tension on top) at the support", () => {
+  test("tip load in z: PL³/(3·E·Iy), reaction, Mx = −PL (tension on top = −y) at the support", () => {
     const m: Solver3DModel = { ...base, loads: [{ type: "nodal", node: 1, fz: -P }] };
     const res = solveFrame3D(m);
     close(res.U[6 + 2], (-P * L ** 3) / (3 * E * 2e-4), 1e-9);
     close(res.reactions[0].fz, P);
     close(res.reactions[0].my, -P * L);
     const st = sampleMember3D(m, res, 0);
-    // course triad of a beam along +x: z = −X, y = Z, x = −Y
-    close(st[0].Mx, P * L);
+    // course triad of a beam along +x: z = −X, y = −Z (down), x = −Y; the top fibre is −y
+    close(st[0].Mx, -P * L);
     close(st[st.length - 1].Mx, 0);
-    close(st[0].Qy, P);
+    close(st[0].Qy, -P);
     close(st[0].z, L); // z runs from the tip (z = 0) towards the support
   });
-  test("tip load in y: PL³/(3·E·Iz), reaction, My = +PL and Qx = −P at the support", () => {
+  test("tip load in y: PL³/(3·E·Iz), reaction, My = −PL and Qx = −P at the support", () => {
     const m: Solver3DModel = { ...base, loads: [{ type: "nodal", node: 1, fy: -P }] };
     const res = solveFrame3D(m);
     close(res.U[6 + 1], (-P * L ** 3) / (3 * E * 5e-5), 1e-9);
     close(res.reactions[0].mz, P * L);
     const st = sampleMember3D(m, res, 0);
-    close(st[0].My, P * L);
+    close(st[0].My, -P * L); // tension on the +Y side = −x
     close(st[0].Qx, -P); // x = −Y: the face carries +Y, i.e. −x
   });
   test("tip torque: twist T·L/(G·J), constant torsor", () => {
@@ -214,9 +214,9 @@ describe("cantilever along x", () => {
     };
     const res = solveFrame3D(m);
     const st = sampleMember3D(m, res, 0);
-    close(st[0].Qy, P);
+    close(st[0].Qy, -P);
     close(st[st.length - 1].Qy, 0);
-    close(st[0].Mx, P * L * 0.5);
+    close(st[0].Mx, -P * L * 0.5);
   });
 });
 

@@ -15,20 +15,21 @@ const cross = (a: Vec3, b: Vec3): Vec3 => [
 ];
 
 // Professor's convention: z along the member (down, or to the left when horizontal),
-// x out of the plane (towards the viewer, −Y), y completing the right-handed triad.
+// x out of the plane (towards the viewer, −Y), y to the right (columns) or down (beams).
+// It is a LEFT-handed triad: x × y = −z.
 describe("courseFrame", () => {
-  test("column: z down, x out of the page, y to the left — however the member is defined", () => {
+  test("column: z down, x out of the page, y to the right — however the member is defined", () => {
     [frame(node(0, 0, 0), node(0, 0, 6)), frame(node(0, 0, 6), node(0, 0, 0))].forEach((f) => {
       near3(f.z, [0, 0, -1]);
       near3(f.x, [0, -1, 0]);
-      near3(f.y, [-1, 0, 0]);
+      near3(f.y, [1, 0, 0]);
     });
   });
-  test("beam: z to the left, x out of the page, y up — however the member is defined", () => {
+  test("beam: z to the left, x out of the page, y down — however the member is defined", () => {
     [frame(node(0, 0, 6), node(5, 0, 6)), frame(node(5, 0, 6), node(0, 0, 6))].forEach((f) => {
       near3(f.z, [-1, 0, 0]);
       near3(f.x, [0, -1, 0]);
-      near3(f.y, [0, 0, 1]);
+      near3(f.y, [0, 0, -1]);
     });
   });
   test("flip tells whether z points from node j to node i", () => {
@@ -44,13 +45,13 @@ describe("courseFrame", () => {
     const g = frame(node(0, 0, 0), node(3, 0, 4)); // going up-right: z reversed
     near3(g.z, [-0.6, 0, -0.8]);
   });
-  test("member along Y: z = −Y, y up, x = +X", () => {
+  test("member along Y: z = −Y, y down, x = +X", () => {
     const f = frame(node(0, 0, 0), node(0, 3, 0));
     near3(f.z, [0, -1, 0]);
-    near3(f.y, [0, 0, 1]);
+    near3(f.y, [0, 0, -1]);
     near3(f.x, [1, 0, 0]);
   });
-  test("always an orthonormal right-handed triad (x × y = z)", () => {
+  test("always an orthonormal left-handed triad (x × y = −z)", () => {
     const ends: [Solver3DNode, Solver3DNode][] = [
       [node(0, 0, 0), node(1, 2, 3)],
       [node(2, -1, 4), node(-3, 5, 4)],
@@ -62,7 +63,7 @@ describe("courseFrame", () => {
       [f.x, f.y, f.z].forEach((v) => expect(Math.hypot(...v)).toBeCloseTo(1, 9));
       expect(dot(f.x, f.y)).toBeCloseTo(0, 9);
       expect(dot(f.y, f.z)).toBeCloseTo(0, 9);
-      near3(cross(f.x, f.y), f.z);
+      near3(cross(f.x, f.y), [-f.z[0], -f.z[1], -f.z[2]]);
     });
   });
 });

@@ -1,7 +1,7 @@
 // Normal-stress check for members with a tabulated profile (pure, unit-testable).
-//   σ(x, y) = N/A + Mx·y/Ix − My·x/Iy
+//   σ(x, y) = N/A + Mx·y/Ix + My·x/Iy
 // in the course triad (z along the member, x out of the plane, y the section depth for an
-// unrotated profile; moments on the +z face, see sampling3d.ts). For a doubly symmetric I
+// unrotated profile; Mx, My positive when they tension the +y / +x fibres, see sampling3d.ts). For a doubly symmetric I
 // section the extreme values are at the four corners of the bounding box.
 // Forces in kN and lengths in m give kN/m²; results are reported in kN/cm² (1 kN/cm² = 10 MPa).
 import { FrameModel3D, Member3D, Material3D } from "./types3d";
@@ -60,7 +60,7 @@ export function computeStress(model: FrameModel3D, solved: SolveOutput3D): Stres
       for (const [sx, sy] of CORNERS) {
         const x = sx * sec.halfX!,
           y = sy * sec.halfY!;
-        const s = (st.N / sec.A + (st.Mx * y) / sec.Ix - (st.My * x) / sec.Iy) / 1e4; // kN/cm²
+        const s = (st.N / sec.A + (st.Mx * y) / sec.Ix + (st.My * x) / sec.Iy) / 1e4; // kN/cm²
         if (Math.abs(s) > Math.abs(gov) + 1e-12) {
           gov = s;
           gx = x;

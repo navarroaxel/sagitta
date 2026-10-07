@@ -1,5 +1,6 @@
 // Stress state of one cross-section of a member (pure, unit-testable).
-// Course triad: x to the right, y up, z out of the page towards the viewer (along the member).
+// Course triad (left-handed, as in the course): drawn with x to the right, y up and z into the
+// page (along the member).
 // Stresses in kN/cm²; forces in kN and m.
 import { FrameModel3D } from "./types3d";
 import { SolveOutput3D } from "./solve3d";
@@ -11,7 +12,7 @@ export interface CutCorner {
   y: number; // m
   sN: number; // σ from N (uniform)
   sMx: number; // σ from Mx: Mx·y/Ix
-  sMy: number; // σ from My: −My·x/Iy
+  sMy: number; // σ from My: My·x/Iy
   sigma: number; // sum
 }
 
@@ -94,14 +95,14 @@ export function cutAt(
       y = sy * halfY;
     const sN = st.N / sec.A / 1e4;
     const sMx = (st.Mx * y) / sec.Ix / 1e4;
-    const sMy = (-st.My * x) / sec.Iy / 1e4;
+    const sMy = (st.My * x) / sec.Iy / 1e4;
     return { x, y, sN, sMx, sMy, sigma: sN + sMx + sMy };
   });
   const critical = corners.reduce((b, c) => (Math.abs(c.sigma) > Math.abs(b.sigma) + 1e-12 ? c : b));
 
   // σ(x,y) = a + b·x + c·y = 0, clipped to the box [−k·halfX, k·halfX] × [−k·halfY, k·halfY]
   const a = st.N / sec.A / 1e4;
-  const b = -st.My / sec.Iy / 1e4;
+  const b = st.My / sec.Iy / 1e4;
   const c = st.Mx / sec.Ix / 1e4;
   const k = 1.25;
   const X = k * halfX,

@@ -40,8 +40,8 @@ describe("cutAt", () => {
     near(pp.sMy, -mp.sMy);
     near(pp.sMx, mp.sMx);
     near(mm.sMy, -pm.sMy);
-    near(pp.sMx, 40 / (p.Sx * 1e-6) / 1e4, 1e-3); // Mx = +40 kN·m → tension on top (+y)
-    near(pp.sMy, 20 / (p.Sy * 1e-6) / 1e4, 1e-3); // fy = +5 → My = −20 → tension at +x
+    near(pp.sMx, -40 / (p.Sx * 1e-6) / 1e4, 1e-3); // Mx = −40 kN·m: the +y (bottom) fibres are in compression
+    near(pp.sMy, 20 / (p.Sy * 1e-6) / 1e4, 1e-3); // fy = +5 → My = +20 → tension at +x
   });
   test("the critical corner matches the member's σ max", () => {
     near(Math.abs(c.critical.sigma), Math.abs(Math.max(...c.corners.map((k) => Math.abs(k.sigma)))));
