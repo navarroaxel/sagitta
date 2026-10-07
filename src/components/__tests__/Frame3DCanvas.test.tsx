@@ -13,6 +13,7 @@ const opts: View3DOptions = {
   showValues: true,
   showMemberLabels: true,
   colorByStress: false,
+  showLocalAxes: false,
   scale: 1,
 };
 
@@ -146,5 +147,57 @@ describe("partial UDL on the canvas", () => {
     expect(tipX).toBeGreaterThan(bx + 5);
     expect(tipX).toBeLessThan(dx);
     expect(tipX).toBeCloseTo(bx + (dx - bx) / 5, 0); // 1 m of 5 m
+  });
+});
+
+describe("local axes", () => {
+  const axis = (m: string, a: string) => {
+    const l = screen.getByTestId(`local-axes-${m}`).querySelector(`line[data-axis=${a}]`)!;
+    const n = (k: string) => parseFloat(l.getAttribute(k)!);
+    return [n("x2") - n("x1"), n("y2") - n("y1")]; // screen vector (y down)
+  };
+  const on = { ...opts, showLocalAxes: true };
+
+  test("hidden unless enabled", () => {
+    render(<Frame3DCanvas model={tFrame} solved={solveModel3D(tFrame)} viewOpts={opts} />);
+    expect(screen.queryByTestId("local-axes-layer")).toBeNull();
+  });
+
+  test("a triad (x', y', z') is drawn on every member", () => {
+    render(<Frame3DCanvas model={tFrame} solved={solveModel3D(tFrame)} viewOpts={on} />);
+    tFrame.members.forEach((m) =>
+      expect(screen.getByTestId(`local-axes-${m.id}`).querySelectorAll("line")).toHaveLength(3),
+    );
+  });
+
+  test("column A->B: x' points up the page, y' is global y (up-right), z' is global -x (left)", () => {
+    render(<Frame3DCanvas model={tFrame} solved={solveModel3D(tFrame)} viewOpts={on} />);
+    const [xx, xy] = axis("M1", "x");
+    expect(Math.abs(xx)).toBeLessThan(1e-6);
+    expect(xy).toBeLessThan(0);
+    const [yx, yy] = axis("M1", "y");
+    expect(yx).toBeGreaterThan(0);
+    expect(yy).toBeLessThan(0);
+    const [zx, zy] = axis("M1", "z");
+    expect(zx).toBeLessThan(0);
+    expect(Math.abs(zy)).toBeLessThan(1e-6);
+  });
+
+  test("hat B->D: x' right, z' up, y' receding up-right", () => {
+    render(<Frame3DCanvas model={tFrame} solved={solveModel3D(tFrame)} viewOpts={on} />);
+    expect(axis("M3", "x")[0]).toBeGreaterThan(0);
+    expect(axis("M3", "z")[1]).toBeLessThan(0);
+    const [yx, yy] = axis("M3", "y");
+    expect(yx).toBeGreaterThan(0);
+    expect(yy).toBeLessThan(0);
+  });
+
+  test("not drawn when the model is unstable", () => {
+    const unstable: FrameModel3D = {
+      ...tFrame,
+      nodes: tFrame.nodes.map((n) => ({ ...n, support: "free" as const })),
+    };
+    render(<Frame3DCanvas model={unstable} solved={solveModel3D(unstable)} viewOpts={on} />);
+    expect(screen.queryByTestId("local-axes-layer")).toBeNull();
   });
 });

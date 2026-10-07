@@ -10,6 +10,7 @@ import { Supports3D } from "./canvas3d/Supports3D";
 import { Loads3DLayer, Reactions3DLayer } from "./canvas3d/Loads3DLayer";
 import { Diagram3DLayer, DiagramKind } from "./canvas3d/Diagram3DLayer";
 import { CutMarker3D } from "./canvas3d/CutMarker3D";
+import { LocalAxes3D } from "./canvas3d/LocalAxes3D";
 import { StressResult, ratioColor } from "@/lib/stress3d";
 import { unit2 } from "./canvas3d/arrows3d";
 import type { Vec3 } from "@/lib/solver3d";
@@ -21,6 +22,7 @@ export interface View3DOptions {
   showValues: boolean;
   showMemberLabels: boolean;
   colorByStress: boolean;
+  showLocalAxes: boolean;
   scale: number;
 }
 
@@ -199,6 +201,8 @@ export default function Frame3DCanvas({
       {stable && viewOpts.showReactions && (
         <Reactions3DLayer model={model} solved={solved!} proj={proj} />
       )}
+
+      {stable && viewOpts.showLocalAxes && <LocalAxes3D model={model} solved={solved!} proj={proj} />}
 
       {stable && cut && <CutMarker3D model={model} solved={solved!} proj={proj} cut={cut} />}
 

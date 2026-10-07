@@ -30,6 +30,7 @@ export default function Frame3DPage() {
     showValues: true,
     showMemberLabels: false,
     colorByStress: false,
+    showLocalAxes: false,
     scale: 1,
   });
   const [cut, setCut] = useState<CutState>({ on: false, member: "", t: 0 });
@@ -44,7 +45,7 @@ export default function Frame3DPage() {
     cutRes && solved ? { member: cutRes.e, x: solved.stations[cutRes.e][cutRes.station].x } : null;
   const hasError = !solved || !solved.result.stable;
   const toggle = (
-    k: "showLoads" | "showReactions" | "showValues" | "showMemberLabels" | "colorByStress",
+    k: "showLoads" | "showReactions" | "showValues" | "showMemberLabels" | "colorByStress" | "showLocalAxes",
   ) =>
     setOpts((o) => ({ ...o, [k]: !o[k] }));
 
@@ -121,6 +122,7 @@ export default function Frame3DPage() {
             ["showValues", "controls.values"],
             ["showMemberLabels", "controls.member_labels"],
             ["colorByStress", "f3d.view.stress_colors"],
+            ["showLocalAxes", "f3d.view.local_axes"],
           ] as const
         ).map(([k, label]) => (
           <label key={k} className="flex items-center gap-1 text-stone-600 dark:text-stone-300">

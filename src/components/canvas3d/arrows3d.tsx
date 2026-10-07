@@ -10,7 +10,7 @@ export function unit2(v: P2): P2 | null {
   return n < 1e-9 ? null : [v[0] / n, v[1] / n];
 }
 
-function Head({
+export function Head({
   tip,
   d,
   size = 10,

@@ -96,6 +96,7 @@ describe("cut marker on the 3D canvas", () => {
     showValues: false,
     showMemberLabels: false,
     colorByStress: false,
+    showLocalAxes: false,
     scale: 1,
   };
   test("shown only when a cut is given", () => {
