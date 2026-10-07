@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import Frame3DCanvas, { View3DOptions } from "../Frame3DCanvas";
 import { solveModel3D } from "@/lib/solve3d";
 import { computeStress } from "@/lib/stress3d";
@@ -219,5 +219,67 @@ describe("local axes", () => {
     };
     render(<Frame3DCanvas model={unstable} solved={solveModel3D(unstable)} viewOpts={on} />);
     expect(screen.queryByTestId("local-axes-layer")).toBeNull();
+  });
+});
+
+describe("zoom and pan (as in the 2D canvas)", () => {
+  const content = () => screen.getByTestId("canvas3d-content").getAttribute("transform")!;
+  const renderIt = () =>
+    render(<Frame3DCanvas model={tFrame} solved={solveModel3D(tFrame)} viewOpts={opts} />);
+
+  test("starts at 100% with no indicator", () => {
+    renderIt();
+    expect(content()).toBe("translate(0,0) scale(1)");
+    expect(screen.queryByTestId("zoom-level")).toBeNull();
+  });
+
+  test("wheel zooms in and out in 15 % steps and shows the level", () => {
+    renderIt();
+    const svg = screen.getByTestId("frame3d-canvas");
+    fireEvent.wheel(svg, { deltaY: -100 });
+    expect(screen.getByTestId("zoom-level").textContent).toBe("115%");
+    expect(content()).toContain("scale(1.15)");
+    fireEvent.wheel(svg, { deltaY: 100 });
+    expect(screen.queryByTestId("zoom-level")).toBeNull(); // back to exactly 100 %
+  });
+
+  test("+ / − buttons zoom by 25 % and ⊙ resets", () => {
+    renderIt();
+    fireEvent.click(screen.getByTitle("Zoom in"));
+    expect(screen.getByTestId("zoom-level").textContent).toBe("125%");
+    fireEvent.click(screen.getByTitle("Zoom out"));
+    fireEvent.click(screen.getByTitle("Zoom out"));
+    expect(screen.getByTestId("zoom-level").textContent).toBe("80%");
+    fireEvent.click(screen.getByTitle("Reset view"));
+    expect(content()).toBe("translate(0,0) scale(1)");
+    expect(screen.queryByTestId("zoom-level")).toBeNull();
+  });
+
+  test("zoom is limited", () => {
+    renderIt();
+    for (let i = 0; i < 40; i++) fireEvent.click(screen.getByTitle("Zoom in"));
+    expect(screen.getByTestId("zoom-level").textContent).toBe("1000%");
+    for (let i = 0; i < 80; i++) fireEvent.click(screen.getByTitle("Zoom out"));
+    expect(screen.getByTestId("zoom-level").textContent).toBe("15%");
+  });
+
+  test("dragging pans the view", () => {
+    renderIt();
+    const svg = screen.getByTestId("frame3d-canvas");
+    fireEvent.mouseDown(svg, { clientX: 100, clientY: 100 });
+    fireEvent.mouseMove(svg, { clientX: 140, clientY: 80 });
+    expect(content()).toBe("translate(40,-20) scale(1)");
+    fireEvent.mouseUp(svg);
+    fireEvent.mouseMove(svg, { clientX: 300, clientY: 300 }); // no longer dragging
+    expect(content()).toBe("translate(40,-20) scale(1)");
+  });
+
+  test("the global axes triad does not move with the view", () => {
+    renderIt();
+    fireEvent.click(screen.getByTitle("Zoom in"));
+    const svg = screen.getByTestId("frame3d-canvas");
+    const group = screen.getByTestId("canvas3d-content");
+    // the triad's lines are direct children of the svg, not of the zoomed group
+    expect(Array.from(svg.children).some((c) => c.tagName === "g" && c !== group && c.querySelector("line"))).toBe(true);
   });
 });
