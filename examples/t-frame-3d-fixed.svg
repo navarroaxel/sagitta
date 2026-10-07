@@ -1,0 +1,171 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="70 30 570 480" font-family="system-ui, sans-serif">
+  <!--
+    Structure: 3D T-frame — a vertical column fixed (built-in) to the ground at its
+      base, with a horizontal hat (beam) on top forming a T. Solid web, rigid joints.
+      Drawn in oblique projection. Axes (right-handed): x along the hat (right),
+      y horizontal, out of the plane of the T (receding, drawn up-right), z vertical (up).
+    World in metres. Transform: sx = 240 + (x*40 + y*14) ; sy = 400 - (z*40 + y*10)
+      (x/z in the plane of the T at 40 px/m; the y axis is only drawn as direction
+       u = (14,-10) px per metre, no dimension is read along it)
+    Nodes:
+      A  (0,0,0)   fixed / built-in base                 -> (240,400)
+      B  (0,0,6)   T-junction, top of the column (rigid) -> (240,160)
+      C  (-2,0,6)  left tip of the hat, free end         -> (160,160)
+      D  (5,0,6)   right tip of the hat, free end        -> (440,160)
+    Members:
+      A-B  column (6 m)
+      C-D  hat (7 m: left arm C-B = 2 m + right arm B-D = 5 m)
+    Supports: A fixed in 3D (restrains all 3 forces and 3 moments).
+    Loads:
+      q_y = 3 kN/m distributed along the whole column A-B, acting in +y (out of the plane of the T)
+        -> resultant Q = 3 x 6 = 18 kN at z = 3 m
+      q_z = 2 kN/m downward (-z) on the hat, from 1 m right of B to the tip D (x = 1..5 m, 4 m long)
+        -> resultant Q_z = 2 x 4 = 8 kN downward at x = 3 m
+        (assumed extent: only the start point, 1 m right of B, was given; it runs to the right tip)
+      M_y = 5 kN.m applied at the left tip C, moment vector along +y
+        (right-hand rule: rotates z toward x = clockwise seen from the figure)
+    Support reactions (computed):
+      A: F_y = 18 kN (along -y) ; F_z = 8 kN (up) ; M_x = 54 kN.m (vector along +x) ;
+         M_y = 29 kN.m (vector along -y) ; F_x = M_z = 0
+    Equilibrium:
+      SumFy  = 18 - 18 = 0
+      SumMx_A = -(18)(3) + 54 = 0   (Q along +y at height z: r x F gives -z*Q about x)
+      SumFz  = 8 - 8 = 0
+      SumMy_A = +5 + (8)(3) - 29 = 0   (downward Q_z at x = 3, right of A, turns clockwise = +y)
+    The given reactions satisfy global equilibrium.
+  -->
+
+  <rect x="70" y="30" width="570" height="480" fill="#ffffff"/>
+
+  <!-- ===== Dimensions ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <!-- hat (top): 2.00 | 5.00 -->
+    <line x1="160" y1="96" x2="440" y2="96"/>
+    <line x1="160" y1="91" x2="160" y2="101"/>
+    <line x1="240" y1="91" x2="240" y2="101"/>
+    <line x1="440" y1="91" x2="440" y2="101"/>
+    <text x="200" y="88" text-anchor="middle" stroke="none">2.00</text>
+    <text x="340" y="88" text-anchor="middle" stroke="none">5.00</text>
+
+    <!-- load start / extent under the hat: 1.00 | 4.00 -->
+    <line x1="240" y1="212" x2="440" y2="212"/>
+    <line x1="240" y1="207" x2="240" y2="217"/>
+    <line x1="280" y1="207" x2="280" y2="217"/>
+    <line x1="440" y1="207" x2="440" y2="217"/>
+    <text x="260" y="230" text-anchor="middle" stroke="none">1.00</text>
+    <text x="360" y="230" text-anchor="middle" stroke="none">4.00</text>
+
+    <!-- column (left): 6.00 m -->
+    <line x1="112" y1="160" x2="112" y2="400"/>
+    <line x1="107" y1="160" x2="117" y2="160"/>
+    <line x1="107" y1="400" x2="117" y2="400"/>
+    <text x="100" y="280" text-anchor="middle" stroke="none" transform="rotate(-90 100 280)">6.00 m</text>
+  </g>
+
+  <!-- ===== Solid-web frame (rigid joints) ===== -->
+  <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
+    <line x1="240" y1="400" x2="240" y2="160"/> <!-- column A-B -->
+    <line x1="160" y1="160" x2="440" y2="160"/> <!-- hat C-B-D -->
+  </g>
+
+  <!-- ===== Fixed / built-in base at A (ground plate in the xy plane + hatch) ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff" fill-opacity="0.85">
+    <polygon points="186,410 266,410 294,390 214,390"/>
+  </g>
+  <g stroke="#1a1a1a" stroke-width="2" fill="none">
+    <line x1="194" y1="410" x2="186" y2="418"/><line x1="204" y1="410" x2="196" y2="418"/><line x1="214" y1="410" x2="206" y2="418"/><line x1="224" y1="410" x2="216" y2="418"/><line x1="234" y1="410" x2="226" y2="418"/><line x1="244" y1="410" x2="236" y2="418"/><line x1="254" y1="410" x2="246" y2="418"/><line x1="264" y1="410" x2="256" y2="418"/>
+  </g>
+
+  <!-- ===== Nodes ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="240" cy="400" r="4"/> <!-- A base -->
+    <circle cx="240" cy="160" r="4"/> <!-- B junction -->
+    <circle cx="160" cy="160" r="4"/> <!-- C left tip -->
+    <circle cx="440" cy="160" r="4"/> <!-- D right tip -->
+  </g>
+
+  <!-- ===== Node labels ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <text x="252" y="190" text-anchor="start">B</text>
+    <text x="146" y="182" text-anchor="end">C</text>
+    <text x="440" y="184" text-anchor="middle">D</text>
+    <text x="254" y="384" text-anchor="start">A</text>
+  </g>
+
+  <!-- ===== Axes triad (global system) ===== -->
+  <g stroke="#5f6368" fill="#5f6368" font-size="13" font-weight="600">
+    <line x1="520" y1="360" x2="552" y2="360" stroke-width="2"/>
+    <polygon points="560,360 551,364 551,356" stroke="none"/>
+    <text x="566" y="364" stroke="none">x</text>
+    <line x1="520" y1="360" x2="520" y2="328" stroke-width="2"/>
+    <polygon points="520,320 524,329 516,329" stroke="none"/>
+    <text x="516" y="312" stroke="none" text-anchor="middle">z</text>
+    <line x1="520" y1="360" x2="555.5" y2="334.6" stroke-width="2"/>
+    <polygon points="562,330 557,338.5 552.4,332" stroke="none"/>
+    <text x="568" y="326" stroke="none">y</text>
+  </g>
+
+  <!-- ===== Loads (red) ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+    <!-- q_y = 3 kN/m along the column, acting in +y (tip at the column, shaft trailing opposite) -->
+    <line x1="204.2" y1="395.6" x2="231.9" y2="375.8" stroke-width="2"/>
+    <polygon points="240,370 233.7,381.9 226.7,372.1" stroke="none"/>
+    <line x1="204.2" y1="335.6" x2="231.9" y2="315.8" stroke-width="2"/>
+    <polygon points="240,310 233.7,321.9 226.7,312.1" stroke="none"/>
+    <line x1="204.2" y1="275.6" x2="231.9" y2="255.8" stroke-width="2"/>
+    <polygon points="240,250 233.7,261.9 226.7,252.1" stroke="none"/>
+    <line x1="204.2" y1="215.6" x2="231.9" y2="195.8" stroke-width="2"/>
+    <polygon points="240,190 233.7,201.9 226.7,192.1" stroke="none"/>
+    <line x1="204.2" y1="395.6" x2="204.2" y2="215.6" stroke-width="2"/>
+    <text x="256" y="290" text-anchor="start" stroke="none">q<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 3 kN/m</tspan></text>
+
+    <!-- q_z = 2 kN/m downward on the hat, x = 1..5 m (tip at the hat, shaft trailing up) -->
+    <line x1="280" y1="124" x2="280" y2="150" stroke-width="2"/>
+    <polygon points="280,160 274,148 286,148" stroke="none"/>
+    <line x1="320" y1="124" x2="320" y2="150" stroke-width="2"/>
+    <polygon points="320,160 314,148 326,148" stroke="none"/>
+    <line x1="360" y1="124" x2="360" y2="150" stroke-width="2"/>
+    <polygon points="360,160 354,148 366,148" stroke="none"/>
+    <line x1="400" y1="124" x2="400" y2="150" stroke-width="2"/>
+    <polygon points="400,160 394,148 406,148" stroke="none"/>
+    <line x1="440" y1="124" x2="440" y2="150" stroke-width="2"/>
+    <polygon points="440,160 434,148 446,148" stroke="none"/>
+    <line x1="280" y1="124" x2="440" y2="124" stroke-width="2"/>
+    <text x="360" y="116" text-anchor="middle" stroke="none">q<tspan font-size="10" dy="4">z</tspan><tspan dy="-4"> = 2 kN/m</tspan></text>
+
+    <!-- M_y = 5 kN.m at C: moment vector along +y (double arrow, right-hand rule) -->
+    <line x1="160" y1="160" x2="195.8" y2="134.4" stroke-width="2.5"/>
+    <polygon points="210.5,124 205.2,133.8 199.4,125.7" stroke="none"/>
+    <polygon points="202.3,129.8 197.1,139.7 191.3,131.5" stroke="none"/>
+    <text x="124" y="118" text-anchor="start" stroke="none">M<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 5 kN&#183;m</tspan></text>
+  </g>
+
+  <!-- ===== Support reactions (blue) ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+    <!-- F_y = 18 kN along -y; drawn offset 24 px to the right of the column axis, tip at the ground plate -->
+    <line x1="299.8" y1="378.4" x2="272.1" y2="398.2" stroke-width="2.5"/>
+    <polygon points="264,404 270.3,392.1 277.3,401.9" stroke="none"/>
+    <text x="316" y="388" text-anchor="start" stroke="none">F<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 18 kN</tspan></text>
+
+    <!-- F_z = 8 kN upward at A (tip at the node, shaft trailing below) -->
+    <line x1="240" y1="440" x2="240" y2="412" stroke-width="2.5"/>
+    <polygon points="240,402 234,414 246,414" stroke="none"/>
+    <text x="250" y="428" text-anchor="start" stroke="none">F<tspan font-size="10" dy="4">z</tspan><tspan dy="-4"> = 8 kN</tspan></text>
+
+    <!-- M_x = 54 kN.m: moment vector along +x (double arrow) -->
+    <line x1="240" y1="452" x2="312" y2="452" stroke-width="2.5"/>
+    <polygon points="330,452 320,457 320,447" stroke="none"/>
+    <polygon points="320,452 310,457 310,447" stroke="none"/>
+    <text x="340" y="456" text-anchor="start" stroke="none">M<tspan font-size="10" dy="4">x</tspan><tspan dy="-4"> = 54 kN&#183;m</tspan></text>
+
+    <!-- M_y = 5 kN.m: moment vector along -y (double arrow) -->
+    <line x1="222" y1="424" x2="200.8" y2="439.1" stroke-width="2.5"/>
+    <polygon points="186.2,449.6 191.4,439.7 197.2,447.8" stroke="none"/>
+    <polygon points="194.3,443.8 199.6,433.9 205.4,442" stroke="none"/>
+    <text x="176" y="462" text-anchor="end" stroke="none">M<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 29 kN&#183;m</tspan></text>
+  </g>
+
+  <text x="355" y="496" text-anchor="middle" fill="#5f6368" font-size="13">
+    3D T-frame, fixed at A. Loads red, reactions blue; double arrow = moment vector.
+  </text>
+</svg>
