@@ -4,7 +4,7 @@ import React from "react";
 import { FrameModel3D } from "@/lib/types3d";
 import { SolveOutput3D } from "@/lib/solve3d";
 import { StressResult } from "@/lib/stress3d";
-import { cutAt, nearestStation, sectionOutline } from "@/lib/sectionCut";
+import { cutAt, nearestStation, sectionOutline, SectionCutData } from "@/lib/sectionCut";
 import { useColors } from "@/contexts/ColorContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -70,6 +70,49 @@ function Bowtie({
         strokeWidth={1}
       />
     </g>
+  );
+}
+
+const sg = (v: number, d = 2) => `${v < 0 ? "−" : "+"} ${Math.abs(v).toFixed(d)}`;
+const num = (v: number, d = 2) => (v < 0 ? `(${v.toFixed(d)})` : v.toFixed(d));
+
+// The verification written out with the numbers of the critical corner (kN and cm).
+function CheckEquation({ data, sigmaAdm }: { data: SectionCutData; sigmaAdm: number }) {
+  const { t } = useLanguage();
+  const c = data.critical;
+  const A = data.A * 1e4, // cm²
+    Iy = data.Iy * 1e8, // cm⁴
+    Iz = data.Iz * 1e8;
+  const My = data.My * 100, // kN·cm
+    Mz = data.Mz * 100;
+  const y = c.y * 100,
+    z = c.z * 100; // cm
+  const ratio = sigmaAdm > 0 ? Math.abs(c.sigma) / sigmaAdm : Infinity;
+  const ok = ratio <= 1;
+  return (
+    <div
+      className="rounded border border-stone-200 bg-stone-50 p-2 font-mono text-xs leading-relaxed dark:border-stone-700 dark:bg-stone-800"
+      data-testid="cut-equation"
+    >
+      <div className="mb-1 font-sans font-bold text-stone-600 uppercase dark:text-stone-300">
+        {t("f3d.cut.check")}
+      </div>
+      <div>σ = N/A − My·z&apos;/Iy − Mz·y&apos;/Iz ≤ σ adm</div>
+      <div>
+        σ = {num(data.N)}/{A.toFixed(1)} − {num(My)}·{num(z, 1)}/{Iy.toFixed(0)} − {num(Mz)}·{num(y, 1)}/
+        {Iz.toFixed(0)}
+      </div>
+      <div data-testid="cut-equation-terms">
+        σ = {c.sN.toFixed(2)} {sg(c.sMy)} {sg(c.sMz)} = {c.sigma.toFixed(2)} kN/cm²
+      </div>
+      <div data-testid="cut-equation-result" className={ok ? "text-emerald-700 dark:text-emerald-400" : "text-red-600"}>
+        |σ| = {Math.abs(c.sigma).toFixed(2)} {ok ? "≤" : ">"} σ adm = {sigmaAdm} kN/cm² → {ok ? "✓" : "✗"} (
+        {(ratio * 100).toFixed(0)} %)
+      </div>
+      <div className="font-sans text-stone-500 dark:text-stone-400">
+        N [kN], M [kN·cm], A [cm²], I [cm⁴], y&apos;, z&apos; [cm]
+      </div>
+    </div>
   );
 }
 
@@ -304,6 +347,8 @@ export default function SectionCut({
       </svg>
 
       <p className="text-xs text-stone-500 dark:text-stone-400">{t("f3d.cut.view_note")}</p>
+
+      <CheckEquation data={data} sigmaAdm={model.sigmaAdm} />
 
       <div className="grid gap-3 text-xs sm:grid-cols-2">
         <div>

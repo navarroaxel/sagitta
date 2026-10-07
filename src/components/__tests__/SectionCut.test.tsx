@@ -58,6 +58,29 @@ describe("SectionCut", () => {
     expect(screen.getByTestId("cut-x").textContent).toContain("x = 0.00");
   });
 
+  test("writes out the check with the critical corner's numbers", () => {
+    render(<Harness />);
+    const eq = screen.getByTestId("cut-equation");
+    expect(eq.textContent).toContain("σ = N/A − My·z'/Iy − Mz·y'/Iz ≤ σ adm");
+    // terms add up to the member's σ max (column base) and the verdict is shown
+    const sigma = stress[0]!.max.sigma;
+    expect(screen.getByTestId("cut-equation-terms").textContent).toContain(`= ${sigma.toFixed(2)} kN/cm²`);
+    const res = screen.getByTestId("cut-equation-result").textContent!;
+    expect(res).toContain(`|σ| = ${Math.abs(sigma).toFixed(2)} ≤ σ adm = 14 kN/cm² → ✓`);
+    expect(res).toContain(`${((Math.abs(sigma) / 14) * 100).toFixed(0)} %`);
+  });
+
+  test("a failing section shows > and ✗", () => {
+    const weak: FrameModel3D = {
+      ...model,
+      members: model.members.map((m) => (m.id === "M1" ? { ...m, profile: "IPN 80" } : m)),
+    };
+    render(<Harness model={weak} />);
+    const res = screen.getByTestId("cut-equation-result").textContent!;
+    expect(res).toContain(">");
+    expect(res).toContain("✗");
+  });
+
   test("members without a profile cannot be cut", () => {
     const none: FrameModel3D = { ...model, members: model.members.map((m) => ({ ...m, profile: undefined })) };
     render(<Harness model={none} />);

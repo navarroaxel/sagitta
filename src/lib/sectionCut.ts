@@ -26,6 +26,9 @@ export interface SectionCutData {
   T: number;
   Qy: number;
   Qz: number;
+  A: number; // m²
+  Iy: number; // m⁴
+  Iz: number; // m⁴
   cy: number; // half width along y', m
   cz: number; // half depth along z', m
   corners: CutCorner[]; // (+y,+z), (+y,−z), (−y,+z), (−y,−z)
@@ -133,6 +136,9 @@ export function cutAt(
     T: st.T,
     Qy: st.Qy,
     Qz: st.Qz,
+    A: sec.A,
+    Iy: sec.Iy,
+    Iz: sec.Iz,
     cy,
     cz,
     corners,
