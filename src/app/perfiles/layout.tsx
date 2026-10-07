@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
-const title = "Perfiles de acero IPN / IPB | Frame Diagram Simulator";
+const title = "Perfiles y tubos de acero (CIRSOC) | Frame Diagram Simulator";
 const description =
-  "Tabla de perfiles IPN e IPB (CIRSOC) con búsqueda, filtros por mínimo de Ix, Sx y A, orden por columna y copiado de valores.";
+  "Tablas CIRSOC de perfiles laminados IPN, IPB, IPE, IPBl, IPBv y UPN, y de tubos de acero circulares, cuadrados y rectangulares: búsqueda, filtros por mínimo de Ix, Sx y A, orden por columna, dibujo de la sección con cotas y copiado de valores.";
 
 export const metadata: Metadata = {
   title,
