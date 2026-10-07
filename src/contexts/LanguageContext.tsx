@@ -222,7 +222,8 @@ const EN = {
   "f3d.cut.title": "Section cut",
   "f3d.cut.member": "Member",
   "f3d.cut.peak": "Go to σ max",
-  "f3d.cut.no_profile": "Assign an IPN/IPB profile to a member (members tab) to see its section cut.",
+  "f3d.cut.no_profile":
+    "Assign an IPN/IPB profile to a member (members tab) to see its section cut.",
   "f3d.cut.view_note":
     "Section seen with z into the page: x to the right, y up. The 'Z' diagrams are σ from N, Mx and My; the corner values are their sum. Fillets are not drawn.",
   "f3d.cut.neutral": "neutral axis",
@@ -266,6 +267,58 @@ const EN = {
 
   "quiz.link": "Quiz",
   "quiz.back": "← Simulator",
+  "prof.link": "Steel profiles",
+  "prof.profile": "Profile",
+  "prof.title": "Steel profiles (IPN / IPB)",
+  "prof.search": "Search: 200, ipb 300, ipn…",
+  "prof.all": "All",
+  "prof.min_label": "Minimum required",
+  "prof.count": "profiles",
+  "prof.none": "No profile matches.",
+  "prof.hint":
+    "Click a row to see the section and copy values. Click a column header to sort. Use the minimums to find the lightest profile that meets Ix, Sx or A.",
+  "prof.copied": "Copied",
+  "prof.copy": "Click to copy",
+  "prof.lightest": "Smallest area first",
+  "prof.detail": "Selected profile",
+  "prof.leg.title": "Legend",
+  "prof.leg.A": "= Gross cross-sectional area.",
+  "prof.leg.I": "= Moment of inertia of the section about the principal axes.",
+  "prof.leg.r": "= Radius of gyration",
+  "prof.leg.S": "= Elastic section modulus.",
+  "prof.leg.Q": "= Static moment of half the section.",
+  "prof.leg.Z": "= Plastic section modulus.",
+  "prof.leg.J": "= Torsion constant.",
+  "prof.leg.d": "total depth",
+  "prof.leg.bf": "flange width",
+  "prof.leg.tf": "flange thickness",
+  "prof.leg.tw": "web thickness",
+  "prof.leg.hw": "clear web height",
+  "prof.leg.r1": "root fillet radius",
+  "prof.leg.r2": "flange-toe radius",
+  "prof.leg.strong": "strong axis",
+  "prof.leg.weak": "weak axis",
+  "prof.tab.rolled": "Rolled profiles",
+  "prof.tab.chs": "Circular tubes",
+  "prof.tab.shs": "Square tubes",
+  "prof.tube.search": "Search: 168 6.35, 100…",
+  "prof.tube.title": "Steel tubes (IRAM-IAS U 500-218 / 2592)",
+  "prof.tube.D": "outer diameter",
+  "prof.tube.B": "outer width",
+  "prof.tube.t": "wall thickness",
+  "prof.tube.R": "outer corner radius = 2.00 t",
+  "prof.tube.g": "weight per metre",
+  "prof.tube.A": "= Gross cross-sectional area.",
+  "prof.tube.I": "= Moment of inertia.",
+  "prof.tube.S": "= Elastic section modulus.",
+  "prof.tube.r": "= Radius of gyration",
+  "prof.tube.Z": "= Plastic section modulus.",
+  "prof.tube.J": "= Torsion constant.",
+  "prof.tube.C": "= Torsional modulus (J / ((D − t)/2)).",
+  "prof.tube.units":
+    "Units: mm for dimensions · cm² · kg/m · cm⁴ · cm³ · cm. Circular rows are computed from D and t; square rows are transcribed from the table.",
+  "prof.units":
+    "Units: mm for dimensions · cm² · cm³ · cm · cm⁴. X-X is the strong axis.",
   "quiz.title": "True/False Exam — Statics",
   "quiz.check": "Check",
   "quiz.reset": "Reset",
@@ -323,9 +376,12 @@ const EN = {
   "esf.s2.title": "The member’s axis system",
   "esf.s2.p1":
     "Each member has its own local triad, defined from the member’s start node i toward its end node j:",
-  "esf.s2.x": "the member axis, from i to j — the direction of the axial force.",
-  "esf.s2.y": "perpendicular to the axis, rotated 90° counter-clockwise from x′ — the direction of the shear.",
-  "esf.s2.z": "out of the plane; the positive sense of the moment is measured about this axis (clockwise positive).",
+  "esf.s2.x":
+    "the member axis, from i to j — the direction of the axial force.",
+  "esf.s2.y":
+    "perpendicular to the axis, rotated 90° counter-clockwise from x′ — the direction of the shear.",
+  "esf.s2.z":
+    "out of the plane; the positive sense of the moment is measured about this axis (clockwise positive).",
   "esf.s2.p2":
     "The signs of N, Q and M are defined relative to this triad — that is why the same force may read with a different sign depending on how the member is oriented.",
 
@@ -365,7 +421,8 @@ const EN = {
   "esf.s5.kicker": "05 — Analytical procedure",
   "esf.s5.title": "Step by step",
   "esf.s5.step1.t": "Supports",
-  "esf.s5.step1.d": "Analyse the support conditions and determine whether the structure can be solved.",
+  "esf.s5.step1.d":
+    "Analyse the support conditions and determine whether the structure can be solved.",
   "esf.s5.step2.t": "Free-body diagram",
   "esf.s5.step2.d": "Draw the free-body diagram.",
   "esf.s5.step3.t": "Equilibrium equations",
@@ -373,9 +430,11 @@ const EN = {
   "esf.s5.step4.t": "Reactions",
   "esf.s5.step4.d": "Solve the system and find the support reactions.",
   "esf.s5.step5.t": "Key points",
-  "esf.s5.step5.d": "Identify the structure’s key points and build the table of values.",
+  "esf.s5.step5.d":
+    "Identify the structure’s key points and build the table of values.",
   "esf.s5.step6.t": "Traverse and plot",
-  "esf.s5.step6.d": "Traverse the structure computing the forces and plot them to scale.",
+  "esf.s5.step6.d":
+    "Traverse the structure computing the forces and plot them to scale.",
 
   "esf.s6.kicker": "06 — Worked example",
   "esf.s6.title": "L-frame, fixed at the base",
@@ -618,7 +677,8 @@ const ES: Record<TranslationKey, string> = {
   "f3d.cut.title": "Corte de sección",
   "f3d.cut.member": "Barra",
   "f3d.cut.peak": "Ir a σ máx",
-  "f3d.cut.no_profile": "Asigná un perfil IPN/IPB a una barra (pestaña barras) para ver su corte de sección.",
+  "f3d.cut.no_profile":
+    "Asigná un perfil IPN/IPB a una barra (pestaña barras) para ver su corte de sección.",
   "f3d.cut.view_note":
     "Sección vista con z entrando al plano: x a la derecha, y arriba. Los diagramas en 'Z' son σ por N, Mx y My; los valores en las esquinas son su suma. No se dibujan los radios de acuerdo.",
   "f3d.cut.neutral": "eje neutro",
@@ -662,6 +722,59 @@ const ES: Record<TranslationKey, string> = {
 
   "quiz.link": "Quiz",
   "quiz.back": "← Simulador",
+  "prof.link": "Perfiles de acero",
+  "prof.profile": "Perfil",
+  "prof.title": "Perfiles de acero (IPN / IPB)",
+  "prof.search": "Buscar: 200, ipb 300, ipn…",
+  "prof.all": "Todos",
+  "prof.min_label": "Mínimo requerido",
+  "prof.count": "perfiles",
+  "prof.none": "Ningún perfil cumple.",
+  "prof.hint":
+    "Tocá una fila para ver la sección y copiar valores. Tocá el encabezado de una columna para ordenar. Usá los mínimos para encontrar el perfil más liviano que cumpla Ix, Sx o A.",
+  "prof.copied": "Copiado",
+  "prof.copy": "Click para copiar",
+  "prof.lightest": "Menor área primero",
+  "prof.detail": "Perfil seleccionado",
+  "prof.leg.title": "Leyenda",
+  "prof.leg.A": "= Área bruta de la sección transversal.",
+  "prof.leg.I":
+    "= Momento de inercia de la sección respecto de los ejes principales.",
+  "prof.leg.r": "= Radio de giro",
+  "prof.leg.S": "= Módulo resistente elástico de la sección.",
+  "prof.leg.Q": "= Momento estático de media sección.",
+  "prof.leg.Z": "= Módulo plástico de la sección.",
+  "prof.leg.J": "= Módulo de torsión.",
+  "prof.leg.d": "altura total",
+  "prof.leg.bf": "ancho del ala",
+  "prof.leg.tf": "espesor del ala",
+  "prof.leg.tw": "espesor del alma",
+  "prof.leg.hw": "altura libre del alma",
+  "prof.leg.r1": "radio de acuerdo",
+  "prof.leg.r2": "radio de la punta del ala",
+  "prof.leg.strong": "eje fuerte",
+  "prof.leg.weak": "eje débil",
+  "prof.tab.rolled": "Perfiles laminados",
+  "prof.tab.chs": "Tubos circulares",
+  "prof.tab.shs": "Tubos cuadrados",
+  "prof.tube.search": "Buscar: 168 6.35, 100…",
+  "prof.tube.title": "Tubos de acero (IRAM-IAS U 500-218 / 2592)",
+  "prof.tube.D": "diámetro exterior",
+  "prof.tube.B": "ancho exterior",
+  "prof.tube.t": "espesor de pared",
+  "prof.tube.R": "radio de esquina exterior = 2,00 t",
+  "prof.tube.g": "peso por metro lineal",
+  "prof.tube.A": "= Sección bruta.",
+  "prof.tube.I": "= Momento de inercia.",
+  "prof.tube.S": "= Módulo elástico resistente.",
+  "prof.tube.r": "= Radio de giro",
+  "prof.tube.Z": "= Módulo plástico.",
+  "prof.tube.J": "= Módulo de torsión.",
+  "prof.tube.C": "= Constante torsional (J / ((D − t)/2)).",
+  "prof.tube.units":
+    "Unidades: mm en dimensiones · cm² · kg/m · cm⁴ · cm³ · cm. Los circulares se calculan desde D y t; los cuadrados están transcriptos de la tabla.",
+  "prof.units":
+    "Unidades: mm en dimensiones · cm² · cm³ · cm · cm⁴. X-X es el eje fuerte.",
   "quiz.title": "Examen V/F — Estática",
   "quiz.check": "Corregir",
   "quiz.reset": "Reiniciar",
@@ -699,7 +812,8 @@ const ES: Record<TranslationKey, string> = {
   "claudeQuiz.shuffle": "Mezclar",
   "claudeQuiz.reset": "Reiniciar",
   "claudeQuiz.result.great": "Muy sólido. Estás listo para la parte teórica.",
-  "claudeQuiz.result.ok": "Bien encaminado. Repasá las que fallaste y reintentá.",
+  "claudeQuiz.result.ok":
+    "Bien encaminado. Repasá las que fallaste y reintentá.",
   "claudeQuiz.result.low": "Repasá los temas flojos y reintentá.",
 
   // ── Esfuerzos característicos (N/Q/M) ──
@@ -720,8 +834,10 @@ const ES: Record<TranslationKey, string> = {
   "esf.s2.p1":
     "Cada barra tiene su propia terna local, definida desde el nudo inicial i hacia el nudo final j:",
   "esf.s2.x": "eje de la barra, de i a j — dirección del esfuerzo normal.",
-  "esf.s2.y": "perpendicular al eje, girado 90° antihorario respecto de x′ — dirección del corte.",
-  "esf.s2.z": "saliente del plano; el sentido positivo del momento se mide alrededor de este eje (horario positivo).",
+  "esf.s2.y":
+    "perpendicular al eje, girado 90° antihorario respecto de x′ — dirección del corte.",
+  "esf.s2.z":
+    "saliente del plano; el sentido positivo del momento se mide alrededor de este eje (horario positivo).",
   "esf.s2.p2":
     "Los signos de N, Q y M se definen respecto de esta terna; por eso el mismo esfuerzo puede leerse con distinto signo según cómo se oriente la barra.",
 
@@ -761,17 +877,21 @@ const ES: Record<TranslationKey, string> = {
   "esf.s5.kicker": "05 — Determinación analítica",
   "esf.s5.title": "Paso a paso",
   "esf.s5.step1.t": "Sustentación",
-  "esf.s5.step1.d": "Analizar las condiciones de sustentación y determinar si es posible resolverlo.",
+  "esf.s5.step1.d":
+    "Analizar las condiciones de sustentación y determinar si es posible resolverlo.",
   "esf.s5.step2.t": "Diagrama de cuerpo libre",
   "esf.s5.step2.d": "Graficar el diagrama de cuerpo libre.",
   "esf.s5.step3.t": "Ecuaciones de equilibrio",
   "esf.s5.step3.d": "Plantear las tres, o más, ecuaciones de equilibrio.",
   "esf.s5.step4.t": "Reacciones de vínculo",
-  "esf.s5.step4.d": "Resolver el sistema y determinar las reacciones de vínculo.",
+  "esf.s5.step4.d":
+    "Resolver el sistema y determinar las reacciones de vínculo.",
   "esf.s5.step5.t": "Puntos característicos",
-  "esf.s5.step5.d": "Determinar los puntos característicos de la estructura a analizar y confeccionar la tabla de valores.",
+  "esf.s5.step5.d":
+    "Determinar los puntos característicos de la estructura a analizar y confeccionar la tabla de valores.",
   "esf.s5.step6.t": "Recorrer y graficar",
-  "esf.s5.step6.d": "Recorrer la estructura calculando los esfuerzos y graficarlos en escala.",
+  "esf.s5.step6.d":
+    "Recorrer la estructura calculando los esfuerzos y graficarlos en escala.",
 
   "esf.s6.kicker": "06 — Ejemplo resuelto",
   "esf.s6.title": "Pórtico en L, empotrado en la base",
