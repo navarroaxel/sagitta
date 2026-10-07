@@ -10,6 +10,7 @@ import { GitHubLink } from "@/components/GitHubLink";
 import { SettingsPanel } from "@/components/SettingsPanel";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { solveModel3D } from "@/lib/solve3d";
+import { computeStress } from "@/lib/stress3d";
 import { PRESETS_3D } from "@/lib/presets3d";
 import { DIAGRAMS_3D, Diagram3D } from "@/lib/results3d";
 import { FrameModel3D } from "@/lib/types3d";
@@ -27,12 +28,19 @@ export default function Frame3DPage() {
     showReactions: true,
     showValues: true,
     showMemberLabels: false,
+    colorByStress: false,
     scale: 1,
   });
   const svgRef = useRef<SVGSVGElement>(null);
   const solved = useMemo(() => solveModel3D(model), [model]);
+  const stress = useMemo(
+    () => (solved && solved.result.stable ? computeStress(model, solved) : null),
+    [model, solved],
+  );
   const hasError = !solved || !solved.result.stable;
-  const toggle = (k: "showLoads" | "showReactions" | "showValues" | "showMemberLabels") =>
+  const toggle = (
+    k: "showLoads" | "showReactions" | "showValues" | "showMemberLabels" | "colorByStress",
+  ) =>
     setOpts((o) => ({ ...o, [k]: !o[k] }));
 
   return (
@@ -91,6 +99,15 @@ export default function Frame3DPage() {
             {d}
           </label>
         ))}
+        <label className="flex items-center gap-1 font-mono font-bold text-red-700 dark:text-red-400">
+          <input
+            type="radio"
+            name="diagram"
+            checked={opts.diagram === "S"}
+            onChange={() => setOpts((o) => ({ ...o, diagram: "S" }))}
+          />
+          σ
+        </label>
         <span className="h-4 w-px bg-stone-300 dark:bg-stone-600" />
         {(
           [
@@ -98,6 +115,7 @@ export default function Frame3DPage() {
             ["showLoads", "controls.loads"],
             ["showValues", "controls.values"],
             ["showMemberLabels", "controls.member_labels"],
+            ["colorByStress", "f3d.view.stress_colors"],
           ] as const
         ).map(([k, label]) => (
           <label key={k} className="flex items-center gap-1 text-stone-600 dark:text-stone-300">
@@ -126,11 +144,11 @@ export default function Frame3DPage() {
 
       <div className="flex flex-1 overflow-hidden">
         <aside className="w-[380px] flex-shrink-0 overflow-auto border-r border-stone-200 bg-white dark:border-stone-700 dark:bg-stone-900">
-          <Model3DEditor model={model} onChange={setModel} solved={solved} />
+          <Model3DEditor model={model} onChange={setModel} solved={solved} stress={stress} />
         </aside>
         <main className="flex flex-1 flex-col items-center justify-center gap-2 overflow-auto bg-stone-100 p-2 dark:bg-stone-800">
           <div className="overflow-hidden rounded border border-stone-200 shadow-sm dark:border-stone-600">
-            <Frame3DCanvas model={model} solved={solved} viewOpts={opts} svgRef={svgRef} />
+            <Frame3DCanvas model={model} solved={solved} stress={stress} viewOpts={opts} svgRef={svgRef} />
           </div>
           <p className="max-w-[900px] text-xs text-stone-500 dark:text-stone-400">{t("f3d.note")}</p>
         </main>

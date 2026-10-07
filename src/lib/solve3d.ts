@@ -2,6 +2,7 @@
 import { FrameModel3D } from "./types3d";
 import { solveFrame3D, Solver3DModel, Solver3DResult } from "./solver3d";
 import { sampleMember3D, Station3D } from "./sampling3d";
+import { memberSection } from "./stress3d";
 
 export interface SolveOutput3D {
   result: Solver3DResult;
@@ -16,7 +17,7 @@ export interface SolveOutput3D {
 export function solveModel3D(model: FrameModel3D): SolveOutput3D | null {
   const nodeIndex = new Map(model.nodes.map((n, i) => [n.id, i]));
   const memberIndex = new Map(model.members.map((m, i) => [m.id, i]));
-  const { E, G, A, Iy, Iz, J } = model.material;
+  const { E, G } = model.material;
 
   if (model.members.some((m) => !nodeIndex.has(m.n1) || !nodeIndex.has(m.n2)))
     return null;
@@ -29,16 +30,10 @@ export function solveModel3D(model: FrameModel3D): SolveOutput3D | null {
 
   const solverModel: Solver3DModel = {
     nodes: model.nodes.map(({ x, y, z, support }) => ({ x, y, z, support })),
-    members: model.members.map((m) => ({
-      i: nodeIndex.get(m.n1)!,
-      j: nodeIndex.get(m.n2)!,
-      E,
-      G,
-      A,
-      Iy,
-      Iz,
-      J,
-    })),
+    members: model.members.map((m) => {
+      const { A, Iy, Iz, J } = memberSection(model.material, m);
+      return { i: nodeIndex.get(m.n1)!, j: nodeIndex.get(m.n2)!, E, G, A, Iy, Iz, J };
+    }),
     loads: model.loads.map((l) =>
       l.type === "nodal"
         ? {

@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { FrameModel3D, FrameNode3D, Load3D, Material3D, Member3D, Support3D } from "@/lib/types3d";
 import { SolveOutput3D } from "@/lib/solve3d";
 import Results3DPanel from "@/components/Results3DPanel";
+import { IPN_PROFILES, IPB_PROFILES } from "@/lib/profiles";
+import { StressResult } from "@/lib/stress3d";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 type Tab = "nodes" | "members" | "loads" | "material" | "results";
@@ -50,10 +52,12 @@ export default function Model3DEditor({
   model,
   onChange,
   solved,
+  stress = null,
 }: {
   model: FrameModel3D;
   onChange: (m: FrameModel3D) => void;
   solved: SolveOutput3D | null;
+  stress?: StressResult | null;
 }) {
   const { t } = useLanguage();
   const [tab, setTab] = useState<Tab>("nodes");
@@ -172,28 +176,61 @@ export default function Model3DEditor({
         {tab === "members" && (
           <div>
             {model.members.map((m, i) => (
-              <div key={m.id} className="mt-1 grid grid-cols-[3rem_1fr_1fr_1.2rem] items-center gap-1">
-                <span className="font-mono text-xs">{m.id}</span>
-                {(["n1", "n2"] as const).map((end) => (
-                  <select
-                    key={end}
-                    aria-label={`${m.id} ${end}`}
-                    className={selectCls}
-                    value={m[end]}
-                    onChange={(e) => setMember(i, { [end]: e.target.value })}
+              <div key={m.id} className="mt-2 rounded border border-stone-200 p-1.5 dark:border-stone-700">
+                <div className="grid grid-cols-[3rem_1fr_1fr_1.2rem] items-center gap-1">
+                  <span className="font-mono text-xs">{m.id}</span>
+                  {(["n1", "n2"] as const).map((end) => (
+                    <select
+                      key={end}
+                      aria-label={`${m.id} ${end}`}
+                      className={selectCls}
+                      value={m[end]}
+                      onChange={(e) => setMember(i, { [end]: e.target.value })}
+                    >
+                      {model.nodes.map((n) => (
+                        <option key={n.id}>{n.id}</option>
+                      ))}
+                    </select>
+                  ))}
+                  <button
+                    aria-label={`remove ${m.id}`}
+                    onClick={() => removeMember(m.id)}
+                    className="text-stone-400 hover:text-red-600"
                   >
-                    {model.nodes.map((n) => (
-                      <option key={n.id}>{n.id}</option>
-                    ))}
+                    ✕
+                  </button>
+                </div>
+                <div className="mt-1 flex items-center gap-2 text-xs">
+                  <span className="text-stone-500">{t("f3d.members.profile")}</span>
+                  <select
+                    aria-label={`${m.id} profile`}
+                    className={`${selectCls} flex-1`}
+                    value={m.profile ?? ""}
+                    onChange={(e) => setMember(i, { profile: e.target.value || undefined })}
+                  >
+                    <option value="">{t("f3d.members.profile_none")}</option>
+                    <optgroup label="IPN">
+                      {IPN_PROFILES.map((p) => (
+                        <option key={p.name}>{p.name}</option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="IPB">
+                      {IPB_PROFILES.map((p) => (
+                        <option key={p.name}>{p.name}</option>
+                      ))}
+                    </optgroup>
                   </select>
-                ))}
-                <button
-                  aria-label={`remove ${m.id}`}
-                  onClick={() => removeMember(m.id)}
-                  className="text-stone-400 hover:text-red-600"
-                >
-                  ✕
-                </button>
+                  <label className="flex items-center gap-1" title={t("f3d.members.rotate_title")}>
+                    <input
+                      type="checkbox"
+                      aria-label={`${m.id} rotated`}
+                      checked={!!m.rotated}
+                      disabled={!m.profile}
+                      onChange={(e) => setMember(i, { rotated: e.target.checked })}
+                    />
+                    {t("f3d.members.rotate")}
+                  </label>
+                </div>
               </div>
             ))}
             <button
@@ -362,11 +399,23 @@ export default function Model3DEditor({
                 </label>
               ))}
             </div>
+            <label className="flex items-center gap-2 text-xs">
+              <span>{t("f3d.material.sigma_adm")}</span>
+              <input
+                type="number"
+                aria-label="sigma adm"
+                className={`${inputCls} w-24`}
+                value={model.sigmaAdm}
+                min={0}
+                step={1}
+                onChange={(e) => onChange({ ...model, sigmaAdm: parseFloat(e.target.value) || 0 })}
+              />
+            </label>
             <p className="text-xs text-stone-500 dark:text-stone-400">{t("f3d.material.note")}</p>
           </div>
         )}
 
-        {tab === "results" && <Results3DPanel model={model} solved={solved} />}
+        {tab === "results" && <Results3DPanel model={model} solved={solved} stress={stress} />}
       </div>
     </div>
   );

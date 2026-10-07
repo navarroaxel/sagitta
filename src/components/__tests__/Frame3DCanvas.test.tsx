@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import Frame3DCanvas, { View3DOptions } from "../Frame3DCanvas";
 import { solveModel3D } from "@/lib/solve3d";
+import { computeStress } from "@/lib/stress3d";
 import { PRESETS_3D } from "@/lib/presets3d";
 import type { FrameModel3D } from "@/lib/types3d";
 
@@ -11,6 +12,7 @@ const opts: View3DOptions = {
   showReactions: true,
   showValues: true,
   showMemberLabels: true,
+  colorByStress: false,
   scale: 1,
 };
 
@@ -73,5 +75,61 @@ describe("Frame3DCanvas", () => {
     expect(screen.queryByTestId("loads3d-layer")).toBeNull();
     expect(screen.queryByTestId("reactions3d-layer")).toBeNull();
     expect(screen.queryByTestId("diagram3d-My")).toBeNull();
+  });
+});
+
+describe("Frame3DCanvas stress view", () => {
+  const solved = solveModel3D(tFrame)!;
+  const stress = computeStress(tFrame, solved);
+
+  test("colorByStress shades every member and shows its utilisation", () => {
+    render(
+      <Frame3DCanvas model={tFrame} solved={solved} stress={stress} viewOpts={{ ...opts, colorByStress: true }} />,
+    );
+    tFrame.members.forEach((m, e) => {
+      const line = screen.getByTestId(`member3d-${m.id}`);
+      expect(line.getAttribute("data-ratio")).toBe(stress[e]!.ratio.toFixed(3));
+      expect(screen.getByTestId(`utilization-${m.id}`).textContent).toContain(
+        `${(stress[e]!.ratio * 100).toFixed(0)}%`,
+      );
+    });
+  });
+
+  test("no shading when the option is off", () => {
+    render(<Frame3DCanvas model={tFrame} solved={solved} stress={stress} viewOpts={opts} />);
+    expect(screen.getByTestId("member3d-M1").getAttribute("data-ratio")).toBeNull();
+    expect(screen.queryByTestId("utilization-M1")).toBeNull();
+  });
+
+  test("a failing member is flagged with ✗", () => {
+    const weak: FrameModel3D = {
+      ...tFrame,
+      members: tFrame.members.map((m) => (m.id === "M1" ? { ...m, profile: "IPN 80" } : m)),
+    };
+    const s = solveModel3D(weak)!;
+    render(
+      <Frame3DCanvas
+        model={weak}
+        solved={s}
+        stress={computeStress(weak, s)}
+        viewOpts={{ ...opts, colorByStress: true }}
+      />,
+    );
+    expect(screen.getByTestId("utilization-M1").textContent).toContain("✗");
+    expect(screen.getByTestId("utilization-M2").textContent).not.toContain("✗");
+  });
+
+  test("σ diagram draws only members that have a profile", () => {
+    const mixed: FrameModel3D = {
+      ...tFrame,
+      members: tFrame.members.map((m) => (m.id === "M2" ? { ...m, profile: undefined } : m)),
+    };
+    const s = solveModel3D(mixed)!;
+    const { container } = render(
+      <Frame3DCanvas model={mixed} solved={s} stress={computeStress(mixed, s)} viewOpts={{ ...opts, diagram: "S" }} />,
+    );
+    const layer = container.querySelector("[data-testid=diagram3d-S]")!;
+    expect(layer).toBeTruthy();
+    expect(layer.querySelectorAll("polygon").length).toBe(3); // M1, M3, M4
   });
 });

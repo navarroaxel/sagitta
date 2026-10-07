@@ -4,21 +4,22 @@ import React, { useMemo } from "react";
 import { FrameModel3D } from "@/lib/types3d";
 import { SolveOutput3D } from "@/lib/solve3d";
 import { makeProjection3D } from "@/lib/projection3d";
-import { Diagram3D } from "@/lib/results3d";
 import { SVG_W, SVG_H } from "@/components/canvas/constants";
 import { useColors } from "@/contexts/ColorContext";
 import { Supports3D } from "./canvas3d/Supports3D";
 import { Loads3DLayer, Reactions3DLayer } from "./canvas3d/Loads3DLayer";
-import { Diagram3DLayer } from "./canvas3d/Diagram3DLayer";
+import { Diagram3DLayer, DiagramKind } from "./canvas3d/Diagram3DLayer";
+import { StressResult, ratioColor } from "@/lib/stress3d";
 import { unit2 } from "./canvas3d/arrows3d";
 import type { Vec3 } from "@/lib/solver3d";
 
 export interface View3DOptions {
-  diagram: Diagram3D | null;
+  diagram: DiagramKind | null;
   showLoads: boolean;
   showReactions: boolean;
   showValues: boolean;
   showMemberLabels: boolean;
+  colorByStress: boolean;
   scale: number;
 }
 
@@ -56,11 +57,13 @@ export default function Frame3DCanvas({
   model,
   solved,
   viewOpts,
+  stress = null,
   svgRef,
 }: {
   model: FrameModel3D;
   solved: SolveOutput3D | null;
   viewOpts: View3DOptions;
+  stress?: StressResult | null;
   svgRef?: React.Ref<SVGSVGElement>;
 }) {
   const colors = useColors();
@@ -97,19 +100,56 @@ export default function Frame3DCanvas({
           diagram={viewOpts.diagram}
           scale={viewOpts.scale}
           showValues={viewOpts.showValues}
+          stress={stress}
         />
       )}
 
-      <g stroke={colors.member} strokeWidth={5} strokeLinecap="round">
-        {model.members.map((m) => {
+      <g strokeWidth={5} strokeLinecap="round">
+        {model.members.map((m, e) => {
           const a = nodePos.get(m.n1),
             b = nodePos.get(m.n2);
           if (!a || !b) return null;
+          const r = stable && viewOpts.colorByStress ? stress?.[e] : null;
           return (
-            <line key={m.id} data-testid={`member3d-${m.id}`} x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} />
+            <line
+              key={m.id}
+              data-testid={`member3d-${m.id}`}
+              data-ratio={r ? r.ratio.toFixed(3) : undefined}
+              stroke={r ? ratioColor(r.ratio) : colors.member}
+              x1={a[0]}
+              y1={a[1]}
+              x2={b[0]}
+              y2={b[1]}
+            />
           );
         })}
       </g>
+
+      {stable &&
+        viewOpts.colorByStress &&
+        model.members.map((m, e) => {
+          const r = stress?.[e];
+          const a = nodePos.get(m.n1),
+            b = nodePos.get(m.n2);
+          if (!r || !a || !b) return null;
+          return (
+            <text
+              key={m.id}
+              data-testid={`utilization-${m.id}`}
+              x={(a[0] + b[0]) / 2 - 8}
+              y={(a[1] + b[1]) / 2 + 16}
+              fontSize={11}
+              fontFamily="monospace"
+              fontWeight={700}
+              textAnchor="end"
+              fill={ratioColor(r.ratio)}
+              style={{ paintOrder: "stroke", stroke: "#fff", strokeWidth: 3 }}
+            >
+              {r.ok ? "" : "✗ "}
+              {(r.ratio * 100).toFixed(0)}%
+            </text>
+          );
+        })}
 
       {viewOpts.showMemberLabels &&
         model.members.map((m) => {

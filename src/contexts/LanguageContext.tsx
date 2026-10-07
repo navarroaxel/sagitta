@@ -199,6 +199,21 @@ const EN = {
   "f3d.error":
     "⚠ Unstable, singular or malformed 3D model — check supports, members and loads. Diagrams cannot be computed.",
   "f3d.results.peaks": "Peak internal forces",
+  "f3d.members.profile": "Profile",
+  "f3d.members.profile_none": "— (material tab)",
+  "f3d.members.rotate": "Rotate 90°",
+  "f3d.members.rotate_title":
+    "The strong axis bends the member in the x'-y' plane instead of x'-z'",
+  "f3d.material.sigma_adm": "σ adm (MPa)",
+  "f3d.results.stress": "Normal stress",
+  "f3d.results.profile": "Profile",
+  "f3d.results.sigma_max": "σ max (MPa)",
+  "f3d.results.ratio": "σ/σ adm",
+  "f3d.results.no_profile":
+    "Assign an IPN/IPB profile to a member (members tab) to check its stress.",
+  "f3d.results.stress_note":
+    "σ = N/A − My·z/Iy − Mz·y/Iz at the most stressed corner of the section. Assumes kN and m. Profiles: CIRSOC tables (IPN, IPB).",
+  "f3d.view.stress_colors": "Color by σ/σ adm",
   "learn.link": "Learn the method",
   "learn.back": "← Simulator",
   "learn.title": "Tangent Method (Mohr's Theorems)",
@@ -566,6 +581,21 @@ const ES: Record<TranslationKey, string> = {
   "f3d.error":
     "⚠ Modelo 3D inestable, singular o mal formado — revisá apoyos, barras y cargas. No se pueden calcular los diagramas.",
   "f3d.results.peaks": "Esfuerzos máximos",
+  "f3d.members.profile": "Perfil",
+  "f3d.members.profile_none": "— (pestaña material)",
+  "f3d.members.rotate": "Girar 90°",
+  "f3d.members.rotate_title":
+    "El eje fuerte flexa la barra en el plano x'-y' en vez de x'-z'",
+  "f3d.material.sigma_adm": "σ adm (MPa)",
+  "f3d.results.stress": "Tensión normal",
+  "f3d.results.profile": "Perfil",
+  "f3d.results.sigma_max": "σ máx (MPa)",
+  "f3d.results.ratio": "σ/σ adm",
+  "f3d.results.no_profile":
+    "Asigná un perfil IPN/IPB a una barra (pestaña barras) para verificar su tensión.",
+  "f3d.results.stress_note":
+    "σ = N/A − My·z/Iy − Mz·y/Iz en la esquina más exigida de la sección. Supone kN y m. Perfiles: tablas CIRSOC (IPN, IPB).",
+  "f3d.view.stress_colors": "Colorear por σ/σ adm",
   "learn.link": "Aprendé el método",
   "learn.back": "← Simulador",
   "learn.title": "Método de las Tangentes (Teoremas de Mohr)",

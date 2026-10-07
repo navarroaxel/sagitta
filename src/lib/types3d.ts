@@ -14,6 +14,8 @@ export interface Member3D {
   id: string;
   n1: string; // node id
   n2: string; // node id
+  profile?: string; // IPN/IPB designation (see profiles.ts); overrides A, Iy, Iz, J of the material
+  rotated?: boolean; // true: strong axis bends the member in x'-y' instead of x'-z'
 }
 
 export type Load3D =
@@ -61,4 +63,5 @@ export interface FrameModel3D {
   loads: Load3D[];
   material: Material3D;
   unit: string; // force unit label only, e.g. 'kN'
+  sigmaAdm: number; // allowable normal stress, MPa (stresses assume kN and m)
 }
