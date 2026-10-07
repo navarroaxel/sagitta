@@ -13,8 +13,8 @@ const tFrame: FrameModel3D = {
   members: [
     // IPB 260 with the strong axis against q_y (54 kN·m): ~12.1 kN/cm²; IPB 240 would not pass.
     { id: "M1", n1: "A", n2: "B", profile: "IPB 260", rotated: true },
-    { id: "M2", n1: "C", n2: "B", profile: "IPB 200" },
-    { id: "M3", n1: "B", n2: "D", profile: "IPB 200" },
+    { id: "M2", n1: "C", n2: "B", profile: "IPN 200" },
+    { id: "M3", n1: "B", n2: "D", profile: "IPN 200" },
   ],
   loads: [
     { id: "L1", type: "mudl", member: "M1", gx: 0, gy: 3, gz: 0 },
