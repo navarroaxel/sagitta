@@ -12,8 +12,9 @@ type Tab = "nodes" | "members" | "loads" | "material" | "results";
 const SUPPORTS: Support3D[] = ["free", "pinned", "fixed"];
 
 const uid = () => Math.random().toString(36).slice(2, 6);
-const inputCls =
-  "w-full rounded border border-stone-200 bg-white px-1 py-0.5 font-mono text-xs text-stone-800 dark:border-stone-600 dark:bg-stone-800 dark:text-stone-200";
+const inputBaseCls =
+  "rounded border border-stone-200 bg-white px-1 py-0.5 font-mono text-xs text-stone-800 dark:border-stone-600 dark:bg-stone-800 dark:text-stone-200";
+const inputCls = `w-full ${inputBaseCls}`;
 const selectCls =
   "rounded border border-stone-200 bg-white px-1 py-0.5 text-xs text-stone-800 dark:border-stone-600 dark:bg-stone-800 dark:text-stone-200";
 const btnCls =
@@ -256,7 +257,7 @@ export default function Model3DEditor({
             <label className="flex items-center gap-2 text-xs">
               {t("editor.loads.force_unit")}
               <input
-                className={`${inputCls} w-16`}
+                className={`${inputBaseCls} w-16 shrink-0`}
                 value={model.unit}
                 onChange={(e) => onChange({ ...model, unit: e.target.value })}
               />
@@ -419,11 +420,11 @@ export default function Model3DEditor({
               ))}
             </div>
             <label className="flex items-center gap-2 text-xs">
-              <span>{t("f3d.material.sigma_adm")}</span>
+              <span className="shrink-0 whitespace-nowrap">{t("f3d.material.sigma_adm")}</span>
               <input
                 type="number"
                 aria-label="sigma adm"
-                className={`${inputCls} w-24`}
+                className={`${inputBaseCls} w-20 shrink-0`}
                 value={model.sigmaAdm}
                 min={0}
                 step={0.5}
