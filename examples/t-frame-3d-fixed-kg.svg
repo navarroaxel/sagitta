@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="70 100 580 400" font-family="system-ui, sans-serif">
+  <!--
+    Structure: 3D T-frame — a vertical column (3 m) fixed (built-in) to the ground at its
+      base, with a horizontal beam (3 m) crossing its top: it overhangs 1 m to the left and
+      2 m to the right of the column. Solid web, rigid joints. Drawn in oblique projection.
+      Axes (right-handed): x along the beam (right), y horizontal, out of the plane of the T
+      (receding, drawn up-right), z vertical (up).
+    World in metres. Transform: sx = 300 + (x*60 + y*21) ; sy = 400 - (z*60 + y*15)
+      (x/z in the plane of the T at 60 px/m; the y axis is only drawn as direction
+       u = (21,-15) px per metre, no dimension is read along it)
+    Nodes:
+      A  (0,0,0)   fixed / built-in base                 -> (300,400)
+      B  (0,0,3)   T-junction, top of the column (rigid) -> (300,220)
+      C  (-1,0,3)  left tip of the beam, free end        -> (240,220)
+      D  (2,0,3)   right tip of the beam, free end       -> (420,220)
+    Members:
+      A-B  column (3 m)
+      C-D  beam (3 m: left arm C-B = 1 m + right arm B-D = 2 m)
+    Supports: A fixed in 3D (restrains all 3 forces and 3 moments).
+    Loads (units: kg and kg.m):
+      q_z = 200 kg/m downward (-z) over the whole beam C-D (x = -1..2 m, 3 m wide)
+        -> resultant Q_z = 200 x 3 = 600 kg downward at x = 0.5 m
+      P_y = 300 kg at the joint B (column-beam intersection), acting in +y (out of the plane of the T)
+    Support reactions (computed):
+      A: F_y = 300 kg (along -y) ; F_z = 600 kg (up) ; M_x = 900 kg.m (vector along +x) ;
+         M_y = 300 kg.m (vector along -y) ; F_x = M_z = 0
+    Equilibrium:
+      SumFy  = 300 - 300 = 0
+      SumMx_A = -(300)(3) + 900 = 0   (P_y along +y at height z = 3: r x F gives -z*P about x)
+      SumFz  = 600 - 600 = 0
+      SumMy_A = +(600)(0.5) - 300 = 0   (downward Q_z at x = 0.5, right of A, turns clockwise = +y)
+    The given reactions satisfy global equilibrium.
+  -->
+
+  <rect x="70" y="100" width="580" height="400" fill="#ffffff"/>
+
+  <!-- ===== Dimensions ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <!-- beam (top): 1.00 | 2.00 -->
+    <line x1="240" y1="140" x2="420" y2="140"/>
+    <line x1="240" y1="135" x2="240" y2="145"/>
+    <line x1="300" y1="135" x2="300" y2="145"/>
+    <line x1="420" y1="135" x2="420" y2="145"/>
+    <text x="270" y="132" text-anchor="middle" stroke="none">1.00</text>
+    <text x="360" y="132" text-anchor="middle" stroke="none">2.00</text>
+
+    <!-- column (left): 3.00 m -->
+    <line x1="190" y1="220" x2="190" y2="400"/>
+    <line x1="185" y1="220" x2="195" y2="220"/>
+    <line x1="185" y1="400" x2="195" y2="400"/>
+    <text x="178" y="310" text-anchor="middle" stroke="none" transform="rotate(-90 178 310)">3.00 m</text>
+  </g>
+
+  <!-- ===== Fixed / built-in base at A (ground plate in the xy plane + hatch) ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff" fill-opacity="0.85">
+    <polygon points="246,410 326,410 354,390 274,390"/>
+  </g>
+  <g stroke="#1a1a1a" stroke-width="2" fill="none">
+    <line x1="254" y1="410" x2="246" y2="418"/><line x1="264" y1="410" x2="256" y2="418"/><line x1="274" y1="410" x2="266" y2="418"/><line x1="284" y1="410" x2="276" y2="418"/><line x1="294" y1="410" x2="286" y2="418"/><line x1="304" y1="410" x2="296" y2="418"/><line x1="314" y1="410" x2="306" y2="418"/><line x1="324" y1="410" x2="316" y2="418"/>
+  </g>
+
+  <!-- ===== Solid-web frame (rigid joints) ===== -->
+  <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
+    <line x1="300" y1="400" x2="300" y2="220"/> <!-- column A-B -->
+    <line x1="240" y1="220" x2="420" y2="220"/> <!-- beam C-B-D -->
+  </g>
+
+  <!-- ===== Nodes ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="300" cy="400" r="4"/> <!-- A base -->
+    <circle cx="300" cy="220" r="4"/> <!-- B junction -->
+    <circle cx="240" cy="220" r="4"/> <!-- C left tip -->
+    <circle cx="420" cy="220" r="4"/> <!-- D right tip -->
+  </g>
+
+  <!-- ===== Node labels ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <text x="312" y="250" text-anchor="start">B</text>
+    <text x="226" y="242" text-anchor="end">C</text>
+    <text x="420" y="244" text-anchor="middle">D</text>
+    <text x="314" y="384" text-anchor="start">A</text>
+  </g>
+
+  <!-- ===== Axes triad (global system) ===== -->
+  <g stroke="#5f6368" fill="#5f6368" font-size="13" font-weight="600">
+    <line x1="540" y1="360" x2="572" y2="360" stroke-width="2"/>
+    <polygon points="580,360 571,364 571,356" stroke="none"/>
+    <text x="586" y="364" stroke="none">x</text>
+    <line x1="540" y1="360" x2="540" y2="328" stroke-width="2"/>
+    <polygon points="540,320 544,329 536,329" stroke="none"/>
+    <text x="536" y="312" stroke="none" text-anchor="middle">z</text>
+    <line x1="540" y1="360" x2="575.5" y2="334.6" stroke-width="2"/>
+    <polygon points="582,330 577,338.5 572.4,332" stroke="none"/>
+    <text x="588" y="326" stroke="none">y</text>
+  </g>
+
+  <!-- ===== Loads (red) ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+    <!-- q_z = 200 kg/m downward on the whole beam, x = -1..2 m (tip at the beam, shaft trailing up) -->
+    <line x1="240" y1="184" x2="240" y2="210" stroke-width="2"/>
+    <polygon points="240,220 234,208 246,208" stroke="none"/>
+    <line x1="270" y1="184" x2="270" y2="210" stroke-width="2"/>
+    <polygon points="270,220 264,208 276,208" stroke="none"/>
+    <line x1="300" y1="184" x2="300" y2="210" stroke-width="2"/>
+    <polygon points="300,220 294,208 306,208" stroke="none"/>
+    <line x1="330" y1="184" x2="330" y2="210" stroke-width="2"/>
+    <polygon points="330,220 324,208 336,208" stroke="none"/>
+    <line x1="360" y1="184" x2="360" y2="210" stroke-width="2"/>
+    <polygon points="360,220 354,208 366,208" stroke="none"/>
+    <line x1="390" y1="184" x2="390" y2="210" stroke-width="2"/>
+    <polygon points="390,220 384,208 396,208" stroke="none"/>
+    <line x1="420" y1="184" x2="420" y2="210" stroke-width="2"/>
+    <polygon points="420,220 414,208 426,208" stroke="none"/>
+    <line x1="240" y1="184" x2="420" y2="184" stroke-width="2"/>
+    <text x="330" y="176" text-anchor="middle" stroke="none">q<tspan font-size="10" dy="4">z</tspan><tspan dy="-4"> = 200 kg/m</tspan></text>
+
+    <!-- P_y = 300 kg at B, acting in +y (tip at the node, shaft trailing opposite, down-left) -->
+    <line x1="263.4" y1="246.1" x2="292" y2="225.8" stroke-width="2.5"/>
+    <polygon points="300,220 293.7,231.9 286.7,222.1" stroke="none"/>
+    <text x="256" y="264" text-anchor="end" stroke="none">P<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 300 kg</tspan></text>
+  </g>
+
+  <!-- ===== Support reactions (blue) ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+    <!-- F_y = 300 kg along -y; line of action through A, tip pulled back ~32 px along it to keep the support clear -->
+    <line x1="361.8" y1="355.8" x2="334.1" y2="375.6" stroke-width="2.5"/>
+    <polygon points="326,381.4 332.3,369.5 339.3,379.3" stroke="none"/>
+    <text x="378" y="359" text-anchor="start" stroke="none">F<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 300 kg</tspan></text>
+
+    <!-- F_z = 600 kg upward at A (tip at the node, shaft trailing below) -->
+    <line x1="300" y1="440" x2="300" y2="412" stroke-width="2.5"/>
+    <polygon points="300,402 294,414 306,414" stroke="none"/>
+    <text x="310" y="428" text-anchor="start" stroke="none">F<tspan font-size="10" dy="4">z</tspan><tspan dy="-4"> = 600 kg</tspan></text>
+
+    <!-- M_x = 900 kg.m: moment vector along +x (double arrow), line of action through A -->
+    <line x1="300" y1="400" x2="372" y2="400" stroke-width="2.5"/>
+    <polygon points="390,400 380,405 380,395" stroke="none"/>
+    <polygon points="380,400 370,405 370,395" stroke="none"/>
+    <text x="400" y="404" text-anchor="start" stroke="none">M<tspan font-size="10" dy="4">x</tspan><tspan dy="-4"> = 900 kg&#183;m</tspan></text>
+
+    <!-- M_y = 300 kg.m: moment vector along -y (double arrow), collinear with F_y (line of action through A), drawn beyond the plate -->
+    <line x1="270.7" y1="420.9" x2="249.6" y2="436" stroke-width="2.5"/>
+    <polygon points="234.9,446.5 239.5,435.8 246.5,445.6" stroke="none"/>
+    <polygon points="243,440.7 247.7,430 254.7,439.8" stroke="none"/>
+    <text x="225" y="459" text-anchor="end" stroke="none">M<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 300 kg&#183;m</tspan></text>
+  </g>
+
+  <text x="360" y="490" text-anchor="middle" fill="#5f6368" font-size="13">
+    3D T-frame, fixed at A. Loads red, reactions blue; double arrow = moment vector.
+  </text>
+</svg>

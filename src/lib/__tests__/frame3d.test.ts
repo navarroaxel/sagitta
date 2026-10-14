@@ -34,6 +34,19 @@ describe("3D presets", () => {
     near(r.mz, 0);
   });
 
+  test("T-frame (kg example) reactions match the worked example", () => {
+    const model = PRESETS_3D.find((p) => p.key === "t_frame_kg")!.model;
+    const solved = solveModel3D(model)!;
+    const r = solved.result.reactions[solved.nodeIndex.get("A")!];
+    const g = 0.00981;
+    near(r.fx, 0);
+    near(r.fy, -300 * g);
+    near(r.fz, 600 * g);
+    near(r.mx, 900 * g);
+    near(r.my, -300 * g);
+    near(r.mz, 0);
+  });
+
   test("L-frame: first arm in torsion T = P·3, bending M = P·4", () => {
     const model = PRESETS_3D.find((p) => p.key === "l_torsion")!.model;
     const solved = solveModel3D(model)!;
