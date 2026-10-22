@@ -54,7 +54,7 @@ export function Diagram3DLayer({
           ? colors.loads
           : colors.moment;
   const unit = isStress
-    ? "kN/cm²"
+    ? `${model.unit}/cm²`
     : diagram === "T" || diagram[0] === "M"
       ? `${model.unit}·m`
       : model.unit;

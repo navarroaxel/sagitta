@@ -81,15 +81,21 @@ export function EccentricSection() {
     compressionColor = colors.compression;
   const col = (v: number) => (v >= 0 ? tensionColor : compressionColor);
 
-  // σ ∝ P·(a + b·x + c·y): split the section by the neutral axis into a tension and a compression half
+  // σ ∝ P·(a + b·x + c·y): split the section by the neutral axis into a tension and a compression
+  // half. When the four corners have the same sign the axis misses the section: paint it whole.
   const a = 1 / r.A,
     b = exv / r.Iy,
     c = eyv / r.Ix;
-  const nn = Math.hypot(b, c);
+  const sgn = p >= 0 ? 1 : -1;
+  const side = r.corners.map((q) => q.perKN * sgn);
   const halves: { points: string; color: string }[] = [];
-  if (nn < 1e-12) {
-    halves.push({ points: outline, color: col(p * a) });
+  if (side.every((v) => v >= 0)) {
+    halves.push({ points: outline, color: col(1) });
+  } else if (side.every((v) => v <= 0)) {
+    halves.push({ points: outline, color: col(-1) });
   } else {
+    // the line crosses the section, so it is never far from the centroid: a fixed reach is enough
+    const nn = Math.hypot(b, c);
     const nx = b / nn,
       ny = c / nn; // unit normal toward σ/P > 0
     const p0: [number, number] = [(-a * nx) / nn, (-a * ny) / nn]; // a point of the line, cm
@@ -104,7 +110,6 @@ export function EccentricSection() {
       ]
         .map(([x, y]) => px(x, y).join(","))
         .join(" ");
-    const sgn = p >= 0 ? 1 : -1;
     halves.push({ points: half(1), color: col(sgn) }, { points: half(-1), color: col(-sgn) });
   }
 
@@ -121,7 +126,7 @@ export function EccentricSection() {
     <div className="mx-auto grid max-w-6xl gap-6 p-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]" data-testid="eccentric">
       <div className="space-y-4">
         <p className="text-sm text-stone-600 dark:text-stone-400">
-          <Sub>{t("ecc.intro")}</Sub>
+          <Sub>{t(rotated ? "ecc.intro_rot" : "ecc.intro")}</Sub>
         </p>
 
         <section className="space-y-2 rounded border border-stone-200 bg-white p-3 dark:border-stone-700 dark:bg-stone-900">
@@ -146,8 +151,8 @@ export function EccentricSection() {
             {t("ecc.rotated")}
           </label>
           <NumField label={t("ecc.p")} value={P} onChange={setP} step={1} />
-          <NumField label={t("ecc.ex")} value={ex} onChange={setEx} />
-          <NumField label={t("ecc.ey")} value={ey} onChange={setEy} />
+          <NumField label={t(rotated ? "ecc.ex_rot" : "ecc.ex")} value={ex} onChange={setEx} />
+          <NumField label={t(rotated ? "ecc.ey_rot" : "ecc.ey")} value={ey} onChange={setEy} />
           <NumField label={t("ecc.sigma_adm")} value={sigmaAdm} onChange={setSigmaAdm} step={1} />
         </section>
 

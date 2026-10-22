@@ -30,6 +30,30 @@ describe("EccentricSection", () => {
     expect(container.textContent).not.toMatch(/[A-Za-z]_[xyz]/); // no raw "P_z" left in the page
   });
 
+  test("rotating the section swaps the web-relative labels and the introduction", () => {
+    const { container } = setup();
+    expect(screen.getByLabelText("e_x (cm), ⟂ web")).toBeTruthy();
+    expect(screen.getByLabelText("e_y (cm), ∥ web")).toBeTruthy();
+    expect(container.textContent).toContain("ex (perpendicular to the web)");
+    fireEvent.click(screen.getByRole("checkbox"));
+    expect(screen.getByLabelText("e_x (cm), ∥ web")).toBeTruthy();
+    expect(screen.getByLabelText("e_y (cm), ⟂ web")).toBeTruthy();
+    expect(container.textContent).toContain("ex (parallel to the web, horizontal)");
+    expect(container.textContent).not.toContain("ex (perpendicular to the web)");
+  });
+
+  test("a near-concentric load paints the whole section (the neutral axis is far away)", () => {
+    setup();
+    fireEvent.change(input(/e_x/), { target: { value: "0" } });
+    fireEvent.change(input(/e_y/), { target: { value: "0.1" } }); // neutral axis ~1420 cm below the centroid
+    const zones = () => screen.getByTestId("ecc-zones").querySelectorAll("polygon");
+    expect(zones().length).toBe(1);
+    const tension = zones()[0].getAttribute("fill");
+    fireEvent.change(input(/P_z/), { target: { value: "-76" } });
+    expect(zones().length).toBe(1);
+    expect(zones()[0].getAttribute("fill")).not.toBe(tension); // all compression now
+  });
+
   test("the load point is outside the section for e_x = 10, e_y = 20, and inside for small e", () => {
     setup();
     expect(screen.getByTestId("ecc-outside")).toBeTruthy();

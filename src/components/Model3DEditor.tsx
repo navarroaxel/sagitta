@@ -1,5 +1,6 @@
 "use client";
 
+import { withUnit } from "@/lib/units";
 import React, { useState } from "react";
 import { FrameModel3D, FrameNode3D, Load3D, Material3D, Member3D, Support3D } from "@/lib/types3d";
 import { SolveOutput3D } from "@/lib/solve3d";
@@ -420,7 +421,7 @@ export default function Model3DEditor({
               ))}
             </div>
             <label className="flex items-center gap-2 text-xs">
-              <span className="shrink-0 whitespace-nowrap">{t("f3d.material.sigma_adm")}</span>
+              <span className="shrink-0 whitespace-nowrap">{withUnit(t("f3d.material.sigma_adm"), model.unit)}</span>
               <input
                 type="number"
                 aria-label="sigma adm"
@@ -431,7 +432,7 @@ export default function Model3DEditor({
                 onChange={(e) => onChange({ ...model, sigmaAdm: parseFloat(e.target.value) || 0 })}
               />
             </label>
-            <p className="text-xs text-stone-500 dark:text-stone-400">{t("f3d.material.note")}</p>
+            <p className="text-xs text-stone-500 dark:text-stone-400">{withUnit(t("f3d.material.note"), model.unit)}</p>
           </div>
         )}
 

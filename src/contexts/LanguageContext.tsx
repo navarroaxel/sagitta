@@ -199,7 +199,7 @@ const EN = {
     "Oblique view: x right, z up, y toward the viewer (global axes, the course's left-handed triad). Local triad of each member: z along the member (down or to the left), x out of the plane, y to the right (columns) or down (beams). Moments are drawn on the tension side.",
   "f3d.nodes.z": "z",
   "f3d.material.note":
-    "E, G in kN/m², A in m², Ix/Iy/J in m⁴. Local axes: z along the member, x out of the plane, y in the section; Ix is the inertia about x (bending in the y-z plane), Iy about y.",
+    "E, G in {u}/m², A in m², Ix/Iy/J in m⁴. Local axes: z along the member, x out of the plane, y in the section; Ix is the inertia about x (bending in the y-z plane), Iy about y.",
   "f3d.error":
     "⚠ Unstable, singular or malformed 3D model — check supports, members and loads. Diagrams cannot be computed.",
   "f3d.results.peaks": "Peak internal forces",
@@ -208,15 +208,15 @@ const EN = {
   "f3d.members.rotate": "Rotate 90°",
   "f3d.members.rotate_title":
     "The strong axis bends the member in the x-z plane instead of the y-z plane",
-  "f3d.material.sigma_adm": "σ adm (kN/cm²)",
+  "f3d.material.sigma_adm": "σ adm ({u}/cm²)",
   "f3d.results.stress": "Normal stress",
   "f3d.results.profile": "Profile",
-  "f3d.results.sigma_max": "σ max (kN/cm²)",
+  "f3d.results.sigma_max": "σ max ({u}/cm²)",
   "f3d.results.ratio": "σ/σ adm",
   "f3d.results.no_profile":
     "Assign an IPN/IPB profile to a member (members tab) to check its stress.",
   "f3d.results.stress_note":
-    "σ = N/A + Mx·y/Ix + My·x/Iy at the most stressed corner of the section (Mx, My > 0 tension the +y, +x fibres). Assumes kN and m. Profiles: CIRSOC tables (IPN, IPB).",
+    "σ = N/A + Mx·y/Ix + My·x/Iy at the most stressed corner of the section (Mx, My > 0 tension the +y, +x fibres). Assumes {u} and m. Profiles: CIRSOC tables (IPN, IPB).",
   "f3d.view.stress_colors": "Color by σ/σ adm",
   "f3d.view.local_axes": "Local axes",
   "f3d.loads.from": "from (m)",
@@ -277,10 +277,14 @@ const EN = {
   "ecc.intro":
     "A load P_z along the member axis, applied e_x (perpendicular to the web) and e_y (parallel to the web) off the centroid, equals N = P_z plus the moments M_x = P_z·e_y and M_y = P_z·e_x. σ = N/A + M_x·y/I_x + M_y·x/I_y.",
   "ecc.inputs": "Data",
+  "ecc.intro_rot":
+    "A load P_z along the member axis, applied e_x (parallel to the web, horizontal) and e_y (perpendicular to the web, vertical) off the centroid, equals N = P_z plus the moments M_x = P_z·e_y and M_y = P_z·e_x. σ = N/A + M_x·y/I_x + M_y·x/I_y.",
   "ecc.rotated": "Rotated (web horizontal)",
   "ecc.p": "P_z (kN, + tension)",
   "ecc.ex": "e_x (cm), ⟂ web",
   "ecc.ey": "e_y (cm), ∥ web",
+  "ecc.ex_rot": "e_x (cm), ∥ web",
+  "ecc.ey_rot": "e_y (cm), ⟂ web",
   "ecc.sigma_adm": "σ adm (kN/cm²)",
   "ecc.reduction": "Reduction to the centroid",
   "ecc.corners": "Stress at the corners (kN/cm²)",
@@ -293,7 +297,7 @@ const EN = {
   "ecc.section_note":
     "Section seen from the free end: ⊙ tension points toward the viewer, ⊗ compression away from it.",
   "ecc.outside":
-    "The load point lies outside the section (|e_x| > b/2 or |e_y| > h/2): it is applied through a bracket or rigid plate. Only the moments P·e matter.",
+    "The load point lies outside the section (beyond half its extent along x or y): it is applied through a bracket or rigid plate. Only the moments P·e matter.",
   "prof.profile": "Profile",
   "prof.title": "Steel profiles (IPN / IPB)",
   "prof.search": "Search: 200, ipb 300, ipn…",
@@ -682,7 +686,7 @@ const ES: Record<TranslationKey, string> = {
     "Vista oblicua: x a la derecha, z arriba, y hacia quien mira (ejes globales, terna izquierda del curso). Terna local de cada barra: z a lo largo de la barra (hacia abajo o hacia la izquierda), x saliente al plano, y hacia la derecha (columnas) o hacia abajo (vigas). Los momentos se dibujan del lado traccionado.",
   "f3d.nodes.z": "z",
   "f3d.material.note":
-    "E, G en kN/m², A en m², Ix/Iy/J en m⁴. Ejes locales: z a lo largo de la barra, x saliente al plano, y en la sección; Ix es la inercia respecto de x (flexión en el plano y-z) e Iy respecto de y.",
+    "E, G en {u}/m², A en m², Ix/Iy/J en m⁴. Ejes locales: z a lo largo de la barra, x saliente al plano, y en la sección; Ix es la inercia respecto de x (flexión en el plano y-z) e Iy respecto de y.",
   "f3d.error":
     "⚠ Modelo 3D inestable, singular o mal formado — revisá apoyos, barras y cargas. No se pueden calcular los diagramas.",
   "f3d.results.peaks": "Esfuerzos máximos",
@@ -691,15 +695,15 @@ const ES: Record<TranslationKey, string> = {
   "f3d.members.rotate": "Girar 90°",
   "f3d.members.rotate_title":
     "El eje fuerte flexa la barra en el plano x-z en vez del plano y-z",
-  "f3d.material.sigma_adm": "σ adm (kN/cm²)",
+  "f3d.material.sigma_adm": "σ adm ({u}/cm²)",
   "f3d.results.stress": "Tensión normal",
   "f3d.results.profile": "Perfil",
-  "f3d.results.sigma_max": "σ máx (kN/cm²)",
+  "f3d.results.sigma_max": "σ máx ({u}/cm²)",
   "f3d.results.ratio": "σ/σ adm",
   "f3d.results.no_profile":
     "Asigná un perfil IPN/IPB a una barra (pestaña barras) para verificar su tensión.",
   "f3d.results.stress_note":
-    "σ = N/A + Mx·y/Ix + My·x/Iy en la esquina más exigida de la sección (Mx, My > 0 traccionan las fibras +y, +x). Supone kN y m. Perfiles: tablas CIRSOC (IPN, IPB).",
+    "σ = N/A + Mx·y/Ix + My·x/Iy en la esquina más exigida de la sección (Mx, My > 0 traccionan las fibras +y, +x). Supone {u} y m. Perfiles: tablas CIRSOC (IPN, IPB).",
   "f3d.view.stress_colors": "Colorear por σ/σ adm",
   "f3d.view.local_axes": "Ternas locales",
   "f3d.loads.from": "desde (m)",
@@ -760,10 +764,14 @@ const ES: Record<TranslationKey, string> = {
   "ecc.intro":
     "Una carga P_z a lo largo del eje de la barra, aplicada a e_x (perpendicular al alma) y e_y (paralela al alma) del baricentro, equivale a N = P_z más los momentos M_x = P_z·e_y y M_y = P_z·e_x. σ = N/A + M_x·y/I_x + M_y·x/I_y.",
   "ecc.inputs": "Datos",
+  "ecc.intro_rot":
+    "Una carga P_z a lo largo del eje de la barra, aplicada a e_x (paralela al alma, horizontal) y e_y (perpendicular al alma, vertical) del baricentro, equivale a N = P_z más los momentos M_x = P_z·e_y y M_y = P_z·e_x. σ = N/A + M_x·y/I_x + M_y·x/I_y.",
   "ecc.rotated": "Girado (alma horizontal)",
   "ecc.p": "P_z (kN, + tracción)",
   "ecc.ex": "e_x (cm), ⟂ alma",
   "ecc.ey": "e_y (cm), ∥ alma",
+  "ecc.ex_rot": "e_x (cm), ∥ alma",
+  "ecc.ey_rot": "e_y (cm), ⟂ alma",
   "ecc.sigma_adm": "σ adm (kN/cm²)",
   "ecc.reduction": "Reducción al baricentro",
   "ecc.corners": "Tensiones en las esquinas (kN/cm²)",
@@ -776,7 +784,7 @@ const ES: Record<TranslationKey, string> = {
   "ecc.section_note":
     "Sección vista desde el extremo libre: ⊙ la tracción apunta hacia quien mira, ⊗ la compresión se aleja.",
   "ecc.outside":
-    "El punto de aplicación queda fuera de la sección (|e_x| > b/2 o |e_y| > h/2): la carga se aplica mediante una ménsula o placa rígida. Solo importan los momentos P·e.",
+    "El punto de aplicación queda fuera de la sección (más allá de la mitad de su extensión en x o en y): la carga se aplica mediante una ménsula o placa rígida. Solo importan los momentos P·e.",
   "prof.profile": "Perfil",
   "prof.title": "Perfiles de acero (IPN / IPB)",
   "prof.search": "Buscar: 200, ipb 300, ipn…",

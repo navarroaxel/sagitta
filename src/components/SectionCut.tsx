@@ -45,8 +45,8 @@ function Bowtie({
   vertical: boolean;
   origin: [number, number];
   half: number; // px, half the extent along the axis
-  a: number; // σ at the + end (up for vertical, right for horizontal), kN/cm²
-  scale: number; // px per kN/cm²
+  a: number; // σ at the + end (up for vertical, right for horizontal), force unit/cm²
+  scale: number; // px per (force unit/cm²)
   pos: string;
   neg: string;
   testId: string;
@@ -76,14 +76,14 @@ function Bowtie({
 const sg = (v: number, d = 2) => `${v < 0 ? "−" : "+"} ${Math.abs(v).toFixed(d)}`;
 const num = (v: number, d = 2) => (v < 0 ? `(${v.toFixed(d)})` : v.toFixed(d));
 
-// The verification written out with the numbers of the critical corner (kN and cm).
-function CheckEquation({ data, sigmaAdm }: { data: SectionCutData; sigmaAdm: number }) {
+// The verification written out with the numbers of the critical corner (force unit of the model and cm).
+function CheckEquation({ data, sigmaAdm, unit }: { data: SectionCutData; sigmaAdm: number; unit: string }) {
   const { t } = useLanguage();
   const c = data.critical;
   const A = data.A * 1e4, // cm²
     Ix = data.Ix * 1e8, // cm⁴
     Iy = data.Iy * 1e8;
-  const Mx = data.Mx * 100, // kN·cm
+  const Mx = data.Mx * 100, // force unit·cm
     My = data.My * 100;
   const x = c.x * 100,
     y = c.y * 100; // cm
@@ -103,14 +103,14 @@ function CheckEquation({ data, sigmaAdm }: { data: SectionCutData; sigmaAdm: num
         {Iy.toFixed(0)}
       </div>
       <div data-testid="cut-equation-terms">
-        σ = {c.sN.toFixed(2)} {sg(c.sMx)} {sg(c.sMy)} = {c.sigma.toFixed(2)} kN/cm²
+        σ = {c.sN.toFixed(2)} {sg(c.sMx)} {sg(c.sMy)} = {c.sigma.toFixed(2)} {unit}/cm²
       </div>
       <div data-testid="cut-equation-result" className={ok ? "text-emerald-700 dark:text-emerald-400" : "text-red-600"}>
-        |σ| = {Math.abs(c.sigma).toFixed(2)} {ok ? "≤" : ">"} σ adm = {sigmaAdm} kN/cm² → {ok ? "✓" : "✗"} (
+        |σ| = {Math.abs(c.sigma).toFixed(2)} {ok ? "≤" : ">"} σ adm = {sigmaAdm} {unit}/cm² → {ok ? "✓" : "✗"} (
         {(ratio * 100).toFixed(0)} %)
       </div>
       <div className="font-sans text-stone-500 dark:text-stone-400">
-        N [kN], M [kN·cm], A [cm²], I [cm⁴], x, y [cm]
+        N [{unit}], M [{unit}·cm], A [cm²], I [cm⁴], x, y [cm]
       </div>
     </div>
   );
@@ -349,7 +349,7 @@ export default function SectionCut({
 
       <p className="text-xs text-stone-500 dark:text-stone-400">{t("f3d.cut.view_note")}</p>
 
-      <CheckEquation data={data} sigmaAdm={model.sigmaAdm} />
+      <CheckEquation data={data} sigmaAdm={model.sigmaAdm} unit={model.unit} />
 
       <div className="grid gap-3 text-xs sm:grid-cols-2">
         <div>
@@ -376,7 +376,7 @@ export default function SectionCut({
           </table>
         </div>
         <div>
-          <h4 className="mb-1 font-bold uppercase text-stone-600 dark:text-stone-300">σ (kN/cm²)</h4>
+          <h4 className="mb-1 font-bold uppercase text-stone-600 dark:text-stone-300">σ ({model.unit}/cm²)</h4>
           <table className="font-mono" data-testid="cut-corners">
             <thead>
               <tr className="text-stone-500">
