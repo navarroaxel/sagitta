@@ -42,17 +42,10 @@
     <line x1="85" y1="260" x2="95" y2="260"/>
     <line x1="85" y1="380" x2="95" y2="380"/>
     <line x1="85" y1="500" x2="95" y2="500"/>
-    <line x1="95" y1="200" x2="245" y2="200" stroke-dasharray="3 3"/>
-    <line x1="95" y1="260" x2="185" y2="260" stroke-dasharray="3 3"/>
-    <line x1="95" y1="380" x2="245" y2="380" stroke-dasharray="3 3"/>
-    <line x1="95" y1="500" x2="145" y2="500" stroke-dasharray="3 3"/>
     <text x="82" y="230" text-anchor="middle" stroke="none" transform="rotate(-90 82 230)">1.00</text>
     <text x="82" y="320" text-anchor="middle" stroke="none" transform="rotate(-90 82 320)">2.00</text>
     <text x="82" y="440" text-anchor="middle" stroke="none" transform="rotate(-90 82 440)">2.00</text>
     <!-- beam: 1.00 | 2.00 | 2.00 -->
-    <line x1="190" y1="262" x2="190" y2="566" stroke-dasharray="3 3"/>
-    <line x1="370" y1="262" x2="370" y2="566" stroke-dasharray="3 3"/>
-    <line x1="490" y1="260" x2="490" y2="566" stroke-dasharray="3 3"/>
     <line x1="190" y1="558" x2="490" y2="558"/>
     <line x1="190" y1="553" x2="190" y2="563"/>
     <line x1="250" y1="553" x2="250" y2="563"/>
