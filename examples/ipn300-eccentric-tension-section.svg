@@ -51,13 +51,13 @@
     <!-- e_x = 10 cm (horizontal, at the load level) -->
     <line x1="300" y1="40" x2="411" y2="40"/>
     <line x1="300" y1="35" x2="300" y2="45"/>
-    <text x="355" y="33" text-anchor="middle" stroke="none">e<tspan font-size="10" dy="4">x</tspan><tspan dy="-4"> = 10 cm</tspan></text>
+    <text x="355" y="33" text-anchor="middle" stroke="none">e<tspan font-size="10" dy="4">x</tspan><tspan dx="2" dy="-4"> = 10 cm</tspan></text>
     <!-- e_y = 20 cm (vertical, from the x-x axis to the load level) -->
     <line x1="460" y1="280" x2="460" y2="40"/>
     <line x1="455" y1="40" x2="465" y2="40"/>
     <line x1="455" y1="280" x2="465" y2="280"/>
     <line x1="429" y1="40" x2="455" y2="40" stroke-dasharray="3 3"/>
-    <text x="468" y="164" stroke="none">e<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 20 cm</tspan></text>
+    <text x="468" y="164" stroke="none">e<tspan font-size="10" dy="4">y</tspan><tspan dx="2" dy="-4"> = 20 cm</tspan></text>
   </g>
 
   <!-- ===== Section (IPN 300 outline) ===== -->
@@ -112,20 +112,20 @@
     <!-- P_z toward the viewer: circle + dot -->
     <circle cx="420" cy="40" r="9" fill="#ffffff" stroke-width="2"/>
     <circle cx="420" cy="40" r="3" stroke="none"/>
-    <text x="420" y="20" text-anchor="middle" stroke="none">P<tspan font-size="10" dy="4">z</tspan><tspan dy="-4"> = 76 kN</tspan></text>
+    <text x="420" y="20" text-anchor="middle" stroke="none">P<tspan font-size="10" dy="4">z</tspan><tspan dx="2" dy="-4"> = 76 kN</tspan></text>
   </g>
 
   <!-- ===== Data panel ===== -->
   <g fill="#5f6368" font-size="13">
     <text x="570" y="120" font-weight="700">IPN 300</text>
     <text x="570" y="142">A = 69.0 cm²</text>
-    <text x="570" y="162">I<tspan font-size="10" dy="4">x</tspan><tspan dy="-4"> = 9800 cm⁴</tspan></text>
-    <text x="570" y="182">W<tspan font-size="10" dy="4">x</tspan><tspan dy="-4"> = 653 cm³</tspan></text>
-    <text x="570" y="202">I<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 451 cm⁴</tspan></text>
-    <text x="570" y="222">W<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 72.2 cm³</tspan></text>
-    <text x="570" y="262" font-weight="700">σ = P<tspan font-size="10" dy="4">z</tspan><tspan dy="-4">·(1/A ± e</tspan><tspan font-size="10" dy="4">y</tspan><tspan dy="-4">/W</tspan><tspan font-size="10" dy="4">x</tspan><tspan dy="-4"> ± e</tspan><tspan font-size="10" dy="4">x</tspan><tspan dy="-4">/W</tspan><tspan font-size="10" dy="4">y</tspan><tspan dy="-4">)</tspan></text>
-    <text x="570" y="284">= 0.1836·P<tspan font-size="10" dy="4">z</tspan><tspan dy="-4"> (critical corner)</tspan></text>
-    <text x="570" y="324" font-weight="700">P<tspan font-size="10" dy="4">z,max</tspan><tspan dy="-4"> = 14 / 0.1836 ≈ 76 kN</tspan></text>
+    <text x="570" y="162">I<tspan font-size="10" dy="4">x</tspan><tspan dx="2" dy="-4"> = 9800 cm⁴</tspan></text>
+    <text x="570" y="182">W<tspan font-size="10" dy="4">x</tspan><tspan dx="2" dy="-4"> = 653 cm³</tspan></text>
+    <text x="570" y="202">I<tspan font-size="10" dy="4">y</tspan><tspan dx="2" dy="-4"> = 451 cm⁴</tspan></text>
+    <text x="570" y="222">W<tspan font-size="10" dy="4">y</tspan><tspan dx="2" dy="-4"> = 72.2 cm³</tspan></text>
+    <text x="570" y="262" font-weight="700">σ = P<tspan font-size="10" dy="4">z</tspan><tspan dy="-4">·(1/A ± e</tspan><tspan font-size="10" dy="4">y</tspan><tspan dy="-4">/W</tspan><tspan font-size="10" dy="4">x</tspan><tspan dx="2" dy="-4"> ± e</tspan><tspan font-size="10" dy="4">x</tspan><tspan dy="-4">/W</tspan><tspan font-size="10" dy="4">y</tspan><tspan dy="-4">)</tspan></text>
+    <text x="570" y="284">= 0.1836·P<tspan font-size="10" dy="4">z</tspan><tspan dx="2" dy="-4"> (critical corner)</tspan></text>
+    <text x="570" y="324" font-weight="700">P<tspan font-size="10" dy="4">z,max</tspan><tspan dx="2" dy="-4"> = 14 / 0.1836 ≈ 76 kN</tspan></text>
     <text x="570" y="346">(σ stresses in kN/cm², teal = tension,</text>
     <text x="570" y="364">red = compression)</text>
   </g>

@@ -22,7 +22,9 @@
       Pz2 = 300 kg downward (-Z) at the right tip D
       qy1 = 500 kg/m distributed along +Y (toward the viewer) on the lower 2 m of the column
         (z = 0..2 m) -> resultant 500 x 2 = 1000 kg along +Y at z = 1 m
-    Reactions: not given in the figure, not drawn.
+    Support reactions (computed, drawn in blue; checked with the simulator):
+      A: R_y = 1000 kg (along -Y, away from the viewer) ; R_z = 400 kg (up) ;
+         M_x = 1000 kg.m (vector along +X) ; M_y = -800 kg.m (vector along -Y) ; R_x = M_z = 0
   -->
 
   <rect x="50" y="160" width="620" height="420" fill="#ffffff"/>
@@ -124,12 +126,12 @@
     <polygon points="230,240 225,228 235,228" stroke="none"/>
     <line x1="250" y1="200" x2="250" y2="228" stroke-width="2"/>
     <polygon points="250,240 245,228 255,228" stroke="none"/>
-    <text x="190" y="190" text-anchor="middle" stroke="none">P<tspan font-size="10" dy="4">z1</tspan><tspan dy="-4"> = 100 kg</tspan></text>
+    <text x="190" y="190" text-anchor="middle" stroke="none">P<tspan font-size="10" dy="4">z1</tspan><tspan dx="2" dy="-4"> = 100 kg</tspan></text>
 
     <!-- Pz2 = 300 kg downward at the right tip D (tip at the node, shaft trailing up) -->
     <line x1="430" y1="190" x2="430" y2="228" stroke-width="2.5"/>
     <polygon points="430,240 424,228 436,228" stroke="none"/>
-    <text x="430" y="182" text-anchor="middle" stroke="none">P<tspan font-size="10" dy="4">z2</tspan><tspan dy="-4"> = 300 kg</tspan></text>
+    <text x="430" y="182" text-anchor="middle" stroke="none">P<tspan font-size="10" dy="4">z2</tspan><tspan dx="2" dy="-4"> = 300 kg</tspan></text>
 
     <!-- qy1 = 500 kg/m along +Y (toward the viewer, down-left) on the lower 2 m of the column (z = 0..2);
          tips at the column, shafts trailing opposite (up-right) -->
@@ -146,7 +148,32 @@
     <polygon points="250,388 255.23,378.12 261.04,386.26" stroke="none"/>
     <line x1="274.41" y1="350.56" x2="258.14" y2="362.19" stroke-width="2"/>
     <polygon points="250,368 255.23,358.12 261.04,366.26" stroke="none"/>
-    <text x="286" y="404" text-anchor="start" stroke="none">q<tspan font-size="10" dy="4">y1</tspan><tspan dy="-4"> = 500 kg/m</tspan></text>
+    <text x="286" y="404" text-anchor="start" stroke="none">q<tspan font-size="10" dy="4">y1</tspan><tspan dx="2" dy="-4"> = 500 kg/m</tspan></text>
+  </g>
+
+  <!-- ===== Support reactions (blue) ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+    <!-- R_z = 400 kg upward at A (tip at the node, shaft trailing below) -->
+    <line x1="250" y1="520" x2="250" y2="494" stroke-width="2.5"/>
+    <polygon points="250,482 244,494 256,494" stroke="none"/>
+    <text x="260" y="510" text-anchor="start" stroke="none" style="paint-order:stroke;stroke:#ffffff;stroke-width:3px">R<tspan font-size="10" dy="4">z</tspan><tspan dx="2" dy="-4"> = 400 kg</tspan></text>
+
+    <!-- R_y = 1000 kg along -Y (away from the viewer, up-right); line of action through A, drawn on the near side with the tip pulled back ~28 px to keep the support clear -->
+    <line x1="200" y1="513" x2="217.5" y2="500.5" stroke-width="2.5"/>
+    <polygon points="226,494.4 220.1,506.5 213.1,496.7" stroke="none"/>
+    <text x="194" y="512" text-anchor="end" stroke="none" style="paint-order:stroke;stroke:#ffffff;stroke-width:3px">R<tspan font-size="10" dy="4">y</tspan><tspan dx="2" dy="-4"> = 1000 kg</tspan></text>
+
+    <!-- M_x = 1000 kg.m: moment vector along +X (double arrow), line of action through A -->
+    <line x1="250" y1="480" x2="322" y2="480" stroke-width="2.5"/>
+    <polygon points="340,480 330,485 330,475" stroke="none"/>
+    <polygon points="330,480 320,485 320,475" stroke="none"/>
+    <text x="350" y="484" text-anchor="start" stroke="none" style="paint-order:stroke;stroke:#ffffff;stroke-width:3px">M<tspan font-size="10" dy="4">x</tspan><tspan dx="2" dy="-4"> = 1000 kg·m</tspan></text>
+
+    <!-- M_y = -800 kg.m: moment vector along -Y (away from the viewer, up-right; double arrow), collinear with R_y, drawn beyond the plate -->
+    <line x1="279.3" y1="459.1" x2="300.4" y2="444" stroke-width="2.5"/>
+    <polygon points="315.1,433.5 310.5,444.2 303.5,434.4" stroke="none"/>
+    <polygon points="307,439.3 302.3,450 295.3,440.2" stroke="none"/>
+    <text x="322" y="430" text-anchor="start" stroke="none" style="paint-order:stroke;stroke:#ffffff;stroke-width:3px">M<tspan font-size="10" dy="4">y</tspan><tspan dx="2" dy="-4"> = 800 kg·m</tspan></text>
   </g>
 
   <!-- ===== Axes triad (global system; Y toward the viewer, as in the figure) ===== -->
@@ -163,6 +190,6 @@
   </g>
 
   <text x="360" y="566" text-anchor="middle" fill="#5f6368" font-size="13">
-    3D T-frame (Figura 1), fixed at A. Loads red; local triad of each member and global triad shown.
+    3D T-frame (Figura 1), fixed at A. Loads red, reactions blue; double arrow = moment vector.
   </text>
 </svg>

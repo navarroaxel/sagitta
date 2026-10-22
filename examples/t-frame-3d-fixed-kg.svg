@@ -112,12 +112,12 @@
     <line x1="420" y1="184" x2="420" y2="210" stroke-width="2"/>
     <polygon points="420,220 414,208 426,208" stroke="none"/>
     <line x1="240" y1="184" x2="420" y2="184" stroke-width="2"/>
-    <text x="330" y="176" text-anchor="middle" stroke="none">q<tspan font-size="10" dy="4">z</tspan><tspan dy="-4"> = 200 kg/m</tspan></text>
+    <text x="330" y="176" text-anchor="middle" stroke="none">q<tspan font-size="10" dy="4">z</tspan><tspan dx="2" dy="-4"> = 200 kg/m</tspan></text>
 
     <!-- P_y = 300 kg at B, acting in +y, toward the viewer (down-left); drawn just outside the node pointing in the force direction so it does not run through the distributed load -->
     <line x1="296" y1="223" x2="274" y2="238.6" stroke-width="2.5"/>
     <polygon points="265.8,244.4 278.5,241.5 272.7,233.3" stroke="none"/>
-    <text x="294" y="266" text-anchor="end" stroke="none">P<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 300 kg</tspan></text>
+    <text x="294" y="266" text-anchor="end" stroke="none">P<tspan font-size="10" dy="4">y</tspan><tspan dx="2" dy="-4"> = 300 kg</tspan></text>
   </g>
 
   <!-- ===== Support reactions (blue) ===== -->
@@ -125,24 +125,24 @@
     <!-- F_y = 300 kg along -y (away from the viewer, up-right); line of action through A, drawn on the near side with the tip pulled back ~32 px to keep the support clear -->
     <line x1="238.2" y1="444.2" x2="265.9" y2="424.4" stroke-width="2.5"/>
     <polygon points="274,418.6 267.7,430.5 260.7,420.7" stroke="none"/>
-    <text x="222" y="448" text-anchor="end" stroke="none">F<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 300 kg</tspan></text>
+    <text x="222" y="448" text-anchor="end" stroke="none">F<tspan font-size="10" dy="4">y</tspan><tspan dx="2" dy="-4"> = 300 kg</tspan></text>
 
     <!-- F_z = 600 kg upward at A (tip at the node, shaft trailing below) -->
     <line x1="300" y1="440" x2="300" y2="412" stroke-width="2.5"/>
     <polygon points="300,402 294,414 306,414" stroke="none"/>
-    <text x="310" y="428" text-anchor="start" stroke="none">F<tspan font-size="10" dy="4">z</tspan><tspan dy="-4"> = 600 kg</tspan></text>
+    <text x="310" y="428" text-anchor="start" stroke="none">F<tspan font-size="10" dy="4">z</tspan><tspan dx="2" dy="-4"> = 600 kg</tspan></text>
 
     <!-- M_x = 900 kg.m: moment vector along +x (double arrow), line of action through A -->
     <line x1="300" y1="400" x2="372" y2="400" stroke-width="2.5"/>
     <polygon points="390,400 380,405 380,395" stroke="none"/>
     <polygon points="380,400 370,405 370,395" stroke="none"/>
-    <text x="400" y="404" text-anchor="start" stroke="none">M<tspan font-size="10" dy="4">x</tspan><tspan dy="-4"> = 900 kg&#183;m</tspan></text>
+    <text x="400" y="404" text-anchor="start" stroke="none">M<tspan font-size="10" dy="4">x</tspan><tspan dx="2" dy="-4"> = 900 kg&#183;m</tspan></text>
 
     <!-- M_y = 300 kg.m: moment vector along -y (away from the viewer, up-right; double arrow), collinear with F_y -->
     <line x1="329.3" y1="379.1" x2="350.4" y2="364" stroke-width="2.5"/>
     <polygon points="365.1,353.5 360.5,364.2 353.5,354.4" stroke="none"/>
     <polygon points="357,359.3 352.3,370 345.3,360.2" stroke="none"/>
-    <text x="372" y="350" text-anchor="start" stroke="none">M<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 300 kg&#183;m</tspan></text>
+    <text x="372" y="350" text-anchor="start" stroke="none">M<tspan font-size="10" dy="4">y</tspan><tspan dx="2" dy="-4"> = 300 kg&#183;m</tspan></text>
   </g>
 
   <text x="360" y="490" text-anchor="middle" fill="#5f6368" font-size="13">
