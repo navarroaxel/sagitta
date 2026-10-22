@@ -91,6 +91,20 @@ describe("3D presets", () => {
     near(r.mz, 0);
   });
 
+  test("frame_dcl2 (kg): reactions follow from statics", () => {
+    // P_z1 = 200 kg at E, P_y1 = 100 kg along −Y at C, q_z1 = 300 kg/m on the beam x = 2..4,
+    // q_x1 = 400 kg/m along −X on the lower 2 m of the column
+    const model = PRESETS_3D.find((p) => p.key === "frame_dcl2")!.model;
+    const solved = solveModel3D(model)!;
+    const r = solved.result.reactions[solved.nodeIndex.get("A")!];
+    near(r.fx, 800); // 400 · 2
+    near(r.fy, 100);
+    near(r.fz, 800); // 200 + 300 · 2
+    near(r.mx, -500); // 100 kg · 5 m
+    near(r.my, -800); // −200·1 + 300·2·3 − 400·2·1 = 800
+    near(r.mz, 0);
+  });
+
   test("cantilever IPN 320 in kg: sigma = P·L/W_x just under sigma_adm (max length ≈ 4.17 m)", () => {
     const model = PRESETS_3D.find((p) => p.key === "cantilever_kg")!.model;
     const solved = solveModel3D(model)!;

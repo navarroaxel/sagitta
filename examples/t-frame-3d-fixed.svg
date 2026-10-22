@@ -111,7 +111,7 @@
     <line x1="204.2" y1="215.6" x2="231.9" y2="195.8" stroke-width="2"/>
     <polygon points="240,190 233.7,201.9 226.7,192.1" stroke="none"/>
     <line x1="204.2" y1="395.6" x2="204.2" y2="215.6" stroke-width="2"/>
-    <text x="256" y="290" text-anchor="start" stroke="none">q<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 3 kN/m</tspan></text>
+    <text x="256" y="290" text-anchor="start" stroke="none">q<tspan font-size="10" dy="4">y</tspan><tspan dx="2" dy="-4"> = 3 kN/m</tspan></text>
 
     <!-- q_z = 2 kN/m downward on the hat, x = 1..5 m (tip at the hat, shaft trailing up) -->
     <line x1="280" y1="124" x2="280" y2="150" stroke-width="2"/>
@@ -125,13 +125,13 @@
     <line x1="440" y1="124" x2="440" y2="150" stroke-width="2"/>
     <polygon points="440,160 434,148 446,148" stroke="none"/>
     <line x1="280" y1="124" x2="440" y2="124" stroke-width="2"/>
-    <text x="360" y="116" text-anchor="middle" stroke="none">q<tspan font-size="10" dy="4">z</tspan><tspan dy="-4"> = 2 kN/m</tspan></text>
+    <text x="360" y="116" text-anchor="middle" stroke="none">q<tspan font-size="10" dy="4">z</tspan><tspan dx="2" dy="-4"> = 2 kN/m</tspan></text>
 
     <!-- M_y = 5 kN.m at C: moment vector along +y, toward the viewer (double arrow) -->
     <line x1="160" y1="160" x2="124.2" y2="185.6" stroke-width="2.5"/>
     <polygon points="109.5,196 114.8,186.2 120.6,194.3" stroke="none"/>
     <polygon points="117.7,190.2 122.9,180.3 128.7,188.5" stroke="none"/>
-    <text x="104" y="216" text-anchor="start" stroke="none">M<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 5 kN&#183;m</tspan></text>
+    <text x="104" y="216" text-anchor="start" stroke="none">M<tspan font-size="10" dy="4">y</tspan><tspan dx="2" dy="-4"> = 5 kN&#183;m</tspan></text>
   </g>
 
   <!-- ===== Support reactions (blue) ===== -->
@@ -139,24 +139,24 @@
     <!-- F_y = 18 kN along +y (toward the viewer, down-left); collinear with M_y (which goes up-right), so drawn just outside the node pointing in the force direction -->
     <line x1="228.6" y1="408.1" x2="210.7" y2="420.9" stroke-width="2.5"/>
     <polygon points="200.9,427.9 213.6,425 207.8,416.8" stroke="none"/>
-    <text x="190" y="442" text-anchor="end" stroke="none">F<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 18 kN</tspan></text>
+    <text x="190" y="442" text-anchor="end" stroke="none">F<tspan font-size="10" dy="4">y</tspan><tspan dx="2" dy="-4"> = 18 kN</tspan></text>
 
     <!-- F_z = 8 kN upward at A (tip at the node, shaft trailing below) -->
     <line x1="240" y1="440" x2="240" y2="412" stroke-width="2.5"/>
     <polygon points="240,402 234,414 246,414" stroke="none"/>
-    <text x="250" y="428" text-anchor="start" stroke="none">F<tspan font-size="10" dy="4">z</tspan><tspan dy="-4"> = 8 kN</tspan></text>
+    <text x="250" y="428" text-anchor="start" stroke="none">F<tspan font-size="10" dy="4">z</tspan><tspan dx="2" dy="-4"> = 8 kN</tspan></text>
 
     <!-- M_x = 54 kN.m: moment vector along -x (double arrow to the left), line of action through A -->
     <line x1="240" y1="400" x2="168" y2="400" stroke-width="2.5"/>
     <polygon points="150,400 160,405 160,395" stroke="none"/>
     <polygon points="160,400 170,405 170,395" stroke="none"/>
-    <text x="140" y="404" text-anchor="end" stroke="none">M<tspan font-size="10" dy="4">x</tspan><tspan dy="-4"> = 54 kN&#183;m</tspan></text>
+    <text x="140" y="404" text-anchor="end" stroke="none">M<tspan font-size="10" dy="4">x</tspan><tspan dx="2" dy="-4"> = 54 kN&#183;m</tspan></text>
 
     <!-- M_y = 29 kN.m: moment vector along -y (away from the viewer, up-right; double arrow), collinear with F_y -->
     <line x1="269.3" y1="379.1" x2="290.4" y2="364" stroke-width="2.5"/>
     <polygon points="305.1,353.5 300.5,364.2 293.5,354.4" stroke="none"/>
     <polygon points="297,359.3 292.3,370 285.3,360.2" stroke="none"/>
-    <text x="312" y="350" text-anchor="start" stroke="none">M<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 29 kN&#183;m</tspan></text>
+    <text x="312" y="350" text-anchor="start" stroke="none">M<tspan font-size="10" dy="4">y</tspan><tspan dx="2" dy="-4"> = 29 kN&#183;m</tspan></text>
   </g>
 
   <text x="355" y="496" text-anchor="middle" fill="#5f6368" font-size="13">

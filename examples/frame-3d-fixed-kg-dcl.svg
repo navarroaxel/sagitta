@@ -137,7 +137,7 @@
     <polygon points="470,260 465,248 475,248" stroke="none"/>
     <line x1="490" y1="222" x2="490" y2="248" stroke-width="2"/>
     <polygon points="490,260 485,248 495,248" stroke="none"/>
-    <text x="430" y="212" text-anchor="middle" stroke="none">q<tspan font-size="10" dy="4">z1</tspan><tspan dy="-4"> = 100 kg/m</tspan></text>
+    <text x="430" y="212" text-anchor="middle" stroke="none">q<tspan font-size="10" dy="4">z1</tspan><tspan dx="2" dy="-4"> = 100 kg/m</tspan></text>
 
     <!-- qx1 = 150 kg/m along +X on the lower 2 m of the column (tip at the column, shaft trailing left) -->
     <line x1="220" y1="388" x2="220" y2="488" stroke-width="2"/>
@@ -153,12 +153,12 @@
     <polygon points="250,408 240,403 240,413" stroke="none"/>
     <line x1="220" y1="388" x2="241" y2="388" stroke-width="2"/>
     <polygon points="250,388 240,383 240,393" stroke="none"/>
-    <text x="190" y="370" text-anchor="middle" stroke="none">q<tspan font-size="10" dy="4">x1</tspan><tspan dy="-4"> = 150 kg/m</tspan></text>
+    <text x="190" y="370" text-anchor="middle" stroke="none">q<tspan font-size="10" dy="4">x1</tspan><tspan dx="2" dy="-4"> = 150 kg/m</tspan></text>
 
     <!-- Py1 = 200 kg along -Y (away from the viewer, up-right) at the top C (tip at the node, shaft trailing down-left) -->
     <line x1="217.4" y1="223.2" x2="243.5" y2="204.6" stroke-width="2.5"/>
     <polygon points="250,200 244.8,209.9 239,201.7" stroke="none"/>
-    <text x="262" y="196" text-anchor="start" stroke="none">P<tspan font-size="10" dy="4">y1</tspan><tspan dy="-4"> = 200 kg</tspan></text>
+    <text x="262" y="196" text-anchor="start" stroke="none">P<tspan font-size="10" dy="4">y1</tspan><tspan dx="2" dy="-4"> = 200 kg</tspan></text>
   </g>
 
   <!-- ===== Axes triad (global system; Y toward the viewer, as in the figure) ===== -->

@@ -71,13 +71,13 @@
     <!-- A: V_A = 3000 kg upward (drawn below the node pointing up) -->
     <line x1="100" y1="240" x2="100" y2="280" stroke-width="2.5"/>
     <polygon points="100,232 94,244 106,244" stroke="none"/>
-    <text x="118" y="262" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan><tspan dy="-4"> = 3000 kg</tspan></text>
+    <text x="118" y="262" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan><tspan dx="2" dy="-4"> = 3000 kg</tspan></text>
 
     <!-- A: M_A = 12 510 kg.m counterclockwise (arc centered on node A) -->
     <circle cx="100" cy="200" r="2" stroke="none"/>
     <path d="M 91 184.41 A 18 18 0 1 0 109 184.41" fill="none" stroke-width="2.5"/>
     <polygon points="102.76,180.8 111.4,180.2 106.6,188.6" stroke="none"/>
-    <text x="100" y="172" text-anchor="middle" stroke="none">M<tspan font-size="10" dy="4">A</tspan><tspan dy="-4"> = 12 510 kg&#183;m</tspan></text>
+    <text x="100" y="172" text-anchor="middle" stroke="none">M<tspan font-size="10" dy="4">A</tspan><tspan dx="2" dy="-4"> = 12 510 kg&#183;m</tspan></text>
   </g>
 
   <text x="360" y="300" text-anchor="middle" fill="#5f6368" font-size="13">
