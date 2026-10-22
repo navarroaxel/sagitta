@@ -84,14 +84,14 @@ const tFrameQy: FrameModel3D = {
   sigmaAdm: 1400, // kg/cm²
 };
 
-// examples/frame-3d-fixed-kg-dcl.svg — the professor's DCL exercise: 5 m column fixed at A (the beam
+// examples/frame-3d-fixed-kg-right-beam.svg — the professor's exercise: 5 m column fixed at A (the beam
 // leaves it at z = 4 m, 1 m below the top C), 4 m beam to the right. Loads in kg as drawn: P_y1 = 200 kg
 // at C along -Y (away from the viewer), q_x1 = 150 kg/m along +X on the lower 2 m of the column and
 // q_z1 = 100 kg/m (-Z) on the beam from x = 2 to 4 m. Reactions at A: R_x = -300, R_y = 200,
 // R_z = 200 kg, M_x = -1000, M_y = -900 kg·m (the professor's resolution, tested). The figure gives no
 // profiles: the column is one IPB 160 (strong axis against q_x1 and the beam load, 81%; IPB 140 would
 // not pass, 115%) and the beam an IPN 120 (78%; IPN 100 would not pass, 125%), at sigmaAdm = 1400 kg/cm².
-const frameDcl: FrameModel3D = {
+const frameRightBeam: FrameModel3D = {
   nodes: [
     { id: "A", x: 0, y: 0, z: 0, support: "fixed" },
     { id: "B", x: 0, y: 0, z: 4, support: "free" },
@@ -113,14 +113,14 @@ const frameDcl: FrameModel3D = {
   sigmaAdm: 1400, // kg/cm²
 };
 
-// examples/frame-3d-fixed-kg-dcl2.svg — 5 m column fixed at A, crossed by a beam at z = 4 m (1 m below the
+// examples/frame-3d-fixed-kg-overhang.svg — 5 m column fixed at A, crossed by a beam at z = 4 m (1 m below the
 // top C): 1 m to the left (E) and 4 m to the right (D). Loads in kg as drawn: P_z1 = 200 kg down at E,
 // P_y1 = 100 kg at C along -Y (away from the viewer), q_z1 = 300 kg/m (-Z) on the beam from x = 2 to 4 m
 // and q_x1 = 400 kg/m along -X on the lower 2 m of the column. Reactions at A (statics, tested):
 // R_x = 800, R_y = 100, R_z = 800 kg, M_x = -500, M_y = -800 kg·m. The figure gives no profiles: the
 // column is one IPB 140 (85%; IPB 120 would not pass, 126%) and the beam one IPN 180 (80%; IPN 160 would
 // not pass, 110%), none of them rotated, at sigmaAdm = 1400 kg/cm².
-const frameDcl2: FrameModel3D = {
+const frameOverhang: FrameModel3D = {
   nodes: [
     { id: "A", x: 0, y: 0, z: 0, support: "fixed" },
     { id: "B", x: 0, y: 0, z: 4, support: "free" },
@@ -197,7 +197,7 @@ const cantileverKg: FrameModel3D = {
 };
 
 export interface Preset3D {
-  key: "t_frame" | "t_frame_kg" | "l_torsion" | "eccentric_tension" | "cantilever_kg" | "t_frame_qy" | "frame_dcl" | "frame_dcl2";
+  key: "t_frame" | "t_frame_kg" | "l_torsion" | "eccentric_tension" | "cantilever_kg" | "t_frame_qy" | "frame_right_beam" | "frame_overhang";
   model: FrameModel3D;
 }
 
@@ -205,8 +205,8 @@ export const PRESETS_3D: Preset3D[] = [
   { key: "t_frame", model: tFrame },
   { key: "t_frame_kg", model: tFrameKg },
   { key: "t_frame_qy", model: tFrameQy },
-  { key: "frame_dcl", model: frameDcl },
-  { key: "frame_dcl2", model: frameDcl2 },
+  { key: "frame_right_beam", model: frameRightBeam },
+  { key: "frame_overhang", model: frameOverhang },
   { key: "l_torsion", model: lTorsion },
   { key: "eccentric_tension", model: eccentricTension },
   { key: "cantilever_kg", model: cantileverKg },

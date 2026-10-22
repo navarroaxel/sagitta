@@ -77,10 +77,10 @@ describe("3D presets", () => {
     near(r.mz, 0);
   });
 
-  test("the professor's resolution (DCL) is reproduced with the loads entered in his axes", () => {
+  test("the professor's resolution is reproduced with the loads entered in his axes", () => {
     // P_y1 = 200 kg along −Y at the top, q_x1 = 150 kg/m along +X on the lower 2 m of the column,
     // q_z1 = 100 kg/m (−Z) on the beam from 2 to 4 m
-    const model = PRESETS_3D.find((p) => p.key === "frame_dcl")!.model;
+    const model = PRESETS_3D.find((p) => p.key === "frame_right_beam")!.model;
     const solved = solveModel3D(model)!;
     const r = solved.result.reactions[solved.nodeIndex.get("A")!];
     near(r.fx, -300); // R_x + 150·2 = 0
@@ -91,10 +91,10 @@ describe("3D presets", () => {
     near(r.mz, 0);
   });
 
-  test("frame_dcl2 (kg): reactions follow from statics", () => {
+  test("frame_overhang (kg): reactions follow from statics", () => {
     // P_z1 = 200 kg at E, P_y1 = 100 kg along −Y at C, q_z1 = 300 kg/m on the beam x = 2..4,
     // q_x1 = 400 kg/m along −X on the lower 2 m of the column
-    const model = PRESETS_3D.find((p) => p.key === "frame_dcl2")!.model;
+    const model = PRESETS_3D.find((p) => p.key === "frame_overhang")!.model;
     const solved = solveModel3D(model)!;
     const r = solved.result.reactions[solved.nodeIndex.get("A")!];
     near(r.fx, 800); // 400 · 2
