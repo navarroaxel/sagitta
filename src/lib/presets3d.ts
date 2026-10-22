@@ -84,6 +84,35 @@ const tFrameQy: FrameModel3D = {
   sigmaAdm: 1400, // kg/cm²
 };
 
+// examples/frame-3d-fixed-kg-dcl.svg — the professor's DCL exercise: 5 m column fixed at A (the beam
+// leaves it at z = 4 m, 1 m below the top C), 4 m beam to the right. Loads in kg as drawn: P_y1 = 200 kg
+// at C along -Y (away from the viewer), q_x1 = 150 kg/m along +X on the lower 2 m of the column and
+// q_z1 = 100 kg/m (-Z) on the beam from x = 2 to 4 m. Reactions at A: R_x = -300, R_y = 200,
+// R_z = 200 kg, M_x = -1000, M_y = -900 kg·m (the professor's resolution, tested). The figure gives no
+// profiles: the column is one IPB 160 (strong axis against q_x1 and the beam load, 81%; IPB 140 would
+// not pass, 115%) and the beam an IPN 120 (78%; IPN 100 would not pass, 125%), at sigmaAdm = 1400 kg/cm².
+const frameDcl: FrameModel3D = {
+  nodes: [
+    { id: "A", x: 0, y: 0, z: 0, support: "fixed" },
+    { id: "B", x: 0, y: 0, z: 4, support: "free" },
+    { id: "C", x: 0, y: 0, z: 5, support: "free" },
+    { id: "D", x: 4, y: 0, z: 4, support: "free" },
+  ],
+  members: [
+    { id: "M1", n1: "A", n2: "B", profile: "IPB 160", rotated: true },
+    { id: "M2", n1: "B", n2: "C", profile: "IPB 160", rotated: true },
+    { id: "M3", n1: "B", n2: "D", profile: "IPN 120" },
+  ],
+  loads: [
+    { id: "L1", type: "mudl", member: "M1", gx: 150, gy: 0, gz: 0, from: 0, to: 2 },
+    { id: "L2", type: "nodal", node: "C", fx: 0, fy: -200, fz: 0, mx: 0, my: 0, mz: 0 },
+    { id: "L3", type: "mudl", member: "M3", gx: 0, gy: 0, gz: -100, from: 2, to: 4 },
+  ],
+  material: { ...material, E: 2.1e10, G: 8.1e9 },
+  unit: "kg",
+  sigmaAdm: 1400, // kg/cm²
+};
+
 // Horizontal L in the xy plane, fixed at A, vertical load at the free end: the first arm
 // works in torsion, the second in bending.
 const lTorsion: FrameModel3D = {
@@ -136,7 +165,7 @@ const cantileverKg: FrameModel3D = {
 };
 
 export interface Preset3D {
-  key: "t_frame" | "t_frame_kg" | "l_torsion" | "eccentric_tension" | "cantilever_kg" | "t_frame_qy";
+  key: "t_frame" | "t_frame_kg" | "l_torsion" | "eccentric_tension" | "cantilever_kg" | "t_frame_qy" | "frame_dcl";
   model: FrameModel3D;
 }
 
@@ -144,6 +173,7 @@ export const PRESETS_3D: Preset3D[] = [
   { key: "t_frame", model: tFrame },
   { key: "t_frame_kg", model: tFrameKg },
   { key: "t_frame_qy", model: tFrameQy },
+  { key: "frame_dcl", model: frameDcl },
   { key: "l_torsion", model: lTorsion },
   { key: "eccentric_tension", model: eccentricTension },
   { key: "cantilever_kg", model: cantileverKg },
