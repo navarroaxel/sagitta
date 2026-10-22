@@ -78,27 +78,9 @@ describe("3D presets", () => {
   });
 
   test("the professor's resolution (DCL) is reproduced with the loads entered in his axes", () => {
-    // column 5 m, beam to the right; P_y1 = 200 kg along −Y at the top of the column,
-    // q = 150 kg/m along +X on the lower 2 m of the column, q = 100 kg/m (−Z) on the beam from 2 to 4 m
-    const model: FrameModel3D = {
-      nodes: [
-        { id: "A", x: 0, y: 0, z: 0, support: "fixed" },
-        { id: "B", x: 0, y: 0, z: 5, support: "free" },
-        { id: "D", x: 4, y: 0, z: 5, support: "free" },
-      ],
-      members: [
-        { id: "M1", n1: "A", n2: "B", profile: "IPN 300" },
-        { id: "M2", n1: "B", n2: "D", profile: "IPN 300" },
-      ],
-      loads: [
-        { id: "L1", type: "mudl", member: "M1", gx: 150, gy: 0, gz: 0, from: 0, to: 2 },
-        { id: "L2", type: "nodal", node: "B", fx: 0, fy: -200, fz: 0, mx: 0, my: 0, mz: 0 },
-        { id: "L3", type: "mudl", member: "M2", gx: 0, gy: 0, gz: -100, from: 2, to: 4 },
-      ],
-      material: PRESETS_3D[0].model.material,
-      unit: "kg",
-      sigmaAdm: 1400,
-    };
+    // P_y1 = 200 kg along −Y at the top, q_x1 = 150 kg/m along +X on the lower 2 m of the column,
+    // q_z1 = 100 kg/m (−Z) on the beam from 2 to 4 m
+    const model = PRESETS_3D.find((p) => p.key === "frame_dcl")!.model;
     const solved = solveModel3D(model)!;
     const r = solved.result.reactions[solved.nodeIndex.get("A")!];
     near(r.fx, -300); // R_x + 150·2 = 0
