@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 40 720 270" font-family="system-ui, sans-serif">
+  <!--
+    Structure: cantilever beam, 4.17 m, IPN 320 (solid web, strong axis vertical). Fixed
+      (built-in) at the left end A, free at the right end B. This is the maximum admissible
+      length: M = P.L = sigma_adm.W_x = 1600 x 782 = 1 251 200 kg.cm -> L = 417 cm.
+    World in metres, y up. Transform: sx = 100 + x*120 ; sy = 200 - y*120
+    Nodes:
+      A  (0,0)     fixed / built-in support        -> (100,200)
+      B  (4.17,0)  free right-hand tip (loaded)    -> (600,200)
+    Members:
+      A-B  beam (4.17 m), IPN 320: W_x = 782 cm3, A = 77.7 cm2, I_x = 12510 cm4
+    Supports: A fixed (H, V and M = 3 reactions) -> statically determinate.
+    Loads (units: kg, kg.m):
+      P = 3000 kg vertical (downward) at the tip B
+      sigma_adm = 1600 kg/cm2 (self-weight ignored)
+    Support reactions (computed):
+      A: H_A = 0 ; V_A = 3000 kg (upward) ; M_A = 3000 x 4.17 = 12 510 kg.m (counterclockwise)
+    These reactions satisfy global equilibrium (SumFy = 3000 - 3000 = 0 ;
+    SumM_A = 12 510 - 3000 x 4.17 = 0).
+    Check: sigma = M_A/W_x = 1 251 000 / 782 = 1599.9 kg/cm2 <= 1600 (100 %).
+  -->
+
+  <rect x="0" y="40" width="720" height="270" fill="#ffffff"/>
+
+  <!-- ===== Dimensions ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <line x1="100" y1="60" x2="600" y2="60"/>
+    <line x1="100" y1="55" x2="100" y2="65"/>
+    <line x1="600" y1="55" x2="600" y2="65"/>
+    <text x="350" y="52" text-anchor="middle" stroke="none">4.17</text>
+  </g>
+
+  <!-- ===== Beam (solid web) ===== -->
+  <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
+    <line x1="100" y1="200" x2="600" y2="200"/>
+  </g>
+
+  <!-- ===== Fixed / built-in support at A (vertical wall + hatch) ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="none">
+    <line x1="100" y1="180" x2="100" y2="220"/>
+    <line x1="100" y1="180" x2="92" y2="188"/>
+    <line x1="100" y1="190" x2="92" y2="198"/>
+    <line x1="100" y1="200" x2="92" y2="208"/>
+    <line x1="100" y1="210" x2="92" y2="218"/>
+    <line x1="100" y1="220" x2="92" y2="228"/>
+  </g>
+
+  <!-- ===== Nodes ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="100" cy="200" r="4"/> <!-- A -->
+    <circle cx="600" cy="200" r="4"/> <!-- B free tip -->
+  </g>
+
+  <!-- ===== Node / bar labels ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <text x="125" y="222" text-anchor="start">A</text>
+    <text x="612" y="222" text-anchor="start">B</text>
+    <text x="350" y="224" text-anchor="middle" font-style="italic">IPN 320</text>
+  </g>
+
+  <!-- ===== Loads (red) ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+    <!-- P = 3000 kg downward at the tip (tip at the node, shaft trailing up) -->
+    <line x1="600" y1="94" x2="600" y2="188" stroke-width="2.5"/>
+    <polygon points="600,200 594,188 606,188" stroke="none"/>
+    <text x="612" y="104" text-anchor="start" stroke="none">3000 kg</text>
+  </g>
+
+  <!-- ===== Support reactions (blue) ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+    <!-- A: V_A = 3000 kg upward (drawn below the node pointing up) -->
+    <line x1="100" y1="240" x2="100" y2="280" stroke-width="2.5"/>
+    <polygon points="100,232 94,244 106,244" stroke="none"/>
+    <text x="118" y="262" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan><tspan dy="-4"> = 3000 kg</tspan></text>
+
+    <!-- A: M_A = 12 510 kg.m counterclockwise (arc centered on node A) -->
+    <circle cx="100" cy="200" r="2" stroke="none"/>
+    <path d="M 91 184.41 A 18 18 0 1 0 109 184.41" fill="none" stroke-width="2.5"/>
+    <polygon points="102.76,180.8 111.4,180.2 106.6,188.6" stroke="none"/>
+    <text x="100" y="172" text-anchor="middle" stroke="none">M<tspan font-size="10" dy="4">A</tspan><tspan dy="-4"> = 12 510 kg&#183;m</tspan></text>
+  </g>
+
+  <text x="360" y="300" text-anchor="middle" fill="#5f6368" font-size="13">
+    Cantilever IPN 320, sigma adm = 1600 kg/cm2 — maximum length L = 4.17 m. Load (red), reactions (blue).
+  </text>
+</svg>

@@ -6,6 +6,7 @@ import { SolveOutput3D } from "@/lib/solve3d";
 import { DIAGRAMS_3D, equilibrium3D, peak3D } from "@/lib/results3d";
 import { clean } from "@/lib/results";
 import { StressResult, ratioColor } from "@/lib/stress3d";
+import { withUnit } from "@/lib/units";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const EQ_TOL = 1e-3;
@@ -107,7 +108,7 @@ export default function Results3DPanel({
               <tr>
                 <th className={th}>{t("editor.members.id")}</th>
                 <th className={th}>{t("f3d.results.profile")}</th>
-                <th className={th}>{t("f3d.results.sigma_max")}</th>
+                <th className={th}>{withUnit(t("f3d.results.sigma_max"), model.unit)}</th>
                 <th className={th}>{t("f3d.results.ratio")}</th>
                 <th className={th} />
               </tr>
@@ -133,7 +134,7 @@ export default function Results3DPanel({
           <p className="text-xs text-stone-500 dark:text-stone-400">{t("f3d.results.no_profile")}</p>
         )}
         <p className="mt-1 text-xs text-stone-500 dark:text-stone-400">
-          σ adm = {model.sigmaAdm} kN/cm². {t("f3d.results.stress_note")}
+          σ adm = {model.sigmaAdm} {model.unit}/cm². {withUnit(t("f3d.results.stress_note"), model.unit)}
         </p>
       </section>
 

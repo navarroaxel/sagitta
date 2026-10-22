@@ -3,7 +3,7 @@ import { FrameModel3D } from "@/lib/types3d";
 import { SolveOutput3D } from "@/lib/solve3d";
 import { Projection3D } from "@/lib/projection3d";
 import { useColors } from "@/contexts/ColorContext";
-import { ForceArrow3D, MomentArrow3D, P2 } from "./arrows3d";
+import { ForceArrow3D, forceLabelPos, LabelPos, MomentArrow3D, momentLabelPos, P2 } from "./arrows3d";
 import { udlSpan, type Vec3 } from "@/lib/solver3d";
 
 const TOL = 1e-6;
@@ -124,30 +124,54 @@ export function Reactions3DLayer({
         const at = proj.project([n.x, n.y, n.z]);
         const F = [r.fx, r.fy, r.fz];
         const M = [r.mx, r.my, r.mz];
+        // stack the labels of this support's arrows: two reactions that trail toward the same side
+        // (e.g. Fy and My) would otherwise be written on top of each other
+        const placed: { x0: number; x1: number; y: number }[] = [];
+        const stack = (pos: LabelPos | null, text: string) => {
+          if (!pos) return 0;
+          const w = text.length * 6;
+          const x0 = pos.anchor === "start" ? pos.x : pos.x - w;
+          let dy = 0;
+          while (placed.some((q) => Math.abs(pos.y + dy - q.y) < 11 && x0 < q.x1 && x0 + w > q.x0)) dy += 12;
+          placed.push({ x0, x1: x0 + w, y: pos.y + dy });
+          return dy;
+        };
         return (
           <g key={n.id}>
-            {axes.map((ax, k) => (
-              <React.Fragment key={k}>
-                {Math.abs(F[k]) > 1e-3 && (
-                  <ForceArrow3D
-                    testId={`reaction-${n.id}-f${NAMES[k]}`}
-                    at={at}
-                    dir={proj.dir(ax.map((c) => c * Math.sign(F[k])) as Vec3)}
-                    color={colors.reactions}
-                    label={`F${NAMES[k]} = ${f(Math.abs(F[k]))} ${u}`}
-                  />
-                )}
-                {Math.abs(M[k]) > 1e-3 && (
-                  <MomentArrow3D
-                    testId={`reaction-${n.id}-m${NAMES[k]}`}
-                    at={at}
-                    dir={proj.dir(ax.map((c) => c * Math.sign(M[k])) as Vec3)}
-                    color={colors.reactions}
-                    label={`M${NAMES[k]} = ${f(Math.abs(M[k]))} ${u}·m`}
-                  />
-                )}
-              </React.Fragment>
-            ))}
+            {axes.map((ax, k) => {
+              const fDir = proj.dir(ax.map((c) => c * Math.sign(F[k])) as Vec3);
+              const mDir = proj.dir(ax.map((c) => c * Math.sign(M[k])) as Vec3);
+              const fLabel = `F${NAMES[k]} = ${f(Math.abs(F[k]))} ${u}`;
+              const mLabel = `M${NAMES[k]} = ${f(Math.abs(M[k]))} ${u}·m`;
+              const hasF = Math.abs(F[k]) > 1e-3,
+                hasM = Math.abs(M[k]) > 1e-3;
+              const fDy = hasF ? stack(forceLabelPos(at, fDir), fLabel) : 0;
+              const mDy = hasM ? stack(momentLabelPos(at, mDir), mLabel) : 0;
+              return (
+                <React.Fragment key={k}>
+                  {hasF && (
+                    <ForceArrow3D
+                      testId={`reaction-${n.id}-f${NAMES[k]}`}
+                      at={at}
+                      dir={fDir}
+                      color={colors.reactions}
+                      label={fLabel}
+                      labelDy={fDy}
+                    />
+                  )}
+                  {hasM && (
+                    <MomentArrow3D
+                      testId={`reaction-${n.id}-m${NAMES[k]}`}
+                      at={at}
+                      dir={mDir}
+                      color={colors.reactions}
+                      label={mLabel}
+                      labelDy={mDy}
+                    />
+                  )}
+                </React.Fragment>
+              );
+            })}
           </g>
         );
       })}

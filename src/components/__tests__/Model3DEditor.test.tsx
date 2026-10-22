@@ -106,3 +106,37 @@ describe("partial distributed load", () => {
     expect(last.loads.find((l) => l.id === "L2")).toMatchObject({ from: 1, to: 4 });
   });
 });
+
+describe("the model's force unit is propagated to the labels (kg presets)", () => {
+  const kg = PRESETS_3D.find((p) => p.key === "cantilever_kg")!.model;
+
+  test("material tab: σ adm and the E/G note use the model unit", () => {
+    function KgHarness() {
+      const [model, setModel] = useState(kg);
+      const solved = solveModel3D(model);
+      return (
+        <Model3DEditor
+          model={model}
+          onChange={setModel}
+          solved={solved}
+          stress={solved ? computeStress(model, solved) : null}
+        />
+      );
+    }
+    render(<KgHarness />);
+    fireEvent.click(screen.getByText("material"));
+    expect(screen.getByText("σ adm (kg/cm²)")).toBeTruthy();
+    expect(screen.getByText(/E, G in kg\/m²/)).toBeTruthy();
+    expect(screen.queryByText(/kN/)).toBeNull();
+  });
+
+  test("results panel: σ max header, σ adm and the stress note use the model unit", () => {
+    const s = solveModel3D(kg)!;
+    render(<Results3DPanel model={kg} solved={s} stress={computeStress(kg, s)} />);
+    const section = screen.getByTestId("stress-section").parentElement!;
+    expect(section.textContent).toContain("σ max (kg/cm²)");
+    expect(section.textContent).toContain("σ adm = 1600 kg/cm²");
+    expect(section.textContent).toContain("Assumes kg and m");
+    expect(section.textContent).not.toContain("kN");
+  });
+});

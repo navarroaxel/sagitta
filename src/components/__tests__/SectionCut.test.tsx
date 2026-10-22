@@ -112,3 +112,15 @@ describe("cut marker on the 3D canvas", () => {
     expect(screen.queryByTestId("cut-marker")).toBeNull();
   });
 });
+
+describe("SectionCut with a kg model", () => {
+  test("the verification and the corner table are written in kg/cm²", () => {
+    const kg = PRESETS_3D.find((p) => p.key === "cantilever_kg")!.model;
+    render(<Harness model={kg} start={1} />);
+    const eq = screen.getByTestId("cut-equation").textContent!;
+    expect(eq).toContain("σ adm = 1600 kg/cm²");
+    expect(eq).toContain("N [kg], M [kg·cm]");
+    expect(screen.getByTestId("section-cut").textContent).toContain("σ (kg/cm²)");
+    expect(screen.getByTestId("section-cut").textContent).not.toContain("kN");
+  });
+});

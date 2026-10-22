@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-30 140 700 360" font-family="system-ui, sans-serif">
+  <!--
+    Structure: 3D cantilever — a horizontal IPN 300 beam (2 m) fixed (built-in) to a wall at
+      its left end A, free at B. Solid web, strong axis vertical (web in the x-z plane, flange
+      width along y). Loaded at the free end by an ECCENTRIC TENSION P_z along the member axis
+      (global x, pulling away from the wall), applied e_y = 20 cm above the centroid (parallel
+      to the web) and e_x = 10 cm out of the plane (perpendicular to the web, along y).
+      Drawn in oblique projection. The eccentricities are drawn exaggerated (NOT to scale) so
+      they are readable; the beam length is to scale.
+      Axes (the course's left-handed triad): x along the beam (right), y horizontal, out of the
+      plane (toward the viewer, drawn down-left), z vertical (up). Section axes: x-x = global y (flange width),
+      y-y = global z (depth); the cross-section is in examples/ipn300-eccentric-tension-section.svg.
+    World in metres. Transform: sx = 150 + (x*125 - y*30) ; sy = 300 - (z*100 - y*21)
+      (x at 125 px/m; y and z are only drawn as directions: y = (-30,21) px per unit,
+       z = (0,-1) px per px of height; no dimension is read along them)
+    Nodes:
+      A  (0,0,0)   fixed / built-in end          -> (150,300)
+      B  (2,0,0)   free end, end plate           -> (400,300)
+      P  load point on the end plate (y = 0.8 units, z = 40 px up) -> (376,277)
+    Members:
+      A-B  IPN 300, 2 m (A = 69.0 cm2, I_x = 9800 cm4, I_y = 451 cm4)
+    Supports: A fixed in 3D (restrains all 3 forces and 3 moments).
+    Loads (units: kN, kN.m):
+      P_z = 76 kN along +x (tension) at the eccentric point P (e_x = 10 cm, e_y = 20 cm)
+      equivalent at B (r x F): N = 76 kN ; M_y = P_z*e_y = 15.2 kN.m ; M_z = -P_z*e_x = -7.6 kN.m
+    Reactions (computed):
+      A: F_x = 76 kN (along -x) ; M_y = 15.2 kN.m (vector along -y) ; M_z = 7.6 kN.m (vector
+         along +z) ; F_y = F_z = M_x = 0
+    Equilibrium:
+      SumFx   = 76 - 76 = 0
+      SumMy_A = 76*0.20 - 15.2 = 0   (r x F about y, load above the axis)
+      SumMz_A = -76*0.10 + 7.6 = 0   (r x F about z, load out of the plane in +y)
+    The given reactions satisfy global equilibrium.
+    Check: sigma_max = P_z*(1/A + e_y/W_x + e_x/W_y) = 0.1836*76 = 13.96 kN/cm2 <= 14 kN/cm2,
+      so P_z,max = 14/0.1836 = 76.25 kN.
+  -->
+
+  <rect x="-30" y="140" width="700" height="360" fill="#ffffff"/>
+
+  <!-- ===== Dimensions ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <!-- beam length 2.00 -->
+    <line x1="150" y1="190" x2="400" y2="190"/>
+    <line x1="150" y1="185" x2="150" y2="195"/>
+    <line x1="400" y1="185" x2="400" y2="195"/>
+    <text x="275" y="182" text-anchor="middle" stroke="none">2.00</text>
+    <!-- e_y = 20 cm (vertical on the end plate, B to the line z = 40 px) -->
+    <line x1="400" y1="300" x2="400" y2="260" stroke-dasharray="3 3"/>
+    <line x1="401" y1="282" x2="438" y2="288"/>
+    <text x="442" y="292" text-anchor="start" stroke="none">e<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 20 cm</tspan></text>
+    <!-- e_x = 10 cm (along y on the end plate, to the load point) -->
+    <line x1="400" y1="260" x2="376" y2="277" stroke-dasharray="3 3"/>
+    <line x1="364" y1="262" x2="387" y2="269"/>
+    <text x="360" y="266" text-anchor="end" stroke="none">e<tspan font-size="10" dy="4">x</tspan><tspan dy="-4"> = 10 cm</tspan></text>
+  </g>
+
+  <!-- ===== Supports: fixed wall at A (plate in the y-z plane) ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff" fill-opacity="0.85">
+    <polygon points="120,381 180,339 180,219 120,261"/>
+  </g>
+  <g stroke="#1a1a1a" stroke-width="2" fill="none">
+    <line x1="120" y1="270" x2="112" y2="278"/><line x1="120" y1="282" x2="112" y2="290"/><line x1="120" y1="294" x2="112" y2="302"/><line x1="120" y1="306" x2="112" y2="314"/><line x1="120" y1="318" x2="112" y2="326"/><line x1="120" y1="330" x2="112" y2="338"/><line x1="120" y1="342" x2="112" y2="350"/><line x1="120" y1="354" x2="112" y2="362"/><line x1="120" y1="366" x2="112" y2="374"/>
+  </g>
+
+  <!-- ===== Solid-web beam + end plate at B ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff" fill-opacity="0.85">
+    <polygon points="370,366 430,324 430,234 370,276"/> <!-- end plate (y-z plane) -->
+  </g>
+  <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
+    <line x1="150" y1="300" x2="400" y2="300"/> <!-- beam A-B -->
+  </g>
+
+  <!-- ===== Nodes ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="150" cy="300" r="4"/> <!-- A fixed end -->
+    <circle cx="400" cy="300" r="4"/> <!-- B centroid at the free end -->
+  </g>
+
+  <!-- ===== Node / bar labels ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <text x="160" y="320" text-anchor="start">A</text>
+    <text x="388" y="320" text-anchor="end">B</text>
+    <text x="275" y="322" text-anchor="middle" font-style="italic">IPN 300</text>
+  </g>
+
+  <!-- ===== Axes triad (global system) ===== -->
+  <g stroke="#5f6368" fill="#5f6368" font-size="13" font-weight="600">
+    <line x1="600" y1="400" x2="632" y2="400" stroke-width="2"/>
+    <polygon points="640,400 631,404 631,396" stroke="none"/>
+    <text x="646" y="404" stroke="none">x</text>
+    <line x1="600" y1="400" x2="600" y2="368" stroke-width="2"/>
+    <polygon points="600,360 604,369 596,369" stroke="none"/>
+    <text x="596" y="352" stroke="none" text-anchor="middle">z</text>
+    <line x1="600" y1="400" x2="564.5" y2="425.4" stroke-width="2"/>
+    <polygon points="558,430 563,421.5 567.6,428" stroke="none"/>
+    <text x="546" y="442" stroke="none">y</text>
+  </g>
+
+  <!-- ===== Loads (red) ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+    <!-- P_z = 76 kN along +x (tension), pulling the end plate at P away from the wall -->
+    <circle cx="376" cy="277" r="3" stroke="none"/>
+    <line x1="376" y1="277" x2="498" y2="277" stroke-width="2.5"/>
+    <polygon points="510,277 498,271 498,283" stroke="none"/>
+    <text x="470" y="265" text-anchor="middle" stroke="none">P<tspan font-size="10" dy="4">z</tspan><tspan dy="-4"> = 76 kN</tspan></text>
+  </g>
+
+  <!-- ===== Support reactions (blue) ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+    <!-- F_x = 76 kN along -x; collinear with the beam, so drawn just outside the wall pointing in the force direction -->
+    <line x1="104" y1="300" x2="68" y2="300" stroke-width="2.5"/>
+    <polygon points="56,300 68,294 68,306" stroke="none"/>
+    <text x="98" y="290" text-anchor="end" stroke="none">F<tspan font-size="10" dy="4">x</tspan><tspan dy="-4"> = 76 kN</tspan></text>
+
+    <!-- M_y = 15.2 kN.m: moment vector along -y (away from the viewer, up-right; double arrow), line of action through A -->
+    <line x1="150" y1="300" x2="193" y2="270" stroke-width="2.5"/>
+    <polygon points="206,261 199,273 193,264" stroke="none"/>
+    <polygon points="196,268 189,280 183,271" stroke="none"/>
+    <text x="212" y="254" text-anchor="start" stroke="none">M<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 15.2 kN·m</tspan></text>
+
+    <!-- M_z = 7.6 kN.m: moment vector along +z (double arrow), line of action through A -->
+    <line x1="150" y1="300" x2="150" y2="226" stroke-width="2.5"/>
+    <polygon points="150,212 144,225 156,225" stroke="none"/>
+    <polygon points="150,224 144,237 156,237" stroke="none"/>
+    <text x="160" y="210" text-anchor="start" stroke="none">M<tspan font-size="10" dy="4">z</tspan><tspan dy="-4"> = 7.6 kN·m</tspan></text>
+  </g>
+
+  <text x="320" y="486" text-anchor="middle" fill="#5f6368" font-size="13">
+    3D cantilever IPN 300, fixed at A, eccentric tension P_z (e_x = 10 cm, e_y = 20 cm). Loads red, reactions blue.
+  </text>
+</svg>
