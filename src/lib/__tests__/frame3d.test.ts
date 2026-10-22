@@ -1,5 +1,6 @@
 import { solveModel3D } from "../solve3d";
 import { equilibrium3D, peak3D } from "../results3d";
+import { computeStress } from "../stress3d";
 import { PRESETS_3D } from "../presets3d";
 import { makeProjection3D } from "../projection3d";
 import type { FrameModel3D } from "../types3d";
@@ -22,29 +23,102 @@ describe("3D presets", () => {
     });
   });
 
-  test("T-frame reactions match the worked example", () => {
+  test("T-frame reactions match the worked example (q_y = 3 kN/m toward −Y, backward)", () => {
     const model = PRESETS_3D.find((p) => p.key === "t_frame")!.model;
     const solved = solveModel3D(model)!;
     const r = solved.result.reactions[solved.nodeIndex.get("A")!];
     near(r.fx, 0);
-    near(r.fy, -18);
+    near(r.fy, 18); // the load goes toward −Y, so the reaction is +Y
     near(r.fz, 8);
-    near(r.mx, 54);
+    near(r.mx, -54);
     near(r.my, -29);
     near(r.mz, 0);
+  });
+
+  test("My of the column at the base matches the professor: −54 kN·m (q_y toward −Y), +900 kg·m (P_y toward +Y)", () => {
+    const base = (key: "t_frame" | "t_frame_kg") => {
+      const model = PRESETS_3D.find((p) => p.key === key)!.model;
+      const st = solveModel3D(model)!.stations[0]; // column A→B: course z runs down, the base has the largest z
+      return st.reduce((b, p) => (p.z > b.z ? p : b)).My;
+    };
+    near(base("t_frame"), -54);
+    near(base("t_frame_kg"), 900);
   });
 
   test("T-frame (kg example) reactions match the worked example", () => {
     const model = PRESETS_3D.find((p) => p.key === "t_frame_kg")!.model;
     const solved = solveModel3D(model)!;
     const r = solved.result.reactions[solved.nodeIndex.get("A")!];
-    const g = 0.00981;
     near(r.fx, 0);
-    near(r.fy, -300 * g);
-    near(r.fz, 600 * g);
-    near(r.mx, 900 * g);
-    near(r.my, -300 * g);
+    near(r.fy, -300);
+    near(r.fz, 600);
+    near(r.mx, 900);
+    near(r.my, -300);
     near(r.mz, 0);
+  });
+
+  test("eccentric tension on IPN 300: sigma_max = P·(1/A + e_y/Wx + e_x/Wy)", () => {
+    const model = PRESETS_3D.find((p) => p.key === "eccentric_tension")!.model;
+    const solved = solveModel3D(model)!;
+    const s = computeStress(model, solved)[0]!;
+    near(Math.abs(s.max.sigma), 76 * (1 / 69 + 20 / 653 + 10 / 72.2), 2e-3);
+    expect(s.ok).toBe(true);
+  });
+
+  test("T-frame with q_y1 (kg): reactions follow from statics", () => {
+    const model = PRESETS_3D.find((p) => p.key === "t_frame_qy")!.model;
+    const solved = solveModel3D(model)!;
+    const r = solved.result.reactions[solved.nodeIndex.get("A")!];
+    near(r.fx, 0);
+    near(r.fy, -1000); // q_y1 = 500 kg/m over 2 m, along +Y (toward the viewer)
+    near(r.fz, 400); // 100 kg (spread over the left arm) + 300 kg
+    near(r.mx, 1000); // 1000 kg · 1 m
+    near(r.my, -800); // 100 kg · 1 m left of the column − 300 kg · 3 m
+    near(r.mz, 0);
+  });
+
+  test("the professor's resolution (DCL) is reproduced with the loads entered in his axes", () => {
+    // column 5 m, beam to the right; P_y1 = 200 kg along −Y at the top of the column,
+    // q = 150 kg/m along +X on the lower 2 m of the column, q = 100 kg/m (−Z) on the beam from 2 to 4 m
+    const model: FrameModel3D = {
+      nodes: [
+        { id: "A", x: 0, y: 0, z: 0, support: "fixed" },
+        { id: "B", x: 0, y: 0, z: 5, support: "free" },
+        { id: "D", x: 4, y: 0, z: 5, support: "free" },
+      ],
+      members: [
+        { id: "M1", n1: "A", n2: "B", profile: "IPN 300" },
+        { id: "M2", n1: "B", n2: "D", profile: "IPN 300" },
+      ],
+      loads: [
+        { id: "L1", type: "mudl", member: "M1", gx: 150, gy: 0, gz: 0, from: 0, to: 2 },
+        { id: "L2", type: "nodal", node: "B", fx: 0, fy: -200, fz: 0, mx: 0, my: 0, mz: 0 },
+        { id: "L3", type: "mudl", member: "M2", gx: 0, gy: 0, gz: -100, from: 2, to: 4 },
+      ],
+      material: PRESETS_3D[0].model.material,
+      unit: "kg",
+      sigmaAdm: 1400,
+    };
+    const solved = solveModel3D(model)!;
+    const r = solved.result.reactions[solved.nodeIndex.get("A")!];
+    near(r.fx, -300); // R_x + 150·2 = 0
+    near(r.fy, 200); // R_y − 200 = 0
+    near(r.fz, 200); // R_z − 100·2 = 0
+    near(r.mx, -1000); // M_x + 200·5 = 0
+    near(r.my, -900); // M_y + 150·2·1 + 100·2·3 = 0
+    near(r.mz, 0);
+  });
+
+  test("cantilever IPN 320 in kg: sigma = P·L/W_x just under sigma_adm (max length ≈ 4.17 m)", () => {
+    const model = PRESETS_3D.find((p) => p.key === "cantilever_kg")!.model;
+    const solved = solveModel3D(model)!;
+    const r = solved.result.reactions[solved.nodeIndex.get("A")!];
+    near(r.fz, 3000);
+    near(Math.abs(r.my), 3000 * 4.169);
+    const s = computeStress(model, solved)[0]!;
+    near(Math.abs(s.max.sigma), (3000 * 416.9) / (12510 / 16), 1e-9); // kg/cm²
+    expect(s.ratio).toBeGreaterThan(0.999);
+    expect(s.ok).toBe(true);
   });
 
   test("L-frame: first arm in torsion T = P·3, bending M = P·4", () => {
@@ -96,10 +170,10 @@ describe("oblique projection", () => {
     expect(y1).toBeCloseTo(y0);
     expect(y2).toBeLessThan(y0);
   });
-  test("y recedes up-right with the (14,-10)/40 ratio", () => {
+  test("y points toward the viewer (down-left) with the (14,-10)/40 ratio", () => {
     const [dx, dy] = pr.dir([0, 1, 0]);
-    near(dx, 0.35 * pr.k);
-    near(dy, -0.25 * pr.k);
+    near(dx, -0.35 * pr.k);
+    near(dy, 0.25 * pr.k);
   });
   test("fits inside the viewport", () => {
     [

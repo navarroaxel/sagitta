@@ -1,6 +1,8 @@
-// Oblique projection for the 3D view: x to the right, z up, y receding up-right.
-// Same convention as examples/t-frame-3d-fixed.svg: one metre along y is drawn as
-// (14, -10) px when one metre along x/z is 40 px.
+// Oblique projection for the 3D view: x to the right, z up, y toward the viewer (down-left).
+// This is the course's global triad (left-handed: X right, Z up, Y toward the viewer); the solver's
+// numbers already follow it (verified against the professor's resolution, see frame3d.test.ts), only
+// the drawing needed the flip. One metre along y is drawn as (-14, +10) px when one metre along
+// x/z is 40 px.
 import type { Vec3 } from "./solver3d";
 
 export const DEPTH_X = 14 / 40;
@@ -22,8 +24,8 @@ export function makeProjection3D(
 ): Projection3D {
   // projected extents at k = 1, origin at 0
   const raw = (p: Vec3): [number, number] => [
-    p[0] + p[1] * DEPTH_X,
-    -(p[2] + p[1] * DEPTH_Y),
+    p[0] - p[1] * DEPTH_X,
+    -(p[2] - p[1] * DEPTH_Y),
   ];
   const pts = points.length ? points.map(raw) : [[0, 0] as [number, number]];
   const xs = pts.map((p) => p[0]);

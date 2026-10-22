@@ -34,6 +34,33 @@ describe("Frame3DCanvas", () => {
     expect(screen.getByTestId("support-fixed-A")).toBeTruthy();
   });
 
+  test("the fixed support follows the member: horizontal plate for a column, vertical wall for a beam", () => {
+    const { unmount } = render(<Frame3DCanvas model={tFrame} solved={solveModel3D(tFrame)} viewOpts={opts} />);
+    expect(screen.getByTestId("support-fixed-A").getAttribute("data-axis")).toBe("z");
+    unmount();
+    const beam = PRESETS_3D.find((p) => p.key === "cantilever_kg")!.model;
+    render(<Frame3DCanvas model={beam} solved={solveModel3D(beam)} viewOpts={opts} />);
+    expect(screen.getByTestId("support-fixed-A").getAttribute("data-axis")).toBe("x");
+  });
+
+  test("reaction labels at one support never overlap (Fy and My trail to the same side)", () => {
+    const model = PRESETS_3D.find((p) => p.key === "t_frame_qy")!.model;
+    render(<Frame3DCanvas model={model} solved={solveModel3D(model)} viewOpts={opts} />);
+    const boxes = Array.from(screen.getByTestId("reactions3d-layer").querySelectorAll("text")).map((t) => {
+      const w = t.textContent!.length * 6;
+      const x = parseFloat(t.getAttribute("x")!);
+      const x0 = t.getAttribute("text-anchor") === "end" ? x - w : x;
+      return { x0, x1: x0 + w, y: parseFloat(t.getAttribute("y")!), text: t.textContent };
+    });
+    expect(boxes.length).toBe(4); // Fy, Fz, Mx, My
+    boxes.forEach((a, i) =>
+      boxes.slice(i + 1).forEach((b) => {
+        const clash = Math.abs(a.y - b.y) < 11 && a.x0 < b.x1 && a.x1 > b.x0;
+        expect(clash, `${a.text} / ${b.text}`).toBe(false);
+      }),
+    );
+  });
+
   test("reaction components of the worked example are all drawn (Fy, Fz, Mx, My; no Fx/Mz)", () => {
     render(
       <Frame3DCanvas
@@ -257,9 +284,10 @@ describe("local axes", () => {
     );
   });
 
-  // Course convention (left-handed): z along the member (down / to the left), x out of the page,
+  // Course convention (left-handed): z along the member (down / to the left), x = −Y (out of the
+  // plane; the global Y points toward the viewer, so x points away: up-right on the oblique view),
   // y to the right (columns) or down (beams). Screen vectors have y pointing down.
-  test("column: z' points down, y' to the right, x' out of the page (down-left on the oblique view)", () => {
+  test("column: z' points down, y' to the right, x' out of the plane (up-right on the oblique view)", () => {
     render(
       <Frame3DCanvas
         model={tFrame}
@@ -274,8 +302,8 @@ describe("local axes", () => {
     expect(yx).toBeGreaterThan(0);
     expect(Math.abs(yy)).toBeLessThan(1e-6);
     const [xx, xy] = axis("M1", "x");
-    expect(xx).toBeLessThan(0);
-    expect(xy).toBeGreaterThan(0);
+    expect(xx).toBeGreaterThan(0);
+    expect(xy).toBeLessThan(0);
   });
 
   test("hat: z' points to the left, y' down, x' out of the page", () => {
@@ -293,8 +321,8 @@ describe("local axes", () => {
     expect(Math.abs(yx)).toBeLessThan(1e-6);
     expect(yy).toBeGreaterThan(0);
     const [xx, xy] = axis("M3", "x");
-    expect(xx).toBeLessThan(0);
-    expect(xy).toBeGreaterThan(0);
+    expect(xx).toBeGreaterThan(0);
+    expect(xy).toBeLessThan(0);
   });
 
   test("the triad does not depend on the direction in which the member was defined", () => {

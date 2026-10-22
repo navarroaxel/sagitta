@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="110 0 730 540" font-family="system-ui, sans-serif">
+  <!--
+    Structure: cross-section of a horizontal IPN 300 beam fixed at one end, loaded by an
+      eccentric tension P_z along the member axis. The section is seen from the free end
+      looking toward the wall, so P_z (tension, pulling away from the wall) points toward
+      the viewer. Section axes: x-x horizontal, perpendicular to the web (flange width);
+      y-y vertical, parallel to the web (depth). Both are principal axes through the
+      centroid. Simplified outline: constant flange thickness (the real flanges taper).
+    Transform: sx = 300 + x*12 ; sy = 280 - y*12   (x, y in cm from the centroid, 12 px/cm)
+    Section (IPN 300, course table):
+      h = 30 cm, b = 12.5 cm, t_f = 1.62 cm, t_w = 1.08 cm
+      A = 69.0 cm2, I_x = 9800 cm4, W_x = 653 cm3, I_y = 451 cm4, W_y = 72.2 cm3
+      corners (+-6.25, +-15) cm -> (225|375, 100|460)
+    Nodes: centroid G (0,0) -> (300,280); load point P (e_x, e_y) = (10, 20) cm -> (420,40)
+    Members: none (single cross-section)
+    Supports: none (the beam is fixed at the far end; not shown)
+    Loads (units: kN, cm):
+      P_z = 76 kN tension at (e_x, e_y) = (10, 20) cm, outside the flange (e_x > b/2)
+      reduced to the centroid: N = P_z ; M_x = P_z*e_y = 15.2 kN.m (strong axis) ;
+      M_y = P_z*e_x = 7.6 kN.m (weak axis)
+    Stress: sigma = N/A + M_x*y/I_x + M_y*x/I_y = P_z*(1/A +- e_y/W_x +- e_x/W_y)
+      1/A = 0.01449 ; e_y/W_x = 0.03063 ; e_x/W_y = 0.13850   (cm^-2)
+      corner (+x,+y): 0.18362*P_z = +13.96 kN/cm2  (critical, same quadrant as the load)
+      corner (+x,-y): 0.12236*P_z =  +9.31
+      corner (-x,+y): -0.09338*P_z =  -7.10
+      corner (-x,-y): -0.15464*P_z = -11.76
+      P_z,max = 14 / 0.18362 = 76.25 kN for sigma_adm = 14 kN/cm2
+    Neutral axis (sigma = 0): y = -7.10 - 10.865*x (cm); meets x-x at x = -0.65 cm and y-y
+      at y = -7.10 cm.
+    Reactions: none drawn (the section is not a free body of the support).
+  -->
+
+  <rect x="110" y="0" width="730" height="540" fill="#ffffff"/>
+
+  <!-- ===== Dimensions ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <!-- h = 30 cm -->
+    <line x1="170" y1="100" x2="170" y2="460"/>
+    <line x1="165" y1="100" x2="175" y2="100"/>
+    <line x1="165" y1="460" x2="175" y2="460"/>
+    <line x1="175" y1="100" x2="225" y2="100" stroke-dasharray="3 3"/>
+    <line x1="175" y1="460" x2="225" y2="460" stroke-dasharray="3 3"/>
+    <text x="160" y="280" text-anchor="middle" stroke="none" transform="rotate(-90 160 280)">h = 30 cm</text>
+    <!-- b = 12.5 cm -->
+    <line x1="225" y1="500" x2="375" y2="500"/>
+    <line x1="225" y1="495" x2="225" y2="505"/>
+    <line x1="375" y1="495" x2="375" y2="505"/>
+    <line x1="225" y1="460" x2="225" y2="495" stroke-dasharray="3 3"/>
+    <line x1="375" y1="460" x2="375" y2="495" stroke-dasharray="3 3"/>
+    <text x="300" y="518" text-anchor="middle" stroke="none">b = 12.5 cm</text>
+    <!-- e_x = 10 cm (horizontal, at the load level) -->
+    <line x1="300" y1="40" x2="411" y2="40"/>
+    <line x1="300" y1="35" x2="300" y2="45"/>
+    <text x="355" y="33" text-anchor="middle" stroke="none">e<tspan font-size="10" dy="4">x</tspan><tspan dy="-4"> = 10 cm</tspan></text>
+    <!-- e_y = 20 cm (vertical, from the x-x axis to the load level) -->
+    <line x1="460" y1="280" x2="460" y2="40"/>
+    <line x1="455" y1="40" x2="465" y2="40"/>
+    <line x1="455" y1="280" x2="465" y2="280"/>
+    <line x1="429" y1="40" x2="455" y2="40" stroke-dasharray="3 3"/>
+    <text x="468" y="164" stroke="none">e<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 20 cm</tspan></text>
+  </g>
+
+  <!-- ===== Section (IPN 300 outline) ===== -->
+  <g stroke="#1a1a1a" stroke-width="3" stroke-linejoin="round" fill="#ffffff">
+    <polygon points="225,100 375,100 375,119.4 306.5,119.4 306.5,440.6 375,440.6 375,460 225,460 225,440.6 293.5,440.6 293.5,119.4 225,119.4"/>
+  </g>
+
+  <!-- ===== Axes through the centroid ===== -->
+  <g stroke="#5f6368" stroke-width="1" stroke-dasharray="8 3 2 3" fill="#5f6368" font-size="13" font-style="italic">
+    <line x1="190" y1="280" x2="490" y2="280"/>
+    <line x1="300" y1="470" x2="300" y2="40"/>
+    <text x="496" y="285" stroke="none">x</text>
+    <text x="308" y="56" stroke="none">y</text>
+  </g>
+
+  <!-- ===== Neutral axis (sigma = 0) ===== -->
+  <g stroke="#5f6368" stroke-width="1.5" stroke-dasharray="6 4" fill="#5f6368" font-size="12">
+    <line x1="273.4" y1="76" x2="311" y2="484"/>
+    <text x="266" y="80" text-anchor="end" stroke="none">neutral axis (σ = 0)</text>
+  </g>
+
+  <!-- ===== Nodes: centroid and corners ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="300" cy="280" r="4"/>
+  </g>
+  <g fill="#0b8a8a" stroke="#ffffff" stroke-width="1.5">
+    <circle cx="375" cy="100" r="5"/>
+  </g>
+  <g fill="#c0392b" stroke="#ffffff" stroke-width="1.5">
+    <circle cx="225" cy="100" r="4"/>
+    <circle cx="225" cy="460" r="4"/>
+  </g>
+  <g fill="#0b8a8a" stroke="#ffffff" stroke-width="1.5">
+    <circle cx="375" cy="460" r="4"/>
+  </g>
+
+  <!-- ===== Node / axis labels ===== -->
+  <g fill="#6a1b9a" font-size="13" font-weight="600">
+    <text x="306" y="296">G</text>
+  </g>
+
+  <!-- ===== Corner stresses (kN/cm2 at P_z = 76 kN) ===== -->
+  <g font-size="13" font-weight="700">
+    <text x="386" y="96" fill="#0b8a8a">+13.96</text>
+    <text x="386" y="474" fill="#0b8a8a">+9.31</text>
+    <text x="214" y="96" fill="#c0392b" text-anchor="end">−7.10</text>
+    <text x="214" y="474" fill="#c0392b" text-anchor="end">−11.76</text>
+  </g>
+
+  <!-- ===== Loads (red) ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+    <!-- P_z toward the viewer: circle + dot -->
+    <circle cx="420" cy="40" r="9" fill="#ffffff" stroke-width="2"/>
+    <circle cx="420" cy="40" r="3" stroke="none"/>
+    <text x="420" y="20" text-anchor="middle" stroke="none">P<tspan font-size="10" dy="4">z</tspan><tspan dy="-4"> = 76 kN</tspan></text>
+  </g>
+
+  <!-- ===== Data panel ===== -->
+  <g fill="#5f6368" font-size="13">
+    <text x="570" y="120" font-weight="700">IPN 300</text>
+    <text x="570" y="142">A = 69.0 cm²</text>
+    <text x="570" y="162">I<tspan font-size="10" dy="4">x</tspan><tspan dy="-4"> = 9800 cm⁴</tspan></text>
+    <text x="570" y="182">W<tspan font-size="10" dy="4">x</tspan><tspan dy="-4"> = 653 cm³</tspan></text>
+    <text x="570" y="202">I<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 451 cm⁴</tspan></text>
+    <text x="570" y="222">W<tspan font-size="10" dy="4">y</tspan><tspan dy="-4"> = 72.2 cm³</tspan></text>
+    <text x="570" y="262" font-weight="700">σ = P<tspan font-size="10" dy="4">z</tspan><tspan dy="-4">·(1/A ± e</tspan><tspan font-size="10" dy="4">y</tspan><tspan dy="-4">/W</tspan><tspan font-size="10" dy="4">x</tspan><tspan dy="-4"> ± e</tspan><tspan font-size="10" dy="4">x</tspan><tspan dy="-4">/W</tspan><tspan font-size="10" dy="4">y</tspan><tspan dy="-4">)</tspan></text>
+    <text x="570" y="284">= 0.1836·P<tspan font-size="10" dy="4">z</tspan><tspan dy="-4"> (critical corner)</tspan></text>
+    <text x="570" y="324" font-weight="700">P<tspan font-size="10" dy="4">z,max</tspan><tspan dy="-4"> = 14 / 0.1836 ≈ 76 kN</tspan></text>
+    <text x="570" y="346">(σ stresses in kN/cm², teal = tension,</text>
+    <text x="570" y="364">red = compression)</text>
+  </g>
+
+  <!-- ===== Caption ===== -->
+  <text x="475" y="532" text-anchor="middle" fill="#5f6368" font-size="13">IPN 300 section seen from the free end; eccentric tension P_z, corner stresses at P_z = 76 kN.</text>
+</svg>

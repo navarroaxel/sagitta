@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="50 160 620 420" font-family="system-ui, sans-serif">
+  <!--
+    Structure: 3D T-frame (Figura 1) — a vertical column (4 m: 2 + 2) fixed (built-in) to the ground
+      at its base, with a horizontal beam (5 m) crossing its top: 2 m to the left and 3 m to the right
+      of the column. Solid web, rigid joints. Drawn in oblique projection.
+      Global triad (course, as in the figure): X to the right, Z up, Y toward the
+      viewer (drawn down-left); the local triads of the members are drawn next to them.
+    World in metres. Transform: sx = 250 + x*60 ; sy = 480 - z*60   (x/z in the plane of the T at
+      60 px/m; Y is only drawn as the direction u = (-21,15) px per metre, no dimension is read along it)
+    Nodes:
+      A  (0,0,0)   fixed / built-in base                 -> (250,480)
+      B  (0,0,4)   T-junction, top of the column (rigid) -> (250,240)
+      C  (-2,0,4)  left tip of the beam, free end        -> (130,240)
+      D  (3,0,4)   right tip of the beam, free end       -> (430,240)
+    Members:
+      A-B  column (4 m)
+      C-D  beam (5 m: left arm C-B = 2 m + right arm B-D = 3 m)
+    Supports: A fixed in 3D (restrains all 3 forces and 3 moments).
+    Loads (units: kg and kg.m), as printed in the figure:
+      Pz1 = 100 kg in total, drawn as distributed arrows downward (-Z) over the left arm C-B
+        (x = -2..0 m): 100 kg / 2 m = 50 kg/m, resultant 100 kg at x = -1 m
+      Pz2 = 300 kg downward (-Z) at the right tip D
+      qy1 = 500 kg/m distributed along +Y (toward the viewer) on the lower 2 m of the column
+        (z = 0..2 m) -> resultant 500 x 2 = 1000 kg along +Y at z = 1 m
+    Reactions: not given in the figure, not drawn.
+  -->
+
+  <rect x="50" y="160" width="620" height="420" fill="#ffffff"/>
+
+  <!-- ===== Dimensions ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <!-- column (left): 2.00 | 2.00 -->
+    <line x1="90" y1="240" x2="90" y2="480"/>
+    <line x1="85" y1="240" x2="95" y2="240"/>
+    <line x1="85" y1="360" x2="95" y2="360"/>
+    <line x1="85" y1="480" x2="95" y2="480"/>
+    <text x="82" y="300" text-anchor="middle" stroke="none" transform="rotate(-90 82 300)">2.00</text>
+    <text x="82" y="420" text-anchor="middle" stroke="none" transform="rotate(-90 82 420)">2.00</text>
+    <!-- horizontal (bottom): 2.00 | 3.00 -->
+    <line x1="130" y1="535" x2="430" y2="535"/>
+    <line x1="130" y1="530" x2="130" y2="540"/>
+    <line x1="250" y1="530" x2="250" y2="540"/>
+    <line x1="430" y1="530" x2="430" y2="540"/>
+    <text x="190" y="527" text-anchor="middle" stroke="none">2.00</text>
+    <text x="340" y="527" text-anchor="middle" stroke="none">3.00</text>
+  </g>
+
+  <!-- ===== Supports: fixed base at A (ground plate in the xy plane + hatch) ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff" fill-opacity="0.85">
+    <polygon points="196,490 276,490 304,470 224,470"/>
+  </g>
+  <g stroke="#1a1a1a" stroke-width="2" fill="none">
+    <line x1="204" y1="490" x2="196" y2="498"/>
+    <line x1="214" y1="490" x2="206" y2="498"/>
+    <line x1="224" y1="490" x2="216" y2="498"/>
+    <line x1="234" y1="490" x2="226" y2="498"/>
+    <line x1="244" y1="490" x2="236" y2="498"/>
+    <line x1="254" y1="490" x2="246" y2="498"/>
+    <line x1="264" y1="490" x2="256" y2="498"/>
+    <line x1="274" y1="490" x2="266" y2="498"/>
+  </g>
+
+  <!-- ===== Solid-web frame (rigid joints) ===== -->
+  <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
+    <line x1="250" y1="480" x2="250" y2="240"/> <!-- column A-B -->
+    <line x1="130" y1="240" x2="430" y2="240"/> <!-- beam C-B-D -->
+  </g>
+
+  <!-- ===== Nodes ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="250" cy="480" r="4"/> <!-- A base -->
+    <circle cx="250" cy="240" r="4"/> <!-- B junction -->
+    <circle cx="130" cy="240" r="4"/> <!-- C left tip -->
+    <circle cx="430" cy="240" r="4"/> <!-- D right tip -->
+  </g>
+
+  <!-- ===== Node labels ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <text x="262" y="258" text-anchor="start">B</text>
+    <text x="130" y="262" text-anchor="middle">C</text>
+    <text x="430" y="262" text-anchor="middle">D</text>
+    <text x="236" y="462" text-anchor="end">A</text>
+  </g>
+
+  <!-- ===== Local triads of the members (course triad) ===== -->
+  <g stroke="#5f6368" fill="#5f6368" font-size="12" font-style="italic" font-weight="600">
+    <!-- beam: z along the member (to the left), x out of the plane (toward the viewer), y down -->
+    <line x1="410" y1="270" x2="387" y2="270" stroke-width="2"/>
+    <polygon points="380,270 388,266.5 388,273.5" stroke="none"/>
+    <text x="364" y="267" stroke="none">z</text>
+    <line x1="410" y1="270" x2="391.28" y2="283.37" stroke-width="2"/>
+    <polygon points="385.59,287.44 390.06,279.94 394.13,285.64" stroke="none"/>
+    <text x="362" y="298" stroke="none">x</text>
+    <line x1="410" y1="270" x2="410" y2="293" stroke-width="2"/>
+    <polygon points="410,300 406.5,292 413.5,292" stroke="none"/>
+    <text x="414" y="314" stroke="none">y</text>
+    <!-- column: z along the member (down), x out of the plane (toward the viewer), y to the right -->
+    <line x1="300" y1="290" x2="300" y2="313" stroke-width="2"/>
+    <polygon points="300,320 296.5,312 303.5,312" stroke="none"/>
+    <text x="294" y="334" stroke="none">z</text>
+    <line x1="300" y1="290" x2="281.28" y2="303.37" stroke-width="2"/>
+    <polygon points="275.59,307.44 280.06,299.94 284.13,305.64" stroke="none"/>
+    <text x="266" y="318" stroke="none">x</text>
+    <line x1="300" y1="290" x2="323" y2="290" stroke-width="2"/>
+    <polygon points="330,290 322,293.5 322,286.5" stroke="none"/>
+    <text x="336" y="294" stroke="none">y</text>
+  </g>
+
+  <!-- ===== Loads (red) ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+    <!-- Pz1 = 100 kg: downward arrows over the left arm C-B (x = -2..0), tip at the beam, shaft trailing up -->
+    <line x1="130" y1="200" x2="250" y2="200" stroke-width="2"/>
+    <line x1="130" y1="200" x2="130" y2="228" stroke-width="2"/>
+    <polygon points="130,240 125,228 135,228" stroke="none"/>
+    <line x1="150" y1="200" x2="150" y2="228" stroke-width="2"/>
+    <polygon points="150,240 145,228 155,228" stroke="none"/>
+    <line x1="170" y1="200" x2="170" y2="228" stroke-width="2"/>
+    <polygon points="170,240 165,228 175,228" stroke="none"/>
+    <line x1="190" y1="200" x2="190" y2="228" stroke-width="2"/>
+    <polygon points="190,240 185,228 195,228" stroke="none"/>
+    <line x1="210" y1="200" x2="210" y2="228" stroke-width="2"/>
+    <polygon points="210,240 205,228 215,228" stroke="none"/>
+    <line x1="230" y1="200" x2="230" y2="228" stroke-width="2"/>
+    <polygon points="230,240 225,228 235,228" stroke="none"/>
+    <line x1="250" y1="200" x2="250" y2="228" stroke-width="2"/>
+    <polygon points="250,240 245,228 255,228" stroke="none"/>
+    <text x="190" y="190" text-anchor="middle" stroke="none">P<tspan font-size="10" dy="4">z1</tspan><tspan dy="-4"> = 100 kg</tspan></text>
+
+    <!-- Pz2 = 300 kg downward at the right tip D (tip at the node, shaft trailing up) -->
+    <line x1="430" y1="190" x2="430" y2="228" stroke-width="2.5"/>
+    <polygon points="430,240 424,228 436,228" stroke="none"/>
+    <text x="430" y="182" text-anchor="middle" stroke="none">P<tspan font-size="10" dy="4">z2</tspan><tspan dy="-4"> = 300 kg</tspan></text>
+
+    <!-- qy1 = 500 kg/m along +Y (toward the viewer, down-left) on the lower 2 m of the column (z = 0..2);
+         tips at the column, shafts trailing opposite (up-right) -->
+    <line x1="274.41" y1="450.56" x2="274.41" y2="350.56" stroke-width="2"/>
+    <line x1="274.41" y1="450.56" x2="258.14" y2="462.19" stroke-width="2"/>
+    <polygon points="250,468 255.23,458.12 261.04,466.26" stroke="none"/>
+    <line x1="274.41" y1="430.56" x2="258.14" y2="442.19" stroke-width="2"/>
+    <polygon points="250,448 255.23,438.12 261.04,446.26" stroke="none"/>
+    <line x1="274.41" y1="410.56" x2="258.14" y2="422.19" stroke-width="2"/>
+    <polygon points="250,428 255.23,418.12 261.04,426.26" stroke="none"/>
+    <line x1="274.41" y1="390.56" x2="258.14" y2="402.19" stroke-width="2"/>
+    <polygon points="250,408 255.23,398.12 261.04,406.26" stroke="none"/>
+    <line x1="274.41" y1="370.56" x2="258.14" y2="382.19" stroke-width="2"/>
+    <polygon points="250,388 255.23,378.12 261.04,386.26" stroke="none"/>
+    <line x1="274.41" y1="350.56" x2="258.14" y2="362.19" stroke-width="2"/>
+    <polygon points="250,368 255.23,358.12 261.04,366.26" stroke="none"/>
+    <text x="286" y="404" text-anchor="start" stroke="none">q<tspan font-size="10" dy="4">y1</tspan><tspan dy="-4"> = 500 kg/m</tspan></text>
+  </g>
+
+  <!-- ===== Axes triad (global system; Y toward the viewer, as in the figure) ===== -->
+  <g stroke="#5f6368" fill="#5f6368" font-size="13" font-weight="600">
+    <line x1="590" y1="430" x2="622" y2="430" stroke-width="2"/>
+    <polygon points="630,430 621,434 621,426" stroke="none"/>
+    <text x="636" y="434" stroke="none">x</text>
+    <line x1="590" y1="430" x2="590" y2="398" stroke-width="2"/>
+    <polygon points="590,390 594,399 586,399" stroke="none"/>
+    <text x="586" y="382" stroke="none" text-anchor="middle">z</text>
+    <line x1="590" y1="430" x2="554.5" y2="455.4" stroke-width="2"/>
+    <polygon points="548,460 553,451.5 557.6,458" stroke="none"/>
+    <text x="530" y="468" stroke="none">y</text>
+  </g>
+
+  <text x="360" y="566" text-anchor="middle" fill="#5f6368" font-size="13">
+    3D T-frame (Figura 1), fixed at A. Loads red; local triad of each member and global triad shown.
+  </text>
+</svg>

@@ -10,6 +10,32 @@ export function unit2(v: P2): P2 | null {
   return n < 1e-9 ? null : [v[0] / n, v[1] / n];
 }
 
+export interface LabelPos {
+  x: number;
+  y: number;
+  anchor: "start" | "end";
+}
+
+// Where ForceArrow3D / MomentArrow3D write their label (before any labelDy), so a layer can
+// stack the labels of arrows that would otherwise land on top of each other.
+export function forceLabelPos(at: P2, dir: P2, len = 40): LabelPos | null {
+  const d = unit2(dir);
+  if (!d) return null;
+  const right = Math.abs(d[0]) < 0.3 ? true : d[0] < 0;
+  const tail: P2 = [at[0] - d[0] * len, at[1] - d[1] * len];
+  return { x: tail[0] - d[0] * 4 + (right ? 6 : -4), y: tail[1] - d[1] * 4, anchor: right ? "start" : "end" };
+}
+
+export function momentLabelPos(at: P2, dir: P2, len = 44): LabelPos | null {
+  const d = unit2(dir);
+  if (!d) return null;
+  return {
+    x: at[0] + d[0] * len + (d[0] >= 0 ? 8 : -8),
+    y: at[1] + d[1] * len + 4,
+    anchor: d[0] >= 0 ? "start" : "end",
+  };
+}
+
 export function Head({
   tip,
   d,
@@ -39,6 +65,7 @@ export function ForceArrow3D({
   len = 40,
   color,
   label,
+  labelDy = 0,
   testId,
 }: {
   at: P2;
@@ -46,11 +73,15 @@ export function ForceArrow3D({
   len?: number;
   color: string;
   label?: string;
+  labelDy?: number; // extra vertical offset of the label (px), to keep it clear of others
   testId?: string;
 }) {
   const d = unit2(dir);
   if (!d) return null;
   const tail: P2 = [at[0] - d[0] * len, at[1] - d[1] * len];
+  // the label goes beyond the tail; a (near) vertical shaft puts it to the right, clear of the
+  // wall/plate and of the moment label that trails to the left of a support
+  const right = Math.abs(d[0]) < 0.3 ? true : d[0] < 0;
   return (
     <g data-testid={testId}>
       <line
@@ -64,12 +95,12 @@ export function ForceArrow3D({
       <Head tip={at} d={d} color={color} />
       {label && (
         <text
-          x={tail[0] - d[0] * 4 + (d[0] >= 0 ? -4 : 4)}
-          y={tail[1] - d[1] * 4}
+          x={tail[0] - d[0] * 4 + (right ? 6 : -4)}
+          y={tail[1] - d[1] * 4 + labelDy}
           fontSize={10}
           fontFamily="monospace"
           fill={color}
-          textAnchor={d[0] >= 0 ? "end" : "start"}
+          textAnchor={right ? "start" : "end"}
           style={HALO}
         >
           {label}
@@ -87,6 +118,7 @@ export function MomentArrow3D({
   len = 44,
   color,
   label,
+  labelDy = 0,
   testId,
 }: {
   at: P2;
@@ -94,6 +126,7 @@ export function MomentArrow3D({
   len?: number;
   color: string;
   label?: string;
+  labelDy?: number;
   testId?: string;
 }) {
   const d = unit2(dir);
@@ -115,7 +148,7 @@ export function MomentArrow3D({
       {label && (
         <text
           x={end[0] + (d[0] >= 0 ? 8 : -8)}
-          y={end[1] + 4}
+          y={end[1] + 4 + labelDy}
           fontSize={10}
           fontFamily="monospace"
           fill={color}
