@@ -82,6 +82,13 @@ describe("eccentricLoad — variants", () => {
     expect(r.neutral).toBeNull();
   });
 
+  test("sigma_adm ≤ 0 admits no load (P_max = 0, never negative or NaN)", () => {
+    const z = eccentricLoad({ ...base, sigmaAdm: 0 });
+    expect(z.Pmax).toBe(0);
+    expect(eccentricLoad({ ...base, sigmaAdm: -5 }).Pmax).toBe(0);
+    near(z.kMax, 1 / 69 + 20 / (9800 / 15) + 10 / (451 / 6.25)); // the coefficient does not depend on sigma_adm
+  });
+
   test("P = 0 and sigma_adm = 0 don't blow up", () => {
     const z = eccentricLoad({ ...base, P: 0 });
     near(z.critical.sigma, 0);

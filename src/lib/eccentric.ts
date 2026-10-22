@@ -41,7 +41,8 @@ export interface EccentricResult {
   critical: EccentricCorner; // largest |σ|
   ratio: number; // |σ|max / σ adm
   ok: boolean;
-  Pmax: number; // kN, the |P_z| that brings the critical corner to σ adm (Infinity if σ doesn't depend on P)
+  kMax: number; // cm⁻², the largest |σ| per kN of P_z over the corners (1/A ± ey/Wx ± ex/Wy)
+  Pmax: number; // kN, the |P_z| that brings the critical corner to σ adm (0 if σ adm ≤ 0; Infinity if σ doesn't depend on P)
   inside: boolean; // the load point lies within the section's bounding box
   neutral: [[number, number], [number, number]] | null; // σ = 0 line (cm), clipped to 1.25× the section box
 }
@@ -117,7 +118,8 @@ export function eccentricLoad(input: EccentricInput): EccentricResult {
     critical,
     ratio,
     ok: ratio <= 1,
-    Pmax: k > 0 ? sigmaAdm / k : Infinity,
+    kMax: k,
+    Pmax: k > 0 ? Math.max(sigmaAdm, 0) / k : Infinity,
     inside: Math.abs(ex) <= halfX && Math.abs(ey) <= halfY,
     neutral,
   };

@@ -54,6 +54,13 @@ describe("EccentricSection", () => {
     expect(zones()[0].getAttribute("fill")).not.toBe(tension); // all compression now
   });
 
+  test("σ adm = 0 shows P_z,max = 0 without NaN", () => {
+    const { container } = setup();
+    fireEvent.change(input(/σ adm/), { target: { value: "0" } });
+    expect(text("ecc-pmax")).toContain("0.00 kN");
+    expect(container.textContent).not.toContain("NaN");
+  });
+
   test("the load point is outside the section for e_x = 10, e_y = 20, and inside for small e", () => {
     setup();
     expect(screen.getByTestId("ecc-outside")).toBeTruthy();

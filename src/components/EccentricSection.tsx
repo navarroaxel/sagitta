@@ -119,7 +119,7 @@ export function EccentricSection() {
     [-hw - 8, -hh - 6, "end"],
     [-hw - 8, hh + 14, "end"],
   ];
-  const k = Number.isFinite(r.Pmax) ? sadm / r.Pmax : 0;
+  const k = r.kMax;
   const c0 = r.critical;
 
   return (
