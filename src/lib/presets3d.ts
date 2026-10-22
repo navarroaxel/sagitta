@@ -207,7 +207,8 @@ export const PRESETS_3D: Preset3D[] = [
   { key: "t_frame_qy", model: tFrameQy },
   { key: "frame_right_beam", model: frameRightBeam },
   { key: "frame_overhang", model: frameOverhang },
-  { key: "l_torsion", model: lTorsion },
-  { key: "eccentric_tension", model: eccentricTension },
+  // other cases, from the simplest to the most advanced: bending, eccentric axial load, torsion
   { key: "cantilever_kg", model: cantileverKg },
+  { key: "eccentric_tension", model: eccentricTension },
+  { key: "l_torsion", model: lTorsion },
 ];
