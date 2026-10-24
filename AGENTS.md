@@ -17,7 +17,7 @@ A Next.js 16 + React 19 client-side app that renders structural internal force d
 ```bash
 npm install     # required: installs jsdom + testing-library for the component tests
 npm run dev     # dev server on localhost:3000
-npm test        # full Vitest suite (836 checks, 2 projects — must stay green)
+npm test        # full Vitest suite (844 checks, 2 projects — must stay green)
 npm run build   # production build (must stay clean)
 npm run lint    # ESLint
 npx tsc --noEmit  # TypeScript check
@@ -71,6 +71,7 @@ How diagrams are *drawn and labelled* is selected by the **sign-convention setti
 | `src/lib/resultantDiagram.ts` | Geometry of the resultant diagram (pure, screen px): E.N. (σ = 0), two lines **parallel to the E.N. through the extreme fibres**, and a baseline **perpendicular to the E.N.** (the direction σ grows) with the ordinates lying *along the parallels*, so the whole diagram tilts with the E.N. Positive ordinates point down the screen, away from the section. Returns `null` when σ is uniform (only N) |
 | `src/lib/peakLocation.ts` | Where the largest \|σ\| of the model is: the critical bar, and whether it is **at a node** (support, joint) or **inside the bar** (or constant along it). Derived from the stress check, so it stays true when loads are edited. `/frame3d` writes it under the canvas, in amber when the maximum is interior (that is the case that needs looking for the interior maximum). Only preset #5 is like that (a test pins it) |
 | `src/lib/sectionLoads.ts` | The loads of a member in the section's axes (x right, y up, z into the page): distributed loads and the reaction (+ moments) of an end support. **Only the free body counts**: the internal forces of a cut are the ones on the +z face, which balance the part with z < the cut, so a load or reaction past the cut is not listed |
+| `src/lib/share3d.ts` | Share links of `/frame3d`: `?preset=<key>` (or its permanent number, `?preset=5`) for a preset as it is, `?model=<base64url>` for an edited one — same idea as the 2D `share.ts`. The decoded model is **validated** (`isModel3D`: unique ids, members between two different existing nodes, loads on existing nodes / members, finite numbers, boolean `rotated`, unique load ids, and **size limits**: coordinates ≤ 1000 m and ≤ 100 nodes / members / loads, because a distributed load is drawn as an arrow every 1.5 m of its member) before it reaches the solver, since a link comes from outside; a bad link just opens the default preset. The page applies it in an effect after hydration and clears the address bar; the model is the preset's own object, so the select shows which preset it is |
 | `src/lib/basicShapes.ts` + `src/components/ShapeExplorer.tsx` | The **Basic shapes** tab of `/perfiles`: the 12 shapes of the course's "Características geométricas" table (square, rectangle, right / isosceles triangle, rhombus, trapezoid, regular hexagon, circle, semicircle, quarter circle, circular sector, ring) with area, centroid, J about X, Y through O and about Xg, Yg. Closed forms transcribed from the table (+ the formula text shown in the UI); `integrate()` computes the same quantities from the outline (Green's theorem) and `basicShapes.test.ts` checks **every** closed form against it for several dimension sets, so a transcription slip fails. Axes as the table draws them (X right, Y up, O at the lower-left of the bounding box, at the vertex for quarter circle / sector); the sector's α is the half-angle, typed in degrees. The course PDF itself is **not** in the repo (the data was typed in) |
 | `src/lib/eccentric.ts` + `src/components/EccentricSection.tsx`, `src/app/flexion-compuesta/page.tsx` | `/flexion-compuesta` — eccentric axial load on an IPN/IPB section (oblique compound bending): reduces P_z at (e_x ⟂ web, e_y ∥ web) to N, Mx = P·e_y, My = P·e_x, σ at the four corners (same convention as `stress3d`, in kN and **cm**), neutral axis, tension/compression zones and the P_max that brings the critical corner to σ adm. Pure math in `eccentric.ts` (`eccentric.test.ts`, `EccentricSection.test.tsx`); independent of the 3D solver |
 | `src/lib/solver.ts`                                  | `solveFrame` — direct stiffness method, Gaussian elimination                                                                                     |
@@ -114,7 +115,7 @@ How diagrams are *drawn and labelled* is selected by the **sign-convention setti
 - `sectionCut.test.ts`, `sectionLoads.test.ts`, `resultantDiagram.test.ts` — the cut's σ field (`stressAt`, `sectionRects`, `memberStressField`: equals the cut's field at its own z, varies along the member, same maximum as the stress check), the loads in the section's axes (free body only), and the resultant diagram's geometry (σ max / σ min where the parallels meet the baseline, σ = 0 on the E.N., baseline ⟂ E.N.).
 - Components: `SectionCut.test.tsx` (figures, loads on the prism, σ along z on the prism's sides and the plate moving with the slider, legend width, full screen + the Z slider inside it), `Frame3DPage.test.tsx` (collapsible editor panel, full screen on the frame canvas).
 
-Total 836 checks (`npm test`). Component tests render with `@testing-library/react`; remember to add a test there when adding a canvas layer or fixing a rendering bug.
+Total 844 checks (`npm test`). Component tests render with `@testing-library/react`; remember to add a test there when adding a canvas layer or fixing a rendering bug.
 
 ## 3D presets: numbering (do not "fix" this)
 
@@ -133,4 +134,4 @@ The `#N` in each preset's label (`f3d.example.*` in `LanguageContext.tsx`) is it
 
 ## Out of scope (v1)
 
-Dynamic/modal analysis, second-order effects, member self-weight, 3D hinges/releases, 3D drag-to-move, 3D share links (the 3D solver + `/frame3d` page exist and are tested in `solver3d.test.ts`, `frame3d.test.ts`, `Frame3DCanvas.test.tsx`), inclined supports, temperature loads, member-internal concentrated moments. Leave hook slots but do not build.
+Dynamic/modal analysis, second-order effects, member self-weight, 3D hinges/releases, 3D drag-to-move (the 3D solver + `/frame3d` page exist and are tested in `solver3d.test.ts`, `frame3d.test.ts`, `Frame3DCanvas.test.tsx`), inclined supports, temperature loads, member-internal concentrated moments. Leave hook slots but do not build.

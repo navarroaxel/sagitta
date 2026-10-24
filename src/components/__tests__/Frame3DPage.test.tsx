@@ -74,3 +74,62 @@ describe("/frame3d presets", () => {
     expect(note.className).toContain("amber"); // the case that needs the interior maximum stands out
   });
 });
+
+describe("/frame3d share links", () => {
+  const withSearch = (search: string, fn: () => void) => {
+    window.history.replaceState(null, "", `/frame3d${search}`);
+    try {
+      fn();
+    } finally {
+      window.history.replaceState(null, "", "/");
+    }
+  };
+  const copied = () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", { value: { writeText }, configurable: true });
+    return writeText;
+  };
+  const selected = () => (screen.getByRole("combobox", { name: "Examples ▾" }) as HTMLSelectElement).value;
+
+  test("the share button copies ?preset=<key> for a preset as it is", () => {
+    const writeText = copied();
+    withSearch("", () => {
+      render(<Frame3DPage />);
+      fireEvent.click(screen.getByRole("button", { name: "Share" }));
+    });
+    expect(writeText).toHaveBeenCalledTimes(1);
+    const url = new URL(writeText.mock.calls[0][0]);
+    expect(url.pathname).toBe("/frame3d");
+    expect(url.searchParams.get("preset")).toBe("t_frame");
+  });
+
+  test("after an edit it copies the whole model instead (?model=)", () => {
+    const writeText = copied();
+    render(<Frame3DPage />);
+    fireEvent.change(screen.getByLabelText("A x", { exact: false }), { target: { value: "1" } });
+    fireEvent.click(screen.getByRole("button", { name: "Share" }));
+    const url = new URL(writeText.mock.calls[0][0]);
+    expect(url.searchParams.get("preset")).toBeNull();
+    expect(url.searchParams.get("model")).toBeTruthy();
+  });
+
+  test("opening ?preset=frame_overhang loads that preset (the select shows it) and clears the address bar", () => {
+    withSearch("?preset=frame_overhang", () => {
+      render(<Frame3DPage />);
+      expect(selected()).toBe("frame_overhang");
+      expect(window.location.search).toBe("");
+    });
+  });
+
+  test("a preset can also be named by its number, and a broken link just opens the default", () => {
+    withSearch("?preset=3", () => {
+      const first = render(<Frame3DPage />);
+      expect(selected()).toBe("t_frame_qy");
+      first.unmount();
+    });
+    withSearch("?model=not-a-model", () => {
+      render(<Frame3DPage />);
+      expect(selected()).toBe("t_frame");
+    });
+  });
+});
