@@ -323,24 +323,71 @@ describe("SectionCut prism: where a distributed load acts", () => {
     return <SectionCut model={model} solved={s} stress={computeStress(model, s)} cut={cut} onChange={setCut} />;
   }
 
-  test("the arrows cover only the loaded span (z 0–4 of 5 m), and the legend says so", () => {
-    render(<Beam start={1} />); // cut at the far end: the whole span is on the free body
-    const arrows = screen.getByTestId("prism-q-span-L2").children;
-    expect(arrows.length).toBeGreaterThanOrEqual(5); // a row of them, not one
-    expect(Array.from(arrows).every((a) => a.getAttribute("data-on") === "1")).toBe(true);
+  const zs = () =>
+    Array.from(screen.getByTestId("prism-q-span-L2").children).map((a) => parseFloat(a.getAttribute("data-z")!));
+
+  test("with the cut at the far end the arrows cover exactly the loaded span (z 0–4 of 5 m), and the legend says so", () => {
+    render(<Beam start={1} />); // z = 5: the whole span is on the free body
+    expect(zs().length).toBeGreaterThanOrEqual(5); // a row of them, not one
+    expect(Math.min(...zs())).toBeCloseTo(0, 3);
+    expect(Math.max(...zs())).toBeCloseTo(4, 3); // not up to 5: the 1 m next to B is unloaded
     expect(screen.getByTestId("section-prism").textContent).toContain("(z 0.0–4.0 m)");
   });
 
-  test("with the cut at mid-span the arrows past it are faint: they are not on the free body", () => {
-    render(<Beam start={0.4} />); // z = 2 m of 5
-    const arrows = Array.from(screen.getByTestId("prism-q-span-L2").children);
-    const on = arrows.filter((a) => a.getAttribute("data-on") === "1").length;
-    expect(on).toBeGreaterThan(0);
-    expect(on).toBeLessThan(arrows.length);
+  test("with the cut at mid-span there are no arrows past it: they are not on the free body (like a reaction past the cut)", () => {
+    render(<Beam start={0.4} />); // the station nearest to z = 2 m of 5
+    const zCut = parseFloat(screen.getByTestId("cut-x").textContent!.replace("z = ", "")); // what the bar shows
+    expect(Math.max(...zs())).toBeLessThanOrEqual(zCut + 0.006); // the bar rounds z to 2 decimals
+    expect(Math.max(...zs())).toBeCloseTo(zCut, 1); // the row ends at the plate
+    expect(screen.getByTestId("section-prism").textContent).toContain("(z 0.0–4.0 m)"); // the legend still gives the whole span
+  });
+
+  test("the row grows with the slider", () => {
+    render(<Beam start={0.2} />);
+    const short = zs().length;
+    fireEvent.change(screen.getByLabelText("cut position"), { target: { value: "0.8" } }); // z ≈ 4
+    expect(zs().length).toBeGreaterThan(short);
+    expect(Math.max(...zs())).toBeCloseTo(4, 1);
   });
 
   test("a load over the whole member (the column's q) gets no span in the legend", () => {
     render(<Harness start={1} />);
     expect(screen.getByTestId("section-prism").textContent).not.toMatch(/q L1 \(z /); // the legend line of q
+  });
+});
+
+describe("SectionCut resultant when σ is uniform", () => {
+  function Beam3({ start }: { start: number }) {
+    const [cut, setCut] = useState<CutState>({ on: true, member: "M3", t: start });
+    const s = solveModel3D(model)!;
+    return <SectionCut model={model} solved={s} stress={computeStress(model, s)} cut={cut} onChange={setCut} />;
+  }
+
+  test("z = 0 of M3 (the free end: nothing before it): says σ = 0 instead of drawing an empty figure", () => {
+    render(<Beam3 start={0} />);
+    const note = screen.getByTestId("cut-resultant-uniform");
+    expect(note.textContent).toContain("σ = 0");
+    expect(screen.queryByTestId("cut-resultant-neutral")).toBeNull(); // no E.N. to draw
+  });
+
+  test("a normal cut still draws the diagram and not the note", () => {
+    render(<Beam3 start={0.5} />);
+    expect(screen.queryByTestId("cut-resultant-uniform")).toBeNull();
+    expect(screen.getByTestId("cut-resultant-neutral")).toBeTruthy();
+  });
+});
+
+describe("SectionCut prism where there is no stress", () => {
+  test("at the free end (σ = 0) there is no '-0.00' and no ring on an arbitrary corner", () => {
+    function Beam0() {
+      const [cut, setCut] = useState<CutState>({ on: true, member: "M3", t: 0 });
+      const s = solveModel3D(model)!;
+      return <SectionCut model={model} solved={s} stress={computeStress(model, s)} cut={cut} onChange={setCut} />;
+    }
+    render(<Beam0 />);
+    const prism = screen.getByTestId("section-prism");
+    [0, 1, 2, 3].forEach((i) => expect(screen.getByTestId(`prism-corner-${i}`).textContent).toBe("0.00"));
+    expect(prism.textContent).not.toMatch(/[-−]0\.00/);
+    expect(screen.queryByTestId("prism-critical")).toBeNull();
   });
 });

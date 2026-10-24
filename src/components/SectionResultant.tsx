@@ -44,6 +44,23 @@ export default function SectionResultant({ data, controls }: { data: SectionCutD
   ];
 
   let body: React.ReactNode = null;
+  if (!l) {
+    // σ is the same everywhere: zero (a free end with nothing on it) or only N. No neutral axis to draw.
+    const sig = data.corners[0].sigma;
+    const zero = Math.abs(sig) < 1e-6;
+    const x0 = CX + hw + 40;
+    body = (
+      <g data-testid="cut-resultant-uniform" fontSize={12}>
+        {!zero && <SignMark x={x0 + 8} y={CY - 4} sign={sig >= 0 ? 1 : -1} color={col(sig)} />}
+        <text x={x0 + (zero ? 0 : 24)} y={CY} fill={zero ? colors.ink : col(sig)} fontWeight={700}>
+          {zero ? t("f3d.cut.uniform_zero") : `${t("f3d.cut.uniform")} = ${sig.toFixed(2)}`}
+        </text>
+        <text x={x0 + (zero ? 0 : 24)} y={CY + 18} fill={colors.dimensions} fontSize={11}>
+          {zero ? t("f3d.cut.uniform_zero_why") : t("f3d.cut.uniform_why")}
+        </text>
+      </g>
+    );
+  }
   if (l) {
     const n = l.n; // ordinates lie along the parallels
     const k = K_MAX / Math.max(Math.abs(l.hi.sigma), Math.abs(l.lo.sigma), 1e-12);
@@ -182,6 +199,7 @@ export default function SectionResultant({ data, controls }: { data: SectionCutD
     );
   }
 
+  if (!l) pts.push([CX + hw + 40, CY - 18], [CX + hw + 40 + 330, CY + 26]); // the note on the right
   const M = 14; // margin around the drawing
   const x0 = Math.min(...pts.map((q) => q[0])) - M,
     y0 = Math.min(...pts.map((q) => q[1])) - M - 22, // + a row for the title
