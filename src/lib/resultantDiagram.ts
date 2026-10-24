@@ -2,8 +2,8 @@
 // the section: the neutral axis (E.N.), two lines parallel to it through the extreme fibres, and
 // a baseline PERPENDICULAR to the E.N. on which σ is plotted as two triangles (+ / −), the
 // ordinates lying along the parallels themselves. So the whole diagram is tilted with the E.N.
-// Pure, in screen px (y down).
-import { SectionCutData, stressAt } from "./sectionCut";
+// Pure, in screen px (y down). Returns null when σ is (practically) uniform.
+import { SIGMA_EPS, SectionCutData, stressAt } from "./sectionCut";
 
 export interface ResultantEnd {
   corner: [number, number]; // screen position of the extreme corner
@@ -36,6 +36,10 @@ export function resultantLayout(d: SectionCutData, o: ResultantOptions): Resulta
   const gY = f(cx, cy + 1) - f(cx, cy);
   const gn = Math.hypot(gX, gY);
   if (gn < 1e-14) return null; // uniform σ: there is no neutral axis
+  // σ barely changes over the section (all of it noise, or only N with a bending that does not show):
+  // the E.N. would be absurdly far away and the "diagram" a magnified rounding error
+  const sigmas = d.corners.map((c) => c.sigma);
+  if (Math.max(...sigmas) - Math.min(...sigmas) < SIGMA_EPS) return null;
   const u: [number, number] = [gX / gn, gY / gn];
   const e: [number, number] = [-u[1], u[0]];
   // the ordinates go away from the section, towards the bottom of the screen

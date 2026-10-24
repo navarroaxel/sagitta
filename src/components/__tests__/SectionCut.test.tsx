@@ -403,3 +403,29 @@ describe("SectionCut prism where there is no stress", () => {
     expect(screen.queryByTestId("prism-critical")).toBeNull();
   });
 });
+
+describe("SectionCut at the free end of M4 of the 400 kg/m preset (numerical noise, not stress)", () => {
+  const over = PRESETS_3D.find((p) => p.key === "frame_overhang")!.model;
+  function M4({ start }: { start: number }) {
+    const [cut, setCut] = useState<CutState>({ on: true, member: "M4", t: start });
+    const s = solveModel3D(over)!;
+    return <SectionCut model={over} solved={s} stress={computeStress(over, s)} cut={cut} onChange={setCut} />;
+  }
+
+  test("z = 0: σ = 0 is said, not a diagram built on ~1e-13 (no 'σ max = -0.00' and no far-away E.N.)", () => {
+    render(<M4 start={0} />);
+    expect(screen.getByTestId("cut-resultant-uniform").textContent).toContain("σ = 0");
+    expect(screen.queryByTestId("cut-resultant-neutral")).toBeNull();
+    expect(screen.queryByTestId("cut-resultant-max")).toBeNull();
+    expect(screen.getByTestId("section-prism").textContent).not.toMatch(/[-−]0\.00/);
+    expect(screen.queryByTestId("prism-critical")).toBeNull();
+    // a 0.00 has no sign, so it is not painted tension-green or compression-red
+    [0, 1, 2, 3].forEach((i) => expect(screen.getByTestId(`prism-corner-${i}`).getAttribute("fill")).not.toMatch(/^#(008a00|e00000)$/i));
+  });
+
+  test("a little further along the beam the diagram is back", () => {
+    render(<M4 start={0.5} />);
+    expect(screen.queryByTestId("cut-resultant-uniform")).toBeNull();
+    expect(screen.getByTestId("cut-resultant-neutral")).toBeTruthy();
+  });
+});

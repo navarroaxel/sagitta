@@ -4,7 +4,7 @@ import React from "react";
 import { FrameModel3D } from "@/lib/types3d";
 import { SolveOutput3D } from "@/lib/solve3d";
 import { StressResult } from "@/lib/stress3d";
-import { cutAt, nearestStation, sectionOutline, SectionCutData } from "@/lib/sectionCut";
+import { cutAt, nearestStation, sectionOutline, SectionCutData, SIGMA_EPS } from "@/lib/sectionCut";
 import FullscreenFigure from "./FullscreenFigure";
 import SignMark from "./SignMark";
 import SectionPrism from "./SectionPrism";
@@ -330,7 +330,7 @@ export default function SectionCut({
           const [px, py] = toPx(c.x, c.y);
           return (
             <g key={i}>
-              <circle cx={px} cy={py} r={3} fill={col(c.sigma)} />
+              <circle cx={px} cy={py} r={3} fill={Math.abs(c.sigma) < SIGMA_EPS ? colors.ink : col(c.sigma)} />
               <text
                 data-testid={`cut-corner-${i}`}
                 x={CX + lx}
@@ -339,7 +339,7 @@ export default function SectionCut({
                 fontSize={12}
                 fontFamily="monospace"
                 fontWeight={700}
-                fill={col(c.sigma)}
+                fill={Math.abs(c.sigma) < SIGMA_EPS ? colors.ink : col(c.sigma)} // a 0.00 has no sign
                 style={{ paintOrder: "stroke", stroke: "#fff", strokeWidth: 3 }}
               >
                 {c.sigma >= 0 ? "+" : ""}

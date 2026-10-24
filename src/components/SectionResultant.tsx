@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { SectionCutData, sectionOutline } from "@/lib/sectionCut";
+import { SIGMA_EPS, SectionCutData, sectionOutline } from "@/lib/sectionCut";
 import { resultantLayout } from "@/lib/resultantDiagram";
 import FullscreenFigure from "./FullscreenFigure";
 import SignMark from "./SignMark";
@@ -46,8 +46,8 @@ export default function SectionResultant({ data, controls }: { data: SectionCutD
   let body: React.ReactNode = null;
   if (!l) {
     // σ is the same everywhere: zero (a free end with nothing on it) or only N. No neutral axis to draw.
-    const sig = data.corners[0].sigma;
-    const zero = Math.abs(sig) < 1e-6;
+    const sig = data.corners.reduce((acc, c) => acc + c.sigma, 0) / data.corners.length;
+    const zero = Math.max(...data.corners.map((c) => Math.abs(c.sigma))) < SIGMA_EPS;
     const x0 = CX + hw + 40;
     body = (
       <g data-testid="cut-resultant-uniform" fontSize={12}>

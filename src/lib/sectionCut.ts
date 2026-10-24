@@ -8,6 +8,10 @@ import { getProfile, Profile } from "./profiles";
 import { memberSection } from "./stress3d";
 import type { Station3D } from "./sampling3d";
 
+// Below this a σ is shown as "0.00": the solver leaves ~1e-13 of numerical noise where the true
+// value is 0 (e.g. the free end of a member), and a diagram built from noise is meaningless.
+export const SIGMA_EPS = 5e-3;
+
 export interface CutCorner {
   x: number; // m
   y: number; // m

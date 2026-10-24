@@ -2,6 +2,7 @@
 
 import React, { useMemo } from "react";
 import {
+  SIGMA_EPS,
   SectionCutData,
   StressField,
   memberStressField,
@@ -463,7 +464,7 @@ export default function SectionPrism({
             );
           })}
           {/* the most stressed corner: where the loads above end up (black ring with a white halo, to read over red) */}
-          {Math.abs(data.critical.sigma) > 1e-6 &&
+          {Math.abs(data.critical.sigma) > SIGMA_EPS &&
             (() => {
               const [px, py] = scr(
                 data.critical.x * 1000,
@@ -504,7 +505,13 @@ export default function SectionPrism({
                 fontSize={11}
                 fontFamily="monospace"
                 fontWeight={700}
-                fill={c.sigma >= 0 ? colors.tension : colors.compression}
+                fill={
+                  Math.abs(c.sigma) < SIGMA_EPS
+                    ? colors.ink
+                    : c.sigma >= 0
+                      ? colors.tension
+                      : colors.compression
+                } /* a 0.00 has no sign */
                 style={{ paintOrder: "stroke", stroke: "#fff", strokeWidth: 3 }}
               >
                 {Math.abs(c.sigma) < 5e-3

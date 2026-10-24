@@ -57,4 +57,36 @@ describe("resultantLayout", () => {
     d.corners = d.corners.map((c) => ({ ...c, sigma: c.sN }));
     expect(resultantLayout(d, opts)).toBeNull();
   });
+
+  test("returns null when σ is only numerical noise (the free end of a member: ~1e-13 where the true value is 0)", () => {
+    const d = cut(1);
+    const noise = { ...d, N: 1e-13, Mx: -3e-13, My: 2e-13 };
+    noise.corners = d.corners.map((c) => ({ ...c, sigma: stressAt(noise, c.x, c.y) }));
+    expect(Math.max(...noise.corners.map((c) => Math.abs(c.sigma)))).toBeLessThan(1e-9);
+    expect(resultantLayout(noise, opts)).toBeNull();
+  });
+
+  test("returns null when σ varies less than it can show (a 0.00 spread over the section)", () => {
+    const d = cut(1);
+    const flat = { ...d, corners: d.corners.map((c, i) => ({ ...c, sigma: -3 + i * 1e-4 })) };
+    expect(resultantLayout(flat, opts)).toBeNull();
+  });
+
+  test("still draws a real, small bending: M4 of the 400 kg/m preset at z = 0.25 (σ ≈ ±5.8 kg/cm², 0.4 % of σ adm)", () => {
+    const over = PRESETS_3D.find((p) => p.key === "frame_overhang")!.model;
+    const sv = solveModel3D(over)!;
+    const e = over.members.findIndex((m) => m.id === "M4");
+    const d = cutAt(over, sv, e, nearestStation(sv, e, 0.25))!;
+    expect(Math.max(...d.corners.map((c) => c.sigma))).toBeGreaterThan(5); // kg/cm²: far above the noise floor
+    expect(resultantLayout(d, opts)).not.toBeNull();
+  });
+
+  test("and at its free end (z = 0) the same member gives null: nothing but noise", () => {
+    const over = PRESETS_3D.find((p) => p.key === "frame_overhang")!.model;
+    const sv = solveModel3D(over)!;
+    const e = over.members.findIndex((m) => m.id === "M4");
+    const d = cutAt(over, sv, e, nearestStation(sv, e, 0))!;
+    expect(Math.max(...d.corners.map((c) => Math.abs(c.sigma)))).toBeLessThan(1e-6);
+    expect(resultantLayout(d, opts)).toBeNull();
+  });
 });

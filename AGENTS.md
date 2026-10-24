@@ -17,7 +17,7 @@ A Next.js 16 + React 19 client-side app that renders structural internal force d
 ```bash
 npm install     # required: installs jsdom + testing-library for the component tests
 npm run dev     # dev server on localhost:3000
-npm test        # full Vitest suite (782 checks, 2 projects — must stay green)
+npm test        # full Vitest suite (788 checks, 2 projects — must stay green)
 npm run build   # production build (must stay clean)
 npm run lint    # ESLint
 npx tsc --noEmit  # TypeScript check
@@ -112,12 +112,13 @@ How diagrams are *drawn and labelled* is selected by the **sign-convention setti
 - `sectionCut.test.ts`, `sectionLoads.test.ts`, `resultantDiagram.test.ts` — the cut's σ field (`stressAt`, `sectionRects`, `memberStressField`: equals the cut's field at its own z, varies along the member, same maximum as the stress check), the loads in the section's axes (free body only), and the resultant diagram's geometry (σ max / σ min where the parallels meet the baseline, σ = 0 on the E.N., baseline ⟂ E.N.).
 - Components: `SectionCut.test.tsx` (figures, loads on the prism, σ along z on the prism's sides and the plate moving with the slider, legend width, full screen + the Z slider inside it), `Frame3DPage.test.tsx` (collapsible editor panel, full screen on the frame canvas).
 
-Total 782 checks (`npm test`). Component tests render with `@testing-library/react`; remember to add a test there when adding a canvas layer or fixing a rendering bug.
+Total 788 checks (`npm test`). Component tests render with `@testing-library/react`; remember to add a test there when adding a canvas layer or fixing a rendering bug.
 
 ## Section-cut conventions (do not "fix" these)
 
 - The cut's view is **x right, y up, z into the page** (the course's left-handed triad). The professor's own exam sheets sometimes draw x vertical / y horizontal; the app keeps one convention.
 - The resultant diagram follows the professor's sheet: baseline ⟂ E.N., ordinates on the parallels. An axis-aligned baseline or a perspective "stress plane" was tried and rejected.
+- **A σ below `SIGMA_EPS` (0.005, what a "0.00" shows) is zero.** The solver leaves ~1e-13 of numerical noise where the true value is 0 (the free end of a member: z = 0). `resultantLayout` returns `null` when σ is below that or varies less than that over the section, so no diagram is built on noise (it used to draw full-size triangles for "σ max = -0.00" and an E.N. miles away); a 0.00 is also never painted tension-green or compression-red.
 - When σ is the same everywhere (a free end with nothing before it: σ = 0; or only N) there is no E.N., so `SectionResultant` writes that ("σ = 0 at this cut" / "uniform σ") instead of an empty figure, and `SectionPrism` shows "0.00" (never "-0.00") and no "most stressed corner" ring.
 - σ labels of the resultant go *past* the baseline's ends (beside it when the baseline is flat-ish, above/below when steep), never on it. The legend of `SectionPrism` must fit its viewBox with kg-sized numbers (100+ shown without decimals; a test measures it).
 - `FullscreenFigure`'s CSS (`globals.css`, `.fs-figure:fullscreen svg:not(.fs-icon)`) resizes the figure's SVG; its own button icon has the class `fs-icon`. In tests, `container.querySelector("svg")` inside a figure is the **icon**, not the drawing — use `svg:not(.fs-icon)`. jsdom has no Fullscreen API: tests install `requestFullscreen` themselves.
