@@ -5,13 +5,15 @@ import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ProfileExplorer } from "@/components/ProfileExplorer";
 import { TubeExplorer } from "@/components/TubeExplorer";
+import { ShapeExplorer } from "@/components/ShapeExplorer";
 import type { TranslationKey } from "@/contexts/LanguageContext";
 
-const TABS: { id: "rolled" | "CHS" | "SHS" | "RHS"; key: TranslationKey }[] = [
+const TABS: { id: "rolled" | "CHS" | "SHS" | "RHS" | "shapes"; key: TranslationKey }[] = [
   { id: "rolled", key: "prof.tab.rolled" },
   { id: "CHS", key: "prof.tab.chs" },
   { id: "SHS", key: "prof.tab.shs" },
   { id: "RHS", key: "prof.tab.rhs" },
+  { id: "shapes", key: "prof.tab.shapes" },
 ];
 
 export default function PerfilesPage() {
@@ -56,6 +58,8 @@ export default function PerfilesPage() {
       <main className="flex-1">
         {tab === "rolled" ? (
           <ProfileExplorer />
+        ) : tab === "shapes" ? (
+          <ShapeExplorer />
         ) : (
           <TubeExplorer key={tab} kind={tab} />
         )}
