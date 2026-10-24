@@ -2,6 +2,7 @@ import { render as rtlRender, screen, fireEvent, within, act } from "@testing-li
 import { useState, type ReactElement } from "react";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import SectionCut, { CutState } from "../SectionCut";
+import { LEGEND_X } from "../SectionPrism";
 import Frame3DCanvas, { View3DOptions } from "../Frame3DCanvas";
 import { solveModel3D } from "@/lib/solve3d";
 import { computeStress } from "@/lib/stress3d";
@@ -229,9 +230,9 @@ describe("SectionCut prism legend fits in the figure", () => {
     const svg = screen.getByTestId("section-prism").querySelector<SVGSVGElement>("svg:not(.fs-icon)")!; // not the button's icon
     const vbW = svg.viewBox.baseVal.width;
     const CHAR = 6.6; // px per character of the 11 px monospace legend text
-    const lines = Array.from(svg.querySelectorAll("text")).filter((t) => t.getAttribute("x") === "416"); // the load legend lines
+    const lines = Array.from(svg.querySelectorAll("text")).filter((t) => t.getAttribute("x") === String(LEGEND_X + 16)); // the load legend lines
     expect(lines.length).toBeGreaterThan(0);
-    lines.forEach((t) => expect(416 + t.textContent!.length * CHAR).toBeLessThan(vbW - 8));
+    lines.forEach((t) => expect(LEGEND_X + 16 + t.textContent!.length * CHAR).toBeLessThan(vbW - 8));
   });
 });
 
@@ -247,5 +248,37 @@ describe("SectionCut sign marks", () => {
     const tension = fig.querySelector('[data-sign="+"] circle')!.getAttribute("stroke");
     const compression = fig.querySelector('[data-sign="−"] circle')!.getAttribute("stroke");
     expect(tension).not.toBe(compression);
+  });
+});
+
+describe("SectionCut prism shows σ along z", () => {
+  const sidesOpacities = () =>
+    Array.from(screen.getByTestId("prism-sides").querySelectorAll("polygon")).map((n) => n.getAttribute("fill-opacity"));
+
+  test("the sides are painted slice by slice with σ(z): many different intensities, not one per face", () => {
+    render(<Harness start={1} />);
+    expect(new Set(sidesOpacities()).size).toBeGreaterThan(8);
+    // and tension and compression both appear on the member's sides (the column bends)
+    const fills = new Set(Array.from(screen.getByTestId("prism-sides").querySelectorAll("polygon")).map((n) => n.getAttribute("fill")));
+    expect(fills.size).toBe(2);
+  });
+
+  test("the sides do not depend on where the cut is; the plate (the cut) moves along z with the slider", () => {
+    render(<Harness start={0} />);
+    const sidesBefore = sidesOpacities().join();
+    const plate = () => screen.getByTestId("prism-front").querySelector("polygon")!.getAttribute("points");
+    const markerBefore = screen.getByTestId("prism-cut-marker").getAttribute("cx");
+    const plateBefore = plate();
+    fireEvent.change(screen.getByLabelText("cut position"), { target: { value: "1" } });
+    expect(sidesOpacities().join()).toBe(sidesBefore); // σ(z) is a property of the member
+    expect(plate()).not.toBe(plateBefore); // the plate moved…
+    expect(parseFloat(screen.getByTestId("prism-cut-marker").getAttribute("cx")!)).toBeGreaterThan(parseFloat(markerBefore!)); // …towards the back (z grows into the page)
+  });
+
+  test("the z axis is labelled with the member's ends", () => {
+    render(<Harness start={1} />);
+    const axis = screen.getByTestId("prism-z-axis").textContent!;
+    expect(axis).toContain("z = 0"); // the front end
+    expect(axis).toContain("z = 6.00 m"); // the other end: the 6 m column of the first preset
   });
 });

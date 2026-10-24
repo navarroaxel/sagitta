@@ -247,7 +247,7 @@ const EN = {
   "f3d.cut.tension": "tension fibres",
   "f3d.cut.compression": "compression fibres",
   "f3d.cut.prism_note":
-    "3D view of the profile behind the cut (z runs into the page, up and to the right; the front face is the cut). Blue: distributed load; purple: support reaction — only those on the part of the member between its z = 0 end and the cut, which is the part the internal forces balance — in the section's own axes (the axial part is drawn along z). Darker = larger |σ|; the ring marks the most stressed corner, where those loads end up.",
+    "The whole member in 3D (z runs into the page, up and to the right; z = 0 is the front end). The sides are painted with σ at every z, so you see how it varies along the member; the plate that slides with the slider is the cut. Blue: distributed load; purple: support reaction — only those between the z = 0 end and the cut, which is the part the internal forces balance — in the section's own axes (the axial part is drawn along z). Darker = larger |σ| (scaled by the member's largest); the ring marks the most stressed corner of the cut.",
   "f3d.cut.forces": "Forces at the cut",
   "f3d.cut.corner": "Corner",
   "learn.link": "Learn the method",
@@ -751,7 +751,7 @@ const ES: Record<TranslationKey, string> = {
   "f3d.cut.tension": "fibras traccionadas",
   "f3d.cut.compression": "fibras comprimidas",
   "f3d.cut.prism_note":
-    "Vista 3D del perfil detrás del corte (z entra al plano, hacia arriba y a la derecha; la cara frontal es el corte). Azul: carga distribuida; violeta: reacción del vínculo — solo las del tramo entre el extremo z = 0 y el corte, que es el que equilibran los esfuerzos internos — en los ejes propios de la sección (la parte axial se dibuja según z). Más oscuro = mayor |σ|; el aro marca la esquina más exigida, adonde llegan esas cargas.",
+    "La barra completa en 3D (z entra al plano, hacia arriba y a la derecha; z = 0 es el extremo de adelante). Las caras laterales se pintan con σ en cada z, así se ve cómo varía a lo largo de la barra; la placa que se mueve con el slider es el corte. Azul: carga distribuida; violeta: reacción del vínculo — solo las del tramo entre el extremo z = 0 y el corte, que es el que equilibran los esfuerzos internos — en los ejes propios de la sección (la parte axial se dibuja según z). Más oscuro = mayor |σ| (escalado por el mayor de la barra); el aro marca la esquina más exigida del corte.",
   "f3d.cut.forces": "Esfuerzos en el corte",
   "f3d.cut.corner": "Esquina",
   "learn.link": "Aprendé el método",

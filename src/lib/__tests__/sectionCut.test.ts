@@ -1,5 +1,6 @@
-import { cutAt, nearestStation, sectionOutline, sectionRects, stressAt } from "../sectionCut";
+import { cutAt, memberStressField, nearestStation, sectionOutline, sectionRects, stressAt } from "../sectionCut";
 import { solveModel3D } from "../solve3d";
+import { computeStress } from "../stress3d";
 import { PRESETS_3D } from "../presets3d";
 import { getProfile } from "../profiles";
 import type { FrameModel3D } from "../types3d";
@@ -121,5 +122,45 @@ describe("stressAt / sectionRects", () => {
       const area = sectionRects(p, rot).reduce((a, [x0, y0, x1, y1]) => a + (x1 - x0) * (y1 - y0), 0);
       near(area, p.bf * 2 * p.tf + (p.h - 2 * p.tf) * p.tw, 1e-9);
     });
+  });
+});
+
+describe("memberStressField", () => {
+  const model = PRESETS_3D[0].model;
+  const solved = solveModel3D(model)!;
+  const stress = computeStress(model, solved);
+  const dataAt = (z: number) => cutAt(model, solved, 0, nearestStation(solved, 0, z))!;
+
+  test("at the cut's own z it reproduces the cut's σ field", () => {
+    [0, 1.5, 3, 4.5, 6].forEach((z) => {
+      const d = dataAt(z);
+      const f = memberStressField(d, solved.stations[0]);
+      [[0.05, 0.1], [-0.05, 0.1], [0, 0], [0.13, -0.13]].forEach(([x, y]) =>
+        near(f.at(x, y, d.z), stressAt(d, x, y), 1e-6),
+      );
+    });
+  });
+
+  test("σ really varies along the member: the column's top and base are not the same", () => {
+    const d = dataAt(6);
+    const f = memberStressField(d, solved.stations[0]);
+    const top = f.at(d.halfX, d.halfY, 0),
+      base = f.at(d.halfX, d.halfY, 6);
+    expect(Math.abs(base - top)).toBeGreaterThan(1); // kN/cm²: ~0 at the top, ≈ −12 at the base
+  });
+
+  test("maxAbs is the member's largest |σ| (the same one the stress check finds)", () => {
+    const f = memberStressField(dataAt(6), solved.stations[0]);
+    near(f.maxAbs, Math.abs(stress[0]!.max.sigma), 1e-6);
+  });
+
+  test("is continuous between stations and clamps outside the member", () => {
+    const d = dataAt(3);
+    const f = memberStressField(d, solved.stations[0]);
+    const a = f.at(0.1, 0.1, 2.9999),
+      b = f.at(0.1, 0.1, 3.0001);
+    expect(Math.abs(a - b)).toBeLessThan(0.05);
+    near(f.at(0.1, 0.1, -5), f.at(0.1, 0.1, 0), 1e-9);
+    near(f.at(0.1, 0.1, 99), f.at(0.1, 0.1, 6), 1e-9);
   });
 });

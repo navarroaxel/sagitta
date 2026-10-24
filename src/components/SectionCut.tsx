@@ -387,7 +387,7 @@ export default function SectionCut({
 
       <SectionResultant data={data} controls={fsControls} />
 
-      <SectionPrism data={data} loads={sectionLoads(model, solved, r.e, r.station)} unit={model.unit} controls={fsControls} />
+      <SectionPrism data={data} loads={sectionLoads(model, solved, r.e, r.station)} unit={model.unit} controls={fsControls} stations={solved.stations[r.e]} L={r.L} />
 
       <CheckEquation data={data} sigmaAdm={model.sigmaAdm} unit={model.unit} />
 
