@@ -342,6 +342,18 @@ describe("SectionCut prism: where a distributed load acts", () => {
     expect(screen.getByTestId("section-prism").textContent).toContain("(z 0.0–4.0 m)"); // the legend still gives the whole span
   });
 
+  test("the thick arrows AT the cut only appear where the load acts there: not past the end of its span (z > 4)", () => {
+    const { unmount } = render(<Beam start={0.5} />); // z = 2.5: inside the loaded span 0–4
+    expect(screen.queryByTestId("sload-q-L2")).toBeTruthy();
+    unmount();
+    render(<Beam start={0.94} />); // z ≈ 4.7: the load ended at z = 4 (it is on the free body, but not acting here)
+    expect(parseFloat(screen.getByTestId("cut-x").textContent!.replace("z = ", ""))).toBeGreaterThan(4);
+    expect(screen.queryByTestId("sload-q-L2")).toBeNull(); // no arrows at the plate…
+    expect(zs().length).toBeGreaterThanOrEqual(5); // …but the row along the span is there, ending at z = 4
+    expect(Math.max(...zs())).toBeCloseTo(4, 3);
+    expect(screen.getByTestId("section-prism").textContent).toContain("(z 0.0–4.0 m)"); // and the legend
+  });
+
   test("the row grows with the slider", () => {
     render(<Beam start={0.2} />);
     const short = zs().length;

@@ -399,8 +399,17 @@ export default function SectionPrism({
               strokeDasharray="7 4"
             />
           )}
-          {/* loads of the member in the section's axes: tip at the centroid, shaft trailing the force */}
+          {/* loads of the member in the section's axes: tip at the centroid, shaft trailing the force.
+              A distributed load only gets its arrows AT the cut when it acts there (the cut is inside its
+              loaded span); past the end of the span it is still on the free body (the row of arrows and the
+              legend show it) but it does not act at this section. */}
           {loads.map((l) => {
+            if (
+              l.kind === "q" &&
+              l.zSpan &&
+              (data.z < l.zSpan[0] - 1e-6 || data.z > l.zSpan[1] + 1e-6)
+            )
+              return null;
             const color = LOAD_COLORS[l.kind];
             const big = Math.max(
               1e-9,
