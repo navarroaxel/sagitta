@@ -236,6 +236,26 @@ describe("SectionCut prism legend fits in the figure", () => {
   });
 });
 
+describe("SectionCut prism legend with many loads", () => {
+  test("five distributed loads and a reaction: every legend line is inside the viewBox and clear of the triad", () => {
+    const base = PRESETS_3D.find((p) => p.key === "frame_overhang")!.model;
+    const many: FrameModel3D = {
+      ...base,
+      loads: [1, 2, 3, 4, 5].map((i) => ({ id: `Q${i}`, type: "mudl" as const, member: "M1", gx: 0, gy: 0, gz: -i })),
+    };
+    render(<Harness model={many} start={1} />);
+    const svg = screen.getByTestId("section-prism").querySelector<SVGSVGElement>("svg:not(.fs-icon)")!;
+    const vbH = svg.viewBox.baseVal.height;
+    const lines = Array.from(svg.querySelectorAll("text")).filter((t) => t.getAttribute("x") === String(LEGEND_X + 16));
+    expect(lines.length).toBeGreaterThanOrEqual(6 * 2);
+    const bottom = Math.max(...lines.map((t) => parseFloat(t.getAttribute("y")!)));
+    expect(bottom).toBeLessThan(vbH - 8);
+    // the triad sits below the last legend entry
+    const triad = svg.querySelector('[data-testid="prism-local-axes"] line')!;
+    expect(parseFloat(triad.getAttribute("y1")!) - 42).toBeGreaterThan(bottom);
+  });
+});
+
 describe("SectionCut sign marks", () => {
   test("σ(N), σ(Mx) and σ(My) areas carry their + / − (tension / compression) mark", () => {
     render(<Harness start={1} />); // base of the column: N < 0, Mx and My of both signs on the section

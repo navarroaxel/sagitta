@@ -197,7 +197,7 @@ export default function SectionCut({
       <label className="flex items-center gap-1">
         {t("f3d.cut.member")}
         <select
-          aria-label={copy ? "cut member (full screen)" : "cut member"}
+          aria-label={t(copy ? "f3d.cut.aria_member_fs" : "f3d.cut.aria_member")}
           className="rounded border border-stone-200 bg-white px-1 py-0.5 text-xs dark:border-stone-600 dark:bg-stone-800"
           value={member.id}
           onChange={(e) => onChange({ ...cut, member: e.target.value })}
@@ -215,7 +215,7 @@ export default function SectionCut({
         </span>
         <input
           type="range"
-          aria-label={copy ? "cut position (full screen)" : "cut position"}
+          aria-label={t(copy ? "f3d.cut.aria_pos_fs" : "f3d.cut.aria_pos")}
           className="min-w-32 flex-1"
           min={0}
           max={1}

@@ -61,4 +61,20 @@ describe("sectionLoads: the loaded span (zSpan)", () => {
     near(q.zSpan![0], 0);
     near(q.zSpan![1], 6); // M1: the 6 m column, q_y over all of it
   });
+
+  test("a distributed load whose span is empty, reversed or outside the member is not listed (the solver ignores it)", () => {
+    const base = PRESETS_3D.find((p) => p.key === "frame_overhang")!.model;
+    const withLoad = (from: number, to: number) => ({
+      ...base,
+      loads: [{ id: "Lz", type: "mudl" as const, member: "M1", gx: 0, gy: 0, gz: -100, from, to }],
+    });
+    const qAt = (m: typeof base) => {
+      const sv = solveModel3D(m)!;
+      return sectionLoads(m, sv, 0, nearestStation(sv, 0, 4)).some((l) => l.kind === "q");
+    };
+    expect(qAt(withLoad(1, 1))).toBe(false); // empty
+    expect(qAt(withLoad(3, 1))).toBe(false); // reversed
+    expect(qAt(withLoad(50, 60))).toBe(false); // past the end of the 4 m column
+    expect(qAt(withLoad(1, 3))).toBe(true); // a real span still shows
+  });
 });

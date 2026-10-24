@@ -6,7 +6,7 @@
 import { FrameModel3D } from "./types3d";
 import { SolveOutput3D } from "./solve3d";
 import { courseFrame } from "./localFrame";
-import type { Vec3 } from "./solver3d";
+import { udlSpan, type Vec3 } from "./solver3d";
 
 export interface SectionLoad {
   kind: "q" | "R"; // distributed load of the member / reaction of an end support
@@ -40,8 +40,10 @@ export function sectionLoads(
   const out: SectionLoad[] = [];
   model.loads.forEach((l) => {
     if (l.type !== "mudl" || l.member !== m.id) return;
-    const zA = zOf(l.from ?? 0),
-      zB = zOf(l.to ?? g.L);
+    const span = udlSpan(l, g.L); // same clamping and "non-empty" rule as the solver
+    if (!span) return;
+    const zA = zOf(span.a),
+      zB = zOf(span.b);
     const zSpan: [number, number] = [Math.min(zA, zB), Math.max(zA, zB)];
     if (zSpan[0] < st.z - EPS) out.push({ kind: "q", id: l.id, force: comps([l.gx, l.gy, l.gz]), zSpan });
   });

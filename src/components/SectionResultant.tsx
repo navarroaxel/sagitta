@@ -82,8 +82,13 @@ export default function SectionResultant({ data, controls }: { data: SectionCutD
     // the E.N.: from the baseline to a little past the centroid
     const b0 = l.at(l.t0);
     const lam = (CX - b0[0]) * l.e[0] + (CY - b0[1]) * l.e[1];
-    const reach = lam + (lam >= 0 ? 1 : -1) * (Math.max(hw, hh) + 40);
+    const R = Math.max(hw, hh) + 40;
+    const reach = lam + (lam >= 0 ? 1 : -1) * R;
     const enEnd: [number, number] = [b0[0] + l.e[0] * reach, b0[1] + l.e[1] * reach];
+    // with a big N and little bending the E.N. is far from the section (the baseline meets it miles
+    // away): draw only the part near the section, so the figure is not framed around it
+    const from = Math.abs(lam) > 2 * R ? lam - (lam >= 0 ? 1 : -1) * 2 * R : 0;
+    const enStart: [number, number] = [b0[0] + l.e[0] * from, b0[1] + l.e[1] * from];
 
     const crosses = l.lo.sigma < 0 && l.hi.sigma > 0;
     const tLo = Math.min(l.lo.t, l.hi.t),
@@ -95,9 +100,9 @@ export default function SectionResultant({ data, controls }: { data: SectionCutD
         ]
       : [
           {
-            key: l.hi.sigma >= 0 ? "pos" : "neg",
+            key: l.hi.sigma > 0 ? "pos" : "neg",
             pts: [l.at(l.lo.t), ord(l.lo.t), ord(l.hi.t), l.at(l.hi.t)],
-            sign: l.hi.sigma >= 0 ? 1 : -1,
+            sign: l.hi.sigma > 0 ? 1 : -1,
           },
         ];
     const centroid = (pts: [number, number][]): [number, number] => [
@@ -123,7 +128,7 @@ export default function SectionResultant({ data, controls }: { data: SectionCutD
       const x0 = anchor === "start" ? bx : anchor === "end" ? bx - w : bx - w / 2;
       return { x: bx, y, anchor, box: [x0, y - 12, x0 + w, y + 4] as [number, number, number, number] };
     };
-    pts.push(l.at(tLo - 20), l.at(tHi + 20), enEnd, [enEnd[0] + 30, enEnd[1]]);
+    pts.push(l.at(tLo - 20), l.at(tHi + 20), enStart, enEnd, [enEnd[0] + 30, enEnd[1]]);
     ends.forEach(({ id, end }) => {
       const b = labelAt(end, id === "max" ? l.lo : l.hi).box;
       pts.push(parallel(end).to, ord(end.t), [b[0], b[1]], [b[2], b[3]]);
@@ -149,8 +154,8 @@ export default function SectionResultant({ data, controls }: { data: SectionCutD
         })}
         <line
           data-testid="cut-resultant-neutral"
-          x1={b0[0]}
-          y1={b0[1]}
+          x1={enStart[0]}
+          y1={enStart[1]}
           x2={enEnd[0]}
           y2={enEnd[1]}
           stroke="#ca8a04"

@@ -237,6 +237,10 @@ const EN = {
   "f3d.cut.toggle": "Section cut",
   "f3d.cut.title": "Section cut",
   "f3d.cut.member": "Member",
+  "f3d.cut.aria_member": "cut member",
+  "f3d.cut.aria_member_fs": "cut member (full screen)",
+  "f3d.cut.aria_pos": "cut position",
+  "f3d.cut.aria_pos_fs": "cut position (full screen)",
   "f3d.cut.peak": "Go to σ max",
   "f3d.cut.no_profile":
     "Assign an IPN/IPB profile to a member (members tab) to see its section cut.",
@@ -751,6 +755,10 @@ const ES: Record<TranslationKey, string> = {
   "f3d.cut.toggle": "Corte de sección",
   "f3d.cut.title": "Corte de sección",
   "f3d.cut.member": "Barra",
+  "f3d.cut.aria_member": "barra del corte",
+  "f3d.cut.aria_member_fs": "barra del corte (pantalla completa)",
+  "f3d.cut.aria_pos": "posición del corte",
+  "f3d.cut.aria_pos_fs": "posición del corte (pantalla completa)",
   "f3d.cut.peak": "Ir a σ máx",
   "f3d.cut.no_profile":
     "Asigná un perfil IPN/IPB a una barra (pestaña barras) para ver su corte de sección.",

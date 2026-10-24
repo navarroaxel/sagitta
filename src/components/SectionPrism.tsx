@@ -90,7 +90,7 @@ const PrismSides = React.memo(function PrismSides({
     })
     .filter(
       ({ ex, ey }) =>
-        (cw > 0 ? ey : -ey) * DX + (cw > 0 ? -ex : ex) * DY > 1e-9,
+        (cw > 0 ? -ey : ey) * DX + (cw > 0 ? ex : -ex) * DY > 1e-9,
     ) // faces towards the viewer
     .sort(
       (a, b) =>
@@ -162,6 +162,10 @@ export default function SectionPrism({
     [A, Ix, Iy, halfX, halfY, stations],
   );
   const sMax = Math.max(1e-9, field.maxAbs);
+  // the legend grows with the loads (56 px each from y = 126): grow the figure with it and keep the
+  // local triad underneath, so no entry is clipped and none runs into the triad
+  const Hs = Math.max(H, 126 + Math.max(loads.length - 1, 0) * 56 + 30 + 95);
+  const dH = Hs - H;
   const zf = L > 0 ? Math.min(1, Math.max(0, data.z / L)) : 0; // where the cut is, 0..1 along the member
 
   const sig = (xMm: number, yMm: number) =>
@@ -234,7 +238,7 @@ export default function SectionPrism({
       <FullscreenFigure testId="fs-cut-prism" controls={controls}>
         <svg
           width="100%"
-          viewBox={`0 0 ${W} ${H}`}
+          viewBox={`0 0 ${W} ${Hs}`}
           style={{ background: colors.paper, maxWidth: W }}
         >
           {/* far end of the member, then the visible sides (σ along z), the z = 0 end, the z axis and the cut */}
@@ -262,7 +266,7 @@ export default function SectionPrism({
             const ex = x2 - x,
               ey = y2 - y;
             const vis =
-              (cw > 0 ? ey : -ey) * DX + (cw > 0 ? -ex : ex) * DY > 1e-9;
+              (cw > 0 ? -ey : ey) * DX + (cw > 0 ? ex : -ex) * DY > 1e-9;
             return vis ? (
               <line
                 key={i}
@@ -530,7 +534,7 @@ export default function SectionPrism({
               ] as const
             ).map(({ name, v, color }) => {
               const d = unit2([...v] as P2)!;
-              const o: P2 = [600, 285];
+              const o: P2 = [600, 285 + dH];
               const tip: P2 = [o[0] + d[0] * 42, o[1] + d[1] * 42];
               return (
                 <g key={name} data-axis={name}>
@@ -555,7 +559,7 @@ export default function SectionPrism({
             })}
             <text
               x={530}
-              y={322}
+              y={322 + dH}
               fontSize={10}
               fontWeight={400}
               fill={colors.dimensions}

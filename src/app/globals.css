@@ -35,7 +35,7 @@ body {
   background: var(--background);
 }
 .fs-figure:fullscreen svg:not(.fs-icon) {
-  max-width: none !important;
+  max-width: calc(100vw - 2rem) !important; /* a portrait screen: fit the width too (the drawing keeps its aspect) */
   width: auto !important;
   height: calc(100vh - 2rem) !important;
 }

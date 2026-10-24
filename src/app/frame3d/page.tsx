@@ -187,7 +187,7 @@ export default function Frame3DPage() {
 
       <div className="flex flex-1 overflow-hidden">
         <aside
-          className={`flex flex-shrink-0 flex-col border-r border-stone-200 bg-white transition-[width] dark:border-stone-700 dark:bg-stone-900 ${panelOpen ? "w-[380px]" : "w-9"}`}
+          className={`flex flex-shrink-0 flex-col border-r border-stone-200 bg-white transition-[width] motion-reduce:transition-none dark:border-stone-700 dark:bg-stone-900 ${panelOpen ? "w-[380px]" : "w-9"}`}
         >
           <div className={`flex border-b border-stone-200 dark:border-stone-700 ${panelOpen ? "justify-end px-1 py-1" : "justify-center py-1"}`}>
             <button
