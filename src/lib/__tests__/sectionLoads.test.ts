@@ -42,3 +42,23 @@ describe("sectionLoads", () => {
     expect(sectionLoads(model, solved, 2, 0)).toEqual([]);
   });
 });
+
+describe("sectionLoads: the loaded span (zSpan)", () => {
+  test("M3 of the first preset: q from 1 to 5 m of a 5 m beam whose z runs from D to B is loaded over z in [0, 4]", () => {
+    const model = PRESETS_3D[0].model;
+    const solved = solveModel3D(model)!;
+    const e = model.members.findIndex((m) => m.id === "M3");
+    const q = sectionLoads(model, solved, e, nearestStation(solved, e, 2.5)).find((l) => l.kind === "q")!;
+    expect(q.id).toBe("L2");
+    near(q.zSpan![0], 0);
+    near(q.zSpan![1], 4); // not the whole 5 m: the 1 m next to B (z in [4, 5]) is unloaded
+  });
+
+  test("a load over the whole member has the whole member as its span", () => {
+    const model = PRESETS_3D[0].model;
+    const solved = solveModel3D(model)!;
+    const q = sectionLoads(model, solved, 0, nearestStation(solved, 0, 6)).find((l) => l.kind === "q")!;
+    near(q.zSpan![0], 0);
+    near(q.zSpan![1], 6); // M1: the 6 m column, q_y over all of it
+  });
+});

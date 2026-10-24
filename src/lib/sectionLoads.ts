@@ -13,6 +13,7 @@ export interface SectionLoad {
   id: string; // load id or support node id
   force: Vec3; // components along the section's x, y, z (force/m for q, force for R)
   moment?: Vec3; // reaction moment components (R only)
+  zSpan?: [number, number]; // q only: the loaded span along the section's z, m (z = 0 at the front end)
 }
 
 const EPS = 1e-9;
@@ -39,8 +40,10 @@ export function sectionLoads(
   const out: SectionLoad[] = [];
   model.loads.forEach((l) => {
     if (l.type !== "mudl" || l.member !== m.id) return;
-    const zLo = Math.min(zOf(l.from ?? 0), zOf(l.to ?? g.L));
-    if (zLo < st.z - EPS) out.push({ kind: "q", id: l.id, force: comps([l.gx, l.gy, l.gz]) });
+    const zA = zOf(l.from ?? 0),
+      zB = zOf(l.to ?? g.L);
+    const zSpan: [number, number] = [Math.min(zA, zB), Math.max(zA, zB)];
+    if (zSpan[0] < st.z - EPS) out.push({ kind: "q", id: l.id, force: comps([l.gx, l.gy, l.gz]), zSpan });
   });
   [m.n1, m.n2].forEach((id) => {
     const node = model.nodes.find((n) => n.id === id);

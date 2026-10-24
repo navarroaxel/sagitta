@@ -217,21 +217,52 @@ export default function SectionPrism({
           <circle cx={scr(0, 0)[0]} cy={scr(0, 0)[1]} r={2.5} stroke="none" />
           <circle cx={scr(0, 0, 1)[0]} cy={scr(0, 0, 1)[1]} r={2.5} stroke="none" />
           <text
+            data-testid="prism-z0-label"
             x={scr(-data.halfX * 1000, -data.halfY * 1000)[0] - 8}
-            y={scr(-data.halfX * 1000, -data.halfY * 1000)[1] + 16}
+            y={scr(-data.halfX * 1000, -data.halfY * 1000)[1] + 34}
             textAnchor="end"
             stroke="none"
           >
             z = 0
           </text>
           <text
+            data-testid="prism-zL-label"
             x={scr(data.halfX * 1000, data.halfY * 1000, 1)[0] + 12}
-            y={scr(data.halfX * 1000, data.halfY * 1000, 1)[1] - 4}
+            y={scr(data.halfX * 1000, data.halfY * 1000, 1)[1] - 24}
             stroke="none"
           >
             z = {L.toFixed(2)} m
           </text>
         </g>
+
+        {/* distributed loads along their loaded span: a row of arrows on the member's axis, so it is clear
+            where they act; the ones past the cut are not on the free body, so they are faint */}
+        {loads
+          .filter((l) => l.kind === "q" && l.zSpan)
+          .map((l) => {
+            const [za, zb] = l.zSpan!;
+            const big = Math.max(1e-9, ...loads.filter((o) => o.kind === "q").map((o) => Math.max(...o.force.map(Math.abs))));
+            const k = (0.6 * MAX_ARROW) / big;
+            const v: P2 = [l.force[0] * k, -l.force[1] * k];
+            const d = unit2(v);
+            if (!d || Math.hypot(...v) < 6 || L <= 0) return null;
+            const n = 2 + Math.round(5 * ((zb - za) / L)); // 2 arrows for a short span, 7 for the whole member
+            return (
+              <g key={`span-${l.id}`} data-testid={`prism-q-span-${l.id}`}>
+                {Array.from({ length: n }, (_, i) => {
+                  const z = za + ((zb - za) * i) / (n - 1);
+                  const tip = scr(0, 0, z / L);
+                  const on = z <= data.z + 1e-9;
+                  return (
+                    <g key={i} data-on={on ? "1" : "0"} opacity={on ? 1 : 0.3}>
+                      <line x1={tip[0] - v[0]} y1={tip[1] - v[1]} x2={tip[0]} y2={tip[1]} stroke={LOAD_COLORS.q} strokeWidth={2} />
+                      <Head tip={tip} d={d} size={7} color={LOAD_COLORS.q} />
+                    </g>
+                  );
+                })}
+              </g>
+            );
+          })}
 
         <polygon points={cutOutline} fill={colors.paper} /> {/* opaque, so the cut reads as a solid plate */}
         <g data-testid="prism-front">{front}</g>
@@ -302,6 +333,7 @@ export default function SectionPrism({
           return (
             <text
               key={i}
+              data-testid={`prism-corner-${i}`}
               x={px + (lbl[i][0] > 0 ? 6 : -6)}
               y={py + (lbl[i][1] > 0 ? -6 : 14)}
               textAnchor={lbl[i][0] > 0 ? "start" : "end"}
@@ -369,7 +401,9 @@ export default function SectionPrism({
               <g key={`${l.kind}-${l.id}`} fontFamily="monospace" fontSize={11}>
                 <rect x={LEGEND_X} y={y - 10} width={10} height={10} fill={LOAD_COLORS[l.kind]} />
                 <text x={LEGEND_X + 16} y={y}>
-                  {l.kind === "q" ? `q ${l.id}` : `${t("f3d.cut.reaction")} ${l.id}`}
+                  {l.kind === "q"
+                    ? `q ${l.id}${l.zSpan && (l.zSpan[0] > 1e-6 || l.zSpan[1] < L - 1e-6) ? ` (z ${l.zSpan[0].toFixed(1)}–${l.zSpan[1].toFixed(1)} m)` : ""}`
+                    : `${t("f3d.cut.reaction")} ${l.id}`}
                 </text>
                 <text x={LEGEND_X + 16} y={y + 13}>
                   ({fmt(fx)}, {fmt(fy)}, {fmt(fz)}) {unit}

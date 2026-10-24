@@ -292,3 +292,55 @@ describe("SectionCut controls stay in reach", () => {
     expect(bar.className).toContain("bg-white"); // opaque, so the figures do not show through it
   });
 });
+
+describe("SectionCut prism: the z labels stay clear of the cut's corner values", () => {
+  const num = (el: Element, a: string) => parseFloat(el.getAttribute(a)!);
+
+  test.each([
+    ["at the front end (z = 0)", 0],
+    ["at the far end (z = L)", 1],
+  ])("%s", (_name, start) => {
+    render(<Harness start={start} />);
+    const z0 = screen.getByTestId("prism-z0-label"),
+      zL = screen.getByTestId("prism-zL-label");
+    const FONT = 12; // px: two lines closer than this overlap
+    const WIDTH = 60; // px: text wider than this can reach the neighbour's x
+    [0, 1, 2, 3].forEach((i) => {
+      const c = screen.getByTestId(`prism-corner-${i}`);
+      [z0, zL].forEach((z) => {
+        const near = Math.abs(num(z, "x") - num(c, "x")) < WIDTH;
+        if (near) expect(Math.abs(num(z, "y") - num(c, "y"))).toBeGreaterThanOrEqual(FONT);
+      });
+    });
+  });
+});
+
+describe("SectionCut prism: where a distributed load acts", () => {
+  function Beam({ start }: { start: number }) {
+    // M3 of the first preset: q from 1 to 5 m of a 5 m beam — NOT the whole beam
+    const [cut, setCut] = useState<CutState>({ on: true, member: "M3", t: start });
+    const s = solveModel3D(model)!;
+    return <SectionCut model={model} solved={s} stress={computeStress(model, s)} cut={cut} onChange={setCut} />;
+  }
+
+  test("the arrows cover only the loaded span (z 0–4 of 5 m), and the legend says so", () => {
+    render(<Beam start={1} />); // cut at the far end: the whole span is on the free body
+    const arrows = screen.getByTestId("prism-q-span-L2").children;
+    expect(arrows.length).toBeGreaterThanOrEqual(5); // a row of them, not one
+    expect(Array.from(arrows).every((a) => a.getAttribute("data-on") === "1")).toBe(true);
+    expect(screen.getByTestId("section-prism").textContent).toContain("(z 0.0–4.0 m)");
+  });
+
+  test("with the cut at mid-span the arrows past it are faint: they are not on the free body", () => {
+    render(<Beam start={0.4} />); // z = 2 m of 5
+    const arrows = Array.from(screen.getByTestId("prism-q-span-L2").children);
+    const on = arrows.filter((a) => a.getAttribute("data-on") === "1").length;
+    expect(on).toBeGreaterThan(0);
+    expect(on).toBeLessThan(arrows.length);
+  });
+
+  test("a load over the whole member (the column's q) gets no span in the legend", () => {
+    render(<Harness start={1} />);
+    expect(screen.getByTestId("section-prism").textContent).not.toMatch(/q L1 \(z /); // the legend line of q
+  });
+});
