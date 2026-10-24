@@ -5,16 +5,24 @@ import { fromBase64Url, toBase64Url } from "./share";
 import { PRESETS_3D } from "./presets3d";
 import type { FrameModel3D } from "./types3d";
 
+// What a link may ask the page to draw: a distributed load is a row of arrows every 1.5 m of its
+// member, so a member 1e8 m long would be tens of millions of SVG nodes. These limits are far above
+// anything a course exercise needs (the presets stay under 10 m and 10 items).
+export const MAX_COORD = 1000; // m, per axis
+export const MAX_ITEMS = 100; // nodes, members and loads, each
+
 const num = (v: unknown): v is number => typeof v === "number" && Number.isFinite(v);
 const str = (v: unknown): v is string => typeof v === "string" && v.length > 0;
 const obj = (v: unknown): v is Record<string, unknown> => typeof v === "object" && v !== null;
 
 export function isModel3D(m: unknown): m is FrameModel3D {
   if (!obj(m) || !Array.isArray(m.nodes) || !Array.isArray(m.members) || !Array.isArray(m.loads)) return false;
+  if (m.nodes.length > MAX_ITEMS || m.members.length > MAX_ITEMS || m.loads.length > MAX_ITEMS) return false;
   const nodes = new Set<string>();
   for (const n of m.nodes) {
     if (!obj(n) || !str(n.id) || nodes.has(n.id)) return false;
     if (!num(n.x) || !num(n.y) || !num(n.z)) return false;
+    if (Math.abs(n.x) > MAX_COORD || Math.abs(n.y) > MAX_COORD || Math.abs(n.z) > MAX_COORD) return false;
     if (n.support !== "free" && n.support !== "pinned" && n.support !== "fixed") return false;
     nodes.add(n.id);
   }
@@ -23,10 +31,13 @@ export function isModel3D(m: unknown): m is FrameModel3D {
     if (!obj(e) || !str(e.id) || members.has(e.id)) return false;
     if (!str(e.n1) || !str(e.n2) || e.n1 === e.n2 || !nodes.has(e.n1) || !nodes.has(e.n2)) return false;
     if (e.profile !== undefined && typeof e.profile !== "string") return false;
+    if (e.rotated !== undefined && typeof e.rotated !== "boolean") return false; // "false" would count as true
     members.add(e.id);
   }
+  const loads = new Set<string>(); // the editor keys and removes loads by id
   for (const l of m.loads) {
-    if (!obj(l) || !str(l.id)) return false;
+    if (!obj(l) || !str(l.id) || loads.has(l.id)) return false;
+    loads.add(l.id);
     if (l.type === "nodal") {
       if (!str(l.node) || !nodes.has(l.node)) return false;
       if (![l.fx, l.fy, l.fz, l.mx, l.my, l.mz].every(num)) return false;

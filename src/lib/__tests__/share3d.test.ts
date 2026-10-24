@@ -46,8 +46,21 @@ describe("3D share links", () => {
     bad((m) => ({ ...m, loads: [{ id: "L", type: "weird" }] }));
     bad((m) => ({ ...m, material: { ...m.material, E: NaN } }));
     bad((m) => ({ ...m, sigmaAdm: "14" }));
+    bad((m) => ({ ...m, members: [{ ...m.members[0], rotated: "false" }, ...m.members.slice(1)] })); // a string is truthy
+    bad((m) => ({ ...m, loads: [m.loads[0], m.loads[0]] })); // two loads with the same id: "remove" would delete both
+    bad((m) => ({ ...m, nodes: [m.nodes[0], { ...m.nodes[1], x: 1e8 }, ...m.nodes.slice(2)] })); // a member 1e8 m long
+    bad((m) => ({
+      ...m,
+      nodes: Array.from({ length: 101 }, (_, i) => ({ id: `N${i}`, x: i, y: 0, z: 0, support: "free" })),
+      members: [],
+      loads: [],
+    })); // too many items to draw
     bad(() => null);
     bad(() => []);
+    // a real one with boolean `rotated` stays valid
+    const rot = structuredClone(base);
+    rot.members[0].rotated = true;
+    expect(isModel3D(rot)).toBe(true);
     // and the real ones are fine and solve
     PRESETS_3D.forEach((p) => {
       expect(isModel3D(p.model)).toBe(true);
