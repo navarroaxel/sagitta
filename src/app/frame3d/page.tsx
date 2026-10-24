@@ -3,6 +3,7 @@
 import React, { useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Frame3DCanvas, { View3DOptions } from "@/components/Frame3DCanvas";
+import FullscreenFigure from "@/components/FullscreenFigure";
 import Model3DEditor from "@/components/Model3DEditor";
 import NavMenu from "@/components/NavMenu";
 import { Footer } from "@/components/Footer";
@@ -34,6 +35,7 @@ export default function Frame3DPage() {
     scale: 1,
   });
   const [cut, setCut] = useState<CutState>({ on: false, member: "", t: 0 });
+  const [panelOpen, setPanelOpen] = useState(true); // the nodes / members / loads editor
   const svgRef = useRef<SVGSVGElement>(null);
   const solved = useMemo(() => solveModel3D(model), [model]);
   const stress = useMemo(
@@ -159,18 +161,37 @@ export default function Frame3DPage() {
       )}
 
       <div className="flex flex-1 overflow-hidden">
-        <aside className="w-[380px] flex-shrink-0 overflow-auto border-r border-stone-200 bg-white dark:border-stone-700 dark:bg-stone-900">
-          <Model3DEditor model={model} onChange={setModel} solved={solved} stress={stress} />
+        <aside
+          className={`flex flex-shrink-0 flex-col border-r border-stone-200 bg-white transition-[width] dark:border-stone-700 dark:bg-stone-900 ${panelOpen ? "w-[380px]" : "w-9"}`}
+        >
+          <div className={`flex border-b border-stone-200 dark:border-stone-700 ${panelOpen ? "justify-end px-1 py-1" : "justify-center py-1"}`}>
+            <button
+              type="button"
+              aria-expanded={panelOpen}
+              aria-controls="editor-panel"
+              aria-label={panelOpen ? t("f3d.panel.hide") : t("f3d.panel.show")}
+              title={panelOpen ? t("f3d.panel.hide") : t("f3d.panel.show")}
+              className="flex h-7 w-7 items-center justify-center rounded text-base font-bold text-stone-500 hover:bg-stone-200 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-stone-700 dark:hover:text-stone-100"
+              onClick={() => setPanelOpen((v) => !v)}
+            >
+              {panelOpen ? "«" : "»"}
+            </button>
+          </div>
+          <div id="editor-panel" hidden={!panelOpen} className="flex-1 overflow-auto">
+            <Model3DEditor model={model} onChange={setModel} solved={solved} stress={stress} />
+          </div>
         </aside>
         <main className="flex flex-1 flex-wrap content-start items-start justify-center gap-3 overflow-auto bg-stone-100 p-2 dark:bg-stone-800">
           <div className="min-w-[420px] flex-1 basis-[560px]" style={{ maxWidth: 900 }}>
             <div className="overflow-hidden rounded border border-stone-200 shadow-sm dark:border-stone-600">
-              <Frame3DCanvas model={model} solved={solved} stress={stress} cut={cutMarker} viewOpts={opts} svgRef={svgRef} />
+              <FullscreenFigure testId="fs-frame3d">
+                <Frame3DCanvas model={model} solved={solved} stress={stress} cut={cutMarker} viewOpts={opts} svgRef={svgRef} />
+              </FullscreenFigure>
             </div>
             <p className="mt-2 text-xs text-stone-500 dark:text-stone-400">{t("f3d.note")}</p>
           </div>
           {cut.on && (
-            <section className="min-w-[380px] flex-1 basis-[420px] rounded border border-stone-200 bg-white p-3 dark:border-stone-600 dark:bg-stone-900" style={{ maxWidth: 580 }}>
+            <section className="min-w-[380px] flex-1 basis-[420px] rounded border border-stone-200 bg-white p-3 dark:border-stone-600 dark:bg-stone-900" style={{ maxWidth: panelOpen ? 580 : 780 }}>
               <h2 className="mb-2 text-sm font-semibold">{t("f3d.cut.title")}</h2>
               <SectionCut model={model} solved={solved} stress={stress} cut={cut} onChange={setCut} />
             </section>

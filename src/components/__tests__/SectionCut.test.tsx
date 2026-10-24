@@ -1,4 +1,4 @@
-import { render as rtlRender, screen, fireEvent } from "@testing-library/react";
+import { render as rtlRender, screen, fireEvent, within, act } from "@testing-library/react";
 import { useState, type ReactElement } from "react";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import SectionCut, { CutState } from "../SectionCut";
@@ -122,5 +122,115 @@ describe("SectionCut with a kg model", () => {
     expect(eq).toContain("N [kg], M [kg·cm]");
     expect(screen.getByTestId("section-cut").textContent).toContain("σ (kg/cm²)");
     expect(screen.getByTestId("section-cut").textContent).not.toContain("kN");
+  });
+});
+
+describe("SectionCut 3D prism", () => {
+  test("paints tension and compression fibres, the sides and the neutral axis", () => {
+    render(<Harness start={1} />);
+    const prism = screen.getByTestId("section-prism");
+    const fills = (id: string) =>
+      Array.from(prism.querySelectorAll(`[data-testid="${id}"] polygon`)).map((n) => n.getAttribute("fill"));
+    const front = new Set(fills("prism-front"));
+    expect(front.size).toBe(2); // the base of the column has both tension and compression
+    expect(fills("prism-sides").length).toBeGreaterThan(0);
+    expect(screen.getByTestId("prism-neutral")).toBeTruthy();
+  });
+});
+
+describe("SectionCut resultant (oblique) diagram", () => {
+  test("draws the E.N., the two parallels and the + / − triangles with σ max / σ min", () => {
+    render(<Harness start={1} />);
+    expect(screen.getByTestId("cut-resultant-neutral")).toBeTruthy();
+    expect(screen.getByTestId("cut-extreme-max")).toBeTruthy();
+    expect(screen.getByTestId("cut-extreme-min")).toBeTruthy();
+    expect(screen.getByTestId("cut-resultant-pos")).toBeTruthy();
+    expect(screen.getByTestId("cut-resultant-neg")).toBeTruthy();
+    const nums = ["max", "min"].map((k) => parseFloat(screen.getByTestId(`cut-resultant-${k}`).textContent!.split("=")[1]));
+    expect(nums[0]).toBeGreaterThan(0);
+    expect(nums[1]).toBeLessThan(0);
+  });
+});
+
+describe("SectionCut loads drawn on the 3D prism", () => {
+  test("shows the support reaction of the column, and ⊗/⊙ for its axial part", () => {
+    render(<Harness start={1} />);
+    expect(screen.getByTestId("section-prism").contains(screen.getByTestId("sload-R-A"))).toBe(true);
+    expect(screen.getByTestId("prism-critical")).toBeTruthy();
+    expect(screen.getByTestId("section-prism").textContent).toContain("most stressed corner"); // the ring is in the legend
+    expect(screen.getByTestId("sload-R-A")).toBeTruthy();
+    expect(screen.getByTestId("sload-z-R-A")).toBeTruthy();
+  });
+});
+
+describe("SectionCut local triad", () => {
+  test("draws the section's own x, y and z in the 3D prism", () => {
+    render(<Harness start={1} />);
+    const l = screen.getByTestId("prism-local-axes");
+    ["x", "y", "z"].forEach((a) => expect(l.querySelector(`[data-axis="${a}"]`)).toBeTruthy());
+  });
+});
+
+describe("SectionCut full screen", () => {
+  test("each diagram has a full-screen button that asks the browser to show that figure alone", () => {
+    // jsdom has no Fullscreen API: install the method for this test
+    const req = vi.fn();
+    const proto = HTMLElement.prototype as unknown as { requestFullscreen?: () => void };
+    proto.requestFullscreen = req;
+    try {
+      render(<Harness start={1} />);
+      const buttons = screen.getAllByRole("button", { name: "Full screen" });
+      expect(buttons).toHaveLength(3); // components, resultant, 3D prism
+      ["fs-cut-components", "fs-cut-resultant", "fs-cut-prism"].forEach((id) =>
+        expect(screen.getByTestId(id).querySelector("svg")).toBeTruthy(),
+      );
+      fireEvent.click(buttons[1]);
+      expect(req).toHaveBeenCalledTimes(1);
+      expect(req.mock.contexts[0]).toBe(screen.getByTestId("fs-cut-resultant")); // that figure, not the page
+    } finally {
+      delete proto.requestFullscreen;
+    }
+  });
+});
+
+describe("SectionCut full screen controls", () => {
+  test("while a figure is full screen it shows the Z slider, and moving it moves the cut", () => {
+    const proto = HTMLElement.prototype as unknown as { requestFullscreen?: () => void };
+    let fsEl: Element | null = null;
+    const req = vi.fn(function () {});
+    proto.requestFullscreen = req;
+    Object.defineProperty(document, "fullscreenElement", { configurable: true, get: () => fsEl });
+    try {
+      render(<Harness start={1} />);
+      const fig = screen.getByTestId("fs-cut-resultant");
+      expect(within(fig).queryByLabelText("cut position (full screen)")).toBeNull(); // only when full screen
+      fireEvent.click(within(fig).getByRole("button", { name: "Full screen" }));
+      fsEl = req.mock.contexts[0] as Element; // the browser would now show that figure alone
+      act(() => {
+        document.dispatchEvent(new Event("fullscreenchange"));
+      });
+      const slider = within(fig).getByLabelText("cut position (full screen)");
+      expect(screen.getByTestId("cut-x").textContent).toContain("z = 6.00");
+      fireEvent.change(slider, { target: { value: "0" } });
+      expect(screen.getByTestId("cut-x").textContent).toContain("z = 0.00"); // the cut moved
+      expect(within(fig).getByRole("button", { name: "Exit full screen" })).toBeTruthy();
+    } finally {
+      delete proto.requestFullscreen;
+      delete (document as unknown as { fullscreenElement?: unknown }).fullscreenElement;
+    }
+  });
+});
+
+describe("SectionCut prism legend fits in the figure", () => {
+  test("the widest legend line (reaction components, kg-sized numbers) ends inside the viewBox", () => {
+    // 3D T-frame in kg: reactions in the hundreds
+    const kg = PRESETS_3D.find((p) => p.key === "frame_overhang")!.model;
+    render(<Harness model={kg} start={1} />);
+    const svg = screen.getByTestId("section-prism").querySelector<SVGSVGElement>("svg:not(.fs-icon)")!; // not the button's icon
+    const vbW = svg.viewBox.baseVal.width;
+    const CHAR = 6.6; // px per character of the 11 px monospace legend text
+    const lines = Array.from(svg.querySelectorAll("text")).filter((t) => t.getAttribute("x") === "416"); // the load legend lines
+    expect(lines.length).toBeGreaterThan(0);
+    lines.forEach((t) => expect(416 + t.textContent!.length * CHAR).toBeLessThan(vbW - 8));
   });
 });

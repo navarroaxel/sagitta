@@ -1,4 +1,4 @@
-import { cutAt, nearestStation, sectionOutline } from "../sectionCut";
+import { cutAt, nearestStation, sectionOutline, sectionRects, stressAt } from "../sectionCut";
 import { solveModel3D } from "../solve3d";
 import { PRESETS_3D } from "../presets3d";
 import { getProfile } from "../profiles";
@@ -101,5 +101,25 @@ describe("sectionOutline", () => {
     near(ext(a, 1), p.h);
     near(ext(b, 0), p.h);
     near(ext(b, 1), p.bf);
+  });
+});
+
+describe("stressAt / sectionRects", () => {
+  test("stressAt reproduces the corner σ and is linear (zero on the neutral axis)", () => {
+    const m = PRESETS_3D[0].model;
+    const s = solveModel3D(m)!;
+    const d = cutAt(m, s, 0, nearestStation(s, 0, 6))!;
+    d.corners.forEach((c) => near(stressAt(d, c.x, c.y), c.sigma, 1e-9));
+    const [p, q] = d.neutral!;
+    near(stressAt(d, p[0], p[1]), 0, 1e-6);
+    near(stressAt(d, q[0], q[1]), 0, 1e-6);
+  });
+
+  test("the three rectangles tile the profile area, rotated or not", () => {
+    const p = getProfile("IPB 200")!;
+    [false, true].forEach((rot) => {
+      const area = sectionRects(p, rot).reduce((a, [x0, y0, x1, y1]) => a + (x1 - x0) * (y1 - y0), 0);
+      near(area, p.bf * 2 * p.tf + (p.h - 2 * p.tf) * p.tw, 1e-9);
+    });
   });
 });

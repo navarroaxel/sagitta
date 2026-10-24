@@ -146,3 +146,23 @@ export function cutAt(
     neutral,
   };
 }
+
+// σ (kN/cm²) at (x, y) m of the cut: the same linear field the corners sample.
+export function stressAt(d: SectionCutData, x: number, y: number): number {
+  return (d.N / d.A + (d.Mx * y) / d.Ix + (d.My * x) / d.Iy) / 1e4;
+}
+
+// The I section as three rectangles [x0, y0, x1, y1] in mm (flange, web, flange), flanges
+// parallel to x unless rotated. Used to paint the section cell by cell.
+export function sectionRects(p: Profile, rotated: boolean): [number, number, number, number][] {
+  const H = p.h / 2,
+    B = p.bf / 2,
+    w = p.tw / 2,
+    f = p.tf;
+  const rects: [number, number, number, number][] = [
+    [-B, -H, B, -H + f],
+    [-w, -H + f, w, H - f],
+    [-B, H - f, B, H],
+  ];
+  return rotated ? rects.map(([a, b, c, d]) => [b, a, d, c]) : rects;
+}

@@ -5,6 +5,10 @@ import { FrameModel3D } from "@/lib/types3d";
 import { SolveOutput3D } from "@/lib/solve3d";
 import { StressResult } from "@/lib/stress3d";
 import { cutAt, nearestStation, sectionOutline, SectionCutData } from "@/lib/sectionCut";
+import FullscreenFigure from "./FullscreenFigure";
+import SectionPrism from "./SectionPrism";
+import SectionResultant from "./SectionResultant";
+import { sectionLoads } from "@/lib/sectionLoads";
 import { useColors } from "@/contexts/ColorContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -172,48 +176,55 @@ export default function SectionCut({
   const zVal = stationsOf[r.station].z;
   const peakT = stress?.[r.e] ? stress[r.e]!.max.z / r.L : 0;
 
+  // the same controls, shown inside a figure while it is full screen (copy: no duplicated test ids)
+  const controlRow = (cls: string, copy: boolean) => (
+  <div className={`flex flex-wrap items-center gap-3 text-sm ${cls}`}>
+      <label className="flex items-center gap-1">
+        {t("f3d.cut.member")}
+        <select
+          aria-label={copy ? "cut member (full screen)" : "cut member"}
+          className="rounded border border-stone-200 bg-white px-1 py-0.5 text-xs dark:border-stone-600 dark:bg-stone-800"
+          value={member.id}
+          onChange={(e) => onChange({ ...cut, member: e.target.value })}
+        >
+          {withProfile.map((m) => (
+            <option key={m.id} value={m.id}>
+              {m.id} ({m.profile})
+            </option>
+          ))}
+        </select>
+      </label>
+      <label className="flex flex-1 items-center gap-2">
+        <span className="font-mono text-xs whitespace-nowrap" data-testid={copy ? undefined : "cut-x"}>
+          z = {zVal.toFixed(2)} / {r.L.toFixed(2)} m
+        </span>
+        <input
+          type="range"
+          aria-label={copy ? "cut position (full screen)" : "cut position"}
+          className="min-w-32 flex-1"
+          min={0}
+          max={1}
+          step={0.005}
+          value={cut.t}
+          onChange={(e) => onChange({ ...cut, t: parseFloat(e.target.value) })}
+        />
+      </label>
+      <button
+        type="button"
+        className="rounded border border-stone-200 bg-stone-100 px-2 py-0.5 text-xs hover:bg-stone-200 dark:border-stone-600 dark:bg-stone-800 dark:hover:bg-stone-700"
+        onClick={() => onChange({ ...cut, member: member.id, t: peakT })}
+      >
+        {t("f3d.cut.peak")}
+      </button>
+    </div>
+  );
+  const fsControls = controlRow("", true);
+
   return (
     <div className="space-y-2" data-testid="section-cut">
-      <div className="flex flex-wrap items-center gap-3 text-sm">
-        <label className="flex items-center gap-1">
-          {t("f3d.cut.member")}
-          <select
-            aria-label="cut member"
-            className="rounded border border-stone-200 bg-white px-1 py-0.5 text-xs dark:border-stone-600 dark:bg-stone-800"
-            value={member.id}
-            onChange={(e) => onChange({ ...cut, member: e.target.value })}
-          >
-            {withProfile.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.id} ({m.profile})
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="flex flex-1 items-center gap-2">
-          <span className="font-mono text-xs whitespace-nowrap" data-testid="cut-x">
-            z = {zVal.toFixed(2)} / {r.L.toFixed(2)} m
-          </span>
-          <input
-            type="range"
-            aria-label="cut position"
-            className="min-w-32 flex-1"
-            min={0}
-            max={1}
-            step={0.005}
-            value={cut.t}
-            onChange={(e) => onChange({ ...cut, t: parseFloat(e.target.value) })}
-          />
-        </label>
-        <button
-          type="button"
-          className="rounded border border-stone-200 bg-stone-100 px-2 py-0.5 text-xs hover:bg-stone-200 dark:border-stone-600 dark:bg-stone-800 dark:hover:bg-stone-700"
-          onClick={() => onChange({ ...cut, member: member.id, t: peakT })}
-        >
-          {t("f3d.cut.peak")}
-        </button>
-      </div>
+      {controlRow("", false)}
 
+      <FullscreenFigure testId="fs-cut-components" controls={fsControls}>
       <svg
         width="100%"
         viewBox={`0 0 ${W} ${H}`}
@@ -346,8 +357,13 @@ export default function SectionCut({
           {f1(ccorner.sMy)}
         </text>
       </svg>
+      </FullscreenFigure>
 
       <p className="text-xs text-stone-500 dark:text-stone-400">{t("f3d.cut.view_note")}</p>
+
+      <SectionResultant data={data} controls={fsControls} />
+
+      <SectionPrism data={data} loads={sectionLoads(model, solved, r.e, r.station)} unit={model.unit} controls={fsControls} />
 
       <CheckEquation data={data} sigmaAdm={model.sigmaAdm} unit={model.unit} />
 
