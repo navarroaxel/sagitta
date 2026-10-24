@@ -14,6 +14,7 @@ import { solveModel3D } from "@/lib/solve3d";
 import { computeStress } from "@/lib/stress3d";
 import SectionCut, { CutState, resolveCut } from "@/components/SectionCut";
 import { PRESETS_3D } from "@/lib/presets3d";
+import { peakLocation } from "@/lib/peakLocation";
 import { DIAGRAMS_3D, Diagram3D } from "@/lib/results3d";
 import { FrameModel3D } from "@/lib/types3d";
 
@@ -42,6 +43,30 @@ export default function Frame3DPage() {
     () => (solved && solved.result.stable ? computeStress(model, solved) : null),
     [model, solved],
   );
+  // the loaded model is a preset (by identity: any edit makes a new object, and the select goes back to its placeholder)
+  const currentPreset = PRESETS_3D.find((p) => p.model === model)?.key ?? "";
+  const peak = useMemo(
+    () => (solved && stress ? peakLocation(model, solved, stress) : null),
+    [model, solved, stress],
+  );
+  const fill = (text: string, vars: Record<string, string>) =>
+    Object.entries(vars).reduce((acc, [k, v]) => acc.replace(`{${k}}`, v), text);
+  const peakWhere = !peak
+    ? ""
+    : peak.where.kind === "constant"
+      ? t("f3d.peak.constant")
+      : peak.where.kind === "inside"
+        ? fill(t("f3d.peak.inside"), { dist: peak.where.dist.toFixed(2), node: peak.where.node })
+        : fill(
+            t(
+              peak.where.support === "fixed"
+                ? "f3d.peak.node_fixed"
+                : peak.where.support === "pinned"
+                  ? "f3d.peak.node_pinned"
+                  : "f3d.peak.node_free",
+            ),
+            { node: peak.where.node },
+          );
   const cutRes = cut.on ? resolveCut(model, solved, cut) : null;
   const cutMarker =
     cutRes && solved ? { member: cutRes.e, x: solved.stations[cutRes.e][cutRes.station].x } : null;
@@ -63,7 +88,7 @@ export default function Frame3DPage() {
         <select
           aria-label={t("preset.examples")}
           className={btn}
-          value=""
+          value={currentPreset}
           onChange={(e) => {
             const p = PRESETS_3D.find((x) => x.key === e.target.value);
             if (p) setModel(p.model);
@@ -188,6 +213,23 @@ export default function Frame3DPage() {
                 <Frame3DCanvas model={model} solved={solved} stress={stress} cut={cutMarker} viewOpts={opts} svgRef={svgRef} />
               </FullscreenFigure>
             </div>
+            {peak && (
+              <p
+                data-testid="peak-note"
+                className={`mt-2 text-xs ${
+                  peak.where.kind === "inside"
+                    ? "font-semibold text-amber-700 dark:text-amber-400"
+                    : "text-stone-600 dark:text-stone-300"
+                }`}
+              >
+                {fill(t("f3d.peak"), {
+                  member: peak.member,
+                  profile: peak.profile,
+                  pct: (peak.ratio * 100).toFixed(0),
+                  where: peakWhere,
+                })}
+              </p>
+            )}
             <p className="mt-2 text-xs text-stone-500 dark:text-stone-400">{t("f3d.note")}</p>
           </div>
           {cut.on && (
