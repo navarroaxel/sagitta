@@ -15,32 +15,39 @@ import {
 const inputCls =
   "rounded border border-stone-300 bg-white px-2 py-1.5 text-sm dark:border-stone-600 dark:bg-stone-800";
 
-const GROUPS: { title: TranslationKey; rows: { key: PropKey; label: string; unit: string }[] }[] = [
+const GROUPS: { title: TranslationKey; rows: { key: PropKey; label: string; sub: string; unit: string }[] }[] = [
   {
     title: "prof.shapes.g_cg",
     rows: [
-      { key: "xg", label: "xg", unit: "" },
-      { key: "yg", label: "yg", unit: "" },
-      { key: "F", label: "F", unit: "²" },
+      { key: "xg", label: "x", sub: "g", unit: "" },
+      { key: "yg", label: "y", sub: "g", unit: "" },
+      { key: "F", label: "F", sub: "", unit: "²" },
     ],
   },
   {
     title: "prof.shapes.g_o",
     rows: [
-      { key: "Jx", label: "Jx", unit: "⁴" },
-      { key: "Jy", label: "Jy", unit: "⁴" },
-      { key: "Jxy", label: "Jxy", unit: "⁴" },
+      { key: "Jx", label: "J", sub: "x", unit: "⁴" },
+      { key: "Jy", label: "J", sub: "y", unit: "⁴" },
+      { key: "Jxy", label: "J", sub: "xy", unit: "⁴" },
     ],
   },
   {
     title: "prof.shapes.g_g",
     rows: [
-      { key: "Jxg", label: "Jxg", unit: "⁴" },
-      { key: "Jyg", label: "Jyg", unit: "⁴" },
-      { key: "Jxyg", label: "Jxyg", unit: "⁴" },
+      { key: "Jxg", label: "J", sub: "xg", unit: "⁴" },
+      { key: "Jyg", label: "J", sub: "yg", unit: "⁴" },
+      { key: "Jxyg", label: "J", sub: "xyg", unit: "⁴" },
     ],
   },
 ];
+
+// "X_g" in a translated text is X with a subscript g
+const Sub = ({ text }: { text: string }) => (
+  <>
+    {text.split(/(?<=\w)_(\w)/).map((part, i) => (i % 2 ? <sub key={i}>{part}</sub> : part))}
+  </>
+);
 
 // 6 significant digits, no exponent for the sizes this table deals with; a zero stays a clean 0
 const fmt = (v: number) => (Math.abs(v) < 1e-9 ? "0" : String(Number(v.toPrecision(6))));
@@ -105,8 +112,8 @@ function ShapeFigure({ loops, props, size = 300 }: { loops: Loop[]; props: Shape
         <text x={ox - 12} y={oy + 14}>O</text>
       </g>
       <g fontSize={11} className="fill-amber-700 dark:fill-amber-300" fontWeight={700}>
-        <text x={X(x1) + ext - 8} y={gy - 5}>Xg</text>
-        <text x={gx + 5} y={Y(y1) - ext + 8}>Yg</text>
+        <text x={X(x1) + ext - 8} y={gy - 5}>X<tspan fontSize={8} dy={3}>g</tspan></text>
+        <text x={gx + 5} y={Y(y1) - ext + 8}>Y<tspan fontSize={8} dy={3}>g</tspan></text>
         <text x={gx + 6} y={gy - 6}>G</text>
       </g>
       <circle cx={gx} cy={gy} r={3.5} className="fill-amber-600 dark:fill-amber-400" />
@@ -165,7 +172,9 @@ export function ShapeExplorer() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-3 p-3 sm:p-4" data-testid="shape-explorer">
-      <p className="text-xs text-stone-500 dark:text-stone-400">{t("prof.shapes.note")}</p>
+      <p className="text-xs text-stone-500 dark:text-stone-400">
+        <Sub text={t("prof.shapes.note")} />
+      </p>
 
       <div role="radiogroup" aria-label={t("prof.shapes.pick")} className="flex flex-wrap gap-2">
         {SHAPES.map((s) => (
@@ -234,13 +243,14 @@ export function ShapeExplorer() {
               <tbody key={g.title}>
                 <tr className="bg-stone-50 dark:bg-stone-800/50">
                   <th colSpan={3} className="px-3 py-1 text-left text-xs font-semibold text-stone-500 dark:text-stone-400">
-                    {t(g.title)}
+                    <Sub text={t(g.title)} />
                   </th>
                 </tr>
                 {g.rows.map((r) => (
                   <tr key={r.key} className="border-t border-stone-100 dark:border-stone-800">
                     <th scope="row" className="px-3 py-1.5 text-left font-semibold">
                       {r.label}
+                      {r.sub && <sub>{r.sub}</sub>}
                     </th>
                     <td className="px-3 py-1.5 font-mono text-xs text-stone-600 dark:text-stone-300">
                       {shape.formulas[r.key]}
