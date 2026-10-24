@@ -234,3 +234,18 @@ describe("SectionCut prism legend fits in the figure", () => {
     lines.forEach((t) => expect(416 + t.textContent!.length * CHAR).toBeLessThan(vbW - 8));
   });
 });
+
+describe("SectionCut sign marks", () => {
+  test("σ(N), σ(Mx) and σ(My) areas carry their + / − (tension / compression) mark", () => {
+    render(<Harness start={1} />); // base of the column: N < 0, Mx and My of both signs on the section
+    const fig = screen.getByTestId("section-cut-svg");
+    const signs = (id: string) =>
+      Array.from(fig.querySelectorAll(`[data-testid^="${id}-sign"]`)).map((g) => g.getAttribute("data-sign"));
+    expect(signs("cut-diagram-N")).toEqual(["−"]); // the column is in compression
+    expect(signs("cut-diagram-Mx").sort()).toEqual(["+", "−"]);
+    // the colour of each mark follows its sign: the same one as the area it labels
+    const tension = fig.querySelector('[data-sign="+"] circle')!.getAttribute("stroke");
+    const compression = fig.querySelector('[data-sign="−"] circle')!.getAttribute("stroke");
+    expect(tension).not.toBe(compression);
+  });
+});

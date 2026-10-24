@@ -4,6 +4,7 @@ import React from "react";
 import { SectionCutData, sectionOutline } from "@/lib/sectionCut";
 import { resultantLayout } from "@/lib/resultantDiagram";
 import FullscreenFigure from "./FullscreenFigure";
+import SignMark from "./SignMark";
 import { useColors } from "@/contexts/ColorContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -155,10 +156,7 @@ export default function SectionResultant({ data, controls }: { data: SectionCutD
           return (
             <g key={key} data-testid={`cut-resultant-${key}`}>
               <polygon points={pts.map(P).join(" ")} fill={col(sign)} fillOpacity={0.45} stroke={col(sign)} />
-              <circle cx={c[0]} cy={c[1]} r={7} fill="#fff" fillOpacity={0.85} stroke={col(sign)} />
-              <text x={c[0]} y={c[1] + 4} fontSize={12} fontWeight={700} textAnchor="middle" fill={col(sign)}>
-                {sign > 0 ? "+" : "−"}
-              </text>
+              <SignMark x={c[0]} y={c[1]} sign={sign > 0 ? 1 : -1} color={col(sign)} />
             </g>
           );
         })}

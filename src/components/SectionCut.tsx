@@ -6,6 +6,7 @@ import { SolveOutput3D } from "@/lib/solve3d";
 import { StressResult } from "@/lib/stress3d";
 import { cutAt, nearestStation, sectionOutline, SectionCutData } from "@/lib/sectionCut";
 import FullscreenFigure from "./FullscreenFigure";
+import SignMark from "./SignMark";
 import SectionPrism from "./SectionPrism";
 import SectionResultant from "./SectionResultant";
 import { sectionLoads } from "@/lib/sectionLoads";
@@ -36,6 +37,8 @@ export function resolveCut(model: FrameModel3D, solved: SolveOutput3D | null, cu
 }
 
 // "Z"-shaped linear stress diagram along one axis (a = value at the + end, −a at the − end).
+const pt = ([x, y]: [number, number]) => ({ x, y });
+
 function Bowtie({
   vertical,
   origin,
@@ -61,10 +64,22 @@ function Bowtie({
     vertical ? `${origin[0] + v},${origin[1] - u}` : `${origin[0] + u},${origin[1] + v}`;
   const top = a >= 0 ? pos : neg,
     bottom = a >= 0 ? neg : pos;
+  // centre of a triangle (u, 0) (u, v) (0, 0), for its sign mark
+  const mid = (u: number, v: number): [number, number] => {
+    const [x, y] = P(u / 3, v / 3).split(",").map(Number);
+    return [x, y];
+  };
+  const big = Math.abs(d) > 16; // a sliver has no room for a mark
   return (
     <g data-testid={testId}>
       <polygon points={`${P(half, 0)} ${P(half, d)} ${P(0, 0)}`} fill={top} fillOpacity={0.45} stroke={top} />
       <polygon points={`${P(-half, 0)} ${P(-half, -d)} ${P(0, 0)}`} fill={bottom} fillOpacity={0.45} stroke={bottom} />
+      {big && (
+        <>
+          <SignMark {...pt(mid(half, d))} sign={a >= 0 ? 1 : -1} color={top} testId={`${testId}-sign-top`} />
+          <SignMark {...pt(mid(-half, -d))} sign={a >= 0 ? -1 : 1} color={bottom} testId={`${testId}-sign-bottom`} />
+        </>
+      )}
       <line
         x1={vertical ? origin[0] : origin[0] - half}
         y1={vertical ? origin[1] - half : origin[1]}
@@ -246,6 +261,15 @@ export default function SectionCut({
             stroke={col(ccorner.sN)}
           />
           <line x1={CX - hw - 70} y1={CY - hh} x2={CX - hw - 70} y2={CY + hh} stroke="#78716c" />
+          {Math.abs(ccorner.sN) > 1e-9 && (
+            <SignMark
+              x={CX - hw - 70 + (ccorner.sN * ps) / 2}
+              y={CY}
+              sign={ccorner.sN >= 0 ? 1 : -1}
+              color={col(ccorner.sN)}
+              testId="cut-diagram-N-sign"
+            />
+          )}
         </g>
 
         {/* section */}
