@@ -25,3 +25,20 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* FullscreenFigure: while a figure is shown full screen its SVG grows to the viewport height
+   (the inline max-width of the SVG would otherwise cap it). */
+.fs-figure:fullscreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--background);
+}
+.fs-figure:fullscreen svg:not(.fs-icon) {
+  max-width: none !important;
+  width: auto !important;
+  height: calc(100vh - 2rem) !important;
+}
+.fs-figure.fs-has-controls:fullscreen svg:not(.fs-icon) {
+  height: calc(100vh - 6.5rem) !important; /* leaves the bottom strip to the controls */
+}

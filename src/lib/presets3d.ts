@@ -201,6 +201,9 @@ export interface Preset3D {
   model: FrameModel3D;
 }
 
+// The "#N" in the label of each preset (LanguageContext, f3d.example.*) is its position in this list and
+// is PERMANENT: people say "preset #3". Never reorder or renumber; a new preset goes at the END (#9, #10…)
+// and a removed one leaves a gap.
 export const PRESETS_3D: Preset3D[] = [
   { key: "t_frame", model: tFrame },
   { key: "t_frame_kg", model: tFrameKg },
