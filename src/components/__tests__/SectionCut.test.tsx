@@ -282,3 +282,13 @@ describe("SectionCut prism shows σ along z", () => {
     expect(axis).toContain("z = 6.00 m"); // the other end: the 6 m column of the first preset
   });
 });
+
+describe("SectionCut controls stay in reach", () => {
+  test("the member / Z slider bar is sticky, so Z can be moved while looking at any figure (not only in full screen)", () => {
+    render(<Harness start={1} />);
+    const bar = screen.getByLabelText("cut position").closest("div")!;
+    expect(bar.className).toContain("sticky");
+    expect(bar.className).toContain("-top-2"); // cancels the scroll area's p-2, so nothing peeks above the bar
+    expect(bar.className).toContain("bg-white"); // opaque, so the figures do not show through it
+  });
+});

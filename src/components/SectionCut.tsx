@@ -237,7 +237,11 @@ export default function SectionCut({
 
   return (
     <div className="space-y-2" data-testid="section-cut">
-      {controlRow("", false)}
+      {/* sticky: stays at the top of the scrolling area, so Z can be moved while looking at any figure below */}
+      {controlRow(
+        "sticky -top-2 z-20 -mx-3 -mt-1 border-b border-stone-200 bg-white px-3 py-2 dark:border-stone-700 dark:bg-stone-900",
+        false,
+      )}
 
       <FullscreenFigure testId="fs-cut-components" controls={fsControls}>
       <svg

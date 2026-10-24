@@ -17,7 +17,7 @@ A Next.js 16 + React 19 client-side app that renders structural internal force d
 ```bash
 npm install     # required: installs jsdom + testing-library for the component tests
 npm run dev     # dev server on localhost:3000
-npm test        # full Vitest suite (769 checks, 2 projects — must stay green)
+npm test        # full Vitest suite (770 checks, 2 projects — must stay green)
 npm run build   # production build (must stay clean)
 npm run lint    # ESLint
 npx tsc --noEmit  # TypeScript check
@@ -112,7 +112,7 @@ How diagrams are *drawn and labelled* is selected by the **sign-convention setti
 - `sectionCut.test.ts`, `sectionLoads.test.ts`, `resultantDiagram.test.ts` — the cut's σ field (`stressAt`, `sectionRects`, `memberStressField`: equals the cut's field at its own z, varies along the member, same maximum as the stress check), the loads in the section's axes (free body only), and the resultant diagram's geometry (σ max / σ min where the parallels meet the baseline, σ = 0 on the E.N., baseline ⟂ E.N.).
 - Components: `SectionCut.test.tsx` (figures, loads on the prism, σ along z on the prism's sides and the plate moving with the slider, legend width, full screen + the Z slider inside it), `Frame3DPage.test.tsx` (collapsible editor panel, full screen on the frame canvas).
 
-Total 769 checks (`npm test`). Component tests render with `@testing-library/react`; remember to add a test there when adding a canvas layer or fixing a rendering bug.
+Total 770 checks (`npm test`). Component tests render with `@testing-library/react`; remember to add a test there when adding a canvas layer or fixing a rendering bug.
 
 ## Section-cut conventions (do not "fix" these)
 
@@ -120,6 +120,7 @@ Total 769 checks (`npm test`). Component tests render with `@testing-library/rea
 - The resultant diagram follows the professor's sheet: baseline ⟂ E.N., ordinates on the parallels. An axis-aligned baseline or a perspective "stress plane" was tried and rejected.
 - σ labels of the resultant go *past* the baseline's ends (beside it when the baseline is flat-ish, above/below when steep), never on it. The legend of `SectionPrism` must fit its viewBox with kg-sized numbers (100+ shown without decimals; a test measures it).
 - `FullscreenFigure`'s CSS (`globals.css`, `.fs-figure:fullscreen svg:not(.fs-icon)`) resizes the figure's SVG; its own button icon has the class `fs-icon`. In tests, `container.querySelector("svg")` inside a figure is the **icon**, not the drawing — use `svg:not(.fs-icon)`. jsdom has no Fullscreen API: tests install `requestFullscreen` themselves.
+- The bar with the member select and the Z slider is **sticky** at the top of the scrolling area (`sticky -top-2`: the `-2` cancels the `p-2` of `<main>`, otherwise a strip of the figures shows above it), so Z can be moved while looking at any figure — not only in full screen, where the same controls are repeated inside the figure.
 - Not handled: `requestFullscreen` on a `div` does not work on iPhone Safari (the button does nothing there).
 
 ## Out of scope (v1)
