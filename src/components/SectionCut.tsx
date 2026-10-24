@@ -4,7 +4,12 @@ import React from "react";
 import { FrameModel3D } from "@/lib/types3d";
 import { SolveOutput3D } from "@/lib/solve3d";
 import { StressResult } from "@/lib/stress3d";
-import { cutAt, nearestStation, sectionOutline, SectionCutData } from "@/lib/sectionCut";
+import { cutAt, nearestStation, sectionOutline, SectionCutData, SIGMA_EPS } from "@/lib/sectionCut";
+import FullscreenFigure from "./FullscreenFigure";
+import SignMark from "./SignMark";
+import SectionPrism from "./SectionPrism";
+import SectionResultant from "./SectionResultant";
+import { sectionLoads } from "@/lib/sectionLoads";
 import { useColors } from "@/contexts/ColorContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -32,6 +37,8 @@ export function resolveCut(model: FrameModel3D, solved: SolveOutput3D | null, cu
 }
 
 // "Z"-shaped linear stress diagram along one axis (a = value at the + end, −a at the − end).
+const pt = ([x, y]: [number, number]) => ({ x, y });
+
 function Bowtie({
   vertical,
   origin,
@@ -57,10 +64,22 @@ function Bowtie({
     vertical ? `${origin[0] + v},${origin[1] - u}` : `${origin[0] + u},${origin[1] + v}`;
   const top = a >= 0 ? pos : neg,
     bottom = a >= 0 ? neg : pos;
+  // centre of a triangle (u, 0) (u, v) (0, 0), for its sign mark
+  const mid = (u: number, v: number): [number, number] => {
+    const [x, y] = P(u / 3, v / 3).split(",").map(Number);
+    return [x, y];
+  };
+  const big = Math.abs(d) > 16; // a sliver has no room for a mark
   return (
     <g data-testid={testId}>
       <polygon points={`${P(half, 0)} ${P(half, d)} ${P(0, 0)}`} fill={top} fillOpacity={0.45} stroke={top} />
       <polygon points={`${P(-half, 0)} ${P(-half, -d)} ${P(0, 0)}`} fill={bottom} fillOpacity={0.45} stroke={bottom} />
+      {big && (
+        <>
+          <SignMark {...pt(mid(half, d))} sign={a >= 0 ? 1 : -1} color={top} testId={`${testId}-sign-top`} />
+          <SignMark {...pt(mid(-half, -d))} sign={a >= 0 ? -1 : 1} color={bottom} testId={`${testId}-sign-bottom`} />
+        </>
+      )}
       <line
         x1={vertical ? origin[0] : origin[0] - half}
         y1={vertical ? origin[1] - half : origin[1]}
@@ -172,48 +191,59 @@ export default function SectionCut({
   const zVal = stationsOf[r.station].z;
   const peakT = stress?.[r.e] ? stress[r.e]!.max.z / r.L : 0;
 
+  // the same controls, shown inside a figure while it is full screen (copy: no duplicated test ids)
+  const controlRow = (cls: string, copy: boolean) => (
+  <div className={`flex flex-wrap items-center gap-3 text-sm ${cls}`}>
+      <label className="flex items-center gap-1">
+        {t("f3d.cut.member")}
+        <select
+          aria-label={t(copy ? "f3d.cut.aria_member_fs" : "f3d.cut.aria_member")}
+          className="rounded border border-stone-200 bg-white px-1 py-0.5 text-xs dark:border-stone-600 dark:bg-stone-800"
+          value={member.id}
+          onChange={(e) => onChange({ ...cut, member: e.target.value })}
+        >
+          {withProfile.map((m) => (
+            <option key={m.id} value={m.id}>
+              {m.id} ({m.profile})
+            </option>
+          ))}
+        </select>
+      </label>
+      <label className="flex flex-1 items-center gap-2">
+        <span className="font-mono text-xs whitespace-nowrap" data-testid={copy ? undefined : "cut-x"}>
+          z = {zVal.toFixed(2)} / {r.L.toFixed(2)} m
+        </span>
+        <input
+          type="range"
+          aria-label={t(copy ? "f3d.cut.aria_pos_fs" : "f3d.cut.aria_pos")}
+          className="min-w-32 flex-1"
+          min={0}
+          max={1}
+          step={0.005}
+          value={cut.t}
+          onChange={(e) => onChange({ ...cut, t: parseFloat(e.target.value) })}
+        />
+      </label>
+      <button
+        type="button"
+        className="rounded border border-stone-200 bg-stone-100 px-2 py-0.5 text-xs hover:bg-stone-200 dark:border-stone-600 dark:bg-stone-800 dark:hover:bg-stone-700"
+        onClick={() => onChange({ ...cut, member: member.id, t: peakT })}
+      >
+        {t("f3d.cut.peak")}
+      </button>
+    </div>
+  );
+  const fsControls = controlRow("", true);
+
   return (
     <div className="space-y-2" data-testid="section-cut">
-      <div className="flex flex-wrap items-center gap-3 text-sm">
-        <label className="flex items-center gap-1">
-          {t("f3d.cut.member")}
-          <select
-            aria-label="cut member"
-            className="rounded border border-stone-200 bg-white px-1 py-0.5 text-xs dark:border-stone-600 dark:bg-stone-800"
-            value={member.id}
-            onChange={(e) => onChange({ ...cut, member: e.target.value })}
-          >
-            {withProfile.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.id} ({m.profile})
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="flex flex-1 items-center gap-2">
-          <span className="font-mono text-xs whitespace-nowrap" data-testid="cut-x">
-            z = {zVal.toFixed(2)} / {r.L.toFixed(2)} m
-          </span>
-          <input
-            type="range"
-            aria-label="cut position"
-            className="min-w-32 flex-1"
-            min={0}
-            max={1}
-            step={0.005}
-            value={cut.t}
-            onChange={(e) => onChange({ ...cut, t: parseFloat(e.target.value) })}
-          />
-        </label>
-        <button
-          type="button"
-          className="rounded border border-stone-200 bg-stone-100 px-2 py-0.5 text-xs hover:bg-stone-200 dark:border-stone-600 dark:bg-stone-800 dark:hover:bg-stone-700"
-          onClick={() => onChange({ ...cut, member: member.id, t: peakT })}
-        >
-          {t("f3d.cut.peak")}
-        </button>
-      </div>
+      {/* sticky: stays at the top of the scrolling area, so Z can be moved while looking at any figure below */}
+      {controlRow(
+        "sticky -top-2 z-20 -mx-3 -mt-1 border-b border-stone-200 bg-white px-3 py-2 dark:border-stone-700 dark:bg-stone-900",
+        false,
+      )}
 
+      <FullscreenFigure testId="fs-cut-components" controls={fsControls}>
       <svg
         width="100%"
         viewBox={`0 0 ${W} ${H}`}
@@ -235,6 +265,15 @@ export default function SectionCut({
             stroke={col(ccorner.sN)}
           />
           <line x1={CX - hw - 70} y1={CY - hh} x2={CX - hw - 70} y2={CY + hh} stroke="#78716c" />
+          {Math.abs(ccorner.sN) > 1e-9 && (
+            <SignMark
+              x={CX - hw - 70 + (ccorner.sN * ps) / 2}
+              y={CY}
+              sign={ccorner.sN >= 0 ? 1 : -1}
+              color={col(ccorner.sN)}
+              testId="cut-diagram-N-sign"
+            />
+          )}
         </g>
 
         {/* section */}
@@ -291,7 +330,7 @@ export default function SectionCut({
           const [px, py] = toPx(c.x, c.y);
           return (
             <g key={i}>
-              <circle cx={px} cy={py} r={3} fill={col(c.sigma)} />
+              <circle cx={px} cy={py} r={3} fill={Math.abs(c.sigma) < SIGMA_EPS ? colors.ink : col(c.sigma)} />
               <text
                 data-testid={`cut-corner-${i}`}
                 x={CX + lx}
@@ -300,10 +339,10 @@ export default function SectionCut({
                 fontSize={12}
                 fontFamily="monospace"
                 fontWeight={700}
-                fill={col(c.sigma)}
+                fill={Math.abs(c.sigma) < SIGMA_EPS ? colors.ink : col(c.sigma)} // a 0.00 has no sign
                 style={{ paintOrder: "stroke", stroke: "#fff", strokeWidth: 3 }}
               >
-                {c.sigma >= 0 ? "+" : ""}
+                {c.sigma >= SIGMA_EPS ? "+" : ""}
                 {f1(c.sigma)}
               </text>
             </g>
@@ -346,8 +385,13 @@ export default function SectionCut({
           {f1(ccorner.sMy)}
         </text>
       </svg>
+      </FullscreenFigure>
 
       <p className="text-xs text-stone-500 dark:text-stone-400">{t("f3d.cut.view_note")}</p>
+
+      <SectionResultant data={data} controls={fsControls} />
+
+      <SectionPrism data={data} loads={sectionLoads(model, solved, r.e, r.station)} unit={model.unit} controls={fsControls} stations={solved.stations[r.e]} L={r.L} />
 
       <CheckEquation data={data} sigmaAdm={model.sigmaAdm} unit={model.unit} />
 

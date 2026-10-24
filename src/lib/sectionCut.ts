@@ -6,6 +6,11 @@ import { FrameModel3D } from "./types3d";
 import { SolveOutput3D } from "./solve3d";
 import { getProfile, Profile } from "./profiles";
 import { memberSection } from "./stress3d";
+import type { Station3D } from "./sampling3d";
+
+// Below this a σ is shown as "0.00": the solver leaves ~1e-13 of numerical noise where the true
+// value is 0 (e.g. the free end of a member), and a diagram built from noise is meaningless.
+export const SIGMA_EPS = 5e-3;
 
 export interface CutCorner {
   x: number; // m
@@ -145,4 +150,74 @@ export function cutAt(
     critical,
     neutral,
   };
+}
+
+// σ (kN/cm²) at (x, y) m of the cut: the same linear field the corners sample.
+export function stressAt(d: SectionCutData, x: number, y: number): number {
+  return (d.N / d.A + (d.Mx * y) / d.Ix + (d.My * x) / d.Iy) / 1e4;
+}
+
+// The I section as three rectangles [x0, y0, x1, y1] in mm (flange, web, flange), flanges
+// parallel to x unless rotated. Used to paint the section cell by cell.
+export function sectionRects(p: Profile, rotated: boolean): [number, number, number, number][] {
+  const H = p.h / 2,
+    B = p.bf / 2,
+    w = p.tw / 2,
+    f = p.tf;
+  const rects: [number, number, number, number][] = [
+    [-B, -H, B, -H + f],
+    [-w, -H + f, w, H - f],
+    [-B, H - f, B, H],
+  ];
+  return rotated ? rects.map(([a, b, c, d]) => [b, a, d, c]) : rects;
+}
+
+// σ over the whole member: the section of the cut (A, I, half sizes) with N, Mx, My taken from the
+// solver's stations, linearly interpolated along z. `at` is in kN/cm² (m for x, y and z);
+// `maxAbs` is the largest |σ| at any station and corner (what the colours are scaled by).
+export interface StressField {
+  at: (x: number, y: number, z: number) => number;
+  maxAbs: number;
+}
+
+export function memberStressField(
+  d: Pick<SectionCutData, "A" | "Ix" | "Iy" | "halfX" | "halfY">,
+  stations: Station3D[],
+): StressField {
+  const st = [...stations].sort((a, b) => a.z - b.z);
+  const forces = (z: number) => {
+    if (st.length === 0) return { N: 0, Mx: 0, My: 0 };
+    if (z <= st[0].z) return st[0];
+    if (z >= st[st.length - 1].z) return st[st.length - 1];
+    let lo = 0,
+      hi = st.length - 1;
+    while (hi - lo > 1) {
+      const mid = (lo + hi) >> 1;
+      if (st[mid].z <= z) lo = mid;
+      else hi = mid;
+    }
+    const a = st[lo],
+      b = st[hi];
+    const dz = b.z - a.z;
+    if (dz < 1e-9) return b; // the pair of stations at a jump
+    const u = (z - a.z) / dz;
+    return { N: a.N + (b.N - a.N) * u, Mx: a.Mx + (b.Mx - a.Mx) * u, My: a.My + (b.My - a.My) * u };
+  };
+  const at = (x: number, y: number, z: number) => {
+    const f = forces(z);
+    return (f.N / d.A + (f.Mx * y) / d.Ix + (f.My * x) / d.Iy) / 1e4;
+  };
+  let maxAbs = 0;
+  st.forEach((f) =>
+    [
+      [1, 1],
+      [1, -1],
+      [-1, 1],
+      [-1, -1],
+    ].forEach(([sx, sy]) => {
+      const v = at(sx * d.halfX, sy * d.halfY, f.z);
+      maxAbs = Math.max(maxAbs, Math.abs(v));
+    }),
+  );
+  return { at, maxAbs };
 }
