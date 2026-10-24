@@ -40,6 +40,8 @@ export function resultantLayout(d: SectionCutData, o: ResultantOptions): Resulta
   // the E.N. would be absurdly far away and the "diagram" a magnified rounding error
   const sigmas = d.corners.map((c) => c.sigma);
   if (Math.max(...sigmas) - Math.min(...sigmas) < SIGMA_EPS) return null;
+  // every corner below the threshold is a zero too, however different they are from each other
+  if (Math.max(...sigmas.map(Math.abs)) < SIGMA_EPS) return null;
   const u: [number, number] = [gX / gn, gY / gn];
   const e: [number, number] = [-u[1], u[0]];
   // the ordinates go away from the section, towards the bottom of the screen

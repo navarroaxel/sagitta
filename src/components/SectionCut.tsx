@@ -342,7 +342,7 @@ export default function SectionCut({
                 fill={Math.abs(c.sigma) < SIGMA_EPS ? colors.ink : col(c.sigma)} // a 0.00 has no sign
                 style={{ paintOrder: "stroke", stroke: "#fff", strokeWidth: 3 }}
               >
-                {c.sigma >= 0 ? "+" : ""}
+                {c.sigma >= SIGMA_EPS ? "+" : ""}
                 {f1(c.sigma)}
               </text>
             </g>

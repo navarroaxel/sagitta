@@ -81,6 +81,19 @@ describe("resultantLayout", () => {
     expect(resultantLayout(d, opts)).not.toBeNull();
   });
 
+  test("returns null when every corner rounds to 0.00, even if they differ from each other (−0.004 / +0.004: spread 0.008)", () => {
+    const d = cut(1);
+    const bend = { ...d, N: 0 };
+    const peak = Math.max(...d.corners.map((c) => Math.abs(stressAt(bend, c.x, c.y))));
+    const k = 0.004 / peak;
+    const tiny = { ...d, N: 0, Mx: d.Mx * k, My: d.My * k };
+    tiny.corners = d.corners.map((c) => ({ ...c, sigma: stressAt(tiny, c.x, c.y) }));
+    const sig = tiny.corners.map((c) => c.sigma);
+    expect(Math.max(...sig.map(Math.abs))).toBeCloseTo(0.004, 6);
+    expect(Math.max(...sig) - Math.min(...sig)).toBeGreaterThan(0.005); // the spread alone would let it through
+    expect(resultantLayout(tiny, opts)).toBeNull();
+  });
+
   test("and at its free end (z = 0) the same member gives null: nothing but noise", () => {
     const over = PRESETS_3D.find((p) => p.key === "frame_overhang")!.model;
     const sv = solveModel3D(over)!;

@@ -72,10 +72,14 @@ const PrismSides = React.memo(function PrismSides({
   ];
   const pts = (...ps: [number, number][]) =>
     ps.map(([a, b]) => `${a},${b}`).join(" ");
-  const paint = (v: number) => ({
-    fill: v >= 0 ? tension : compression,
-    fillOpacity: 0.12 + 0.83 * Math.min(1, Math.abs(v) / sMax),
-  });
+  // a σ that rounds to 0.00 is zero: no tension / compression tint on it
+  const paint = (v: number) =>
+    Math.abs(v) < SIGMA_EPS
+      ? { fill: "none", fillOpacity: 0 }
+      : {
+          fill: v >= 0 ? tension : compression,
+          fillOpacity: 0.12 + 0.83 * Math.min(1, Math.abs(v) / sMax),
+        };
   const outline = sectionOutline(profile, rotated);
   const cw = outline.reduce((acc, [x1, y1], i) => {
     const [x2, y2] = outline[(i + 1) % outline.length];
@@ -170,10 +174,13 @@ export default function SectionPrism({
 
   const sig = (xMm: number, yMm: number) =>
     stressAt(data, xMm / 1000, yMm / 1000);
-  const paint = (v: number) => ({
-    fill: v >= 0 ? colors.tension : colors.compression,
-    fillOpacity: 0.12 + 0.83 * Math.min(1, Math.abs(v) / sMax),
-  });
+  const paint = (v: number) =>
+    Math.abs(v) < SIGMA_EPS
+      ? { fill: "none", fillOpacity: 0 }
+      : {
+          fill: v >= 0 ? colors.tension : colors.compression,
+          fillOpacity: 0.12 + 0.83 * Math.min(1, Math.abs(v) / sMax),
+        };
   // screen point of (x, y) mm on the section at fraction f (0..1) of the member's length
   const scr = (xMm: number, yMm: number, f = 0): [number, number] => [
     CX + xMm * s + off[0] * f,
@@ -339,7 +346,11 @@ export default function SectionPrism({
                   .map((o) => Math.max(...o.force.map(Math.abs))),
               );
               const k = (0.6 * MAX_ARROW) / big;
-              const v: P2 = [l.force[0] * k, -l.force[1] * k];
+              // in-plane part plus the axial one (z, drawn as the plate's z arrow is): a purely axial q has arrows too
+              const v: P2 = [
+                (l.force[0] + l.force[2] * DX) * k,
+                -(l.force[1] + l.force[2] * DY) * k,
+              ];
               const d = unit2(v);
               if (!d || Math.hypot(...v) < 6 || L <= 0) return null;
               const zEnd = Math.min(zb, data.z); // the loaded part that is on the free body: z in [za, zEnd]

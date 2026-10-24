@@ -236,6 +236,18 @@ describe("SectionCut prism legend fits in the figure", () => {
   });
 });
 
+describe("SectionCut prism: a purely axial distributed load", () => {
+  test("gets its row of arrows (the span arrows include the z component)", () => {
+    const base = PRESETS_3D.find((p) => p.key === "frame_overhang")!.model;
+    const axial: FrameModel3D = {
+      ...base,
+      loads: [{ id: "Lax", type: "mudl" as const, member: "M1", gx: 0, gy: 0, gz: -5 }], // along the column
+    };
+    render(<Harness model={axial} start={1} />);
+    expect(screen.getByTestId("prism-q-span-Lax").querySelectorAll("line").length).toBeGreaterThan(1);
+  });
+});
+
 describe("SectionCut prism legend with many loads", () => {
   test("five distributed loads and a reaction: every legend line is inside the viewBox and clear of the triad", () => {
     const base = PRESETS_3D.find((p) => p.key === "frame_overhang")!.model;
@@ -280,6 +292,7 @@ describe("SectionCut prism shows σ along z", () => {
     expect(new Set(sidesOpacities()).size).toBeGreaterThan(8);
     // and tension and compression both appear on the member's sides (the column bends)
     const fills = new Set(Array.from(screen.getByTestId("prism-sides").querySelectorAll("polygon")).map((n) => n.getAttribute("fill")));
+    fills.delete("none"); // slices where σ rounds to 0.00 (the free end) carry no tint
     expect(fills.size).toBe(2);
   });
 
@@ -394,6 +407,15 @@ describe("SectionCut resultant when σ is uniform", () => {
     const s = solveModel3D(model)!;
     return <SectionCut model={model} solved={s} stress={computeStress(model, s)} cut={cut} onChange={setCut} />;
   }
+
+  test("σ = 0: the cut's plate has no tension / compression tint and no corner says +0.00", () => {
+    render(<Beam3 start={0} />);
+    const tinted = Array.from(screen.getByTestId("prism-front").querySelectorAll("polygon")).filter(
+      (n) => ["#0f766e", "#be123c"].includes(n.getAttribute("fill")!) && parseFloat(n.getAttribute("fill-opacity")!) > 0,
+    );
+    expect(tinted).toHaveLength(0);
+    expect(screen.queryByText("+0.00")).toBeNull();
+  });
 
   test("z = 0 of M3 (the free end: nothing before it): says σ = 0 instead of drawing an empty figure", () => {
     render(<Beam3 start={0} />);
