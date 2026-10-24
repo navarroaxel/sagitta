@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Frame3DCanvas, { View3DOptions } from "@/components/Frame3DCanvas";
 import FullscreenFigure from "@/components/FullscreenFigure";
@@ -14,6 +14,7 @@ import { solveModel3D } from "@/lib/solve3d";
 import { computeStress } from "@/lib/stress3d";
 import SectionCut, { CutState, resolveCut } from "@/components/SectionCut";
 import { PRESETS_3D } from "@/lib/presets3d";
+import { modelFromQuery3D, shareQuery3D } from "@/lib/share3d";
 import { peakLocation } from "@/lib/peakLocation";
 import { DIAGRAMS_3D, Diagram3D } from "@/lib/results3d";
 import { FrameModel3D } from "@/lib/types3d";
@@ -38,6 +39,29 @@ export default function Frame3DPage() {
   const [cut, setCut] = useState<CutState>({ on: false, member: "", t: 0 });
   const [panelOpen, setPanelOpen] = useState(true); // the nodes / members / loads editor
   const svgRef = useRef<SVGSVGElement>(null);
+  const [shareCopied, setShareCopied] = useState(false);
+
+  // A shared link (?preset=<key> or ?model=<base64url>) loads that model after hydration (so the
+  // prerendered HTML still matches the first render) and is then taken out of the address bar.
+  useEffect(() => {
+    const shared = modelFromQuery3D(window.location.search);
+    if (shared) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time restore from the URL
+      setModel(shared);
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  }, []);
+
+  const handleShare = useCallback(async () => {
+    const link = `${window.location.origin}${window.location.pathname}?${shareQuery3D(model)}`;
+    try {
+      await navigator.clipboard.writeText(link);
+    } catch {
+      window.prompt("", link); // clipboard blocked — let the user copy it by hand
+    }
+    setShareCopied(true);
+    window.setTimeout(() => setShareCopied(false), 1800);
+  }, [model]);
   const solved = useMemo(() => solveModel3D(model), [model]);
   const stress = useMemo(
     () => (solved && solved.result.stable ? computeStress(model, solved) : null),
@@ -105,6 +129,37 @@ export default function Frame3DPage() {
         </select>
         <button className={btn} onClick={() => setModel(DEFAULT)}>
           {t("f3d.reset")}
+        </button>
+        <button
+          onClick={handleShare}
+          aria-label={t("app.share")}
+          title={shareCopied ? t("app.share_copied") : t("app.share_title")}
+          data-testid="share-3d"
+          className="flex items-center justify-center rounded bg-sky-700 px-2.5 py-1.5 text-white transition-colors hover:bg-sky-800 dark:bg-sky-600 dark:hover:bg-sky-500"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            {shareCopied ? (
+              <polyline points="20 6 9 17 4 12" />
+            ) : (
+              <>
+                <circle cx="18" cy="5" r="3" />
+                <circle cx="6" cy="12" r="3" />
+                <circle cx="18" cy="19" r="3" />
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+              </>
+            )}
+          </svg>
         </button>
         <GitHubLink />
         <SettingsPanel />
