@@ -264,6 +264,18 @@ describe("Truss + Cable + Beam (sizing)", () => {
     expect(model.members.filter((m) => !m.section).length).toBe(3);
   });
 
+  test("the cable gets only HALF of the beam's weight (the other half goes to the pinned support F)", () => {
+    const m2: FrameModel = {
+      ...model,
+      members: model.members.map((m) => ({ ...m, selfWeight: undefined })),
+    };
+    const s2 = solveModel(m2);
+    const cable = (o: typeof solved) =>
+      o.result.reactions[o.nodeIndex.get("F")!].ry;
+    const total = solved.selfWeight[0].total; // 3 146 kg
+    expect(cable(solved) - cable(s2)).toBeCloseTo(total / 2, 6);
+  });
+
   test("without selfWeight the weight is ignored: T = 20 000 kg (the old numbers)", () => {
     const m2: FrameModel = {
       ...model,
@@ -316,6 +328,20 @@ describe("Truss + Cable + Beam IPB 260", () => {
     expect(r("B").ry).toBeCloseTo(40000 + T - VA, 2);
     expect(r("G").ry).toBeCloseTo(T, 2);
     expect(r("G").rx).toBeCloseTo(0, 2);
+  });
+
+  test("the cable gets only HALF of FG's weight (the other half goes to the pinned support G)", () => {
+    const m2: FrameModel = {
+      ...model,
+      members: model.members.map((m) => ({ ...m, selfWeight: undefined })),
+    };
+    const s2 = solveModel(m2);
+    const g = (o: typeof solved) =>
+      o.result.reactions[o.nodeIndex.get("G")!].ry; // the cable's T = V_G
+    const total = solved.selfWeight[0].total; // 926 kg
+    expect(g(solved) - g(s2)).toBeCloseTo(total / 2, 6);
+    const cable = byMember<CableCheck>(checks, "cable");
+    expect(cable.N - 20000).toBeCloseTo(total / 2, 6);
   });
 
   test("a) beam F-G (IPB 260), verified for the load alone: M = P·L/4 + q·L²/8 = 75 000 kg·m, σ ≈ 6 522 kg/cm², does not pass; IPB 550 would", () => {
