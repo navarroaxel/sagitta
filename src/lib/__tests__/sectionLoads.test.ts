@@ -57,7 +57,7 @@ describe("sectionLoads", () => {
         .map((l) => l.id);
     };
     // M2 (B to C, z down): its free end C is z = 0, so L2 is on the free body at every cut
-    for (const f of [(L: number) => 0, (L: number) => L / 2, (L: number) => L])
+    for (const f of [() => 0, (L: number) => L / 2, (L: number) => L])
       expect(at2("M2", f)).toEqual(["L2"]);
     // M3 (E to B, z to the left): its free end E is z = L: L3 only counts once the cut reaches the tip
     expect(at2("M3", () => 0)).toEqual([]);
