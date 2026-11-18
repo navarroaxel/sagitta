@@ -136,4 +136,4 @@ The `#N` in each preset's label (`f3d.example.*` in `LanguageContext.tsx`) is it
 
 ## Out of scope (v1)
 
-Dynamic/modal analysis, second-order effects, member self-weight, 3D hinges/releases, 3D drag-to-move (the 3D solver + `/frame3d` page exist and are tested in `solver3d.test.ts`, `frame3d.test.ts`, `Frame3DCanvas.test.tsx`), inclined supports, temperature loads, member-internal concentrated moments. Leave hook slots but do not build.
+Dynamic/modal analysis, second-order effects, member self-weight in general (only the opt-in `Member.selfWeight` of the checks panel exists, see above), 3D hinges/releases, 3D drag-to-move (the 3D solver + `/frame3d` page exist and are tested in `solver3d.test.ts`, `frame3d.test.ts`, `Frame3DCanvas.test.tsx`), inclined supports, temperature loads, member-internal concentrated moments. Leave hook slots but do not build.
