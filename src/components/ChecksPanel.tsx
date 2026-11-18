@@ -198,7 +198,7 @@ export default function ChecksPanel({
               <th className={`${th} text-right`} title={t("checks.d_min_long")}>
                 Ø<sub>nec</sub> (cm)
               </th>
-              <th className={`${th} text-right`}>ΔL (cm)</th>
+              <th className={`${th} text-right`}>Δl (cm)</th>
             </tr>
           </thead>
           <tbody>
