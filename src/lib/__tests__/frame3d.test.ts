@@ -65,6 +65,22 @@ describe("3D presets", () => {
     expect(s.ok).toBe(true);
   });
 
+  test("column (kg, preset #9): reactions match examples/column-3d-fixed-kg.svg", () => {
+    const model = PRESETS_3D.find((p) => p.key === "column_kg")!.model;
+    const solved = solveModel3D(model)!;
+    const r = solved.result.reactions[solved.nodeIndex.get("A")!];
+    near(r.fx, -1500); // P_x = 1 500 kg along +X
+    near(r.fy, -1000); // q_y = 200 kg/m over 5 m, along +Y (toward the viewer)
+    near(r.fz, 20000);
+    near(r.mx, 2500); // 1000 kg · 2.5 m
+    near(r.my, -7500); // 1500 kg · 5 m
+    near(r.mz, 0);
+    expect(PRESETS_3D[8].key).toBe("column_kg"); // the "#9" is permanent
+    const st = computeStress(model, solved)[0]!;
+    expect(st.ok).toBe(true); // IPB 260: σ max ≈ 1 457 kg/cm² < 1 600
+    near(Math.abs(st.max.sigma), 1457, 5e-3);
+  });
+
   test("T-frame with q_y1 (kg): reactions follow from statics", () => {
     const model = PRESETS_3D.find((p) => p.key === "t_frame_qy")!.model;
     const solved = solveModel3D(model)!;

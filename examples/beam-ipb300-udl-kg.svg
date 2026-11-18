@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 395" font-family="system-ui, sans-serif">
+  <!--
+    Structure: simply supported beam, span 12 m, IPB 300 (solid web, strong axis vertical),
+      uniform load over the full span. sigma_adm = 1600 kg/cm2.
+    World in metres, y up. Transform: sx = 100 + x*40 ; sy = 220 (beam is horizontal, y=0)
+    Nodes (2):
+      A (0,0)  -> (100,220)   [pinned: H and V]
+      B (12,0) -> (580,220)   [roller: V only]
+    Members (1):
+      beam A-B (12 m), IPB 300: W_x = 1680 cm3, A = 149 cm2, I_x = 25170 cm4
+    Supports:
+      A -> pinned (reactions H_A, V_A)
+      B -> roller (reaction V_B)
+    Loads (units: kg, kg/cm):
+      q = 200 kg/cm (= 20 000 kg/m) downward, full span (0 to 12 m); self-weight ignored
+      -> resultant 20 000 * 12 = 240 000 kg at x = 6 m
+    Reactions (computed):
+      A : H_A = 0 ; V_A = 120 000 kg upward
+      B : V_B = 120 000 kg upward
+    Equilibrium check (OK):
+      SumFy = 120 000 + 120 000 - 20 000 * 12 = 0
+      SumM_A = 120 000 * 12 - 20 000 * 12 * 6 = 0
+    Stress check (for reference):
+      M_max = q L^2 / 8 = 20 000 * 12^2 / 8 = 360 000 kg.m = 36 000 000 kg.cm at mid-span
+      sigma = M_max / W_x = 36 000 000 / 1680 = 21 429 kg/cm2 > 1600 (about 13 times sigma_adm)
+      largest admissible q: 8 * 1600 * 1680 / 1200^2 = 14.9 kg/cm
+  -->
+
+  <rect x="0" y="0" width="740" height="395" fill="#ffffff"/>
+
+  <!-- ===== Dimensions ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <!-- span: 12.00 m -->
+    <line x1="100" y1="330" x2="580" y2="330"/>
+    <line x1="100" y1="325" x2="100" y2="335"/>
+    <line x1="580" y1="325" x2="580" y2="335"/>
+    <text x="340" y="350" text-anchor="middle" stroke="none">12.00</text>
+  </g>
+
+  <!-- ===== Beam (solid web) ===== -->
+  <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
+    <line x1="100" y1="220" x2="580" y2="220"/>
+  </g>
+
+  <!-- ===== Pinned support at A ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <polygon points="100,220 91,231 109,231"/>
+    <line x1="85" y1="231" x2="115" y2="231"/>
+    <line x1="88" y1="231" x2="82" y2="238"/>
+    <line x1="96" y1="231" x2="90" y2="238"/>
+    <line x1="104" y1="231" x2="98" y2="238"/>
+    <line x1="112" y1="231" x2="106" y2="238"/>
+  </g>
+
+  <!-- ===== Roller support at B ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <polygon points="580,220 571,231 589,231"/>
+    <circle cx="575" cy="237" r="3"/>
+    <circle cx="585" cy="237" r="3"/>
+    <line x1="565" y1="241" x2="595" y2="241"/>
+    <line x1="568" y1="241" x2="562" y2="248"/>
+    <line x1="576" y1="241" x2="570" y2="248"/>
+    <line x1="584" y1="241" x2="578" y2="248"/>
+    <line x1="592" y1="241" x2="586" y2="248"/>
+  </g>
+
+  <!-- ===== Nodes ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="100" cy="220" r="4"/>
+    <circle cx="580" cy="220" r="4"/>
+  </g>
+
+  <!-- ===== Node labels ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <text x="86" y="206" text-anchor="end">A</text>
+    <text x="594" y="206" text-anchor="start">B</text>
+    <text x="340" y="250" text-anchor="middle" font-weight="400" fill="#5f6368" font-size="12">IPB 300</text>
+  </g>
+
+  <!-- ===== Loads (red): UDL q = 200 kg/cm downward, full span ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+    <text x="340" y="95" text-anchor="middle" stroke="none">q = 200 kg/cm</text>
+    <line x1="100" y1="110" x2="580" y2="110" stroke-width="2"/>
+    <!-- 9 evenly spaced arrow shafts (every 1.5 m), tip at the beam surface -->
+    <line x1="100" y1="110" x2="100" y2="212" stroke-width="2"/>
+    <polygon points="100,220 94,209 106,209" stroke="none"/>
+    <line x1="160" y1="110" x2="160" y2="212" stroke-width="2"/>
+    <polygon points="160,220 154,209 166,209" stroke="none"/>
+    <line x1="220" y1="110" x2="220" y2="212" stroke-width="2"/>
+    <polygon points="220,220 214,209 226,209" stroke="none"/>
+    <line x1="280" y1="110" x2="280" y2="212" stroke-width="2"/>
+    <polygon points="280,220 274,209 286,209" stroke="none"/>
+    <line x1="340" y1="110" x2="340" y2="212" stroke-width="2"/>
+    <polygon points="340,220 334,209 346,209" stroke="none"/>
+    <line x1="400" y1="110" x2="400" y2="212" stroke-width="2"/>
+    <polygon points="400,220 394,209 406,209" stroke="none"/>
+    <line x1="460" y1="110" x2="460" y2="212" stroke-width="2"/>
+    <polygon points="460,220 454,209 466,209" stroke="none"/>
+    <line x1="520" y1="110" x2="520" y2="212" stroke-width="2"/>
+    <polygon points="520,220 514,209 526,209" stroke="none"/>
+    <line x1="580" y1="110" x2="580" y2="212" stroke-width="2"/>
+    <polygon points="580,220 574,209 586,209" stroke="none"/>
+  </g>
+
+  <!-- ===== Support reactions (blue), drawn below the supports pointing up ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+    <!-- A: V_A = 120 000 kg upward -->
+    <line x1="100" y1="260" x2="100" y2="300" stroke-width="2.5"/>
+    <polygon points="100,252 94,264 106,264" stroke="none"/>
+    <text x="118" y="282" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">A</tspan><tspan dx="4" dy="-4">= 120 000 kg</tspan></text>
+    <!-- B: V_B = 120 000 kg upward -->
+    <line x1="580" y1="260" x2="580" y2="300" stroke-width="2.5"/>
+    <polygon points="580,252 574,264 586,264" stroke="none"/>
+    <text x="598" y="282" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">B</tspan><tspan dx="4" dy="-4">= 120 000 kg</tspan></text>
+  </g>
+
+  <text x="370" y="382" text-anchor="middle" fill="#5f6368" font-size="13">
+    simply supported beam, 12 m span, IPB 300; σ<tspan font-size="10" dy="4">adm</tspan><tspan dx="3" dy="-4">= 1600 kg/cm²; UDL (red), reactions (blue)</tspan>
+  </text>
+</svg>

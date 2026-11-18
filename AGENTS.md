@@ -17,7 +17,7 @@ A Next.js 16 + React 19 client-side app that renders structural internal force d
 ```bash
 npm install     # required: installs jsdom + testing-library for the component tests
 npm run dev     # dev server on localhost:3000
-npm test        # full Vitest suite (847 checks, 2 projects — must stay green)
+npm test        # full Vitest suite (880 checks, 2 projects — must stay green)
 npm run build   # production build (must stay clean)
 npm run lint    # ESLint
 npx tsc --noEmit  # TypeScript check
@@ -61,7 +61,8 @@ How diagrams are *drawn and labelled* is selected by the **sign-convention setti
 
 | File                                                 | Purpose                                                                                                                                          |
 | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `src/lib/types.ts`                                   | `FrameModel`, `FrameNode`, `Member`, `Load`, `Material`, `Support`                                                                               |
+| `src/lib/types.ts`                                   | `FrameModel` (+ optional `sigmaAdm`, force/cm²), `FrameNode`, `Member` (+ optional `section`: `profile` to verify, `size` to size, `cable`), `Load`, `Material`, `Support`                                                                               |
+| `src/lib/checks.ts`, `src/components/ChecksPanel.tsx` | **Verification and sizing** of the 2D model's members with a `section` (top of the results tab): σ = \|N\|/A + \|M\|·100/Sx ≤ `sigmaAdm` at the worst station for a given IPN/IPB (`verify`: ✓/✗, ratio, lightest profile of the same series that passes); the lightest IPN / IPB that passes (`size`, with weight, flags compressed bars: **buckling is not checked**); a round steel **cable** (`cable`: N must be tension, A = N/σadm, d = √(4A/π), elongation Δ = N·L/(E·A) = σadm·L/E; E = `material.E`/1e4 in force/cm²). Units: forces in the model's unit (kg for the course), lengths in m, sections in cm (profile table). The member forces of the exercises are statically determinate, so they do not depend on the sections; a `profile` section does feed `solve.ts` (A, Ix → m², m⁴), only for displacements. The editor's members tab has a Section select, the material tab the σ adm field |
 | `src/lib/solver3d.ts`, `sampling3d.ts` | 3D frame solver (6 DOF/node, 12×12 beam, uniform loads over the whole member or a `from`/`to` span) + N/Qx/Qy/T/Mx/My sampling — independent of the 2D solver; same don't-touch-the-math rule once verified. The solver keeps its own local frame (x' along the member); the course's triad is applied only when presenting results (`localFrame.ts`, `sampling3d.ts`) |
 | `src/lib/{types3d,solve3d,results3d,presets3d,projection3d}.ts` | 3D id-based model, adapter, derived results/equilibrium, 2 presets, oblique projection (x right, z up, **y toward the viewer**, down-left — the course's left-handed global triad; the solver's numbers already follow it, verified against the professor's resolution in `frame3d.test.ts`) |
 | `src/lib/localFrame.ts` | Course triad of a member (the professor's, **left-handed: x × y = −z**): **z along the member (down, or to the left if horizontal), x out of the plane (−Y for a frame in the x-z plane), y to the right (columns) or down (beams)**, independent of how the member's nodes are ordered. The global Y is drawn toward the viewer (see `projection3d.ts`), so this x points *away* from the viewer: checked against the professor's My (positive when a +Y load bends the column, i.e. tension on the back fibre). Internal forces: N > 0 tension, Qx/Qy are the force components on the +z face, T the torque about z, and Mx/My are bending moments that are positive when they tension the +y / +x fibres, so σ = N/A + Mx·y/Ix + My·x/Iy |
@@ -82,7 +83,7 @@ How diagrams are *drawn and labelled* is selected by the **sign-convention setti
 | `src/lib/conventions.ts`                             | `diagramSigns` — per-diagram `{sideSign, dispSign}` for Argentina vs International                                                               |
 | `src/lib/results.ts`                                 | `peak`, `equilibrium`, `clean` — derived results + ✓/✗ tolerances                                                                                |
 | `src/lib/loadProjection.ts`                          | Load placement helpers (`pointLoadPos`, UDL arrow fractions)                                                                                     |
-| `src/lib/presets.ts`                                 | 8 preset models (frame+truss, truss, portal w/ hinge, etc.)                                                                                      |
+| `src/lib/presets.ts`                                 | 29 preset models (frame+truss, truss, portal w/ hinge, etc.). The last three, in **kg** with `sigmaAdm` 1600, mirror `examples/beam-ipb300-udl-kg.svg`, `truss-cable-beam-kg.svg` and `truss-cable-beam-ipb260-kg.svg` (verification / sizing exercises; the first and the IPB 260 beam are meant to **fail** the check; the cable-beam one assumes the cable is 4.33 m, E on the support line) — keep `PRESET_META` in `PresetMenu.tsx` in the same order |
 | `src/components/FrameCanvas.tsx`                     | Composes the `canvas/` layers; drag-to-move nodes, zoom/pan                                                                                      |
 | `src/components/canvas/*`                            | Per-concern SVG layers: `DiagramLayer`, `GridLayer`, `LoadsLayer`, `ReactionsLayer`, `SupportSymbol`, `ValueLabel` (+ `constants.ts`, `loads.tsx`) |
 | `src/components/ModelEditor.tsx`                     | Tabbed editor (nodes / members / loads / material / results)                                                                                     |
@@ -108,6 +109,7 @@ How diagrams are *drawn and labelled* is selected by the **sign-convention setti
     4. Moment release (hinge) — M = 0 at the released end
     5. Compound two-bay portal — global equilibrium (ΣFx, ΣFy, ΣM), hinge condition, local member equilibrium, and three expected reaction values
 - `diagram.test.ts`, `geometry.test.ts`, `loadProjection.test.ts`, `results.test.ts` — diagram/geometry/load-placement/results helpers.
+- `checks.test.ts` — σ at a station, lightest passing profile, and the three kg presets end to end (reactions as in the SVGs, cable d / elongation, sizes of the bars and beams, the failing checks); `ChecksPanel.test.tsx` (components) — the panel and the Section / σ adm editor controls.
 
 **components project (jsdom, React render):** `FrameCanvas.test.tsx`, `ValueLabel.test.tsx`, `ReactionsLayer.test.tsx` (the last guards reaction-arrow direction for both signs of the reaction).
 
@@ -115,11 +117,11 @@ How diagrams are *drawn and labelled* is selected by the **sign-convention setti
 - `sectionCut.test.ts`, `sectionLoads.test.ts`, `resultantDiagram.test.ts` — the cut's σ field (`stressAt`, `sectionRects`, `memberStressField`: equals the cut's field at its own z, varies along the member, same maximum as the stress check), the loads in the section's axes (free body only), and the resultant diagram's geometry (σ max / σ min where the parallels meet the baseline, σ = 0 on the E.N., baseline ⟂ E.N.).
 - Components: `SectionCut.test.tsx` (figures, loads on the prism, σ along z on the prism's sides and the plate moving with the slider, legend width, full screen + the Z slider inside it), `Frame3DPage.test.tsx` (collapsible editor panel, full screen on the frame canvas).
 
-Total 847 checks (`npm test`). Component tests render with `@testing-library/react`; remember to add a test there when adding a canvas layer or fixing a rendering bug.
+Total 880 checks (`npm test`). Component tests render with `@testing-library/react`; remember to add a test there when adding a canvas layer or fixing a rendering bug.
 
 ## 3D presets: numbering (do not "fix" this)
 
-The `#N` in each preset's label (`f3d.example.*` in `LanguageContext.tsx`) is its position in `PRESETS_3D` and is **permanent** — people say "preset #3". Never reorder or renumber: a new preset goes at the END (#9, #10…), a removed one leaves a gap. Labels carry the number, the kind of frame and the support, **not the loads** (they change, and are long); only a property that makes the preset special is added (#5: "σ max inside the bar"). The select shows which preset is loaded (found by identity with `PRESETS_3D[i].model`), and goes back to its placeholder as soon as the model is edited.
+The `#N` in each preset's label (`f3d.example.*` in `LanguageContext.tsx`) is its position in `PRESETS_3D` and is **permanent** — people say "preset #3". Never reorder or renumber: a new preset goes at the END (#10, #11…; #9 is the 5 m column of `examples/column-3d-fixed-kg.svg`, whose section IPB 260 is a choice: the exercise gives none), a removed one leaves a gap. Labels carry the number, the kind of frame and the support, **not the loads** (they change, and are long); only a property that makes the preset special is added (#5: "σ max inside the bar"). The select shows which preset is loaded (found by identity with `PRESETS_3D[i].model`), and goes back to its placeholder as soon as the model is edited.
 
 ## Section-cut conventions (do not "fix" these)
 

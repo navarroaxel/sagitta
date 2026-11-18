@@ -40,6 +40,9 @@ const PRESET_META: { key: TranslationKey; cat: Category }[] = [
   { key: "preset.l_frame_hinge_inclined", cat: "frames" },
   { key: "preset.asymmetric_portal_overhang", cat: "frames" },
   { key: "preset.wall_truss_two_panel", cat: "trusses" },
+  { key: "preset.beam_ipb300_check", cat: "beams" },
+  { key: "preset.truss_cable_beam", cat: "trusses" },
+  { key: "preset.truss_cable_beam_ipb260", cat: "trusses" },
 ];
 
 const CATEGORY_ORDER: { cat: Category; titleKey: TranslationKey }[] = [

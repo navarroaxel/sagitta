@@ -65,6 +65,9 @@ const EN = {
   "preset.l_frame_hinge_inclined": "L-Frame w/ Hinge (inclined load)",
   "preset.asymmetric_portal_overhang": "Asymmetric Portal w/ Overhang",
   "preset.wall_truss_two_panel": "Wall Truss (2 panels)",
+  "preset.beam_ipb300_check": "Beam IPB 300 (check)",
+  "preset.truss_cable_beam": "Truss + cable + beam (sizing)",
+  "preset.truss_cable_beam_ipb260": "Truss + cable + beam IPB 260 (check and sizing)",
 
   "forces.member": "Member",
   "forces.state": "State",
@@ -136,6 +139,29 @@ const EN = {
   "editor.loads.remove": "✕ remove",
   "editor.loads.add": "+ Add load",
 
+  "editor.members.section": "Section",
+  "editor.section.none": "— (analysis only)",
+  "editor.section.cable": "Cable",
+  "editor.section.size": "Size (lightest that passes)",
+  "editor.section.verify": "Check profile",
+  "editor.material.sigma_adm": "σ adm",
+  "editor.material.sigma_note":
+    "Used by the Results tab for members with a section (check a profile, size one, or size a cable). Forces in kg and lengths in m give kg/cm²; E is then in kg/m² (steel: 2.1e10).",
+  "checks.title": "Verification and sizing",
+  "checks.no_sigma": "Set σ adm in the Material tab to run the checks.",
+  "checks.member": "Member",
+  "checks.profile": "Profile",
+  "checks.result": "Result",
+  "checks.pass": "✓ passes",
+  "checks.fail": "✗ does not pass",
+  "checks.lightest": "Lightest that passes",
+  "checks.none": "none in the table",
+  "checks.unloaded": "no load: any profile",
+  "checks.cable": "Cable",
+  "checks.not_tension": "not in tension: a cable cannot take compression",
+  "checks.note_buckling":
+    "Only σ = N/A + M/W is checked; buckling of the compressed members is not verified.",
+
   "editor.material.note":
     "Material properties only affect indeterminate frames. For determinate structures the results are independent of E, A, I.",
 
@@ -205,6 +231,7 @@ const EN = {
   "f3d.example.l_torsion": "#8 L space frame (torsion)",
   "f3d.example.eccentric_tension": "#7 Eccentric tension on IPN 300 (P_z,max)",
   "f3d.example.cantilever_kg": "#6 Cantilever IPN 320 (max length)",
+  "f3d.example.column_kg": "#9 3D column (fixed)",
   "f3d.diagram": "Diagram:",
   "f3d.diagram_none": "None",
   "f3d.note":
@@ -611,6 +638,9 @@ const ES: Record<TranslationKey, string> = {
   "preset.l_frame_hinge_inclined": "Pórtico en L con rótula (carga inclinada)",
   "preset.asymmetric_portal_overhang": "Pórtico asimétrico con voladizo",
   "preset.wall_truss_two_panel": "Reticulado en muro (2 paños)",
+  "preset.beam_ipb300_check": "Viga IPB 300 (verificación)",
+  "preset.truss_cable_beam": "Reticulado + cable + viga (dimensionado)",
+  "preset.truss_cable_beam_ipb260": "Reticulado + cable + viga IPB 260 (verificación y dimensionado)",
 
   "forces.member": "Barra",
   "forces.state": "Estado",
@@ -682,6 +712,29 @@ const ES: Record<TranslationKey, string> = {
   "editor.loads.remove": "✕ quitar",
   "editor.loads.add": "+ Agregar carga",
 
+  "editor.members.section": "Sección",
+  "editor.section.none": "— (solo análisis)",
+  "editor.section.cable": "Cable",
+  "editor.section.size": "Dimensionar (el más liviano que cumple)",
+  "editor.section.verify": "Verificar perfil",
+  "editor.material.sigma_adm": "σ adm",
+  "editor.material.sigma_note":
+    "Lo usa la pestaña de resultados para las barras con sección (verificar un perfil, dimensionarlo o dimensionar un cable). Fuerzas en kg y longitudes en m dan kg/cm²; E queda en kg/m² (acero: 2,1e10).",
+  "checks.title": "Verificación y dimensionado",
+  "checks.no_sigma": "Cargá σ adm en la pestaña Material para hacer las verificaciones.",
+  "checks.member": "Barra",
+  "checks.profile": "Perfil",
+  "checks.result": "Resultado",
+  "checks.pass": "✓ cumple",
+  "checks.fail": "✗ no cumple",
+  "checks.lightest": "El más liviano que cumple",
+  "checks.none": "ninguno de la tabla",
+  "checks.unloaded": "sin carga: cualquier perfil",
+  "checks.cable": "Cable",
+  "checks.not_tension": "no está a tracción: un cable no resiste compresión",
+  "checks.note_buckling":
+    "Solo se verifica σ = N/A + M/W; no se verifica el pandeo de las barras comprimidas.",
+
   "editor.material.note":
     "Las propiedades del material solo afectan a las estructuras hiperestáticas. Para estructuras isostáticas, los resultados son independientes de E, A, I.",
 
@@ -751,6 +804,7 @@ const ES: Record<TranslationKey, string> = {
   "f3d.example.l_torsion": "#8 Pórtico en L espacial (torsión)",
   "f3d.example.eccentric_tension": "#7 Tracción excéntrica en IPN 300 (P_z máx)",
   "f3d.example.cantilever_kg": "#6 Voladizo IPN 320 (longitud máx)",
+  "f3d.example.column_kg": "#9 Columna 3D (empotrada)",
   "f3d.diagram": "Diagrama:",
   "f3d.diagram_none": "Ninguno",
   "f3d.note":

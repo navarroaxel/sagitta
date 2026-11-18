@@ -1,5 +1,6 @@
 // Adapter: maps id-based FrameModel -> index-based SolverModel, calls solveFrame.
 import { FrameModel } from "./types";
+import { getProfile } from "./profiles";
 import { solveFrame, SolverModel, SolverResult } from "./solver";
 import { sampleMember, Station } from "./sampling";
 
@@ -20,15 +21,22 @@ export function solveModel(model: FrameModel): SolveOutput {
 
   const solverModel: SolverModel = {
     nodes: model.nodes.map((n) => ({ x: n.x, y: n.y, support: n.support })),
-    members: model.members.map((m) => ({
-      i: nodeIndex.get(m.n1)!,
-      j: nodeIndex.get(m.n2)!,
-      E: model.material.E,
-      A: model.material.A,
-      I: model.material.I,
-      relI: m.relI,
-      relJ: m.relJ,
-    })),
+    members: model.members.map((m) => {
+      // A member checked against a profile uses the profile's A and Ix (cm² -> m², cm⁴ -> m⁴;
+      // lengths are metres). They only matter for displacements: forces of a determinate model
+      // do not depend on the section.
+      const prof =
+        m.section?.kind === "profile" ? getProfile(m.section.name) : undefined;
+      return {
+        i: nodeIndex.get(m.n1)!,
+        j: nodeIndex.get(m.n2)!,
+        E: model.material.E,
+        A: prof ? prof.A * 1e-4 : model.material.A,
+        I: prof ? prof.Ix * 1e-8 : model.material.I,
+        relI: m.relI,
+        relJ: m.relJ,
+      };
+    }),
     loads: model.loads.map((load) => {
       if (load.type === "nodal") {
         return {
