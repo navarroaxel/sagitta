@@ -35,22 +35,51 @@ describe("Frame3DCanvas", () => {
   });
 
   test("the fixed support follows the member: horizontal plate for a column, vertical wall for a beam", () => {
-    const { unmount } = render(<Frame3DCanvas model={tFrame} solved={solveModel3D(tFrame)} viewOpts={opts} />);
-    expect(screen.getByTestId("support-fixed-A").getAttribute("data-axis")).toBe("z");
+    const { unmount } = render(
+      <Frame3DCanvas
+        model={tFrame}
+        solved={solveModel3D(tFrame)}
+        viewOpts={opts}
+      />,
+    );
+    expect(
+      screen.getByTestId("support-fixed-A").getAttribute("data-axis"),
+    ).toBe("z");
     unmount();
     const beam = PRESETS_3D.find((p) => p.key === "cantilever_kg")!.model;
-    render(<Frame3DCanvas model={beam} solved={solveModel3D(beam)} viewOpts={opts} />);
-    expect(screen.getByTestId("support-fixed-A").getAttribute("data-axis")).toBe("x");
+    render(
+      <Frame3DCanvas
+        model={beam}
+        solved={solveModel3D(beam)}
+        viewOpts={opts}
+      />,
+    );
+    expect(
+      screen.getByTestId("support-fixed-A").getAttribute("data-axis"),
+    ).toBe("x");
   });
 
   test("reaction labels at one support never overlap (Fy and My trail to the same side)", () => {
     const model = PRESETS_3D.find((p) => p.key === "t_frame_qy")!.model;
-    render(<Frame3DCanvas model={model} solved={solveModel3D(model)} viewOpts={opts} />);
-    const boxes = Array.from(screen.getByTestId("reactions3d-layer").querySelectorAll("text")).map((t) => {
+    render(
+      <Frame3DCanvas
+        model={model}
+        solved={solveModel3D(model)}
+        viewOpts={opts}
+      />,
+    );
+    const boxes = Array.from(
+      screen.getByTestId("reactions3d-layer").querySelectorAll("text"),
+    ).map((t) => {
       const w = t.textContent!.length * 6;
       const x = parseFloat(t.getAttribute("x")!);
       const x0 = t.getAttribute("text-anchor") === "end" ? x - w : x;
-      return { x0, x1: x0 + w, y: parseFloat(t.getAttribute("y")!), text: t.textContent };
+      return {
+        x0,
+        x1: x0 + w,
+        y: parseFloat(t.getAttribute("y")!),
+        text: t.textContent,
+      };
     });
     expect(boxes.length).toBe(4); // Fy, Fz, Mx, My
     boxes.forEach((a, i) =>
@@ -77,6 +106,20 @@ describe("Frame3DCanvas", () => {
     );
     expect(screen.getByTestId("reaction-A-fy").textContent).toContain("18.00");
     expect(screen.getByTestId("reaction-A-my").textContent).toContain("29.00");
+  });
+
+  test("reaction labels are signed, as in the results table and on the professor's sheet (column #9: Fx −1500, Fy −1000, Fz +20000)", () => {
+    const col = PRESETS_3D.find((p) => p.key === "column_kg")!.model;
+    render(
+      <Frame3DCanvas model={col} solved={solveModel3D(col)} viewOpts={opts} />,
+    );
+    const text = (id: string) =>
+      screen.getByTestId(`reaction-A-${id}`).textContent!;
+    expect(text("fx")).toContain("Fx = -1500.00");
+    expect(text("fy")).toContain("Fy = -1000.00");
+    expect(text("fz")).toContain("Fz = 20000.00");
+    expect(text("mx")).toContain("Mx = 2500.00");
+    expect(text("my")).toContain("My = -7500.00");
   });
 
   test("F_y reaction tip sits at the node (collinear with the M_y vector through A)", () => {

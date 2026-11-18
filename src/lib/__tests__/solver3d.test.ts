@@ -184,14 +184,14 @@ describe("cantilever along x", () => {
     close(st[0].Qy, -P);
     close(st[0].z, L); // z runs from the tip (z = 0) towards the support
   });
-  test("tip load in y: PL³/(3·E·Iz), reaction, My = −PL and Qx = −P at the support", () => {
+  test("tip load in y: PL³/(3·E·Iz), reaction, My = −PL and Qx = +P at the support", () => {
     const m: Solver3DModel = { ...base, loads: [{ type: "nodal", node: 1, fy: -P }] };
     const res = solveFrame3D(m);
     close(res.U[6 + 1], (-P * L ** 3) / (3 * E * 5e-5), 1e-9);
     close(res.reactions[0].mz, P * L);
     const st = sampleMember3D(m, res, 0);
     close(st[0].My, -P * L); // tension on the +Y side = −x
-    close(st[0].Qx, -P); // x = −Y: the face carries +Y, i.e. −x
+    close(st[0].Qx, P); // x = −Y: the face carries +Y, i.e. −x; Qx has the professor's sign (opposite to that force)
   });
   test("tip torque: twist T·L/(G·J), constant torsor", () => {
     const m: Solver3DModel = { ...base, loads: [{ type: "nodal", node: 1, mx: 7 }] };
