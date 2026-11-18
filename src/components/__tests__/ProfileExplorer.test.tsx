@@ -87,7 +87,7 @@ describe("ProfileExplorer", () => {
     expect(heads).toHaveLength(4);
     const cards = (h: Element) =>
       [...(h.nextElementSibling?.querySelectorAll("button") ?? [])].map(
-        (b) => b.textContent?.split(" ")[0],
+        (b) => b.querySelector("span")?.textContent,
       );
     const h3s = [...region.querySelectorAll("h3")];
     expect(cards(h3s[0])).toEqual(["h", "b", "tf", "tw", "hw", "r"]);

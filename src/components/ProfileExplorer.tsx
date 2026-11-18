@@ -331,13 +331,17 @@ function Detail({
                       onClick={() => onCopy(c.key, p[c.key])}
                       className="rounded border border-stone-200 px-2 py-1 text-left text-sm hover:bg-teal-50 dark:border-stone-700 dark:hover:bg-teal-950"
                     >
-                      <span className="text-xs text-stone-500 dark:text-stone-400">
-                        {c.label} [{c.unit}]
+                      <span className="block text-[11px] leading-tight text-stone-500 dark:text-stone-400">
+                        {c.label}
                       </span>
-                      <br />
-                      <span className="font-semibold tabular-nums">
+                      <span className="text-lg leading-tight font-semibold tabular-nums">
                         {copied === c.key ? t("prof.copied") : p[c.key]}
                       </span>
+                      {copied !== c.key && (
+                        <span className="ml-1 text-[11px] text-stone-500 dark:text-stone-400">
+                          {c.unit}
+                        </span>
+                      )}
                     </button>
                   );
                 })}
