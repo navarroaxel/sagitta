@@ -1,0 +1,223 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 700" font-family="system-ui, sans-serif">
+  <!--
+    Structure: 7-bar truss on two supports; node C hangs a 15 m steel cable that carries the left
+      end F of a 10 m beam F-G (IPB 260), pinned at G. Two coupled bodies:
+      truss (A roller, B pinned) + beam (F carried by the cable, G pinned).
+      Cable: same steel as the profile tables, sigma_adm = 1600 kg/cm2.
+      Assumptions (not stated in the exercise): C lies to the RIGHT of B; the 7th bar is the top
+      bar D-E (needed for the truss to be isostatic: 2*5 nodes = 7 bars + 3 reactions); the
+      distributed load covers the whole beam; self-weight is ignored.
+    World in metres, y up. Transform: sx = 150 + x*26 ; sy = 320 - y*26 (the cable is NOT to scale; its 15 m is dimensioned at the right, level of C to level of F-G: drawn 210 px = 8.1 m
+      long instead of 15 m, with a break mark; the beam row is shifted up accordingly)
+    Nodes:
+      A (0,0)           -> (150,320)  roller support
+      B (5,0)           -> (280,320)  pinned support
+      C (13.66,0)       -> (505,320)  cable hangs from it
+      D (0,8.66)        -> (150,95)   loaded
+      E (5,8.66)        -> (280,95)   loaded
+      F (13.66,-15)     -> (505,530)  left end of the beam, held by the cable
+      G (23.66,-15)     -> (765,530)  pinned support
+    Members:
+      b1 A-B (5 m) ; b2 B-C (8.66 m) ; b3 A-D (column, 8.66 m) ; b4 A-E (10 m)
+      b5 B-E (column, 8.66 m) ; b6 E-C (12.25 m) ; b7 D-E (5 m)
+      cable C-F (15 m, tension only) ; beam F-G (10 m, IPB 260)
+    Supports: A roller (V_A) ; B pinned (H_B, V_B) ; G pinned (H_G, V_G)
+    Loads (units: kg, kg/cm):
+      D : 40 000 kg downward
+      E : 5 000 kg to the right
+      beam F-G: 20 000 kg at mid-span + q = 20 kg/cm (= 2 000 kg/m) over the 10 m
+        -> total on the beam 20 000 + 2 000 * 10 = 40 000 kg
+    Support reactions (computed):
+      Beam: symmetric loading -> cable T = 20 000 kg (tension) ; H_G = 0 ; V_G = 20 000 kg (upward)
+      Truss: the cable pulls C down with 20 000 kg
+            SumFx = 0 -> H_B = -5 000 kg (to the left)
+            SumM_B = 0 -> -5 V_A + 40 000 * 5 - 5 000 * 8.66 - 20 000 * 8.66 = 0 -> V_A = -3 300 kg (downward)
+            SumFy = 0 -> V_B = 40 000 + 20 000 + 3 300 = 63 300 kg (upward)
+      These reactions satisfy global equilibrium (SumM_A = 63 300 * 5 - 5 000 * 8.66
+      - 20 000 * 13.66 = 0).
+    Cable: A >= T / sigma_adm = 20 000 / 1600 = 12.5 cm2.
+    NOTE: the reactions above (and the 20 000 kg of the cable) are those of the drawing: they do NOT
+      include the own weight of the beam F-G (IPB 260: 92.6 kg/m x 10 m = 926 kg). The simulator adds
+      it to what the cable carries (T = 20 463 kg), so its numbers are slightly larger.
+  -->
+
+  <rect x="0" y="0" width="840" height="700" fill="#ffffff"/>
+
+  <!-- ===== Dimensions ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <!-- truss base: 5 | 8.66 -->
+    <line x1="150" y1="440" x2="505" y2="440"/>
+    <line x1="150" y1="435" x2="150" y2="445"/>
+    <line x1="280" y1="435" x2="280" y2="445"/>
+    <line x1="505" y1="435" x2="505" y2="445"/>
+    <text x="215" y="433" text-anchor="middle" stroke="none">5.00</text>
+    <text x="392" y="433" text-anchor="middle" stroke="none">8.66</text>
+    <!-- column height: 8.66 m -->
+    <line x1="105" y1="95" x2="105" y2="320"/>
+    <line x1="100" y1="95" x2="110" y2="95"/>
+    <line x1="100" y1="320" x2="110" y2="320"/>
+    <text x="93" y="207" text-anchor="middle" transform="rotate(-90 93 207)" stroke="none">8.66 m</text>
+    <!-- cable length: 15 m (not to scale): level of C down to the level of the beam, near G -->
+    <line x1="514" y1="320" x2="826" y2="320" stroke-dasharray="3 3"/>
+    <line x1="784" y1="530" x2="826" y2="530" stroke-dasharray="3 3"/>
+    <line x1="815" y1="320" x2="815" y2="530"/>
+    <line x1="810" y1="320" x2="820" y2="320"/>
+    <line x1="810" y1="530" x2="820" y2="530"/>
+    <text x="803" y="425" text-anchor="middle" transform="rotate(-90 803 425)" stroke="none">15 m</text>
+    <!-- beam: 5 | 5 -->
+    <line x1="505" y1="630" x2="765" y2="630"/>
+    <line x1="505" y1="625" x2="505" y2="635"/>
+    <line x1="635" y1="625" x2="635" y2="635"/>
+    <line x1="765" y1="625" x2="765" y2="635"/>
+    <text x="570" y="623" text-anchor="middle" stroke="none">5.00</text>
+    <text x="700" y="623" text-anchor="middle" stroke="none">5.00</text>
+  </g>
+
+  <!-- ===== Truss bars b1..b7 (two-force members) ===== -->
+  <g stroke="#1a1a1a" stroke-width="3" stroke-linecap="round">
+    <line x1="150" y1="320" x2="280" y2="320"/>   <!-- b1 A-B -->
+    <line x1="280" y1="320" x2="505" y2="320"/>   <!-- b2 B-C -->
+    <line x1="150" y1="320" x2="150" y2="95"/>    <!-- b3 A-D -->
+    <line x1="150" y1="320" x2="280" y2="95"/>    <!-- b4 A-E -->
+    <line x1="280" y1="320" x2="280" y2="95"/>    <!-- b5 B-E -->
+    <line x1="280" y1="95"  x2="505" y2="320"/>   <!-- b6 E-C -->
+    <line x1="150" y1="95"  x2="280" y2="95"/>    <!-- b7 D-E -->
+  </g>
+
+  <!-- ===== Cable C-F (thin, tension only) ===== -->
+  <g stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round">
+    <line x1="505" y1="320" x2="505" y2="413"/>
+    <polyline points="505,413 505,418 511,422 499,428 505,432 505,437" fill="none"/>
+    <line x1="505" y1="437" x2="505" y2="530"/>
+  </g>
+
+  <!-- ===== Beam F-G (IPB 260, solid web) ===== -->
+  <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
+    <line x1="505" y1="530" x2="765" y2="530"/>
+  </g>
+
+  <!-- ===== Supports ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <!-- A: roller support -->
+    <polygon points="150,320 141,333 159,333"/>
+    <circle cx="145" cy="337" r="3"/>
+    <circle cx="155" cy="337" r="3"/>
+    <line x1="135" y1="341" x2="165" y2="341"/>
+    <line x1="139" y1="341" x2="133" y2="348"/>
+    <line x1="147" y1="341" x2="141" y2="348"/>
+    <line x1="155" y1="341" x2="149" y2="348"/>
+    <line x1="163" y1="341" x2="157" y2="348"/>
+    <!-- B: pinned support -->
+    <polygon points="280,320 271,333 289,333"/>
+    <line x1="265" y1="333" x2="295" y2="333"/>
+    <line x1="269" y1="333" x2="263" y2="340"/>
+    <line x1="277" y1="333" x2="271" y2="340"/>
+    <line x1="285" y1="333" x2="279" y2="340"/>
+    <line x1="293" y1="333" x2="287" y2="340"/>
+    <!-- G: pinned support -->
+    <polygon points="765,530 756,543 774,543"/>
+    <line x1="750" y1="543" x2="780" y2="543"/>
+    <line x1="754" y1="543" x2="748" y2="550"/>
+    <line x1="762" y1="543" x2="756" y2="550"/>
+    <line x1="770" y1="543" x2="764" y2="550"/>
+    <line x1="778" y1="543" x2="772" y2="550"/>
+  </g>
+
+  <!-- ===== Nodes ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="150" cy="320" r="4"/>
+    <circle cx="280" cy="320" r="4"/>
+    <circle cx="505" cy="320" r="4"/>
+    <circle cx="150" cy="95" r="4"/>
+    <circle cx="280" cy="95" r="4"/>
+    <circle cx="505" cy="530" r="4"/>
+    <circle cx="765" cy="530" r="4"/>
+  </g>
+
+  <!-- ===== Node labels ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <text x="138" y="314" text-anchor="end">A</text>
+    <text x="268" y="308" text-anchor="end">B</text>
+    <text x="516" y="312" text-anchor="start">C</text>
+    <text x="138" y="88" text-anchor="end">D</text>
+    <text x="272" y="86" text-anchor="end">E</text>
+    <text x="493" y="524" text-anchor="end">F</text>
+    <text x="777" y="524" text-anchor="start">G</text>
+  </g>
+
+  <!-- ===== Bar names ===== -->
+  <g fill="#6a1b9a" font-size="13" font-style="italic" font-weight="600">
+    <text x="215" y="312" text-anchor="middle">b<tspan font-size="9" dy="3">1</tspan></text>
+    <text x="392" y="312" text-anchor="middle">b<tspan font-size="9" dy="3">2</tspan></text>
+    <text x="140" y="212" text-anchor="end">b<tspan font-size="9" dy="3">3</tspan></text>
+    <text x="212" y="236" text-anchor="start">b<tspan font-size="9" dy="3">4</tspan></text>
+    <text x="290" y="212" text-anchor="start">b<tspan font-size="9" dy="3">5</tspan></text>
+    <text x="398" y="198" text-anchor="start">b<tspan font-size="9" dy="3">6</tspan></text>
+    <text x="215" y="86" text-anchor="middle">b<tspan font-size="9" dy="3">7</tspan></text>
+    <text x="517" y="429" text-anchor="start" font-style="normal" fill="#5f6368" font-weight="400" font-size="12">cable</text>
+    <text x="635" y="570" text-anchor="middle" font-style="normal" fill="#5f6368" font-weight="400" font-size="12">IPB 260</text>
+  </g>
+
+  <!-- ===== Loads (tip at the point of application, shaft trailing opposite) ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+    <!-- D: 40 000 kg downward -->
+    <line x1="150" y1="38" x2="150" y2="86" stroke-width="2.5"/>
+    <polygon points="150,95 144,83 156,83" stroke="none"/>
+    <text x="162" y="66" text-anchor="start" stroke="none">40 000 kg</text>
+    <!-- E: 5 000 kg to the right (drawn just outside E: a shaft trailing left would run along bar b7) -->
+    <line x1="292" y1="95" x2="337" y2="95" stroke-width="2.5"/>
+    <polygon points="348,95 336,89 336,101" stroke="none"/>
+    <text x="320" y="82" text-anchor="middle" stroke="none">5 000 kg</text>
+    <!-- beam: q = 20 kg/cm over the whole span -->
+    <line x1="505" y1="500" x2="765" y2="500" stroke-width="2"/>
+    <line x1="518" y1="500" x2="518" y2="521" stroke-width="2"/>
+    <polygon points="518,530 513,520 523,520" stroke="none"/>
+    <line x1="544" y1="500" x2="544" y2="521" stroke-width="2"/>
+    <polygon points="544,530 539,520 549,520" stroke="none"/>
+    <line x1="570" y1="500" x2="570" y2="521" stroke-width="2"/>
+    <polygon points="570,530 565,520 575,520" stroke="none"/>
+    <line x1="596" y1="500" x2="596" y2="521" stroke-width="2"/>
+    <polygon points="596,530 591,520 601,520" stroke="none"/>
+    <line x1="622" y1="500" x2="622" y2="521" stroke-width="2"/>
+    <polygon points="622,530 617,520 627,520" stroke="none"/>
+    <line x1="648" y1="500" x2="648" y2="521" stroke-width="2"/>
+    <polygon points="648,530 643,520 653,520" stroke="none"/>
+    <line x1="674" y1="500" x2="674" y2="521" stroke-width="2"/>
+    <polygon points="674,530 669,520 679,520" stroke="none"/>
+    <line x1="700" y1="500" x2="700" y2="521" stroke-width="2"/>
+    <polygon points="700,530 695,520 705,520" stroke="none"/>
+    <line x1="726" y1="500" x2="726" y2="521" stroke-width="2"/>
+    <polygon points="726,530 721,520 731,520" stroke="none"/>
+    <line x1="752" y1="500" x2="752" y2="521" stroke-width="2"/>
+    <polygon points="752,530 747,520 757,520" stroke="none"/>
+    <text x="650" y="491" text-anchor="start" stroke="none">q = 20 kg/cm</text>
+    <!-- beam mid-span: 20 000 kg downward -->
+    <line x1="635" y1="440" x2="635" y2="521" stroke-width="2.5"/>
+    <polygon points="635,530 629,518 641,518" stroke="none"/>
+    <text x="647" y="452" text-anchor="start" stroke="none">20 000 kg</text>
+  </g>
+
+  <!-- ===== Support reactions (drawn outside the supports, never across the symbols) ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+    <!-- A: V_A = 3 300 kg downward (just below the roller; a shaft above A would run along column b3) -->
+    <line x1="150" y1="356" x2="150" y2="392" stroke-width="2.5"/>
+    <polygon points="150,403 144,391 156,391" stroke="none"/>
+    <text x="142" y="382" text-anchor="end" stroke="none">V<tspan font-size="10" dy="4">A</tspan><tspan dx="4" dy="-4">= 3 300 kg</tspan></text>
+    <!-- B: V_B = 63 300 kg upward, just below the support -->
+    <line x1="280" y1="392" x2="280" y2="356" stroke-width="2.5"/>
+    <polygon points="280,345 274,357 286,357" stroke="none"/>
+    <text x="292" y="382" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">B</tspan><tspan dx="4" dy="-4">= 63 300 kg</tspan></text>
+    <!-- B: H_B = 5 000 kg to the left (beside V_B: at B itself it would run along bars b1 / b2) -->
+    <line x1="268" y1="365" x2="225" y2="365" stroke-width="2.5"/>
+    <polygon points="214,365 226,359 226,371" stroke="none"/>
+    <text x="268" y="357" text-anchor="end" stroke="none">H<tspan font-size="10" dy="4">B</tspan><tspan dx="4" dy="-4">= 5 000 kg</tspan></text>
+    <!-- G: V_G = 20 000 kg upward, just below the support -->
+    <line x1="765" y1="602" x2="765" y2="566" stroke-width="2.5"/>
+    <polygon points="765,555 759,567 771,567" stroke="none"/>
+    <text x="753" y="592" text-anchor="end" stroke="none">V<tspan font-size="10" dy="4">G</tspan><tspan dx="4" dy="-4">= 20 000 kg</tspan></text>
+  </g>
+
+  <text x="420" y="680" text-anchor="middle" fill="#5f6368" font-size="13">
+    7-bar truss + IPB 260 beam hung by a 15 m cable from C; σ<tspan font-size="10" dy="4">adm</tspan><tspan dx="3" dy="-4">= 1600 kg/cm²; loads (red), reactions (blue)</tspan>
+  </text>
+</svg>

@@ -793,6 +793,149 @@ const wallTrussTwoPanel: FrameModel = {
   unit: "T",
 };
 
+// ─── Verification / sizing exercises (kg, m, kg/cm²; see src/lib/checks.ts) ───────────────────────
+// Forces are in kg and lengths in metres, so E is in kg/m² (steel: 2.1e6 kg/cm² = 2.1e10 kg/m²) and the
+// checks panel reads stresses in kg/cm². Both models are statically determinate, so the member forces
+// do not depend on the sections.
+const steelKg = { E: 2.1e10, A: 0.01, I: 8.3e-5 };
+const H5 = (5 * Math.sqrt(3)) / 2; // height of an equilateral triangle of 5 m side (4.33 m)
+
+// examples/beam-ipb300-udl-kg.svg — simply supported 12 m beam, IPB 300, q = 200 kg/cm = 20 000 kg/m.
+// M max = 360 000 kg·m -> sigma = 21 429 kg/cm² (13 times sigma adm): the check must fail.
+const beamIpb300Check: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 0, support: "pinned" },
+    { id: "B", x: 12, y: 0, support: "roller-v" },
+  ],
+  members: [
+    {
+      id: "m1",
+      n1: "A",
+      n2: "B",
+      section: { kind: "profile", name: "IPB 300" },
+    },
+  ],
+  loads: [{ id: "q", type: "mudl", member: "m1", gx: 0, gy: -20000 }],
+  material: steelKg,
+  unit: "kg",
+  sigmaAdm: 1600,
+};
+
+// examples/truss-cable-beam-kg.svg — 5-bar truss (all 5 m), cable D-E (4.33 m: E is on the support line,
+// assumed), beam E-F (12 m) with 40 000 kg at mid-span, 10 000 kg at D. To size: beam EF (IPN / IPB),
+// cable DE (diameter, elongation), bars b4 and b5 (IPB). The beam is sized for the load alone; its
+// own weight (the profile picked) is then added to what the cable carries. The SVG's reactions do not
+// include it.
+const trussCableBeam: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 0, support: "roller-v" },
+    { id: "B", x: 5, y: 0, support: "pinned" },
+    { id: "C", x: 2.5, y: H5, support: "free" },
+    { id: "D", x: 7.5, y: H5, support: "free" },
+    { id: "E", x: 7.5, y: 0, support: "free" },
+    { id: "F", x: 19.5, y: 0, support: "pinned" },
+  ],
+  members: [
+    { id: "b1", n1: "A", n2: "B", relI: true, relJ: true },
+    { id: "b2", n1: "A", n2: "C", relI: true, relJ: true },
+    { id: "b3", n1: "B", n2: "C", relI: true, relJ: true },
+    {
+      id: "b4",
+      n1: "B",
+      n2: "D",
+      relI: true,
+      relJ: true,
+      section: { kind: "size", series: ["IPB"] },
+    },
+    {
+      id: "b5",
+      n1: "C",
+      n2: "D",
+      relI: true,
+      relJ: true,
+      section: { kind: "size", series: ["IPB"] },
+    },
+    {
+      id: "cable",
+      n1: "D",
+      n2: "E",
+      relI: true,
+      relJ: true,
+      section: { kind: "cable" },
+    },
+    {
+      id: "EF",
+      n1: "E",
+      n2: "F",
+      selfWeight: true,
+      section: { kind: "size", series: ["IPN", "IPB"] },
+    },
+  ],
+  loads: [
+    { id: "pD", type: "nodal", node: "D", fx: 0, fy: -10000, m: 0 },
+    { id: "pEF", type: "mpoint", member: "EF", dist: 6, gx: 0, gy: -40000 },
+  ],
+  material: steelKg,
+  unit: "kg",
+  sigmaAdm: 1600,
+};
+
+// examples/truss-cable-beam-ipb260-kg.svg — 7-bar truss, cable C-F (15 m), beam F-G IPB 260 with
+// 20 000 kg at mid-span and q = 20 kg/cm (2 000 kg/m) over 10 m. To do: verify FG, size the cable (diameter,
+// elongation), bar forces, size the bars (IPB). C sits 8.66 m to the right of B. FG is verified for the load alone; its
+// weight (IPB 260, 92.6 kg/m) is added to what the cable carries. The SVG's reactions do not include it.
+const trussCableBeamIpb260: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 0, support: "roller-v" },
+    { id: "B", x: 5, y: 0, support: "pinned" },
+    { id: "C", x: 13.66, y: 0, support: "free" },
+    { id: "D", x: 0, y: 8.66, support: "free" },
+    { id: "E", x: 5, y: 8.66, support: "free" },
+    { id: "F", x: 13.66, y: -15, support: "free" },
+    { id: "G", x: 23.66, y: -15, support: "pinned" },
+  ],
+  members: [
+    { id: "b1", n1: "A", n2: "B" },
+    { id: "b2", n1: "B", n2: "C" },
+    { id: "b3", n1: "A", n2: "D" },
+    { id: "b4", n1: "A", n2: "E" },
+    { id: "b5", n1: "B", n2: "E" },
+    { id: "b6", n1: "E", n2: "C" },
+    { id: "b7", n1: "D", n2: "E" },
+  ].map((m) => ({
+    ...m,
+    relI: true,
+    relJ: true,
+    section: { kind: "size" as const, series: ["IPB" as const] },
+  })),
+  loads: [
+    { id: "pD", type: "nodal", node: "D", fy: -40000, fx: 0, m: 0 },
+    { id: "pE", type: "nodal", node: "E", fx: 5000, fy: 0, m: 0 },
+    { id: "qFG", type: "mudl", member: "FG", gx: 0, gy: -2000 },
+    { id: "pFG", type: "mpoint", member: "FG", dist: 5, gx: 0, gy: -20000 },
+  ],
+  material: steelKg,
+  unit: "kg",
+  sigmaAdm: 1600,
+};
+trussCableBeamIpb260.members.push(
+  {
+    id: "cable",
+    n1: "C",
+    n2: "F",
+    relI: true,
+    relJ: true,
+    section: { kind: "cable" },
+  },
+  {
+    id: "FG",
+    n1: "F",
+    n2: "G",
+    selfWeight: true,
+    section: { kind: "profile", name: "IPB 260" },
+  },
+);
+
 export const PRESETS: Preset[] = [
   { name: "Simply Supported Beam", model: simplySupported },
   { name: "Cantilever", model: cantilever },
@@ -820,4 +963,7 @@ export const PRESETS: Preset[] = [
   { name: "L-Frame w/ Hinge (inclined load)", model: lFrameHingeInclined },
   { name: "Asymmetric Portal w/ Overhang", model: asymmetricPortalOverhang },
   { name: "Wall Truss (2 panels)", model: wallTrussTwoPanel },
+  { name: "Beam IPB 300 (check)", model: beamIpb300Check },
+  { name: "Truss + Cable + Beam (sizing)", model: trussCableBeam },
+  { name: "Truss + Cable + Beam IPB 260", model: trussCableBeamIpb260 },
 ];

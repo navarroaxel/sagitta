@@ -11,6 +11,7 @@ import {
 } from "@/lib/types";
 import { SolveOutput } from "@/lib/solve";
 import ResultsPanel from "@/components/ResultsPanel";
+import { IPB_PROFILES, IPN_PROFILES } from "@/lib/profiles";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Props {
@@ -53,16 +54,19 @@ function NumInput({
   min,
   step = 0.01,
   className = "",
+  ariaLabel,
 }: {
   value: number;
   onChange: (v: number) => void;
   min?: number;
   step?: number;
   className?: string;
+  ariaLabel?: string;
 }) {
   return (
     <input
       type="number"
+      aria-label={ariaLabel}
       value={value}
       step={step}
       min={min}
@@ -153,7 +157,15 @@ export default function ModelEditor({
           />
         )}
         {tab === "material" && (
-          <MaterialPanel material={model.material} onChange={setMaterial} />
+          <MaterialPanel
+            material={model.material}
+            onChange={setMaterial}
+            sigmaAdm={model.sigmaAdm}
+            unit={model.unit}
+            onSigmaAdm={(v) =>
+              onChange({ ...model, sigmaAdm: v > 0 ? v : undefined })
+            }
+          />
         )}
         {tab === "results" && (
           <ResultsPanel model={model} solved={solved ?? null} />
@@ -256,6 +268,28 @@ function NodesPanel({
 }
 
 // ─── Members panel ───────────────────────────────────────────────────────────
+// A member's `section` as the value of one <select>: "", "cable", "size:IPB", "size:IPN,IPB" or
+// "profile:IPB 300".
+function sectionValue(sec: Member["section"]): string {
+  if (!sec) return "";
+  if (sec.kind === "cable") return "cable";
+  if (sec.kind === "size") return `size:${sec.series.join(",")}`;
+  return `profile:${sec.name}`;
+}
+function parseSection(v: string): Member["section"] {
+  if (v === "cable") return { kind: "cable" };
+  if (v.startsWith("size:"))
+    return {
+      kind: "size",
+      series: v
+        .slice(5)
+        .split(",")
+        .filter((x): x is "IPN" | "IPB" => x === "IPN" || x === "IPB"),
+    };
+  if (v.startsWith("profile:")) return { kind: "profile", name: v.slice(8) };
+  return undefined;
+}
+
 function MembersPanel({
   members,
   nodes,
@@ -285,6 +319,8 @@ function MembersPanel({
             <Th>{t("editor.members.to")}</Th>
             <Th>{t("editor.members.hinge_i")}</Th>
             <Th>{t("editor.members.hinge_j")}</Th>
+            <Th>{t("editor.members.section")}</Th>
+            <Th>{t("editor.members.self_weight")}</Th>
             <th />
           </tr>
         </thead>
@@ -339,6 +375,44 @@ function MembersPanel({
                   type="checkbox"
                   checked={!!m.relJ}
                   onChange={(e) => update(i, { relJ: e.target.checked })}
+                />
+              </Cell>
+              <Cell>
+                <select
+                  value={sectionValue(m.section)}
+                  aria-label={`${t("editor.section.aria")} ${m.id}`}
+                  className={selectCls}
+                  onChange={(e) =>
+                    update(i, { section: parseSection(e.target.value) })
+                  }
+                >
+                  <option value="">{t("editor.section.none")}</option>
+                  <option value="cable">{t("editor.section.cable")}</option>
+                  <optgroup label={t("editor.section.size")}>
+                    <option value="size:IPN">IPN</option>
+                    <option value="size:IPB">IPB</option>
+                    <option value="size:IPN,IPB">IPN + IPB</option>
+                  </optgroup>
+                  <optgroup label={t("editor.section.verify")}>
+                    {[...IPN_PROFILES, ...IPB_PROFILES].map((p) => (
+                      <option key={p.name} value={`profile:${p.name}`}>
+                        {p.name}
+                      </option>
+                    ))}
+                  </optgroup>
+                </select>
+              </Cell>
+              <Cell className="text-center">
+                <input
+                  type="checkbox"
+                  title={t("editor.members.self_weight_hint")}
+                  checked={!!m.selfWeight}
+                  disabled={
+                    m.section?.kind !== "profile" && m.section?.kind !== "size"
+                  }
+                  onChange={(e) =>
+                    update(i, { selfWeight: e.target.checked || undefined })
+                  }
                 />
               </Cell>
               <Cell>
@@ -627,9 +701,15 @@ function LoadsPanel({
 function MaterialPanel({
   material,
   onChange,
+  sigmaAdm,
+  unit,
+  onSigmaAdm,
 }: {
   material: Material;
   onChange: (m: Material) => void;
+  sigmaAdm?: number;
+  unit: string;
+  onSigmaAdm: (v: number) => void;
 }) {
   const { t } = useLanguage();
   return (
@@ -650,6 +730,21 @@ function MaterialPanel({
           />
         </div>
       ))}
+      <div>
+        <label className="font-mono text-xs text-stone-500 dark:text-stone-400">
+          {t("editor.material.sigma_adm")} ({unit}/cm²)
+        </label>
+        <NumInput
+          ariaLabel={`${t("editor.material.sigma_adm")} (${unit}/cm²)`}
+          value={sigmaAdm ?? 0}
+          step={100}
+          min={0}
+          onChange={onSigmaAdm}
+        />
+        <p className="mt-1 text-xs text-stone-400 italic dark:text-stone-500">
+          {t("editor.material.sigma_note")}
+        </p>
+      </div>
     </div>
   );
 }

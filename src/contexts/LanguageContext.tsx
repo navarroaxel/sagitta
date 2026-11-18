@@ -65,6 +65,9 @@ const EN = {
   "preset.l_frame_hinge_inclined": "L-Frame w/ Hinge (inclined load)",
   "preset.asymmetric_portal_overhang": "Asymmetric Portal w/ Overhang",
   "preset.wall_truss_two_panel": "Wall Truss (2 panels)",
+  "preset.beam_ipb300_check": "Beam IPB 300 (check)",
+  "preset.truss_cable_beam": "Truss + cable + beam (sizing)",
+  "preset.truss_cable_beam_ipb260": "Truss + cable + beam IPB 260 (check and sizing)",
 
   "forces.member": "Member",
   "forces.state": "State",
@@ -136,6 +139,43 @@ const EN = {
   "editor.loads.remove": "✕ remove",
   "editor.loads.add": "+ Add load",
 
+  "editor.members.section": "Section",
+  "editor.members.self_weight": "Own wt",
+  "editor.members.self_weight_hint":
+    "Add the member's own weight (profile kg/m) as a distributed load; needs a profile or a size",
+  "editor.section.none": "— (analysis only)",
+  "editor.section.cable": "Cable",
+  "editor.section.size": "Size (lightest that passes)",
+  "editor.section.verify": "Check profile",
+  "editor.material.sigma_adm": "σ adm",
+  "editor.material.sigma_note":
+    "Used by the Results tab for members with a section (check a profile, size one, or size a cable). Forces in kg and lengths in m give kg/cm²; E is then in kg/m² (steel: 2.1e10).",
+  "checks.title": "Verification and sizing",
+  "checks.self_weight": "Own weight added to the supports and the members (the beam itself is verified / sized for the loads alone)",
+  "checks.d_min_long": "Minimum cable diameter",
+  "checks.d_adopted": "adopt",
+  "checks.deflection": "Max deflection f (bending of the member alone, relative to the chord between its ends)",
+  "checks.no_sigma": "Set σ adm in the Material tab to run the checks.",
+  "checks.member": "Member",
+  "checks.profile": "Profile",
+  "checks.result": "Result",
+  "checks.pass": "✓ passes",
+  "checks.fail": "✗ does not pass",
+  "checks.lightest": "Lightest that passes",
+  "checks.none": "none in the table",
+  "checks.unloaded": "no load: any profile",
+  "checks.cable": "Cable",
+  "checks.cable_bending":
+    "carries bending or shear: it is not a cable (give it hinges at both ends)",
+  "checks.not_converged":
+    "The own-weight iteration did not settle: the picks may be out of date.",
+  "checks.note_hyperstatic":
+    "Forces are those of the current model; in a hyperstatic structure they change once the profile is applied, so check again after assigning it.",
+  "editor.section.aria": "Section of member",
+  "checks.not_tension": "not in tension: a cable cannot take compression",
+  "checks.note_buckling":
+    "σ = N/A + M/W is checked; members in compression must also stay below Euler's buckling load P_cr = π²·E·Iy/L² (pinned ends, weak axis, safety coefficient 1).",
+
   "editor.material.note":
     "Material properties only affect indeterminate frames. For determinate structures the results are independent of E, A, I.",
 
@@ -205,6 +245,7 @@ const EN = {
   "f3d.example.l_torsion": "#8 L space frame (torsion)",
   "f3d.example.eccentric_tension": "#7 Eccentric tension on IPN 300 (P_z,max)",
   "f3d.example.cantilever_kg": "#6 Cantilever IPN 320 (max length)",
+  "f3d.example.column_kg": "#9 3D column (fixed)",
   "f3d.diagram": "Diagram:",
   "f3d.diagram_none": "None",
   "f3d.note":
@@ -611,6 +652,9 @@ const ES: Record<TranslationKey, string> = {
   "preset.l_frame_hinge_inclined": "Pórtico en L con rótula (carga inclinada)",
   "preset.asymmetric_portal_overhang": "Pórtico asimétrico con voladizo",
   "preset.wall_truss_two_panel": "Reticulado en muro (2 paños)",
+  "preset.beam_ipb300_check": "Viga IPB 300 (verificación)",
+  "preset.truss_cable_beam": "Reticulado + cable + viga (dimensionado)",
+  "preset.truss_cable_beam_ipb260": "Reticulado + cable + viga IPB 260 (verificación y dimensionado)",
 
   "forces.member": "Barra",
   "forces.state": "Estado",
@@ -682,6 +726,43 @@ const ES: Record<TranslationKey, string> = {
   "editor.loads.remove": "✕ quitar",
   "editor.loads.add": "+ Agregar carga",
 
+  "editor.members.section": "Sección",
+  "editor.members.self_weight": "Peso propio",
+  "editor.members.self_weight_hint":
+    "Suma el peso propio de la barra (kg/m del perfil) como carga distribuida; necesita un perfil o un dimensionado",
+  "editor.section.none": "— (solo análisis)",
+  "editor.section.cable": "Cable",
+  "editor.section.size": "Dimensionar (el más liviano que cumple)",
+  "editor.section.verify": "Verificar perfil",
+  "editor.material.sigma_adm": "σ adm",
+  "editor.material.sigma_note":
+    "Lo usa la pestaña de resultados para las barras con sección (verificar un perfil, dimensionarlo o dimensionar un cable). Fuerzas en kg y longitudes en m dan kg/cm²; E queda en kg/m² (acero: 2,1e10).",
+  "checks.title": "Verificación y dimensionado",
+  "checks.self_weight": "Peso propio sumado a los apoyos y a las demás barras (la propia viga se verifica / dimensiona solo con las cargas)",
+  "checks.d_min_long": "Diámetro mínimo del cable",
+  "checks.d_adopted": "adoptar",
+  "checks.deflection": "Flecha máxima f (solo la flexión de la barra, respecto de la cuerda entre sus extremos)",
+  "checks.no_sigma": "Cargá σ adm en la pestaña Material para hacer las verificaciones.",
+  "checks.member": "Barra",
+  "checks.profile": "Perfil",
+  "checks.result": "Resultado",
+  "checks.pass": "✓ cumple",
+  "checks.fail": "✗ no cumple",
+  "checks.lightest": "El más liviano que cumple",
+  "checks.none": "ninguno de la tabla",
+  "checks.unloaded": "sin carga: cualquier perfil",
+  "checks.cable": "Cable",
+  "checks.cable_bending":
+    "tiene flexión o corte: no es un cable (ponele rótulas en los dos extremos)",
+  "checks.not_converged":
+    "La iteración del peso propio no convergió: los perfiles pueden estar desactualizados.",
+  "checks.note_hyperstatic":
+    "Los esfuerzos son los del modelo actual; en una estructura hiperestática cambian al aplicar el perfil, así que verificá de nuevo después de asignarlo.",
+  "editor.section.aria": "Sección de la barra",
+  "checks.not_tension": "no está a tracción: un cable no resiste compresión",
+  "checks.note_buckling":
+    "Se verifica σ = N/A + M/W; las barras comprimidas además deben quedar por debajo de la carga crítica de pandeo de Euler P_cr = π²·E·Iy/L² (extremos articulados, eje débil, coeficiente de seguridad 1).",
+
   "editor.material.note":
     "Las propiedades del material solo afectan a las estructuras hiperestáticas. Para estructuras isostáticas, los resultados son independientes de E, A, I.",
 
@@ -751,6 +832,7 @@ const ES: Record<TranslationKey, string> = {
   "f3d.example.l_torsion": "#8 Pórtico en L espacial (torsión)",
   "f3d.example.eccentric_tension": "#7 Tracción excéntrica en IPN 300 (P_z máx)",
   "f3d.example.cantilever_kg": "#6 Voladizo IPN 320 (longitud máx)",
+  "f3d.example.column_kg": "#9 Columna 3D (empotrada)",
   "f3d.diagram": "Diagrama:",
   "f3d.diagram_none": "Ninguno",
   "f3d.note":

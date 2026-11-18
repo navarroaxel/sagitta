@@ -1,0 +1,337 @@
+// Verification and sizing of the members of a solved 2D model (the "checks" panel of the editor).
+// Pure and React-free. Units: forces in the model's unit (kg for the course), lengths in metres,
+// sections in cm (profile table), so stresses come out in force/cm² and M·100 is force·cm.
+//
+// σ = N/A + M/W ≤ σadm is checked at every station, and a member in compression also has to
+// stay below Euler's critical load P_cr = π²·E·Iy/L² (pinned ends, L = the member's length,
+// weak axis, safety coefficient 1, as in the course). No shear check.
+import type { FrameModel, Member } from "./types";
+import type { SolveOutput } from "./solve";
+import type { Station } from "./sampling";
+import {
+  IPB_PROFILES,
+  IPN_PROFILES,
+  getProfile,
+  type Profile,
+} from "./profiles";
+import { TOL } from "./results";
+
+const SERIES: Record<"IPN" | "IPB", Profile[]> = {
+  IPN: IPN_PROFILES,
+  IPB: IPB_PROFILES,
+};
+
+export interface Demand {
+  N: number; // normal force at the critical station (+ tension)
+  M: number; // bending moment at the critical station, force·m
+  x: number; // distance from the member's start, m
+  compressed: boolean; // some station is in compression
+}
+
+// σ of a doubly symmetric section at one station: the extreme fibre where N/A and M/W add up.
+export function sigmaAt(p: Profile, N: number, M: number): number {
+  return Math.abs(N) / p.A + (Math.abs(M) * 100) / p.Sx;
+}
+
+// Euler's critical load of the profile (weak axis, pinned ends): force, with E in force/cm², L in m.
+export function eulerPcr(p: Profile, E: number, L: number): number {
+  const Lcm = L * 100;
+  return (Math.PI ** 2 * E * p.Iy) / (Lcm * Lcm);
+}
+
+// A member in compression: the largest compressive force (> 0), its length and E (force/cm²).
+export interface Buckling {
+  P: number;
+  L: number;
+  E: number;
+}
+
+// Largest deflection of a member relative to the chord between its ends (what a simply supported
+// beam would show), from the stations: y'' = M/EI integrated twice (trapezoid rule) and then the
+// straight line through both ends removed. M in force·m, x in m, EI in force·cm²; f in cm.
+// A cable that lets an end sink is not included: this is the bending of the member alone.
+export interface Deflection {
+  f: number; // cm
+  x: number; // m, from the member's start
+  L: number; // m
+}
+
+export function chordDeflection(
+  stations: Station[],
+  EI: number,
+): Deflection | null {
+  const n = stations.length;
+  if (n < 3 || !(EI > 0)) return null;
+  const x = stations.map((s) => s.x * 100); // cm
+  const k = stations.map((s) => (s.M * 100) / EI); // curvature, 1/cm
+  const y = new Array<number>(n).fill(0);
+  let th = 0;
+  for (let i = 1; i < n; i++) {
+    const dx = x[i] - x[i - 1];
+    const thNext = th + ((k[i - 1] + k[i]) / 2) * dx;
+    y[i] = y[i - 1] + ((th + thNext) / 2) * dx;
+    th = thNext;
+  }
+  const Lcm = x[n - 1] - x[0];
+  if (!(Lcm > 0)) return null;
+  let best = { f: 0, x: 0 };
+  for (let i = 0; i < n; i++) {
+    const v = Math.abs(y[i] - (y[n - 1] * (x[i] - x[0])) / Lcm);
+    if (v > best.f) best = { f: v, x: stations[i].x };
+  }
+  return { f: best.f, x: best.x, L: Lcm / 100 };
+}
+
+// Largest σ of the profile along the member, and where it is.
+export function sigmaMax(
+  p: Profile,
+  stations: Station[],
+): { sigma: number; demand: Demand } {
+  let best: Demand = { N: 0, M: 0, x: 0, compressed: false };
+  let sigma = -1;
+  let compressed = false;
+  for (const s of stations) {
+    const v = sigmaAt(p, s.N, s.M);
+    if (s.N < -TOL) compressed = true;
+    if (v > sigma) {
+      sigma = v;
+      best = { N: s.N, M: s.M, x: s.x, compressed: false };
+    }
+  }
+  best.compressed = compressed;
+  return { sigma: Math.max(sigma, 0), demand: best };
+}
+
+// Lightest profile of the series (the table is ordered by size) whose σ max is within sigmaAdm.
+export interface Pick {
+  profile: Profile;
+  sigma: number;
+  pcr?: number; // Euler's critical load, only for members in compression
+}
+
+export function lightestPassing(
+  series: "IPN" | "IPB",
+  stations: Station[],
+  sigmaAdm: number,
+  buckling?: Buckling,
+): Pick | null {
+  for (const p of SERIES[series]) {
+    const { sigma } = sigmaMax(p, stations);
+    if (sigma > sigmaAdm) continue;
+    if (!buckling) return { profile: p, sigma };
+    const pcr = eulerPcr(p, buckling.E, buckling.L);
+    if (buckling.P <= pcr) return { profile: p, sigma, pcr };
+  }
+  return null;
+}
+
+export interface VerifyCheck {
+  kind: "verify";
+  member: string;
+  profile: Profile;
+  sigma: number;
+  ratio: number; // sigma / sigmaAdm
+  ok: boolean;
+  demand: Demand;
+  // bending of the member alone (relative to the chord between its ends); null when it carries no moment
+  deflection: Deflection | null;
+  // member in compression: Euler's critical load of this profile and whether P stays below it
+  buckling: { P: number; pcr: number; ok: boolean } | null;
+  // lightest profile of the same series that passes (null when none of the table does)
+  suggestion: Pick | null;
+}
+
+export interface SizeCheck {
+  kind: "size";
+  member: string;
+  demand: Demand; // largest |N| and largest |M| of the member (not necessarily at the same station)
+  results: {
+    series: "IPN" | "IPB";
+    pick: Pick | null;
+  }[];
+  unloaded: boolean; // the member carries no force: any profile passes
+  compressed: boolean; // in compression: the profiles are also checked against Euler
+}
+
+export interface CableCheck {
+  kind: "cable";
+  member: string;
+  N: number;
+  L: number; // m
+  tension: boolean; // a cable only works in tension: no station may be in compression
+  bending: boolean; // the member also carries bending or shear: it is not a two-force member (no hinges)
+  areaReq: number; // cm², for the peak N
+  dReq: number; // cm, exact diameter for sigmaAdm
+  dAdopted: number; // cm, rounded up to the next mm
+  elongation: number; // cm, ∫N dx / (E·A) with the required area (= sigmaAdm·L/E when N is constant)
+}
+
+export type MemberCheck = VerifyCheck | SizeCheck | CableCheck;
+
+// The series a `size` section looks in; anything unknown (a shared link is outside input) is dropped
+// and an empty list means IPB, so solve.ts and the panel always agree.
+export function sizeSeries(sec: { series?: unknown }): ("IPN" | "IPB")[] {
+  const ok = Array.isArray(sec.series)
+    ? sec.series.filter((x): x is "IPN" | "IPB" => x === "IPN" || x === "IPB")
+    : [];
+  return ok.length ? [...new Set(ok)] : ["IPB"];
+}
+
+const maxAbs = (stations: Station[], key: "N" | "M"): Station =>
+  stations.reduce(
+    (b, s) => (Math.abs(s[key]) > Math.abs(b[key]) ? s : b),
+    stations[0],
+  );
+
+function bending(
+  model: FrameModel,
+  st: Station[],
+  p: Profile,
+): Deflection | null {
+  if (!st.some((s) => Math.abs(s.M) > TOL)) return null;
+  const d = chordDeflection(st, (model.material.E / 1e4) * p.Ix);
+  return d && d.f > 1e-9 ? d : null;
+}
+
+// The stations a member is checked / sized with: without its own weight when it has `selfWeight`
+// (the weight only travels to the supports; see SolveOutput.ownStations).
+export function checkStations(
+  solved: SolveOutput,
+  id: string,
+  e: number,
+): Station[] {
+  return solved.ownStations?.get(id) ?? solved.stations[e];
+}
+
+// Compression of member `e` (null when no station is in compression).
+function bucklingOf(
+  model: FrameModel,
+  solved: SolveOutput,
+  e: number,
+): Buckling | null {
+  const st = checkStations(solved, model.members[e].id, e);
+  const P = -Math.min(...st.map((s) => s.N));
+  if (!(P > TOL)) return null;
+  return { P, L: solved.result.geo[e].L, E: model.material.E / 1e4 };
+}
+
+// The profile a `size` section picks for member `e`: the lightest of its series that passes.
+export function bestPick(
+  model: FrameModel,
+  solved: SolveOutput,
+  e: number,
+): Pick | null {
+  const sec = model.members[e].section;
+  const sigmaAdm = model.sigmaAdm;
+  const st = checkStations(solved, model.members[e].id, e);
+  if (sec?.kind !== "size" || !sigmaAdm || !st) return null;
+  const buck = bucklingOf(model, solved, e) ?? undefined;
+  const picks = sizeSeries(sec)
+    .map((s) => lightestPassing(s, st, sigmaAdm, buck))
+    .filter((p): p is Pick => p !== null);
+  return picks.sort((a, b) => a.profile.w - b.profile.w)[0] ?? null;
+}
+
+// One entry per member that has a `section`; [] when the model has no sigmaAdm or no sections.
+export function runChecks(
+  model: FrameModel,
+  solved: SolveOutput,
+): MemberCheck[] {
+  const sigmaAdm = model.sigmaAdm;
+  if (!sigmaAdm || !(sigmaAdm > 0)) return [];
+  const out: MemberCheck[] = [];
+  // largest force of the whole model: "no load" is relative to it (a fixed 0.01 would hide small demands in kN)
+  let scale = 1;
+  for (const ms of solved.stations)
+    for (const s of ms) scale = Math.max(scale, Math.abs(s.N), Math.abs(s.M));
+  model.members.forEach((m: Member, e) => {
+    const sec = m.section;
+    const st = checkStations(solved, m.id, e);
+    if (!sec || !st || st.length === 0) return;
+
+    if (sec.kind === "profile") {
+      const p = getProfile(sec.name);
+      if (!p) return;
+      const { sigma, demand } = sigmaMax(p, st);
+      const buck = bucklingOf(model, solved, e);
+      const pcr = buck ? eulerPcr(p, buck.E, buck.L) : 0;
+      const bOk = !buck || buck.P <= pcr;
+      out.push({
+        kind: "verify",
+        member: m.id,
+        profile: p,
+        sigma,
+        ratio: sigma / sigmaAdm,
+        ok: sigma <= sigmaAdm && bOk,
+        demand,
+        deflection: bending(model, st, p),
+        buckling: buck ? { P: buck.P, pcr, ok: bOk } : null,
+        suggestion:
+          p.series === "IPN" || p.series === "IPB"
+            ? lightestPassing(p.series, st, sigmaAdm, buck ?? undefined)
+            : null,
+      });
+    } else if (sec.kind === "size") {
+      const nPk = maxAbs(st, "N");
+      const mPk = maxAbs(st, "M");
+      const unloaded =
+        Math.abs(nPk.N) < 1e-9 * scale && Math.abs(mPk.M) < 1e-9 * scale;
+      const series = sizeSeries(sec);
+      out.push({
+        kind: "size",
+        member: m.id,
+        demand: {
+          N: nPk.N,
+          M: mPk.M,
+          x: mPk.x,
+          compressed: st.some((s) => s.N < -TOL),
+        },
+        results: series.map((s) => ({
+          series: s,
+          pick: lightestPassing(
+            s,
+            st,
+            sigmaAdm,
+            bucklingOf(model, solved, e) ?? undefined,
+          ),
+        })),
+        unloaded,
+        compressed: st.some((s) => s.N < -TOL),
+      });
+    } else if (sec.kind === "cable") {
+      const ns = st.map((q) => q.N);
+      const nMax = Math.max(...ns);
+      const nMin = Math.min(...ns);
+      const peak = Math.abs(nMax) >= Math.abs(nMin) ? nMax : nMin;
+      const L = solved.result.geo[e].L;
+      const E = model.material.E / 1e4; // force/m² -> force/cm²
+      const tol = 1e-6 * Math.max(1, Math.abs(peak));
+      // a cable is a two-force member: bending / shear mean it was not given hinges at both ends
+      const bendingToo = st.some(
+        (q) => Math.abs(q.M) > tol || Math.abs(q.Q) > tol,
+      );
+      const tension = nMin >= -tol && nMax > tol && !bendingToo;
+      const areaReq = Math.abs(peak) / sigmaAdm;
+      const dReq = Math.sqrt((4 * areaReq) / Math.PI);
+      // ∫|N| dx (trapezoid over the stations) / (E·A): N may vary with axial loads on the member
+      let intN = 0;
+      for (let i = 1; i < st.length; i++)
+        intN +=
+          ((Math.abs(st[i].N) + Math.abs(st[i - 1].N)) / 2) *
+          (st[i].x - st[i - 1].x);
+      out.push({
+        kind: "cable",
+        member: m.id,
+        N: peak,
+        L,
+        tension,
+        bending: bendingToo,
+        areaReq,
+        dReq,
+        dAdopted: Math.ceil(dReq * 10 - 1e-9) / 10,
+        elongation: areaReq > 0 ? (intN * 100) / (E * areaReq) : 0,
+      });
+    }
+  });
+  return out;
+}

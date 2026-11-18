@@ -7,6 +7,7 @@ import { clean, equilibrium, EQ_TOL, peak } from "@/lib/results";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePrefs } from "@/contexts/PrefsContext";
 import { diagramSigns } from "@/lib/conventions";
+import ChecksPanel from "./ChecksPanel";
 
 interface Props {
   model: FrameModel;
@@ -139,6 +140,9 @@ export default function ResultsPanel({ model, solved }: Props) {
 
   return (
     <div className="space-y-2">
+      {/* Verification and sizing (only when a member has a section) */}
+      <ChecksPanel model={model} solved={solved} />
+
       {/* Section A — Member forces */}
       <section>
         <SectionTitle>{t("results.section.member_forces")}</SectionTitle>
