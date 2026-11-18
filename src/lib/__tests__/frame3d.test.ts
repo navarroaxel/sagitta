@@ -81,6 +81,17 @@ describe("3D presets", () => {
     near(Math.abs(st.max.sigma), 1457, 5e-3);
   });
 
+  test("column (kg, preset #9): the internal forces at the base are the professor's: N −20 000, Qx −1000, Qy −1500, Mx −7500, My +2500", () => {
+    const model = PRESETS_3D.find((p) => p.key === "column_kg")!.model;
+    const st = solveModel3D(model)!.stations[0];
+    const base = st.reduce((b, p) => (p.z > b.z ? p : b)); // the column's z runs down: the base has the largest z
+    near(base.N, -20000);
+    near(base.Qx, -1000); // q_y = 200 kg/m · 5 m toward +Y (= −x): the professor's sign
+    near(base.Qy, -1500); // Fx = 1500 kg (+y)
+    near(base.Mx, -7500); // tension on the −X face
+    near(base.My, 2500); // tension on the back (−Y) face
+  });
+
   test("T-frame with q_y1 (kg): reactions follow from statics", () => {
     const model = PRESETS_3D.find((p) => p.key === "t_frame_qy")!.model;
     const solved = solveModel3D(model)!;

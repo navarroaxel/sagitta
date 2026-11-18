@@ -7,7 +7,7 @@ import { ForceArrow3D, forceLabelPos, LabelPos, MomentArrow3D, momentLabelPos, P
 import { udlSpan, type Vec3 } from "@/lib/solver3d";
 
 const TOL = 1e-6;
-const f = (v: number) => v.toFixed(2);
+const f = (v: number) => (Math.abs(v) < 5e-3 ? 0 : v).toFixed(2); // never "-0.00"
 const axes: Vec3[] = [
   [1, 0, 0],
   [0, 1, 0],
@@ -141,8 +141,9 @@ export function Reactions3DLayer({
             {axes.map((ax, k) => {
               const fDir = proj.dir(ax.map((c) => c * Math.sign(F[k])) as Vec3);
               const mDir = proj.dir(ax.map((c) => c * Math.sign(M[k])) as Vec3);
-              const fLabel = `F${NAMES[k]} = ${f(Math.abs(F[k]))} ${u}`;
-              const mLabel = `M${NAMES[k]} = ${f(Math.abs(M[k]))} ${u}·m`;
+              // signed, as in the results table and on the professor's sheet (the arrow shows the direction too)
+              const fLabel = `F${NAMES[k]} = ${f(F[k])} ${u}`;
+              const mLabel = `M${NAMES[k]} = ${f(M[k])} ${u}·m`;
               const hasF = Math.abs(F[k]) > 1e-3,
                 hasM = Math.abs(M[k]) > 1e-3;
               const fDy = hasF ? stack(forceLabelPos(at, fDir), fLabel) : 0;

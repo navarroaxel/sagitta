@@ -104,7 +104,9 @@ export function sampleMember3D(
       x,
       z: f.flip ? L - x : x,
       N: sgn * d(force, lz),
-      Qx: sgn * d(force, lx),
+      // shear on the +z face: Qy is the component of the face's force along y; in this left-handed triad
+      // the professor's Qx has the opposite sign (his base shear of the 3D column is Qx = −1000 for a +Y load)
+      Qx: -sgn * d(force, lx),
       Qy: sgn * d(force, ly),
       T: sgn * d(moment, lz),
       // moment-vector components on the +z face, turned into "tension on the +side" moments:
