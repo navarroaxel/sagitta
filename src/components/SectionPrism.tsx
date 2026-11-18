@@ -35,7 +35,7 @@ const N_EDGE = 8; // cells per side edge
 const N_Z = 26; // slices along z
 const N_FRONT = 14; // cells along the longer side of a front rectangle
 
-const LOAD_COLORS = { q: "#2563eb", R: "#9333ea" } as const;
+const LOAD_COLORS = { q: "#2563eb", R: "#9333ea", P: "#c0392b" } as const; // distributed / reaction / point load
 const MAX_ARROW = 95; // px of the largest component of each kind
 // two decimals, none from 100 up: the legend has to fit in the figure with kg-sized numbers
 const fmt = (v: number) =>
@@ -644,7 +644,7 @@ export default function SectionPrism({
                   <text x={LEGEND_X + 16} y={y}>
                     {l.kind === "q"
                       ? `q ${l.id}${l.zSpan && (l.zSpan[0] > 1e-6 || l.zSpan[1] < L - 1e-6) ? ` (z ${l.zSpan[0].toFixed(1)}–${l.zSpan[1].toFixed(1)} m)` : ""}`
-                      : `${t("f3d.cut.reaction")} ${l.id}`}
+                      : `${t(l.kind === "P" ? "f3d.cut.point_load" : "f3d.cut.reaction")} ${l.id}`}
                   </text>
                   <text x={LEGEND_X + 16} y={y + 13}>
                     ({fmt(fx)}, {fmt(fy)}, {fmt(fz)}) {unit}

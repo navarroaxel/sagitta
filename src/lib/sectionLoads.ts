@@ -9,10 +9,10 @@ import { courseFrame } from "./localFrame";
 import { udlSpan, type Vec3 } from "./solver3d";
 
 export interface SectionLoad {
-  kind: "q" | "R"; // distributed load of the member / reaction of an end support
+  kind: "q" | "R" | "P"; // distributed load of the member / reaction of an end support / point load on its free end
   id: string; // load id or support node id
-  force: Vec3; // components along the section's x, y, z (force/m for q, force for R)
-  moment?: Vec3; // reaction moment components (R only)
+  force: Vec3; // components along the section's x, y, z (force/m for q, force for R and P)
+  moment?: Vec3; // moment components (R: the reaction moment, P: the applied moment)
   zSpan?: [number, number]; // q only: the loaded span along the section's z, m (z = 0 at the front end)
 }
 
@@ -46,6 +46,21 @@ export function sectionLoads(
       zB = zOf(span.b);
     const zSpan: [number, number] = [Math.min(zA, zB), Math.max(zA, zB)];
     if (zSpan[0] < st.z - EPS) out.push({ kind: "q", id: l.id, force: comps([l.gx, l.gy, l.gz]), zSpan });
+  });
+  // Point loads (nodal) on an end of the member. Only on a FREE END (a node of no other member): there
+  // the load unambiguously belongs to this member's free body; at a joint it is shared with the other
+  // members, which this view does not follow.
+  [m.n1, m.n2].forEach((id) => {
+    if (zOf(id === m.n1 ? 0 : g.L) > st.z + EPS) return; // past the cut
+    if (model.members.some((o) => o !== m && (o.n1 === id || o.n2 === id))) return; // a joint
+    model.loads.forEach((l) => {
+      if (l.type !== "nodal" || l.node !== id) return;
+      const force = comps([l.fx, l.fy, l.fz]);
+      const moment = comps([l.mx, l.my, l.mz]);
+      const hasMoment = moment.some((c) => c !== 0);
+      if (force.every((c) => c === 0) && !hasMoment) return;
+      out.push({ kind: "P", id: l.id, force, moment: hasMoment ? moment : undefined });
+    });
   });
   [m.n1, m.n2].forEach((id) => {
     const node = model.nodes.find((n) => n.id === id);
