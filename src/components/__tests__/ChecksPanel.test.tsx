@@ -54,6 +54,8 @@ describe("ChecksPanel", () => {
     expect(text).toMatch(/Peso propio incluido|Own weight included/);
     expect(text).toContain("EF IPB 800");
     expect(text).toContain("4.14"); // d req
+    expect(text).toMatch(/l0 \(m\)/); // header: length l₀ with subscript
+    expect(text).toMatch(/ΔL \(cm\)/); // header: elongation
     expect(text).toMatch(/Anec \(cm²\)/); // header: A with subscript "nec"
     expect(text).toMatch(/Ønec \(cm\)/); // header: Ø with subscript "nec"
     expect(text).toMatch(/Ønec = 4\.14 cm = 41\.4 mm/); // necessary diameter, also in mm
