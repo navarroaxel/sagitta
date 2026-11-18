@@ -2,6 +2,7 @@ import { PRESETS } from "../presets";
 import { solveModel } from "../solve";
 import { getProfile } from "../profiles";
 import {
+  eulerPcr,
   lightestPassing,
   runChecks,
   sigmaAt,
@@ -52,6 +53,27 @@ describe("sigmaAt / sigmaMax / lightestPassing", () => {
     expect(
       lightestPassing("IPB", [{ x: 0, N: 0, Q: 0, M: 1e9 }], 1600),
     ).toBeNull();
+  });
+});
+
+describe("Euler buckling (pinned ends, weak axis, coefficient 1)", () => {
+  const E = 2.1e6; // kg/cm²
+
+  test("P_cr = π²·E·Iy/L²", () => {
+    expect(eulerPcr(getProfile("IPB 140")!, E, 5)).toBeCloseTo(
+      (Math.PI ** 2 * E * 550) / 500 ** 2,
+      6,
+    );
+    expect(eulerPcr(getProfile("IPB 100")!, E, 5)).toBeCloseTo(13845, -1);
+    expect(eulerPcr(getProfile("IPB 140")!, E, 5)).toBeCloseTo(45598, -1);
+  });
+
+  test("a compressed member needs more than σ ≤ σ adm: IPB 100 has the area but buckles", () => {
+    const st = [{ x: 0, N: -34641, Q: 0, M: 0 }];
+    expect(lightestPassing("IPB", st, 1600)?.profile.name).toBe("IPB 100"); // by area alone
+    const b = { P: 34641, L: 5, E };
+    expect(lightestPassing("IPB", st, 1600, b)?.profile.name).toBe("IPB 140");
+    expect(lightestPassing("IPB", st, 1600, b)?.pcr).toBeCloseTo(45598, -1);
   });
 });
 
@@ -126,15 +148,42 @@ describe("Truss + Cable + Beam (sizing)", () => {
     expect(c.results[1].pick?.profile.name).toBe("IPB 800");
   });
 
-  test("bars b4 (compressed, 34 641 kg) and b5 (tension, 17 321 kg) in IPB", () => {
+  test("b4 is in compression (34 641 kg): IPB 140 by Euler (IPB 100 would pass by area); b5 is in tension (17 321 kg): IPB 100", () => {
     const b4 = byMember<SizeCheck>(checks, "b4");
     const b5 = byMember<SizeCheck>(checks, "b5");
     expect(b4.demand.N).toBeCloseTo(-34641, -1);
     expect(b4.compressed).toBe(true);
-    expect(b4.results[0].pick?.profile.name).toBe("IPB 100"); // A = 26 cm² ≥ 21.65 cm²
+    expect(b4.results[0].pick?.profile.name).toBe("IPB 140"); // IPB 100 / 120: P_cr = 13 845 / 26 364 kg
+    expect(b4.results[0].pick?.pcr).toBeCloseTo(45598, -1);
     expect(b5.demand.N).toBeCloseTo(17321, -1);
     expect(b5.compressed).toBe(false);
-    expect(b5.results[0].pick?.profile.name).toBe("IPB 100"); // A ≥ 10.8 cm²
+    expect(b5.results[0].pick?.profile.name).toBe("IPB 100"); // A ≥ 10.8 cm²; no Euler in tension
+    expect(b5.results[0].pick?.pcr).toBeUndefined();
+  });
+
+  test("verifying a profile in compression: IPB 100 fails by buckling, IPB 140 passes", () => {
+    const base = preset("Truss + Cable + Beam (sizing)");
+    const run = (name: string) => {
+      const model: FrameModel = {
+        ...base,
+        members: base.members.map((m) =>
+          m.id === "b4"
+            ? { ...m, section: { kind: "profile" as const, name } }
+            : m,
+        ),
+      };
+      return runChecks(model, solveModel(model)).find(
+        (c) => c.member === "b4",
+      ) as VerifyCheck;
+    };
+    const weak = run("IPB 100");
+    expect(weak.sigma).toBeLessThan(1600); // σ is fine…
+    expect(weak.buckling?.ok).toBe(false); // …it buckles
+    expect(weak.ok).toBe(false);
+    expect(weak.suggestion?.profile.name).toBe("IPB 140");
+    const strong = run("IPB 140");
+    expect(strong.buckling?.ok).toBe(true);
+    expect(strong.ok).toBe(true);
   });
 
   test("only the members that carry a section are checked", () => {
@@ -179,12 +228,12 @@ describe("Truss + Cable + Beam IPB 260", () => {
 
   test("e, f) bar forces and the lightest IPB of each bar", () => {
     const expected: Record<string, [number, string]> = {
-      b1: [-25000, "IPB 100"],
-      b2: [-20000, "IPB 100"],
-      b3: [-40000, "IPB 100"],
-      b4: [50000, "IPB 120"],
-      b5: [-63300, "IPB 140"],
-      b6: [28284, "IPB 100"],
+      b1: [-25000, "IPB 120"], // compressed, L = 5 m: Euler (by area: IPB 100)
+      b2: [-20000, "IPB 160"], // compressed, L = 8.66 m (by area: IPB 100)
+      b3: [-40000, "IPB 200"], // compressed, L = 8.66 m (by area: IPB 100)
+      b4: [50000, "IPB 120"], // tension
+      b5: [-63300, "IPB 220"], // compressed, L = 8.66 m (by area: IPB 140)
+      b6: [28284, "IPB 100"], // tension
       b7: [0, "IPB 100"],
     };
     for (const [id, [N, name]] of Object.entries(expected)) {

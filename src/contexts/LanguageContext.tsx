@@ -160,7 +160,7 @@ const EN = {
   "checks.cable": "Cable",
   "checks.not_tension": "not in tension: a cable cannot take compression",
   "checks.note_buckling":
-    "Only σ = N/A + M/W is checked; buckling of the compressed members is not verified.",
+    "σ = N/A + M/W is checked; members in compression must also stay below Euler's buckling load P_cr = π²·E·Iy/L² (pinned ends, weak axis, safety coefficient 1).",
 
   "editor.material.note":
     "Material properties only affect indeterminate frames. For determinate structures the results are independent of E, A, I.",
@@ -733,7 +733,7 @@ const ES: Record<TranslationKey, string> = {
   "checks.cable": "Cable",
   "checks.not_tension": "no está a tracción: un cable no resiste compresión",
   "checks.note_buckling":
-    "Solo se verifica σ = N/A + M/W; no se verifica el pandeo de las barras comprimidas.",
+    "Se verifica σ = N/A + M/W; las barras comprimidas además deben quedar por debajo de la carga crítica de pandeo de Euler P_cr = π²·E·Iy/L² (extremos articulados, eje débil, coeficiente de seguridad 1).",
 
   "editor.material.note":
     "Las propiedades del material solo afectan a las estructuras hiperestáticas. Para estructuras isostáticas, los resultados son independientes de E, A, I.",

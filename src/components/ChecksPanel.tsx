@@ -90,7 +90,9 @@ export default function ChecksPanel({
                   <td className={id}>{c.member}</td>
                   <td className={id}>{c.profile.name}</td>
                   <td className={num}>{n0(c.sigma)}</td>
-                  <td className={`${num} whitespace-nowrap`}>{n0(c.ratio * 100)} %</td>
+                  <td className={`${num} whitespace-nowrap`}>
+                    {n0(c.ratio * 100)} %
+                  </td>
                   <td
                     className={`px-2 py-1 text-right font-medium ${c.ok ? good : bad}`}
                   >
@@ -103,6 +105,8 @@ export default function ChecksPanel({
                     className="px-2 pb-1 text-[11px] text-stone-500 dark:text-stone-400"
                   >
                     M = {n0(c.demand.M)} {u}·m, N = {n0(c.demand.N)} {u}
+                    {c.buckling &&
+                      ` · P = ${n0(c.buckling.P)} ${c.buckling.ok ? "≤" : ">"} P_cr = ${n0(c.buckling.pcr)} ${u}`}
                     {c.ok
                       ? ""
                       : ` · ${t("checks.lightest")} ${c.profile.series}: ${
@@ -143,8 +147,10 @@ export default function ChecksPanel({
                             <>
                               {r.pick.profile.name}{" "}
                               <span className="text-stone-500 dark:text-stone-400">
-                                (σ = {n0(r.pick.sigma)}, {n1(r.pick.profile.w)}{" "}
-                                kg/m)
+                                (σ = {n0(r.pick.sigma)}
+                                {r.pick.pcr !== undefined &&
+                                  `, P_cr = ${n0(r.pick.pcr)}`}
+                                , {n1(r.pick.profile.w)} kg/m)
                               </span>
                             </>
                           ) : (

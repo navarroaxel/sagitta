@@ -2,8 +2,9 @@
 // Pure and React-free. Units: forces in the model's unit (kg for the course), lengths in metres,
 // sections in cm (profile table), so stresses come out in force/cm² and M·100 is force·cm.
 //
-// Only σ = N/A + M/W ≤ σadm is checked (no buckling, no shear): a compressed bar is flagged
-// (`compressed`) so the panel can warn that buckling was not verified.
+// σ = N/A + M/W ≤ σadm is checked at every station, and a member in compression also has to
+// stay below Euler's critical load P_cr = π²·E·Iy/L² (pinned ends, L = the member's length,
+// weak axis, safety coefficient 1, as in the course). No shear check.
 import type { FrameModel, Member } from "./types";
 import type { SolveOutput } from "./solve";
 import type { Station } from "./sampling";
@@ -32,6 +33,19 @@ export function sigmaAt(p: Profile, N: number, M: number): number {
   return Math.abs(N) / p.A + (Math.abs(M) * 100) / p.Sx;
 }
 
+// Euler's critical load of the profile (weak axis, pinned ends): force, with E in force/cm², L in m.
+export function eulerPcr(p: Profile, E: number, L: number): number {
+  const Lcm = L * 100;
+  return (Math.PI ** 2 * E * p.Iy) / (Lcm * Lcm);
+}
+
+// A member in compression: the largest compressive force (> 0), its length and E (force/cm²).
+export interface Buckling {
+  P: number;
+  L: number;
+  E: number;
+}
+
 // Largest σ of the profile along the member, and where it is.
 export function sigmaMax(
   p: Profile,
@@ -53,14 +67,24 @@ export function sigmaMax(
 }
 
 // Lightest profile of the series (the table is ordered by size) whose σ max is within sigmaAdm.
+export interface Pick {
+  profile: Profile;
+  sigma: number;
+  pcr?: number; // Euler's critical load, only for members in compression
+}
+
 export function lightestPassing(
   series: "IPN" | "IPB",
   stations: Station[],
   sigmaAdm: number,
-): { profile: Profile; sigma: number } | null {
+  buckling?: Buckling,
+): Pick | null {
   for (const p of SERIES[series]) {
     const { sigma } = sigmaMax(p, stations);
-    if (sigma <= sigmaAdm) return { profile: p, sigma };
+    if (sigma > sigmaAdm) continue;
+    if (!buckling) return { profile: p, sigma };
+    const pcr = eulerPcr(p, buckling.E, buckling.L);
+    if (buckling.P <= pcr) return { profile: p, sigma, pcr };
   }
   return null;
 }
@@ -73,8 +97,10 @@ export interface VerifyCheck {
   ratio: number; // sigma / sigmaAdm
   ok: boolean;
   demand: Demand;
+  // member in compression: Euler's critical load of this profile and whether P stays below it
+  buckling: { P: number; pcr: number; ok: boolean } | null;
   // lightest profile of the same series that passes (null when none of the table does)
-  suggestion: { profile: Profile; sigma: number } | null;
+  suggestion: Pick | null;
 }
 
 export interface SizeCheck {
@@ -83,10 +109,10 @@ export interface SizeCheck {
   demand: Demand; // largest |N| and largest |M| of the member (not necessarily at the same station)
   results: {
     series: "IPN" | "IPB";
-    pick: { profile: Profile; sigma: number } | null;
+    pick: Pick | null;
   }[];
   unloaded: boolean; // the member carries no force: any profile passes
-  compressed: boolean;
+  compressed: boolean; // in compression: the profiles are also checked against Euler
 }
 
 export interface CableCheck {
@@ -109,6 +135,18 @@ const maxAbs = (stations: Station[], key: "N" | "M"): Station =>
     stations[0],
   );
 
+// Compression of member `e` (null when no station is in compression).
+function bucklingOf(
+  model: FrameModel,
+  solved: SolveOutput,
+  e: number,
+): Buckling | null {
+  const st = solved.stations[e];
+  const P = -Math.min(...st.map((s) => s.N));
+  if (!(P > TOL)) return null;
+  return { P, L: solved.result.geo[e].L, E: model.material.E / 1e4 };
+}
+
 // One entry per member that has a `section`; [] when the model has no sigmaAdm or no sections.
 export function runChecks(
   model: FrameModel,
@@ -126,17 +164,21 @@ export function runChecks(
       const p = getProfile(sec.name);
       if (!p) return;
       const { sigma, demand } = sigmaMax(p, st);
+      const buck = bucklingOf(model, solved, e);
+      const pcr = buck ? eulerPcr(p, buck.E, buck.L) : 0;
+      const bOk = !buck || buck.P <= pcr;
       out.push({
         kind: "verify",
         member: m.id,
         profile: p,
         sigma,
         ratio: sigma / sigmaAdm,
-        ok: sigma <= sigmaAdm,
+        ok: sigma <= sigmaAdm && bOk,
         demand,
+        buckling: buck ? { P: buck.P, pcr, ok: bOk } : null,
         suggestion:
           p.series === "IPN" || p.series === "IPB"
-            ? lightestPassing(p.series, st, sigmaAdm)
+            ? lightestPassing(p.series, st, sigmaAdm, buck ?? undefined)
             : null,
       });
     } else if (sec.kind === "size") {
@@ -155,7 +197,12 @@ export function runChecks(
         },
         results: series.map((s) => ({
           series: s,
-          pick: lightestPassing(s, st, sigmaAdm),
+          pick: lightestPassing(
+            s,
+            st,
+            sigmaAdm,
+            bucklingOf(model, solved, e) ?? undefined,
+          ),
         })),
         unloaded,
         compressed: st.some((s) => s.N < -TOL),

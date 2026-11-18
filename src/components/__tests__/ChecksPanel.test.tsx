@@ -45,7 +45,9 @@ describe("ChecksPanel", () => {
     expect(text).toContain("3.99"); // d req
     expect(text).toContain("0.33"); // elongation, cm
     expect(text).toContain("IPB 800"); // beam EF
-    expect(text).toContain("IPB 100"); // b4, b5
+    expect(text).toContain("IPB 100"); // b5 (tension)
+    expect(text).toContain("IPB 140"); // b4 (compression: Euler)
+    expect(text).toContain("P_cr = 45 598");
     expect(text).toMatch(/pandeo|buckling/); // b4 is compressed
   });
 
