@@ -41,8 +41,10 @@ describe("ChecksPanel", () => {
       .getByRole("region")
       .textContent!.replace(/\u00a0/g, " ");
     expect(text).toContain("cable");
-    expect(text).toContain("20 000"); // T
-    expect(text).toContain("3.99"); // d req
+    expect(text).toContain("21 573"); // T = (40 000 + 262.2·12)/2, the beam's own weight included
+    expect(text).toMatch(/Peso propio incluido|Own weight included/);
+    expect(text).toContain("EF IPB 800");
+    expect(text).toContain("4.14"); // d req
     expect(text).toContain("0.33"); // elongation, cm
     expect(text).toContain("IPB 800"); // beam EF
     expect(text).toContain("IPB 100"); // b5 (tension)
@@ -123,5 +125,35 @@ describe("Members tab: section selector", () => {
     const input = screen.getByDisplayValue("1600");
     fireEvent.change(input, { target: { value: "1400" } });
     expect(onChange.mock.calls.at(-1)![0].sigmaAdm).toBe(1400);
+  });
+
+  test("own weight: the checkbox needs a profile or a size, and sets member.selfWeight", () => {
+    const onChange = vi.fn();
+    const model = preset("Truss + Cable + Beam (sizing)");
+    render(
+      <LanguageProvider>
+        <ModelEditor
+          model={model}
+          onChange={onChange}
+          solved={solveModel(model)}
+        />
+      </LanguageProvider>,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /members|barras/i }));
+    const boxes = screen
+      .getAllByRole("checkbox")
+      .filter(
+        (c) => (c as HTMLInputElement).title.length > 0,
+      ) as HTMLInputElement[];
+    expect(boxes).toHaveLength(model.members.length);
+    const idx = (id: string) => model.members.findIndex((m) => m.id === id);
+    expect(boxes[idx("b1")].disabled).toBe(true); // no section
+    expect(boxes[idx("cable")].disabled).toBe(true); // a cable has no profile weight
+    expect(boxes[idx("EF")].disabled).toBe(false);
+    expect(boxes[idx("EF")].checked).toBe(true);
+    fireEvent.click(boxes[idx("EF")]);
+    expect(
+      onChange.mock.calls.at(-1)![0].members[idx("EF")].selfWeight,
+    ).toBeUndefined();
   });
 });

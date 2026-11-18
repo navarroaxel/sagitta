@@ -19,6 +19,10 @@ export interface Member {
   n1: string; // node id
   n2: string; // node id
   section?: MemberSection;
+  // Add the member's own weight (profile's kg/m, straight down) as a distributed load. Needs a
+  // `profile` or `size` section; for `size` the weight depends on the profile picked, so the
+  // solver iterates until the pick is stable (see solve.ts).
+  selfWeight?: boolean;
   relI?: boolean; // moment release (hinge) at the n1 end
   relJ?: boolean; // moment release (hinge) at the n2 end
 }

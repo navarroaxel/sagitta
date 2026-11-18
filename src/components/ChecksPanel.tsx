@@ -68,6 +68,18 @@ export default function ChecksPanel({
         {t("checks.title")} · σ<sub>adm</sub> = {n0(sigmaAdm)} {u}/cm²
       </Title>
 
+      {solved.selfWeight.length > 0 && (
+        <p className="px-2 text-[11px] text-stone-500 dark:text-stone-400">
+          {t("checks.self_weight")}:{" "}
+          {solved.selfWeight
+            .map(
+              (w) =>
+                `${w.member} ${w.profile} ${n1(w.w)} ${u}/m = ${n0(w.total)} ${u}`,
+            )
+            .join(" · ")}
+        </p>
+      )}
+
       {verify.length > 0 && (
         <table className="w-full border-collapse text-xs">
           <thead>

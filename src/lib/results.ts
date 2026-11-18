@@ -42,7 +42,7 @@ export function equilibrium(model: FrameModel, solved: SolveOutput): Equilibrium
     m += px * ay - py * ax + am;
   };
 
-  for (const load of model.loads) {
+  for (const load of [...model.loads, ...(solved.extraLoads ?? [])]) {
     if (load.type === "nodal") {
       const n = nodeById.get(load.node);
       if (n) add(n.x, n.y, load.fx, load.fy, load.m);

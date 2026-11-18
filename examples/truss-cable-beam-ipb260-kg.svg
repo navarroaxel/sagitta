@@ -36,6 +36,9 @@
       These reactions satisfy global equilibrium (SumM_A = 63 300 * 5 - 5 000 * 8.66
       - 20 000 * 13.66 = 0).
     Cable: A >= T / sigma_adm = 20 000 / 1600 = 12.5 cm2.
+    NOTE: the reactions above (and the 20 000 kg of the cable) are those of the drawing: they do NOT
+      include the own weight of the beam F-G (IPB 260: 92.6 kg/m x 10 m = 926 kg). The simulator adds
+      it to what the cable carries (T = 20 463 kg), so its numbers are slightly larger.
   -->
 
   <rect x="0" y="0" width="840" height="700" fill="#ffffff"/>

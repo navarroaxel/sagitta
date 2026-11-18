@@ -317,6 +317,7 @@ function MembersPanel({
             <Th>{t("editor.members.hinge_i")}</Th>
             <Th>{t("editor.members.hinge_j")}</Th>
             <Th>{t("editor.members.section")}</Th>
+            <Th>{t("editor.members.self_weight")}</Th>
             <th />
           </tr>
         </thead>
@@ -395,6 +396,19 @@ function MembersPanel({
                     ))}
                   </optgroup>
                 </select>
+              </Cell>
+              <Cell className="text-center">
+                <input
+                  type="checkbox"
+                  title={t("editor.members.self_weight_hint")}
+                  checked={!!m.selfWeight}
+                  disabled={
+                    m.section?.kind !== "profile" && m.section?.kind !== "size"
+                  }
+                  onChange={(e) =>
+                    update(i, { selfWeight: e.target.checked || undefined })
+                  }
+                />
               </Cell>
               <Cell>
                 <button

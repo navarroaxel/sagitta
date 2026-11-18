@@ -147,6 +147,19 @@ function bucklingOf(
   return { P, L: solved.result.geo[e].L, E: model.material.E / 1e4 };
 }
 
+// The profile a `size` section picks for member `e`: the lightest of its series that passes.
+export function bestPick(model: FrameModel, solved: SolveOutput, e: number): Pick | null {
+  const sec = model.members[e].section;
+  const sigmaAdm = model.sigmaAdm;
+  const st = solved.stations[e];
+  if (sec?.kind !== "size" || !sigmaAdm || !st) return null;
+  const buck = bucklingOf(model, solved, e) ?? undefined;
+  const picks = sec.series
+    .map((s) => lightestPassing(s, st, sigmaAdm, buck))
+    .filter((p): p is Pick => p !== null);
+  return picks.sort((a, b) => a.profile.w - b.profile.w)[0] ?? null;
+}
+
 // One entry per member that has a `section`; [] when the model has no sigmaAdm or no sections.
 export function runChecks(
   model: FrameModel,

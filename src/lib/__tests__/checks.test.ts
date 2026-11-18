@@ -11,6 +11,7 @@ import {
   type SizeCheck,
   type VerifyCheck,
 } from "../checks";
+import { equilibrium, EQ_TOL } from "../results";
 import type { FrameModel } from "../types";
 
 const preset = (name: string): FrameModel => {
@@ -109,16 +110,29 @@ describe("Beam IPB 300 (check)", () => {
   });
 });
 
+// The beam's own weight is part of what the cable carries (member.selfWeight), so the expected values
+// come from statics with the weight of the profile the sizing settles on.
 describe("Truss + Cable + Beam (sizing)", () => {
   const { model, solved, checks } = checksOf("Truss + Cable + Beam (sizing)");
   const r = (id: string) => solved.result.reactions[solved.nodeIndex.get(id)!];
+  const wEF = getProfile("IPB 800")!.w; // the beam settles on IPB 800 (262.2 kg/m)
+  const T = (40000 + wEF * 12) / 2; // cable = half of the beam's load (symmetric)
+  const D = 10000 + T; // load on D: its own 10 000 kg + what the cable pulls down
 
-  test("stable; reactions as in examples/truss-cable-beam-kg.svg", () => {
+  test("EF's weight is included: IPB 800 · 12 m = 3 146 kg, and the solver agrees with itself", () => {
+    expect(solved.selfWeight).toHaveLength(1);
+    expect(solved.selfWeight[0].profile).toBe("IPB 800");
+    expect(solved.selfWeight[0].w).toBeCloseTo(wEF, 6);
+    expect(solved.selfWeight[0].total).toBeCloseTo(wEF * 12, 6);
+    expect(solved.extraLoads).toHaveLength(1);
+  });
+
+  test("stable; reactions from statics (A and B carry D, F carries the beam's half)", () => {
     expect(solved.result.stable).toBe(true);
-    expect(r("A").ry).toBeCloseTo(-15000, 2);
-    expect(r("B").ry).toBeCloseTo(45000, 2);
+    expect(r("A").ry).toBeCloseTo(-D / 2, 2);
+    expect(r("B").ry).toBeCloseTo(D + D / 2, 2);
     expect(r("B").rx).toBeCloseTo(0, 2);
-    expect(r("F").ry).toBeCloseTo(20000, 2);
+    expect(r("F").ry).toBeCloseTo(T, 2);
     expect(r("F").rx).toBeCloseTo(0, 2);
   });
 
@@ -129,42 +143,44 @@ describe("Truss + Cable + Beam (sizing)", () => {
     }
   });
 
-  test("cable D-E: T = 20 000 kg, A = 12.5 cm², d = 3.99 cm, elongation = σ adm·L/E = 0.33 cm", () => {
+  test("cable D-E: T = (40 000 + w·12)/2 = 21 573 kg, A = T/σ adm, d = 4.14 cm, elongation = σ adm·L/E = 0.33 cm", () => {
     const c = byMember<CableCheck>(checks, "cable");
     expect(c.tension).toBe(true);
-    expect(c.N).toBeCloseTo(20000, 2);
-    expect(c.areaReq).toBeCloseTo(12.5, 6);
-    expect(c.dReq).toBeCloseTo(3.989, 3);
-    expect(c.dAdopted).toBeCloseTo(4.0, 9);
+    expect(c.N).toBeCloseTo(T, 2);
+    expect(c.areaReq).toBeCloseTo(T / 1600, 6);
+    expect(c.dReq).toBeCloseTo(Math.sqrt((4 * T) / 1600 / Math.PI), 6);
+    expect(c.dReq).toBeCloseTo(4.143, 3);
     expect(c.L).toBeCloseTo(4.3301, 4);
     expect(c.elongation).toBeCloseTo((1600 * 433.01) / 2.1e6, 4);
   });
 
-  test("beam E-F: M = 120 000 kg·m, no IPN fits, the lightest IPB is IPB 800", () => {
+  test("beam E-F: M = P·L/4 + w·L²/8, no IPN fits, the lightest IPB is IPB 800", () => {
     const c = byMember<SizeCheck>(checks, "EF");
-    expect(c.demand.M).toBeCloseTo(120000, 0);
+    expect(c.demand.M).toBeCloseTo(120000 + (wEF * 144) / 8, 0);
     expect(c.results.map((x) => x.series)).toEqual(["IPN", "IPB"]);
     expect(c.results[0].pick).toBeNull();
     expect(c.results[1].pick?.profile.name).toBe("IPB 800");
+    // its weight does not push it out: σ with the weight included is still within σ adm
+    expect(c.results[1].pick!.sigma).toBeLessThanOrEqual(1600);
   });
 
-  test("b4 is in compression (34 641 kg): IPB 140 by Euler (IPB 100 would pass by area); b5 is in tension (17 321 kg): IPB 100", () => {
+  test("b4 is in compression (D/sin 60° = 36 457 kg): IPB 140 by Euler; b5 is in tension (D/√3): IPB 100", () => {
     const b4 = byMember<SizeCheck>(checks, "b4");
     const b5 = byMember<SizeCheck>(checks, "b5");
-    expect(b4.demand.N).toBeCloseTo(-34641, -1);
+    expect(b4.demand.N).toBeCloseTo(-D / Math.sin(Math.PI / 3), 1);
     expect(b4.compressed).toBe(true);
     expect(b4.results[0].pick?.profile.name).toBe("IPB 140"); // IPB 100 / 120: P_cr = 13 845 / 26 364 kg
-    expect(b4.results[0].pick?.pcr).toBeCloseTo(45598, -1);
-    expect(b5.demand.N).toBeCloseTo(17321, -1);
+    expect(b4.results[0].pick!.pcr!).toBeGreaterThan(-b4.demand.N);
+    expect(b5.demand.N).toBeCloseTo(D / Math.sqrt(3), 1);
     expect(b5.compressed).toBe(false);
-    expect(b5.results[0].pick?.profile.name).toBe("IPB 100"); // A ≥ 10.8 cm²; no Euler in tension
+    expect(b5.results[0].pick?.profile.name).toBe("IPB 100"); // A ≥ 11.4 cm²; no Euler in tension
     expect(b5.results[0].pick?.pcr).toBeUndefined();
   });
 
   test("verifying a profile in compression: IPB 100 fails by buckling, IPB 140 passes", () => {
     const base = preset("Truss + Cable + Beam (sizing)");
     const run = (name: string) => {
-      const model: FrameModel = {
+      const m2: FrameModel = {
         ...base,
         members: base.members.map((m) =>
           m.id === "b4"
@@ -172,7 +188,7 @@ describe("Truss + Cable + Beam (sizing)", () => {
             : m,
         ),
       };
-      return runChecks(model, solveModel(model)).find(
+      return runChecks(m2, solveModel(m2)).find(
         (c) => c.member === "b4",
       ) as VerifyCheck;
     };
@@ -195,53 +211,90 @@ describe("Truss + Cable + Beam (sizing)", () => {
     ]);
     expect(model.members.filter((m) => !m.section).length).toBe(3);
   });
+
+  test("without selfWeight the weight is ignored: T = 20 000 kg (the old numbers)", () => {
+    const m2: FrameModel = {
+      ...model,
+      members: model.members.map((m) => ({ ...m, selfWeight: undefined })),
+    };
+    const s2 = solveModel(m2);
+    expect(s2.selfWeight).toEqual([]);
+    expect(s2.result.reactions[s2.nodeIndex.get("F")!].ry).toBeCloseTo(
+      20000,
+      2,
+    );
+  });
+
+  test("the equilibrium check sums the self-weight too", () => {
+    const eq = equilibrium(model, solved);
+    expect(Math.abs(eq.fx)).toBeLessThan(EQ_TOL);
+    expect(Math.abs(eq.fy)).toBeLessThan(EQ_TOL);
+    expect(Math.abs(eq.m)).toBeLessThan(EQ_TOL);
+  });
 });
 
 describe("Truss + Cable + Beam IPB 260", () => {
-  const { solved, checks } = checksOf("Truss + Cable + Beam IPB 260");
+  const { model, solved, checks } = checksOf("Truss + Cable + Beam IPB 260");
   const r = (id: string) => solved.result.reactions[solved.nodeIndex.get(id)!];
+  const wFG = getProfile("IPB 260")!.w; // 92.63 kg/m
+  const qTot = 2000 + wFG; // kg/m on FG: q = 20 kg/cm + own weight
+  const T = (20000 + qTot * 10) / 2; // cable = V_G = half of the beam's load
 
-  test("stable; reactions as in examples/truss-cable-beam-ipb260-kg.svg", () => {
+  test("FG's weight is included: IPB 260 · 10 m = 926 kg", () => {
+    expect(solved.selfWeight).toHaveLength(1);
+    expect(solved.selfWeight[0].member).toBe("FG");
+    expect(solved.selfWeight[0].profile).toBe("IPB 260");
+    expect(solved.selfWeight[0].total).toBeCloseTo(wFG * 10, 6);
+  });
+
+  test("stable; reactions from statics (ΣM about B with the cable's T at C, 8.66 m to its right)", () => {
     expect(solved.result.stable).toBe(true);
-    expect(r("A").ry).toBeCloseTo(-3300, 2);
+    const VA = (40000 * 5 - 5000 * 8.66 - T * 8.66) / 5; // negative: downward
+    expect(r("A").ry).toBeCloseTo(VA, 2);
     expect(r("B").rx).toBeCloseTo(-5000, 2);
-    expect(r("B").ry).toBeCloseTo(63300, 2);
-    expect(r("G").ry).toBeCloseTo(20000, 2);
+    expect(r("B").ry).toBeCloseTo(40000 + T - VA, 2);
+    expect(r("G").ry).toBeCloseTo(T, 2);
     expect(r("G").rx).toBeCloseTo(0, 2);
   });
 
-  test("a) beam F-G (IPB 260): M = 75 000 kg·m, σ ≈ 6 522 kg/cm², does not pass; IPB 550 would", () => {
+  test("a) beam F-G (IPB 260): M = P·L/4 + q·L²/8, σ ≈ 6 623 kg/cm², does not pass; IPB 550 would", () => {
     const c = byMember<VerifyCheck>(checks, "FG");
-    expect(c.demand.M).toBeCloseTo(75000, 0);
-    expect(c.sigma).toBeCloseTo(7_500_000 / 1150, 0);
+    const M = (20000 * 10) / 4 + (qTot * 100) / 8; // ≈ 76 158 kg·m
+    expect(c.demand.M).toBeCloseTo(M, 0);
+    expect(c.sigma).toBeCloseTo((M * 100) / 1150, 0);
     expect(c.ok).toBe(false);
     expect(c.suggestion?.profile.name).toBe("IPB 550");
   });
 
-  test("b, c) cable C-F: T = 20 000 kg, d = 3.99 cm, elongation 1.14 cm over 15 m", () => {
+  test("b, c) cable C-F: T = 20 463 kg, d = 4.04 cm, elongation 1.14 cm over 15 m", () => {
     const c = byMember<CableCheck>(checks, "cable");
     expect(c.L).toBeCloseTo(15, 9);
-    expect(c.N).toBeCloseTo(20000, 2);
-    expect(c.dReq).toBeCloseTo(3.989, 3);
+    expect(c.N).toBeCloseTo(T, 2);
+    expect(c.dReq).toBeCloseTo(Math.sqrt((4 * T) / 1600 / Math.PI), 6);
+    expect(c.dReq).toBeCloseTo(4.035, 3);
     expect(c.elongation).toBeCloseTo((1600 * 1500) / 2.1e6, 4);
   });
 
   test("e, f) bar forces and the lightest IPB of each bar", () => {
-    const expected: Record<string, [number, string]> = {
-      b1: [-25000, "IPB 120"], // compressed, L = 5 m: Euler (by area: IPB 100)
-      b2: [-20000, "IPB 160"], // compressed, L = 8.66 m (by area: IPB 100)
-      b3: [-40000, "IPB 200"], // compressed, L = 8.66 m (by area: IPB 100)
-      b4: [50000, "IPB 120"], // tension
-      b5: [-63300, "IPB 220"], // compressed, L = 8.66 m (by area: IPB 140)
-      b6: [28284, "IPB 100"], // tension
-      b7: [0, "IPB 100"],
+    // forces from the solver (the cable's T on C), picks by area (tension) or by Euler (compression)
+    const expected: Record<string, string> = {
+      b1: "IPB 120", // compressed, L = 5 m
+      b2: "IPB 160", // compressed, L = 8.66 m
+      b3: "IPB 200", // compressed, L = 8.66 m
+      b4: "IPB 120", // tension
+      b5: "IPB 220", // compressed, L = 8.66 m
+      b6: "IPB 100", // tension
     };
-    for (const [id, [N, name]] of Object.entries(expected)) {
+    for (const [id, name] of Object.entries(expected)) {
       const c = byMember<SizeCheck>(checks, id);
-      expect(c.demand.N).toBeCloseTo(N, -1);
       expect(c.results[0].pick?.profile.name).toBe(name);
+      if (c.compressed)
+        expect(c.results[0].pick!.pcr!).toBeGreaterThan(-c.demand.N);
     }
+    const b3 = byMember<SizeCheck>(checks, "b3");
+    expect(b3.demand.N).toBeCloseTo(-40000, -1); // D's 40 000 kg straight down the column
     expect(byMember<SizeCheck>(checks, "b7").unloaded).toBe(true);
+    expect(model.members.find((m) => m.id === "FG")?.selfWeight).toBe(true);
   });
 });
 

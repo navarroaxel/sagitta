@@ -140,6 +140,9 @@ const EN = {
   "editor.loads.add": "+ Add load",
 
   "editor.members.section": "Section",
+  "editor.members.self_weight": "Own wt",
+  "editor.members.self_weight_hint":
+    "Add the member's own weight (profile kg/m) as a distributed load; needs a profile or a size",
   "editor.section.none": "— (analysis only)",
   "editor.section.cable": "Cable",
   "editor.section.size": "Size (lightest that passes)",
@@ -148,6 +151,7 @@ const EN = {
   "editor.material.sigma_note":
     "Used by the Results tab for members with a section (check a profile, size one, or size a cable). Forces in kg and lengths in m give kg/cm²; E is then in kg/m² (steel: 2.1e10).",
   "checks.title": "Verification and sizing",
+  "checks.self_weight": "Own weight included",
   "checks.no_sigma": "Set σ adm in the Material tab to run the checks.",
   "checks.member": "Member",
   "checks.profile": "Profile",
@@ -713,6 +717,9 @@ const ES: Record<TranslationKey, string> = {
   "editor.loads.add": "+ Agregar carga",
 
   "editor.members.section": "Sección",
+  "editor.members.self_weight": "Peso propio",
+  "editor.members.self_weight_hint":
+    "Suma el peso propio de la barra (kg/m del perfil) como carga distribuida; necesita un perfil o un dimensionado",
   "editor.section.none": "— (solo análisis)",
   "editor.section.cable": "Cable",
   "editor.section.size": "Dimensionar (el más liviano que cumple)",
@@ -721,6 +728,7 @@ const ES: Record<TranslationKey, string> = {
   "editor.material.sigma_note":
     "Lo usa la pestaña de resultados para las barras con sección (verificar un perfil, dimensionarlo o dimensionar un cable). Fuerzas en kg y longitudes en m dan kg/cm²; E queda en kg/m² (acero: 2,1e10).",
   "checks.title": "Verificación y dimensionado",
+  "checks.self_weight": "Peso propio incluido",
   "checks.no_sigma": "Cargá σ adm en la pestaña Material para hacer las verificaciones.",
   "checks.member": "Barra",
   "checks.profile": "Perfil",
