@@ -54,6 +54,9 @@ describe("ChecksPanel", () => {
     expect(text).toMatch(/Peso propio incluido|Own weight included/);
     expect(text).toContain("EF IPB 800");
     expect(text).toContain("4.14"); // d req
+    expect(text).toMatch(/Diámetro mínimo del cable|Minimum cable diameter/);
+    expect(text).toMatch(/= 4\.14 cm = 41\.4 mm/); // d min, also in mm
+    expect(text).toMatch(/(adoptar|adopt) ≥ 4\.2 cm/); // rounded up to the next mm
     expect(text).toContain("0.33"); // elongation, cm
     expect(text).toContain("IPB 800"); // beam EF
     expect(text).toContain("IPB 100"); // b5 (tension)

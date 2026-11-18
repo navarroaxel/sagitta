@@ -193,9 +193,7 @@ export default function ChecksPanel({
               <th className={`${th} text-right`}>
                 A<sub>req</sub> (cm²)
               </th>
-              <th className={`${th} text-right`}>
-                d<sub>req</sub> (cm)
-              </th>
+              <th className={`${th} text-right`}>{t("checks.d_min")}</th>
               <th className={`${th} text-right`}>Δ (cm)</th>
             </tr>
           </thead>
@@ -209,6 +207,16 @@ export default function ChecksPanel({
                   <td className={num}>{n2(c.areaReq)}</td>
                   <td className={num}>{n2(c.dReq)}</td>
                   <td className={num}>{n2(c.elongation)}</td>
+                </tr>
+                <tr>
+                  <td
+                    colSpan={6}
+                    className="px-2 pb-1 text-[11px] font-medium text-stone-700 dark:text-stone-300"
+                  >
+                    {t("checks.d_min_long")} = {n2(c.dReq)} cm ={" "}
+                    {n1(c.dReq * 10)} mm · {t("checks.d_adopted")} ≥{" "}
+                    {n1(c.dAdopted)} cm
+                  </td>
                 </tr>
                 {!c.tension && (
                   <tr>
