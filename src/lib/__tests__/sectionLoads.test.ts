@@ -9,7 +9,8 @@ const near = (a: number, b: number, tol = 1e-6) =>
 describe("sectionLoads", () => {
   const model = PRESETS_3D.find((p) => p.key === "frame_overhang")!.model;
   const solved = solveModel3D(model)!;
-  const at = (z: number) => sectionLoads(model, solved, 0, nearestStation(solved, 0, z));
+  const at = (z: number) =>
+    sectionLoads(model, solved, 0, nearestStation(solved, 0, z));
 
   test("column M1: the distributed load q_x and the support reaction at A, in the section's axes", () => {
     const loads = at(4);
@@ -38,8 +39,71 @@ describe("sectionLoads", () => {
     expect(at(1.5).some((l) => l.kind === "q")).toBe(false);
   });
 
-  test("a member without loads or supports has none", () => {
-    expect(sectionLoads(model, solved, 2, 0)).toEqual([]);
+  test("a member with no load of its own, no support on the free-body side and only a joint at its end has none", () => {
+    // tFrameKg: M1 is the column; B (its z = 0 end) is a joint with the beams, so L3 (a nodal load at B) is not
+    // listed, and the support A is past the cut
+    const kg = PRESETS_3D.find((p) => p.key === "t_frame_kg")!.model;
+    const s = solveModel3D(kg)!;
+    expect(sectionLoads(kg, s, 0, nearestStation(s, 0, 0))).toEqual([]);
+  });
+
+  test("a point load on a FREE end is listed when that end is on the free-body side of the cut (z < cut)", () => {
+    const e = (id: string) => model.members.findIndex((m) => m.id === id);
+    const at2 = (id: string, f: (L: number) => number) => {
+      const i = e(id);
+      const L = solved.result.geo[i].L;
+      return sectionLoads(model, solved, i, nearestStation(solved, i, f(L)))
+        .filter((l) => l.kind === "P")
+        .map((l) => l.id);
+    };
+    // M2 (B to C, z down): its free end C is z = 0, so L2 is on the free body at every cut
+    for (const f of [() => 0, (L: number) => L / 2, (L: number) => L])
+      expect(at2("M2", f)).toEqual(["L2"]);
+    // M3 (E to B, z to the left): its free end E is z = L: L3 only counts once the cut reaches the tip
+    expect(at2("M3", () => 0)).toEqual([]);
+    expect(at2("M3", (L) => L / 2)).toEqual([]);
+    expect(at2("M3", (L) => L)).toEqual(["L3"]);
+    // ... and it acts at z = L (the tip), not at the cut
+    const i = model.members.findIndex((m) => m.id === "M3");
+    const L = solved.result.geo[i].L;
+    const P = sectionLoads(model, solved, i, nearestStation(solved, i, L)).find(
+      (l) => l.kind === "P",
+    )!;
+    near(P.z!, L);
+  });
+});
+
+describe("sectionLoads: point loads on the 3D column (preset #9)", () => {
+  const col = PRESETS_3D.find((p) => p.key === "column_kg")!.model;
+  const colSolved = solveModel3D(col)!;
+  const loadsAt = (z: number) =>
+    sectionLoads(col, colSolved, 0, nearestStation(colSolved, 0, z));
+
+  test("the tip load (Fx = 1500, Fz = −20 000 kg at B) is listed, in the section's axes", () => {
+    const P = loadsAt(2.5).find((l) => l.kind === "P")!;
+    expect(P.id).toBe("L2");
+    // the column's triad: y to the right (= +X), z down: Fx = 1500 along y, the weight 20 000 along +z (down the member)
+    near(P.force[0], 0);
+    near(P.force[1], 1500);
+    near(P.force[2], 20000);
+    expect(P.moment).toBeUndefined();
+    near(P.z!, 0); // acts at the tip (z = 0), wherever the cut is
+  });
+
+  test("a point load keeps its own z whatever the cut: it belongs to its node, not to the plate", () => {
+    const zs = [0, 1, 2.5, 5].map(
+      (z) => loadsAt(z).find((l) => l.kind === "P")!.z,
+    );
+    expect(zs).toEqual([0, 0, 0, 0]);
+  });
+
+  test("it is on the free body at every cut (the tip is z = 0); q_y up to the cut; the base reaction only at the base", () => {
+    for (const z of [0, 1, 2.5, 5]) {
+      expect(loadsAt(z).some((l) => l.kind === "P")).toBe(true);
+    }
+    expect(loadsAt(5).filter((l) => l.kind === "q")).toHaveLength(1);
+    expect(loadsAt(5).some((l) => l.kind === "R")).toBe(true);
+    expect(loadsAt(2.5).some((l) => l.kind === "R")).toBe(false);
   });
 });
 
@@ -48,7 +112,12 @@ describe("sectionLoads: the loaded span (zSpan)", () => {
     const model = PRESETS_3D[0].model;
     const solved = solveModel3D(model)!;
     const e = model.members.findIndex((m) => m.id === "M3");
-    const q = sectionLoads(model, solved, e, nearestStation(solved, e, 2.5)).find((l) => l.kind === "q")!;
+    const q = sectionLoads(
+      model,
+      solved,
+      e,
+      nearestStation(solved, e, 2.5),
+    ).find((l) => l.kind === "q")!;
     expect(q.id).toBe("L2");
     near(q.zSpan![0], 0);
     near(q.zSpan![1], 4); // not the whole 5 m: the 1 m next to B (z in [4, 5]) is unloaded
@@ -57,7 +126,9 @@ describe("sectionLoads: the loaded span (zSpan)", () => {
   test("a load over the whole member has the whole member as its span", () => {
     const model = PRESETS_3D[0].model;
     const solved = solveModel3D(model)!;
-    const q = sectionLoads(model, solved, 0, nearestStation(solved, 0, 6)).find((l) => l.kind === "q")!;
+    const q = sectionLoads(model, solved, 0, nearestStation(solved, 0, 6)).find(
+      (l) => l.kind === "q",
+    )!;
     near(q.zSpan![0], 0);
     near(q.zSpan![1], 6); // M1: the 6 m column, q_y over all of it
   });
@@ -66,11 +137,24 @@ describe("sectionLoads: the loaded span (zSpan)", () => {
     const base = PRESETS_3D.find((p) => p.key === "frame_overhang")!.model;
     const withLoad = (from: number, to: number) => ({
       ...base,
-      loads: [{ id: "Lz", type: "mudl" as const, member: "M1", gx: 0, gy: 0, gz: -100, from, to }],
+      loads: [
+        {
+          id: "Lz",
+          type: "mudl" as const,
+          member: "M1",
+          gx: 0,
+          gy: 0,
+          gz: -100,
+          from,
+          to,
+        },
+      ],
     });
     const qAt = (m: typeof base) => {
       const sv = solveModel3D(m)!;
-      return sectionLoads(m, sv, 0, nearestStation(sv, 0, 4)).some((l) => l.kind === "q");
+      return sectionLoads(m, sv, 0, nearestStation(sv, 0, 4)).some(
+        (l) => l.kind === "q",
+      );
     };
     expect(qAt(withLoad(1, 1))).toBe(false); // empty
     expect(qAt(withLoad(3, 1))).toBe(false); // reversed

@@ -35,7 +35,7 @@ const N_EDGE = 8; // cells per side edge
 const N_Z = 26; // slices along z
 const N_FRONT = 14; // cells along the longer side of a front rectangle
 
-const LOAD_COLORS = { q: "#2563eb", R: "#9333ea" } as const;
+const LOAD_COLORS = { q: "#2563eb", R: "#9333ea", P: "#c0392b" } as const; // distributed / reaction / point load
 const MAX_ARROW = 95; // px of the largest component of each kind
 // two decimals, none from 100 up: the legend has to fit in the figure with kg-sized numbers
 const fmt = (v: number) =>
@@ -415,7 +415,8 @@ export default function SectionPrism({
               strokeDasharray="7 4"
             />
           )}
-          {/* loads of the member in the section's axes: tip at the centroid, shaft trailing the force.
+          {/* loads of the member in the section's axes: tip at the centroid, shaft trailing the force; a point
+              load (P) is drawn at its own node (the member's end), fixed, not at the plate.
               A distributed load only gets its arrows AT the cut when it acts there (the cut is inside its
               loaded span); past the end of the span it is still on the free body (the row of arrows and the
               legend show it) but it does not act at this section. */}
@@ -434,7 +435,10 @@ export default function SectionPrism({
                 .map((o) => Math.max(...o.force.map(Math.abs))),
             );
             const k = MAX_ARROW / big;
-            const o: P2 = cutC;
+            // a point load acts at its node (the member's end) and stays there; reactions and distributed
+            // loads are drawn at the plate (what the cut balances)
+            const o: P2 =
+              l.kind === "P" && L > 0 ? scr(0, 0, (l.z ?? 0) / L) : cutC;
             const parts: { key: string; v: P2 }[] = [
               { key: "xy", v: [l.force[0] * k, -l.force[1] * k] },
               { key: "z", v: [l.force[2] * k * DX, -l.force[2] * k * DY] },
@@ -644,7 +648,7 @@ export default function SectionPrism({
                   <text x={LEGEND_X + 16} y={y}>
                     {l.kind === "q"
                       ? `q ${l.id}${l.zSpan && (l.zSpan[0] > 1e-6 || l.zSpan[1] < L - 1e-6) ? ` (z ${l.zSpan[0].toFixed(1)}–${l.zSpan[1].toFixed(1)} m)` : ""}`
-                      : `${t("f3d.cut.reaction")} ${l.id}`}
+                      : `${t(l.kind === "P" ? "f3d.cut.point_load" : "f3d.cut.reaction")} ${l.id}`}
                   </text>
                   <text x={LEGEND_X + 16} y={y + 13}>
                     ({fmt(fx)}, {fmt(fy)}, {fmt(fz)}) {unit}

@@ -289,6 +289,7 @@ const EN = {
     "Section seen with z into the page: x to the right, y up. The 'Z' diagrams are σ from N, Mx and My; the corner values are their sum. Fillets are not drawn.",
   "f3d.cut.neutral": "neutral axis",
   "f3d.cut.reaction": "Reaction at",
+  "f3d.cut.point_load": "Load",
   "f3d.cut.local": "section axes (local)",
   "f3d.cut.neutral_short": "N.A.",
   "f3d.cut.uniform": "Uniform σ",
@@ -302,7 +303,7 @@ const EN = {
   "f3d.cut.tension": "tension fibres",
   "f3d.cut.compression": "compression fibres",
   "f3d.cut.prism_note":
-    "The whole member in 3D (z runs into the page, up and to the right; z = 0 is the front end). The sides are painted with σ at every z, so you see how it varies along the member; the plate that slides with the slider is the cut. Blue: distributed load; purple: support reaction — only those between the z = 0 end and the cut, which is the part the internal forces balance — in the section's own axes (the axial part is drawn along z). Darker = larger |σ| (scaled by the member's largest); the ring marks the most stressed corner of the cut.",
+    "The whole member in 3D (z runs into the page, up and to the right; z = 0 is the front end). The sides are painted with σ at every z, so you see how it varies along the member; the plate that slides with the slider is the cut. Blue: distributed load; red: point load on the free end of the member; purple: support reaction — only those between the z = 0 end and the cut, which is the part the internal forces balance (a point load shared with other members at a joint is not listed) — in the section's own axes (the axial part is drawn along z). Darker = larger |σ| (scaled by the member's largest); the ring marks the most stressed corner of the cut.",
   "f3d.cut.forces": "Forces at the cut",
   "f3d.cut.corner": "Corner",
   "learn.link": "Learn the method",
@@ -876,6 +877,7 @@ const ES: Record<TranslationKey, string> = {
     "Sección vista con z entrando al plano: x a la derecha, y arriba. Los diagramas en 'Z' son σ por N, Mx y My; los valores en las esquinas son su suma. No se dibujan los radios de acuerdo.",
   "f3d.cut.neutral": "eje neutro",
   "f3d.cut.reaction": "Reacción en",
+  "f3d.cut.point_load": "Carga",
   "f3d.cut.local": "ejes de la sección (locales)",
   "f3d.cut.neutral_short": "E.N.",
   "f3d.cut.uniform": "σ uniforme",
@@ -889,7 +891,7 @@ const ES: Record<TranslationKey, string> = {
   "f3d.cut.tension": "fibras traccionadas",
   "f3d.cut.compression": "fibras comprimidas",
   "f3d.cut.prism_note":
-    "La barra completa en 3D (z entra al plano, hacia arriba y a la derecha; z = 0 es el extremo de adelante). Las caras laterales se pintan con σ en cada z, así se ve cómo varía a lo largo de la barra; la placa que se mueve con el slider es el corte. Azul: carga distribuida; violeta: reacción del vínculo — solo las del tramo entre el extremo z = 0 y el corte, que es el que equilibran los esfuerzos internos — en los ejes propios de la sección (la parte axial se dibuja según z). Más oscuro = mayor |σ| (escalado por el mayor de la barra); el aro marca la esquina más exigida del corte.",
+    "La barra completa en 3D (z entra al plano, hacia arriba y a la derecha; z = 0 es el extremo de adelante). Las caras laterales se pintan con σ en cada z, así se ve cómo varía a lo largo de la barra; la placa que se mueve con el slider es el corte. Azul: carga distribuida; rojo: carga puntual en el extremo libre de la barra; violeta: reacción del vínculo — solo las del tramo entre el extremo z = 0 y el corte, que es el que equilibran los esfuerzos internos (una carga puntual compartida con otras barras en un nudo no se lista) — en los ejes propios de la sección (la parte axial se dibuja según z). Más oscuro = mayor |σ| (escalado por el mayor de la barra); el aro marca la esquina más exigida del corte.",
   "f3d.cut.forces": "Esfuerzos en el corte",
   "f3d.cut.corner": "Esquina",
   "learn.link": "Aprendé el método",

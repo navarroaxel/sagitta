@@ -164,6 +164,37 @@ describe("SectionCut loads drawn on the 3D prism", () => {
   });
 });
 
+describe("SectionCut: the point load at the free end of the column (preset #9)", () => {
+  const col = PRESETS_3D.find((p) => p.key === "column_kg")!.model;
+
+  test("the 1500 kg / 20 000 kg load at B is drawn on the prism's plate and named in the legend", () => {
+    render(<Harness model={col} start={0.5} />);
+    const prism = screen.getByTestId("section-prism");
+    expect(prism.contains(screen.getByTestId("sload-P-L2"))).toBe(true);
+    // its in-plane part (Fx = 1500 along the section's y) and its axial part (the 20 000 kg weight)
+    expect(screen.getByTestId("sload-z-P-L2")).toBeTruthy();
+    expect(prism.textContent).toMatch(/Load L2|Carga L2/);
+    expect(prism.textContent).toContain("(0, 1500, 20000)");
+  });
+
+  test("the point load stays at the tip: it does not move with the cut (the reaction at A, in contrast, is at the plate)", () => {
+    const arrow = (t: number) => {
+      const { unmount } = render(<Harness model={col} start={t} />);
+      const g = screen.getByTestId("sload-P-L2");
+      const lines = Array.from(g.querySelectorAll("line")).map((l) =>
+        ["x1", "y1", "x2", "y2"].map((a) => l.getAttribute(a)).join(","),
+      );
+      unmount();
+      return lines;
+    };
+    const atTip = arrow(0);
+    expect(atTip.length).toBeGreaterThan(0);
+    expect(arrow(0.3)).toEqual(atTip);
+    expect(arrow(0.7)).toEqual(atTip);
+    expect(arrow(1)).toEqual(atTip);
+  });
+});
+
 describe("SectionCut local triad", () => {
   test("draws the section's own x, y and z in the 3D prism", () => {
     render(<Harness start={1} />);
