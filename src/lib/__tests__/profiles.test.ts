@@ -17,6 +17,7 @@ describe("profile table is internally consistent", () => {
       const jThin = (2 * p.bf * p.tf ** 3 + hw * p.tw ** 3) / 3 / 1e4;
       expect(rel(p.J, jThin)).toBeLessThan(0.2);
       expect(p.Ix).toBeGreaterThan(p.Iy);
+      expect(p.w).toBeCloseTo(p.A * 0.785, 1); // kg/m, steel 7850 kg/m³
       // clear web height: h − 2·tf − 2·r for the parallel-flange IPB; tapered IPN just
       // has to be inside the web span
       if (p.series === "IPB")
@@ -25,6 +26,11 @@ describe("profile table is internally consistent", () => {
         );
       else expect(p.hw).toBeLessThan(p.h - 2 * p.tf);
     });
+  });
+
+  test("weight per metre matches the CIRSOC table (IPN 200: 26.2, IPB 300: 117)", () => {
+    expect(getProfile("IPN 200")!.w).toBeCloseTo(26.2, 1);
+    expect(getProfile("IPB 300")!.w).toBeCloseTo(117, 0);
   });
 
   test("known values from the table", () => {

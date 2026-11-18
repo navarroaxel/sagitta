@@ -11,6 +11,7 @@ export interface Profile {
   tf: number; // flange thickness, mm
   tw: number; // web thickness, mm
   A: number; // cm²
+  w: number; // weight per metre, kg/m (= A · 0.785, steel 7850 kg/m³; rounded to 0.1)
   Ix: number; // cm⁴ (strong axis)
   Sx: number; // cm³
   rx: number; // cm
@@ -131,6 +132,7 @@ export function build(
     tf,
     tw,
     A,
+    w: Math.round(A * 78.5) / 100,
     Ix,
     Sx,
     rx,

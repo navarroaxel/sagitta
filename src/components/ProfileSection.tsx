@@ -255,6 +255,7 @@ export function SectionDrawing({ p }: { p: Profile }) {
 
 const PROP_ROWS: { sym: string; key: TranslationKey; formula?: boolean }[] = [
   { sym: "Ag", key: "prof.leg.A" },
+  { sym: "w", key: "prof.leg.w" },
   { sym: "I", key: "prof.leg.I" },
   { sym: "r", key: "prof.leg.r", formula: true },
   { sym: "S", key: "prof.leg.S" },
