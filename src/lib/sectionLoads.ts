@@ -14,6 +14,7 @@ export interface SectionLoad {
   force: Vec3; // components along the section's x, y, z (force/m for q, force for R and P)
   moment?: Vec3; // moment components (R: the reaction moment, P: the applied moment)
   zSpan?: [number, number]; // q only: the loaded span along the section's z, m (z = 0 at the front end)
+  z?: number; // P only: where it acts along the section's z, m: the member's end (it does not move with the cut)
 }
 
 const EPS = 1e-9;
@@ -59,7 +60,13 @@ export function sectionLoads(
       const moment = comps([l.mx, l.my, l.mz]);
       const hasMoment = moment.some((c) => c !== 0);
       if (force.every((c) => c === 0) && !hasMoment) return;
-      out.push({ kind: "P", id: l.id, force, moment: hasMoment ? moment : undefined });
+      out.push({
+        kind: "P",
+        id: l.id,
+        force,
+        moment: hasMoment ? moment : undefined,
+        z: zOf(id === m.n1 ? 0 : g.L),
+      });
     });
   });
   [m.n1, m.n2].forEach((id) => {

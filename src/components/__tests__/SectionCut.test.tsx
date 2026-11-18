@@ -176,6 +176,23 @@ describe("SectionCut: the point load at the free end of the column (preset #9)",
     expect(prism.textContent).toMatch(/Load L2|Carga L2/);
     expect(prism.textContent).toContain("(0, 1500, 20000)");
   });
+
+  test("the point load stays at the tip: it does not move with the cut (the reaction at A, in contrast, is at the plate)", () => {
+    const arrow = (t: number) => {
+      const { unmount } = render(<Harness model={col} start={t} />);
+      const g = screen.getByTestId("sload-P-L2");
+      const lines = Array.from(g.querySelectorAll("line")).map((l) =>
+        ["x1", "y1", "x2", "y2"].map((a) => l.getAttribute(a)).join(","),
+      );
+      unmount();
+      return lines;
+    };
+    const atTip = arrow(0);
+    expect(atTip.length).toBeGreaterThan(0);
+    expect(arrow(0.3)).toEqual(atTip);
+    expect(arrow(0.7)).toEqual(atTip);
+    expect(arrow(1)).toEqual(atTip);
+  });
 });
 
 describe("SectionCut local triad", () => {

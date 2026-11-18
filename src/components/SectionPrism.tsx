@@ -415,7 +415,8 @@ export default function SectionPrism({
               strokeDasharray="7 4"
             />
           )}
-          {/* loads of the member in the section's axes: tip at the centroid, shaft trailing the force.
+          {/* loads of the member in the section's axes: tip at the centroid, shaft trailing the force; a point
+              load (P) is drawn at its own node (the member's end), fixed, not at the plate.
               A distributed load only gets its arrows AT the cut when it acts there (the cut is inside its
               loaded span); past the end of the span it is still on the free body (the row of arrows and the
               legend show it) but it does not act at this section. */}
@@ -434,7 +435,10 @@ export default function SectionPrism({
                 .map((o) => Math.max(...o.force.map(Math.abs))),
             );
             const k = MAX_ARROW / big;
-            const o: P2 = cutC;
+            // a point load acts at its node (the member's end) and stays there; reactions and distributed
+            // loads are drawn at the plate (what the cut balances)
+            const o: P2 =
+              l.kind === "P" && L > 0 ? scr(0, 0, (l.z ?? 0) / L) : cutC;
             const parts: { key: string; v: P2 }[] = [
               { key: "xy", v: [l.force[0] * k, -l.force[1] * k] },
               { key: "z", v: [l.force[2] * k * DX, -l.force[2] * k * DY] },

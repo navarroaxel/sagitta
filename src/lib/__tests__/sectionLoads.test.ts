@@ -63,6 +63,13 @@ describe("sectionLoads", () => {
     expect(at2("M3", () => 0)).toEqual([]);
     expect(at2("M3", (L) => L / 2)).toEqual([]);
     expect(at2("M3", (L) => L)).toEqual(["L3"]);
+    // ... and it acts at z = L (the tip), not at the cut
+    const i = model.members.findIndex((m) => m.id === "M3");
+    const L = solved.result.geo[i].L;
+    const P = sectionLoads(model, solved, i, nearestStation(solved, i, L)).find(
+      (l) => l.kind === "P",
+    )!;
+    near(P.z!, L);
   });
 });
 
@@ -80,6 +87,14 @@ describe("sectionLoads: point loads on the 3D column (preset #9)", () => {
     near(P.force[1], 1500);
     near(P.force[2], 20000);
     expect(P.moment).toBeUndefined();
+    near(P.z!, 0); // acts at the tip (z = 0), wherever the cut is
+  });
+
+  test("a point load keeps its own z whatever the cut: it belongs to its node, not to the plate", () => {
+    const zs = [0, 1, 2.5, 5].map(
+      (z) => loadsAt(z).find((l) => l.kind === "P")!.z,
+    );
+    expect(zs).toEqual([0, 0, 0, 0]);
   });
 
   test("it is on the free body at every cut (the tip is z = 0); q_y up to the cut; the base reaction only at the base", () => {
