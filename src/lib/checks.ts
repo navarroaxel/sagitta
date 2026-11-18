@@ -200,7 +200,7 @@ export function checkStations(
   id: string,
   e: number,
 ): Station[] {
-  return solved.ownStations?.[id] ?? solved.stations[e];
+  return solved.ownStations?.get(id) ?? solved.stations[e];
 }
 
 // Compression of member `e` (null when no station is in compression).

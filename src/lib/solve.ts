@@ -24,7 +24,7 @@ export interface SolveOutput {
   // Stations of the members with `selfWeight` WITHOUT their own weight (member id -> stations): the
   // weight only travels to the supports and the other members, a beam is verified / sized for the
   // applied loads alone (how the course does it). Members without selfWeight are not listed.
-  ownStations: Record<string, Station[]>;
+  ownStations: Map<string, Station[]>; // a Map: member ids are free text ("constructor", "__proto__")
   // false when the pick ↔ weight loop (several sized members) did not settle in its pass limit
   selfWeightConverged: boolean;
 }
@@ -90,12 +90,13 @@ export function solveModel(model: FrameModel): SolveOutput {
     }
   }
   const out = solveWith(model, weights);
-  const ownStations: Record<string, Station[]> = {};
+  const ownStations = new Map<string, Station[]>();
   for (const m of flagged) {
     if (!weights.has(m.id)) continue;
-    ownStations[m.id] = solveWith(model, without(m.id)).stations[
-      out.memberIndex.get(m.id)!
-    ];
+    ownStations.set(
+      m.id,
+      solveWith(model, without(m.id)).stations[out.memberIndex.get(m.id)!],
+    );
   }
   return { ...out, ownStations, selfWeightConverged: converged };
 }
@@ -180,7 +181,7 @@ function solveWith(
     memberIndex,
     extraLoads: extra,
     selfWeight,
-    ownStations: {},
+    ownStations: new Map(),
     selfWeightConverged: true,
   };
 }

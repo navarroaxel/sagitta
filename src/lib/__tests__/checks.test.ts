@@ -316,9 +316,9 @@ describe("Truss + Cable + Beam IPB 260", () => {
     const e = solved.memberIndex.get("FG")!;
     const maxM = (st: { M: number }[]) =>
       Math.max(...st.map((x) => Math.abs(x.M)));
-    expect(maxM(solved.ownStations["FG"])).toBeCloseTo(75000, 0); // the load alone
+    expect(maxM(solved.ownStations.get("FG")!)).toBeCloseTo(75000, 0); // the load alone
     expect(maxM(solved.stations[e])).toBeCloseTo(75000 + (wFG * 100) / 8, 0); // the actual M with its weight
-    expect(Object.keys(solved.ownStations)).toEqual(["FG"]);
+    expect([...solved.ownStations.keys()]).toEqual(["FG"]);
   });
 
   test("stable; reactions from statics (ΣM about B with the cable's T at C, 8.66 m to its right)", () => {
@@ -569,6 +569,40 @@ describe("sizeSeries and 'no load' (review)", () => {
     expect(checks.some((c) => !c.unloaded && Math.abs(c.demand.N) < 0.5)).toBe(
       true,
     );
+  });
+});
+
+describe("member ids are free text", () => {
+  test.each(["constructor", "__proto__", "toString", "hasOwnProperty"])(
+    "a self-weight member called %s works (no inherited-property lookup)",
+    (id) => {
+      const base = preset("Beam IPB 300 (check)");
+      const model: FrameModel = {
+        ...base,
+        members: [{ ...base.members[0], id, selfWeight: true }],
+        loads: [{ id: "q", type: "mudl", member: id, gx: 0, gy: -2000 }],
+      };
+      const solved = solveModel(model);
+      expect(solved.ownStations.has(id)).toBe(true);
+      expect(solved.selfWeight[0].member).toBe(id);
+      const [c] = runChecks(model, solved) as VerifyCheck[];
+      expect(c.member).toBe(id);
+      // the member is verified for the applied load alone: M = 2000·12²/8 = 36 000 kg·m
+      expect(c.demand.M).toBeCloseTo(36000, 0);
+    },
+  );
+
+  test("a member without selfWeight called constructor falls back to the solver's stations", () => {
+    const base = preset("Beam IPB 300 (check)");
+    const model: FrameModel = {
+      ...base,
+      members: [{ ...base.members[0], id: "constructor" }],
+      loads: [
+        { id: "q", type: "mudl", member: "constructor", gx: 0, gy: -2000 },
+      ],
+    };
+    const [c] = runChecks(model, solveModel(model)) as VerifyCheck[];
+    expect(c.demand.M).toBeCloseTo(36000, 0);
   });
 });
 
