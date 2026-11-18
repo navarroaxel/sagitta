@@ -119,6 +119,10 @@ export default function ChecksPanel({
                     M = {n0(c.demand.M)} {u}·m, N = {n0(c.demand.N)} {u}
                     {c.buckling &&
                       ` · P = ${n0(c.buckling.P)} ${c.buckling.ok ? "≤" : ">"} P_cr = ${n0(c.buckling.pcr)} ${u}`}
+                    {c.deflection &&
+                      ` · ${t("checks.deflection")} = ${n1(c.deflection.f)} cm (x = ${n2(c.deflection.x)} m, L/f = ${n0(
+                        (c.deflection.L * 100) / c.deflection.f,
+                      )})`}
                     {c.ok
                       ? ""
                       : ` · ${t("checks.lightest")} ${c.profile.series}: ${

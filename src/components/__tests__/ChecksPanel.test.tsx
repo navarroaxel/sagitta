@@ -28,6 +28,15 @@ describe("ChecksPanel", () => {
     expect(text).toMatch(/ninguno de la tabla|none in the table/);
   });
 
+  test("a verified beam shows its deflection (FG: ≈ 22 cm)", () => {
+    renderChecks(preset("Truss + Cable + Beam IPB 260"));
+    const text = screen
+      .getByRole("region")
+      .textContent!.replace(/\u00a0/g, " ");
+    expect(text).toMatch(/Flecha máxima|Max deflection/);
+    expect(text).toMatch(/= 22\.0 cm \(x = 5\.00 m, L\/f = 45\)/);
+  });
+
   test("σ adm is shown in the title", () => {
     renderChecks(preset("Beam IPB 300 (check)"));
     expect(

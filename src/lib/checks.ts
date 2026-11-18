@@ -46,6 +46,39 @@ export interface Buckling {
   E: number;
 }
 
+// Largest deflection of a member relative to the chord between its ends (what a simply supported
+// beam would show), from the stations: y'' = M/EI integrated twice (trapezoid rule) and then the
+// straight line through both ends removed. M in force·m, x in m, EI in force·cm²; f in cm.
+// A cable that lets an end sink is not included: this is the bending of the member alone.
+export interface Deflection {
+  f: number; // cm
+  x: number; // m, from the member's start
+  L: number; // m
+}
+
+export function chordDeflection(stations: Station[], EI: number): Deflection | null {
+  const n = stations.length;
+  if (n < 3 || !(EI > 0)) return null;
+  const x = stations.map((s) => s.x * 100); // cm
+  const k = stations.map((s) => (s.M * 100) / EI); // curvature, 1/cm
+  const y = new Array<number>(n).fill(0);
+  let th = 0;
+  for (let i = 1; i < n; i++) {
+    const dx = x[i] - x[i - 1];
+    const thNext = th + ((k[i - 1] + k[i]) / 2) * dx;
+    y[i] = y[i - 1] + ((th + thNext) / 2) * dx;
+    th = thNext;
+  }
+  const Lcm = x[n - 1] - x[0];
+  if (!(Lcm > 0)) return null;
+  let best = { f: 0, x: 0 };
+  for (let i = 0; i < n; i++) {
+    const v = Math.abs(y[i] - (y[n - 1] * (x[i] - x[0])) / Lcm);
+    if (v > best.f) best = { f: v, x: stations[i].x };
+  }
+  return { f: best.f, x: best.x, L: Lcm / 100 };
+}
+
 // Largest σ of the profile along the member, and where it is.
 export function sigmaMax(
   p: Profile,
@@ -97,6 +130,8 @@ export interface VerifyCheck {
   ratio: number; // sigma / sigmaAdm
   ok: boolean;
   demand: Demand;
+  // bending of the member alone (relative to the chord between its ends); null when it carries no moment
+  deflection: Deflection | null;
   // member in compression: Euler's critical load of this profile and whether P stays below it
   buckling: { P: number; pcr: number; ok: boolean } | null;
   // lightest profile of the same series that passes (null when none of the table does)
@@ -134,6 +169,12 @@ const maxAbs = (stations: Station[], key: "N" | "M"): Station =>
     (b, s) => (Math.abs(s[key]) > Math.abs(b[key]) ? s : b),
     stations[0],
   );
+
+function bending(model: FrameModel, st: Station[], p: Profile): Deflection | null {
+  if (!st.some((s) => Math.abs(s.M) > TOL)) return null;
+  const d = chordDeflection(st, (model.material.E / 1e4) * p.Ix);
+  return d && d.f > 1e-9 ? d : null;
+}
 
 // Compression of member `e` (null when no station is in compression).
 function bucklingOf(
@@ -188,6 +229,7 @@ export function runChecks(
         ratio: sigma / sigmaAdm,
         ok: sigma <= sigmaAdm && bOk,
         demand,
+        deflection: bending(model, st, p),
         buckling: buck ? { P: buck.P, pcr, ok: bOk } : null,
         suggestion:
           p.series === "IPN" || p.series === "IPB"

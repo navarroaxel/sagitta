@@ -2,6 +2,7 @@ import { PRESETS } from "../presets";
 import { solveModel } from "../solve";
 import { getProfile } from "../profiles";
 import {
+  chordDeflection,
   eulerPcr,
   lightestPassing,
   runChecks,
@@ -78,6 +79,49 @@ describe("Euler buckling (pinned ends, weak axis, coefficient 1)", () => {
   });
 });
 
+describe("chordDeflection", () => {
+  const E = 2.1e6; // kg/cm²
+  const stations = (L: number, M: (x: number) => number, n = 65) =>
+    Array.from({ length: n }, (_, i) => {
+      const x = (L * i) / (n - 1);
+      return { x, N: 0, Q: 0, M: M(x) };
+    });
+
+  test("simply supported, UDL: 5·q·L⁴/(384·E·I) at mid-span", () => {
+    const L = 10; // m
+    const q = 2000; // kg/m
+    const I = 14920; // cm⁴
+    const d = chordDeflection(
+      stations(L, (x) => (q * x * (L - x)) / 2),
+      E * I,
+    )!;
+    expect(d.f).toBeCloseTo(
+      (5 * (q / 100) * (L * 100) ** 4) / (384 * E * I),
+      1,
+    );
+    expect(d.x).toBeCloseTo(5, 6);
+    expect(d.L).toBeCloseTo(10, 9);
+  });
+
+  test("simply supported, central point load: P·L³/(48·E·I)", () => {
+    const L = 10;
+    const P = 20000;
+    const I = 14920;
+    const M = (x: number) => (x <= L / 2 ? (P * x) / 2 : (P * (L - x)) / 2);
+    const d = chordDeflection(stations(L, M), E * I)!;
+    expect(d.f).toBeCloseTo((P * (L * 100) ** 3) / (48 * E * I), 0);
+  });
+
+  test("no moment, no deflection", () => {
+    expect(
+      chordDeflection(
+        stations(5, () => 0),
+        E * 1000,
+      )!.f,
+    ).toBe(0);
+  });
+});
+
 describe("Beam IPB 300 (check)", () => {
   const { solved, checks } = checksOf("Beam IPB 300 (check)");
   const c = byMember<VerifyCheck>(checks, "m1");
@@ -93,6 +137,14 @@ describe("Beam IPB 300 (check)", () => {
     expect(c.ok).toBe(false);
     expect(c.demand.x).toBeCloseTo(6, 1);
     expect(c.demand.M).toBeCloseTo(360000, 0);
+  });
+
+  test("deflection of the beam: 5·q·L⁴/(384·E·I) ≈ 102 cm (q = 200 kg/cm, L = 12 m, Ix = 25 170 cm⁴)", () => {
+    expect(c.deflection!.f).toBeCloseTo(
+      (5 * 200 * 1200 ** 4) / (384 * 2.1e6 * 25170),
+      0,
+    );
+    expect(c.deflection!.x).toBeCloseTo(6, 1);
   });
 
   test("no IPB of the table is enough (IPB 1000: 2 793 kg/cm²)", () => {
@@ -264,6 +316,18 @@ describe("Truss + Cable + Beam IPB 260", () => {
     expect(c.sigma).toBeCloseTo((M * 100) / 1150, 0);
     expect(c.ok).toBe(false);
     expect(c.suggestion?.profile.name).toBe("IPB 550");
+  });
+
+  test("b) deflection of FG alone (its own weight included): 5·q·L⁴/(384·E·I) + P·L³/(48·E·I) ≈ 22 cm", () => {
+    const c = byMember<VerifyCheck>(checks, "FG");
+    const EI = 2.1e6 * 14920;
+    const fq = (5 * (qTot / 100) * 1000 ** 4) / (384 * EI);
+    const fp = (20000 * 1000 ** 3) / (48 * EI);
+    expect(c.deflection!.f).toBeCloseTo(fq + fp, 0);
+    expect(c.deflection!.f).toBeGreaterThan(21.9);
+    expect(c.deflection!.f).toBeLessThan(22.1);
+    expect(c.deflection!.x).toBeCloseTo(5, 1);
+    expect(c.deflection!.L).toBeCloseTo(10, 9);
   });
 
   test("b, c) cable C-F: T = 20 463 kg, d = 4.04 cm, elongation 1.14 cm over 15 m", () => {
