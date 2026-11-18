@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 import type { Profile } from "@/lib/profiles";
 import { ProfileLegend, SectionDrawing } from "./ProfileSection";
 import {
@@ -20,6 +20,7 @@ const COLUMNS: { key: SortKey; label: string; unit: string }[] = [
   { key: "hw", label: "hw", unit: "mm" },
   { key: "r", label: "r", unit: "mm" },
   { key: "A", label: "A", unit: "cm²" },
+  { key: "w", label: "w", unit: "kg/m" },
   { key: "Ix", label: "Ix", unit: "cm⁴" },
   { key: "Sx", label: "Sx", unit: "cm³" },
   { key: "rx", label: "rx", unit: "cm" },
@@ -27,6 +28,18 @@ const COLUMNS: { key: SortKey; label: string; unit: string }[] = [
   { key: "Sy", label: "Sy", unit: "cm³" },
   { key: "ry", label: "ry", unit: "cm" },
   { key: "J", label: "J", unit: "cm⁴" },
+];
+
+// Detail cards, grouped; the X and Y rows share the same three columns (I, S, r) so the axes compare.
+const GROUPS: { title: TranslationKey; cols: 3 | 6; keys: SortKey[] }[] = [
+  {
+    title: "prof.grp.geometry",
+    cols: 6,
+    keys: ["h", "bf", "tf", "tw", "hw", "r"],
+  },
+  { title: "prof.grp.section", cols: 3, keys: ["A", "w", "J"] },
+  { title: "prof.grp.x", cols: 3, keys: ["Ix", "Sx", "rx"] },
+  { title: "prof.grp.y", cols: 3, keys: ["Iy", "Sy", "ry"] },
 ];
 
 const num = (s: string) => {
@@ -299,23 +312,37 @@ function Detail({
             ×
           </button>
         </div>
-        <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-4 lg:grid-cols-7">
-          {COLUMNS.map((c) => (
-            <button
-              key={c.key}
-              type="button"
-              title={t("prof.copy")}
-              onClick={() => onCopy(c.key, p[c.key])}
-              className="rounded border border-stone-200 px-2 py-1 text-left text-sm hover:bg-teal-50 dark:border-stone-700 dark:hover:bg-teal-950"
-            >
-              <span className="text-xs text-stone-500 dark:text-stone-400">
-                {c.label} [{c.unit}]
-              </span>
-              <br />
-              <span className="font-semibold tabular-nums">
-                {copied === c.key ? t("prof.copied") : p[c.key]}
-              </span>
-            </button>
+        <div className="space-y-3">
+          {GROUPS.map((g) => (
+            <div key={g.title}>
+              <h3 className="mb-1 text-xs font-semibold tracking-wide text-teal-700 uppercase dark:text-teal-400">
+                {t(g.title)}
+              </h3>
+              <div
+                className={`grid gap-1.5 ${g.cols === 3 ? "grid-cols-3" : "grid-cols-3 sm:grid-cols-6"}`}
+              >
+                {g.keys.map((k) => {
+                  const c = COLUMNS.find((col) => col.key === k)!;
+                  return (
+                    <button
+                      key={c.key}
+                      type="button"
+                      title={t("prof.copy")}
+                      onClick={() => onCopy(c.key, p[c.key])}
+                      className="rounded border border-stone-200 px-2 py-1 text-left text-sm hover:bg-teal-50 dark:border-stone-700 dark:hover:bg-teal-950"
+                    >
+                      <span className="text-xs text-stone-500 dark:text-stone-400">
+                        {c.label} [{c.unit}]
+                      </span>
+                      <br />
+                      <span className="font-semibold tabular-nums">
+                        {copied === c.key ? t("prof.copied") : p[c.key]}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           ))}
         </div>
         <ProfileLegend p={p} />
