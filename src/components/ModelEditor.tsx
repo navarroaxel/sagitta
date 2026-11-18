@@ -54,16 +54,19 @@ function NumInput({
   min,
   step = 0.01,
   className = "",
+  ariaLabel,
 }: {
   value: number;
   onChange: (v: number) => void;
   min?: number;
   step?: number;
   className?: string;
+  ariaLabel?: string;
 }) {
   return (
     <input
       type="number"
+      aria-label={ariaLabel}
       value={value}
       step={step}
       min={min}
@@ -377,6 +380,7 @@ function MembersPanel({
               <Cell>
                 <select
                   value={sectionValue(m.section)}
+                  aria-label={`${t("editor.section.aria")} ${m.id}`}
                   className={selectCls}
                   onChange={(e) =>
                     update(i, { section: parseSection(e.target.value) })
@@ -385,6 +389,7 @@ function MembersPanel({
                   <option value="">{t("editor.section.none")}</option>
                   <option value="cable">{t("editor.section.cable")}</option>
                   <optgroup label={t("editor.section.size")}>
+                    <option value="size:IPN">IPN</option>
                     <option value="size:IPB">IPB</option>
                     <option value="size:IPN,IPB">IPN + IPB</option>
                   </optgroup>
@@ -730,6 +735,7 @@ function MaterialPanel({
           {t("editor.material.sigma_adm")} ({unit}/cm²)
         </label>
         <NumInput
+          ariaLabel={`${t("editor.material.sigma_adm")} (${unit}/cm²)`}
           value={sigmaAdm ?? 0}
           step={100}
           min={0}

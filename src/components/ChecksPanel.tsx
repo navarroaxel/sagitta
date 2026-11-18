@@ -20,6 +20,9 @@ const bad = "text-red-600 dark:text-red-400";
 // `|| 0`: never "-0"; no-break space as thousands separator: a number never wraps in the narrow panel.
 const n0 = (v: number) =>
   (Math.round(v) || 0).toLocaleString("en-US").replace(/,/g, "\u00a0");
+// σ with enough digits to tell a failing check from its limit (14.10 vs 14.05 must not both read "14").
+const sig = (v: number, adm: number) =>
+  Math.round(v) === Math.round(adm) && v !== adm ? n2(v) : n0(v);
 const n1 = (v: number) => (Math.round(v * 10) / 10).toFixed(1);
 const n2 = (v: number) => (Math.round(v * 100) / 100).toFixed(2);
 
@@ -101,7 +104,7 @@ export default function ChecksPanel({
                 <tr className={row}>
                   <td className={id}>{c.member}</td>
                   <td className={id}>{c.profile.name}</td>
-                  <td className={num}>{n0(c.sigma)}</td>
+                  <td className={num}>{sig(c.sigma, sigmaAdm)}</td>
                   <td className={`${num} whitespace-nowrap`}>
                     {n0(c.ratio * 100)} %
                   </td>
@@ -202,36 +205,54 @@ export default function ChecksPanel({
             </tr>
           </thead>
           <tbody>
-            {cable.map((c) => (
-              <React.Fragment key={c.member}>
-                <tr className={row}>
-                  <td className={id}>{c.member}</td>
-                  <td className={num}>{n0(c.N)}</td>
-                  <td className={num}>{n2(c.L)}</td>
-                  <td className={num}>{n2(c.areaReq)}</td>
-                  <td className={num}>{n2(c.dReq)}</td>
-                  <td className={num}>{n2(c.elongation)}</td>
-                </tr>
-                <tr>
-                  <td
-                    colSpan={6}
-                    className="px-2 pb-1 text-[11px] font-medium text-stone-700 dark:text-stone-300"
-                  >
-                    Ø<sub>nec</sub> = {n2(c.dReq)} cm = {n1(c.dReq * 10)} mm ·{" "}
-                    {t("checks.d_adopted")} ≥ {n1(c.dAdopted)} cm
-                  </td>
-                </tr>
-                {!c.tension && (
-                  <tr>
-                    <td colSpan={6} className={`px-2 pb-1 text-[11px] ${bad}`}>
-                      {t("checks.not_tension")}
-                    </td>
+            {cable.map((c) => {
+              const valid = c.tension && !c.bending;
+              return (
+                <React.Fragment key={c.member}>
+                  <tr className={row}>
+                    <td className={id}>{c.member}</td>
+                    <td className={num}>{n0(c.N)}</td>
+                    <td className={num}>{n2(c.L)}</td>
+                    <td className={num}>{valid ? n2(c.areaReq) : "—"}</td>
+                    <td className={num}>{valid ? n2(c.dReq) : "—"}</td>
+                    <td className={num}>{valid ? n2(c.elongation) : "—"}</td>
                   </tr>
-                )}
-              </React.Fragment>
-            ))}
+                  {valid ? (
+                    <tr>
+                      <td
+                        colSpan={6}
+                        className="px-2 pb-1 text-[11px] font-medium text-stone-700 dark:text-stone-300"
+                      >
+                        Ø<sub>nec</sub> = {n2(c.dReq)} cm = {n1(c.dReq * 10)} mm
+                        · {t("checks.d_adopted")} ≥ {n1(c.dAdopted)} cm
+                      </td>
+                    </tr>
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan={6}
+                        className={`px-2 pb-1 text-[11px] ${bad}`}
+                      >
+                        {c.bending
+                          ? t("checks.cable_bending")
+                          : t("checks.not_tension")}
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              );
+            })}
           </tbody>
         </table>
+      )}
+
+      {!solved.selfWeightConverged && (
+        <p className={`px-2 text-[11px] ${bad}`}>{t("checks.not_converged")}</p>
+      )}
+      {(size.length > 0 || verify.some((c) => c.suggestion)) && (
+        <p className="px-2 text-[11px] text-stone-400 italic dark:text-stone-500">
+          {t("checks.note_hyperstatic")}
+        </p>
       )}
 
       {compressed && (

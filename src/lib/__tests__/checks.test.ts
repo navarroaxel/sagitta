@@ -6,6 +6,7 @@ import {
   eulerPcr,
   lightestPassing,
   runChecks,
+  sizeSeries,
   sigmaAt,
   sigmaMax,
   type CableCheck,
@@ -438,6 +439,136 @@ describe("runChecks edge cases", () => {
     const [c] = runChecks(model, solveModel(model)) as CableCheck[];
     expect(c.N).toBeCloseTo(-1000, 3);
     expect(c.tension).toBe(false);
+  });
+});
+
+describe("cables: tension, bending, elongation (Copilot / CodeRabbit review)", () => {
+  // A(0,0) pinned — B(4,0) on a vertical roller, one hinged bar, tip force and an axial UDL on the bar
+  const bar = (fx: number, gx: number, hinged = true): FrameModel => ({
+    nodes: [
+      { id: "A", x: 0, y: 0, support: "pinned" },
+      { id: "B", x: 4, y: 0, support: "roller-v" },
+    ],
+    members: [
+      {
+        id: "c",
+        n1: "A",
+        n2: "B",
+        relI: hinged,
+        relJ: hinged,
+        section: { kind: "cable" },
+      },
+    ],
+    loads: [
+      { id: "p", type: "nodal", node: "B", fx, fy: 0, m: 0 },
+      { id: "u", type: "mudl", member: "c", gx, gy: 0 },
+    ],
+    material: { E: 2.1e10, A: 0.01, I: 8.3e-5 },
+    unit: "kg",
+    sigmaAdm: 1600,
+  });
+  const cableOf = (m: FrameModel) =>
+    runChecks(m, solveModel(m))[0] as CableCheck;
+
+  test("elongation integrates N(x): N from 2 200 to 1 000 kg is 0.222 cm, not peak·L (0.305 cm)", () => {
+    const c = cableOf(bar(1000, 300)); // N(x) = 1000 + 300·(4 − x)
+    expect(c.tension).toBe(true);
+    expect(c.N).toBeCloseTo(2200, 2);
+    const A = 2200 / 1600;
+    expect(c.areaReq).toBeCloseTo(A, 6);
+    expect(c.elongation).toBeCloseTo((6400 * 100) / (2.1e6 * A), 4); // ∫N dx = 6 400 kg·m
+    expect(c.elongation).toBeLessThan((2200 * 400) / (2.1e6 * A) - 0.05);
+  });
+
+  test("constant N: elongation = σ adm·L/E (the old formula)", () => {
+    const c = cableOf(bar(1000, 0));
+    expect(c.elongation).toBeCloseTo((1600 * 400) / 2.1e6, 6);
+  });
+
+  test("a cable partly in compression is not in tension, even if its largest |N| is a tension", () => {
+    const c = cableOf(bar(1000, -300)); // N(x) = 1000 − 300·(4 − x): −200 at A, +1000 at B
+    expect(c.N).toBeCloseTo(1000, 2);
+    expect(c.tension).toBe(false);
+  });
+
+  test("a 'cable' without hinges that carries bending / shear is flagged", () => {
+    const m: FrameModel = {
+      nodes: [
+        { id: "A", x: 0, y: 0, support: "fixed" },
+        { id: "B", x: 4, y: 0, support: "free" },
+      ],
+      members: [{ id: "c", n1: "A", n2: "B", section: { kind: "cable" } }],
+      loads: [{ id: "p", type: "nodal", node: "B", fx: 1000, fy: -1000, m: 0 }],
+      material: { E: 2.1e10, A: 0.01, I: 8.3e-5 },
+      unit: "kg",
+      sigmaAdm: 1600,
+    };
+    const c = cableOf(m);
+    expect(c.bending).toBe(true);
+    expect(c.tension).toBe(false);
+    // the presets' cables are hinged at both ends: valid
+    for (const name of [
+      "Truss + Cable + Beam (sizing)",
+      "Truss + Cable + Beam IPB 260",
+    ]) {
+      const model = preset(name);
+      const cab = runChecks(model, solveModel(model)).find(
+        (x) => x.member === "cable",
+      ) as CableCheck;
+      expect(cab.bending).toBe(false);
+      expect(cab.tension).toBe(true);
+    }
+  });
+});
+
+describe("sizeSeries and 'no load' (review)", () => {
+  test("unknown series are dropped and an empty list means IPB (solver and panel agree)", () => {
+    expect(sizeSeries({ series: [] })).toEqual(["IPB"]);
+    expect(sizeSeries({ series: ["IPN"] })).toEqual(["IPN"]);
+    expect(sizeSeries({ series: ["IPN", "IPN", "IPB"] })).toEqual([
+      "IPN",
+      "IPB",
+    ]);
+    expect(sizeSeries({ series: ["UPN"] })).toEqual(["IPB"]);
+    expect(sizeSeries({ series: "IPB" })).toEqual(["IPB"]);
+    expect(sizeSeries({})).toEqual(["IPB"]);
+  });
+
+  test("an empty `series` still gets its self-weight iteration (same default as the panel)", () => {
+    const base = preset("Truss + Cable + Beam (sizing)");
+    const model: FrameModel = {
+      ...base,
+      members: base.members.map((m) =>
+        m.id === "EF"
+          ? { ...m, section: { kind: "size" as const, series: [] } }
+          : m,
+      ),
+    };
+    const solved = solveModel(model);
+    expect(solved.selfWeight[0].profile).toBe("IPB 800");
+    expect(solved.selfWeightConverged).toBe(true);
+  });
+
+  test("a small but real demand is not 'no load' (relative to the model's largest force)", () => {
+    const base = preset("Simple Truss");
+    const model: FrameModel = {
+      ...base,
+      unit: "kN",
+      sigmaAdm: 14,
+      loads: base.loads.map((l) =>
+        l.type === "nodal" ? { ...l, fx: l.fx * 1e-3, fy: l.fy * 1e-3 } : l,
+      ),
+      members: base.members.map((m) => ({
+        ...m,
+        section: { kind: "size" as const, series: ["IPB" as const] },
+      })),
+    };
+    const checks = runChecks(model, solveModel(model)) as SizeCheck[];
+    // loads of a few N: demands of ~0.01–0.1 kN, below the old fixed 0.01 cut-off for some bars
+    expect(checks.filter((c) => c.unloaded).length).toBeLessThan(checks.length);
+    expect(checks.some((c) => !c.unloaded && Math.abs(c.demand.N) < 0.5)).toBe(
+      true,
+    );
   });
 });
 

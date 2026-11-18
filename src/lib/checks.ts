@@ -158,14 +158,24 @@ export interface CableCheck {
   member: string;
   N: number;
   L: number; // m
-  tension: boolean; // a cable only works in tension
-  areaReq: number; // cm²
+  tension: boolean; // a cable only works in tension: no station may be in compression
+  bending: boolean; // the member also carries bending or shear: it is not a two-force member (no hinges)
+  areaReq: number; // cm², for the peak N
   dReq: number; // cm, exact diameter for sigmaAdm
   dAdopted: number; // cm, rounded up to the next mm
-  elongation: number; // cm, N·L/(E·A) with the required area (= sigmaAdm·L/E)
+  elongation: number; // cm, ∫N dx / (E·A) with the required area (= sigmaAdm·L/E when N is constant)
 }
 
 export type MemberCheck = VerifyCheck | SizeCheck | CableCheck;
+
+// The series a `size` section looks in; anything unknown (a shared link is outside input) is dropped
+// and an empty list means IPB, so solve.ts and the panel always agree.
+export function sizeSeries(sec: { series?: unknown }): ("IPN" | "IPB")[] {
+  const ok = Array.isArray(sec.series)
+    ? sec.series.filter((x): x is "IPN" | "IPB" => x === "IPN" || x === "IPB")
+    : [];
+  return ok.length ? [...new Set(ok)] : ["IPB"];
+}
 
 const maxAbs = (stations: Station[], key: "N" | "M"): Station =>
   stations.reduce(
@@ -216,7 +226,7 @@ export function bestPick(
   const st = checkStations(solved, model.members[e].id, e);
   if (sec?.kind !== "size" || !sigmaAdm || !st) return null;
   const buck = bucklingOf(model, solved, e) ?? undefined;
-  const picks = sec.series
+  const picks = sizeSeries(sec)
     .map((s) => lightestPassing(s, st, sigmaAdm, buck))
     .filter((p): p is Pick => p !== null);
   return picks.sort((a, b) => a.profile.w - b.profile.w)[0] ?? null;
@@ -230,6 +240,10 @@ export function runChecks(
   const sigmaAdm = model.sigmaAdm;
   if (!sigmaAdm || !(sigmaAdm > 0)) return [];
   const out: MemberCheck[] = [];
+  // largest force of the whole model: "no load" is relative to it (a fixed 0.01 would hide small demands in kN)
+  let scale = 1;
+  for (const ms of solved.stations)
+    for (const s of ms) scale = Math.max(scale, Math.abs(s.N), Math.abs(s.M));
   model.members.forEach((m: Member, e) => {
     const sec = m.section;
     const st = checkStations(solved, m.id, e);
@@ -260,8 +274,9 @@ export function runChecks(
     } else if (sec.kind === "size") {
       const nPk = maxAbs(st, "N");
       const mPk = maxAbs(st, "M");
-      const unloaded = Math.abs(nPk.N) < TOL && Math.abs(mPk.M) < TOL;
-      const series = sec.series.length ? sec.series : (["IPB"] as const);
+      const unloaded =
+        Math.abs(nPk.N) < 1e-9 * scale && Math.abs(mPk.M) < 1e-9 * scale;
+      const series = sizeSeries(sec);
       out.push({
         kind: "size",
         member: m.id,
@@ -283,22 +298,38 @@ export function runChecks(
         unloaded,
         compressed: st.some((s) => s.N < -TOL),
       });
-    } else {
-      const N = maxAbs(st, "N").N;
+    } else if (sec.kind === "cable") {
+      const ns = st.map((q) => q.N);
+      const nMax = Math.max(...ns);
+      const nMin = Math.min(...ns);
+      const peak = Math.abs(nMax) >= Math.abs(nMin) ? nMax : nMin;
       const L = solved.result.geo[e].L;
       const E = model.material.E / 1e4; // force/m² -> force/cm²
-      const areaReq = Math.abs(N) / sigmaAdm;
+      const tol = 1e-6 * Math.max(1, Math.abs(peak));
+      // a cable is a two-force member: bending / shear mean it was not given hinges at both ends
+      const bendingToo = st.some(
+        (q) => Math.abs(q.M) > tol || Math.abs(q.Q) > tol,
+      );
+      const tension = nMin >= -tol && nMax > tol && !bendingToo;
+      const areaReq = Math.abs(peak) / sigmaAdm;
       const dReq = Math.sqrt((4 * areaReq) / Math.PI);
+      // ∫|N| dx (trapezoid over the stations) / (E·A): N may vary with axial loads on the member
+      let intN = 0;
+      for (let i = 1; i < st.length; i++)
+        intN +=
+          ((Math.abs(st[i].N) + Math.abs(st[i - 1].N)) / 2) *
+          (st[i].x - st[i - 1].x);
       out.push({
         kind: "cable",
         member: m.id,
-        N,
+        N: peak,
         L,
-        tension: N > TOL,
+        tension,
+        bending: bendingToo,
         areaReq,
         dReq,
         dAdopted: Math.ceil(dReq * 10 - 1e-9) / 10,
-        elongation: (Math.abs(N) * L * 100) / (E * areaReq || 1),
+        elongation: areaReq > 0 ? (intN * 100) / (E * areaReq) : 0,
       });
     }
   });

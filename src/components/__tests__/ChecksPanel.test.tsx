@@ -85,6 +85,52 @@ describe("ChecksPanel", () => {
   });
 });
 
+describe("ChecksPanel (review fixes)", () => {
+  test("a cable not in tension shows the warning and no sizing numbers", () => {
+    const model: FrameModel = {
+      nodes: [
+        { id: "A", x: 0, y: 0, support: "pinned" },
+        { id: "B", x: 0, y: 3, support: "roller-h" },
+      ],
+      members: [
+        {
+          id: "c",
+          n1: "A",
+          n2: "B",
+          relI: true,
+          relJ: true,
+          section: { kind: "cable" },
+        },
+      ],
+      loads: [{ id: "p", type: "nodal", node: "B", fx: 0, fy: -1000, m: 0 }],
+      material: { E: 2.1e10, A: 0.01, I: 8.3e-5 },
+      unit: "kg",
+      sigmaAdm: 1600,
+    };
+    const { container } = renderChecks(model);
+    const text = container.textContent!.replace(/\u00a0/g, " ");
+    expect(text).toMatch(/no está a tracción|not in tension/);
+    expect(text).not.toMatch(/Ønec =/); // no "minimum diameter" line
+    expect(text).toContain("—"); // the sizing cells are dashes
+  });
+
+  test("a failing σ that rounds to σ adm shows decimals (14.10 vs 14.05)", () => {
+    const base = preset("Beam IPB 300 (check)");
+    // choose σ adm just under the beam's σ so both round to the same integer: 21 429 vs 21 428.6
+    const model = { ...base, sigmaAdm: 21428.5 };
+    const { container } = renderChecks(model);
+    const text = container.textContent!.replace(/\u00a0/g, " ");
+    expect(text).toMatch(/21428\.57/); // σ shown with decimals, not "21 429" (σ adm also reads 21 429)
+  });
+
+  test("the sizing notes: hyperstatic caveat", () => {
+    renderChecks(preset("Truss + Cable + Beam (sizing)"));
+    expect(screen.getByRole("region").textContent).toMatch(
+      /hiperestática|hyperstatic/,
+    );
+  });
+});
+
 describe("Members tab: section selector", () => {
   test("choosing 'cable' / a profile / a sizing series sets member.section", () => {
     const onChange = vi.fn();
@@ -99,6 +145,10 @@ describe("Members tab: section selector", () => {
       </LanguageProvider>,
     );
     fireEvent.click(screen.getByRole("button", { name: /members|barras/i }));
+    // every selector has an accessible name that says which member it belongs to
+    expect(
+      screen.getAllByLabelText(/Section of member|Sección de la barra/).length,
+    ).toBe(model.members.length);
     const selects = screen
       .getAllByRole("combobox")
       .filter((s) =>

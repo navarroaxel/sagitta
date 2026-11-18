@@ -26,4 +26,45 @@ describe("share links", () => {
       expect(findPresetBySlug(presetSlug(p.name))?.name).toBe(p.name);
     }
   });
+
+  test("malformed checks fields of a link are dropped, well-formed ones survive", () => {
+    const base = PRESETS[0].model;
+    const bad = {
+      ...base,
+      sigmaAdm: "lots",
+      members: [
+        {
+          ...base.members[0],
+          section: { kind: "size", series: "IPB" },
+          selfWeight: "yes",
+        },
+        { ...base.members[0], id: "x", section: { kind: "wat" } },
+        { ...base.members[0], id: "y", section: { kind: "profile" } },
+      ],
+    };
+    const d = decodeModel(encodeModel(bad as never))!;
+    expect(d.sigmaAdm).toBeUndefined();
+    for (const m of d.members) {
+      expect(m.section).toBeUndefined();
+      expect(m.selfWeight).toBeUndefined();
+    }
+    const good = {
+      ...base,
+      sigmaAdm: 1600,
+      members: [
+        {
+          ...base.members[0],
+          selfWeight: true,
+          section: { kind: "size", series: ["IPN", "IPB"] },
+        },
+      ],
+    };
+    const g = decodeModel(encodeModel(good as never))!;
+    expect(g.sigmaAdm).toBe(1600);
+    expect(g.members[0].selfWeight).toBe(true);
+    expect(g.members[0].section).toEqual({
+      kind: "size",
+      series: ["IPN", "IPB"],
+    });
+  });
 });

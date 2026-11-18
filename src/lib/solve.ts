@@ -25,6 +25,8 @@ export interface SolveOutput {
   // weight only travels to the supports and the other members, a beam is verified / sized for the
   // applied loads alone (how the course does it). Members without selfWeight are not listed.
   ownStations: Record<string, Station[]>;
+  // false when the pick ↔ weight loop (several sized members) did not settle in its pass limit
+  selfWeightConverged: boolean;
 }
 
 // Profile weights are in kg/m; the model's force unit decides the factor (0: unknown unit, no weight).
@@ -68,7 +70,9 @@ export function solveModel(model: FrameModel): SolveOutput {
   // A `size` pick comes from the member's stations without its own weight, so with one sized member
   // it does not depend on the weight at all; with several, their weights reach each other: iterate.
   const sized = flagged.filter((m) => m.section?.kind === "size");
+  let converged = true;
   if (sized.length && model.sigmaAdm && model.sigmaAdm > 0) {
+    converged = false;
     for (let pass = 0; pass < 12; pass++) {
       let changed = false;
       for (const m of sized) {
@@ -79,7 +83,10 @@ export function solveModel(model: FrameModel): SolveOutput {
           changed = true;
         }
       }
-      if (!changed) break;
+      if (!changed) {
+        converged = true;
+        break;
+      }
     }
   }
   const out = solveWith(model, weights);
@@ -90,7 +97,7 @@ export function solveModel(model: FrameModel): SolveOutput {
       out.memberIndex.get(m.id)!
     ];
   }
-  return { ...out, ownStations };
+  return { ...out, ownStations, selfWeightConverged: converged };
 }
 
 function solveWith(
@@ -174,5 +181,6 @@ function solveWith(
     extraLoads: extra,
     selfWeight,
     ownStations: {},
+    selfWeightConverged: true,
   };
 }

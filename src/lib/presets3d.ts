@@ -199,7 +199,7 @@ const cantileverKg: FrameModel3D = {
 // examples/column-3d-fixed-kg.svg — 5 m column fixed at A, free at B. q_y = 200 kg/m along +Y (toward the
 // viewer) over the whole column, P_z = 20 000 kg downward (direction assumed: the exercise does not say) and
 // P_x = 1 500 kg along +X at B. The exercise gives no section: IPB 260 (strong axis against M_y = 7 500 kg·m)
-// is the lightest IPB that passes (σ max ≈ 1 457 kg/cm² at the base; IPB 240 gives 1 753).
+// is the lightest IPB that passes the normal-stress check (σ max ≈ 1 457 kg/cm² at the base; IPB 240 gives 1 753; shear is not checked).
 // Kept in kg (forces in kg, lengths in m), so E and G are in kg/m² (E = 2.1e6 kg/cm²).
 const columnKg: FrameModel3D = {
   nodes: [

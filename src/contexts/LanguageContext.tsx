@@ -165,6 +165,13 @@ const EN = {
   "checks.none": "none in the table",
   "checks.unloaded": "no load: any profile",
   "checks.cable": "Cable",
+  "checks.cable_bending":
+    "carries bending or shear: it is not a cable (give it hinges at both ends)",
+  "checks.not_converged":
+    "The own-weight iteration did not settle: the picks may be out of date.",
+  "checks.note_hyperstatic":
+    "Forces are those of the current model; in a hyperstatic structure they change once the profile is applied, so check again after assigning it.",
+  "editor.section.aria": "Section of member",
   "checks.not_tension": "not in tension: a cable cannot take compression",
   "checks.note_buckling":
     "σ = N/A + M/W is checked; members in compression must also stay below Euler's buckling load P_cr = π²·E·Iy/L² (pinned ends, weak axis, safety coefficient 1).",
@@ -745,6 +752,13 @@ const ES: Record<TranslationKey, string> = {
   "checks.none": "ninguno de la tabla",
   "checks.unloaded": "sin carga: cualquier perfil",
   "checks.cable": "Cable",
+  "checks.cable_bending":
+    "tiene flexión o corte: no es un cable (ponele rótulas en los dos extremos)",
+  "checks.not_converged":
+    "La iteración del peso propio no convergió: los perfiles pueden estar desactualizados.",
+  "checks.note_hyperstatic":
+    "Los esfuerzos son los del modelo actual; en una estructura hiperestática cambian al aplicar el perfil, así que verificá de nuevo después de asignarlo.",
+  "editor.section.aria": "Sección de la barra",
   "checks.not_tension": "no está a tracción: un cable no resiste compresión",
   "checks.note_buckling":
     "Se verifica σ = N/A + M/W; las barras comprimidas además deben quedar por debajo de la carga crítica de pandeo de Euler P_cr = π²·E·Iy/L² (extremos articulados, eje débil, coeficiente de seguridad 1).",
