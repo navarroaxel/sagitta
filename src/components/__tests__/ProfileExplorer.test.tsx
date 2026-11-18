@@ -73,4 +73,27 @@ describe("ProfileExplorer", () => {
       screen.getByRole("group", { name: /leyenda|legend/i }).textContent,
     ).toContain("r2");
   });
+
+  test("table has a weight column", () => {
+    setup();
+    expect(screen.getAllByText("kg/m").length).toBeGreaterThan(0);
+  });
+
+  test("detail cards are grouped, X and Y rows aligned, weight included", () => {
+    setup();
+    fireEvent.click(screen.getByText("IPN 80"));
+    const region = screen.getByRole("region");
+    const heads = [...region.querySelectorAll("h3")].map((h) => h.textContent);
+    expect(heads).toHaveLength(4);
+    const cards = (h: Element) =>
+      [...(h.nextElementSibling?.querySelectorAll("button") ?? [])].map(
+        (b) => b.textContent?.split(" ")[0],
+      );
+    const h3s = [...region.querySelectorAll("h3")];
+    expect(cards(h3s[0])).toEqual(["h", "b", "tf", "tw", "hw", "r"]);
+    expect(cards(h3s[1])).toEqual(["A", "w", "J"]);
+    expect(cards(h3s[2])).toEqual(["Ix", "Sx", "rx"]);
+    expect(cards(h3s[3])).toEqual(["Iy", "Sy", "ry"]);
+    expect(region.textContent).toContain("5.94");
+  });
 });
