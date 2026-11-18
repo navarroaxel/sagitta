@@ -823,8 +823,9 @@ const beamIpb300Check: FrameModel = {
 
 // examples/truss-cable-beam-kg.svg — 5-bar truss (all 5 m), cable D-E (4.33 m: E is on the support line,
 // assumed), beam E-F (12 m) with 40 000 kg at mid-span, 10 000 kg at D. To size: beam EF (IPN / IPB),
-// cable DE (diameter, elongation), bars b4 and b5 (IPB). The beam's own weight (the profile picked, so
-// solveModel iterates) is added to what the cable carries; the SVG's reactions do not include it.
+// cable DE (diameter, elongation), bars b4 and b5 (IPB). The beam is sized for the load alone; its
+// own weight (the profile picked) is then added to what the cable carries. The SVG's reactions do not
+// include it.
 const trussCableBeam: FrameModel = {
   nodes: [
     { id: "A", x: 0, y: 0, support: "roller-v" },
@@ -881,8 +882,8 @@ const trussCableBeam: FrameModel = {
 
 // examples/truss-cable-beam-ipb260-kg.svg — 7-bar truss, cable C-F (15 m), beam F-G IPB 260 with
 // 20 000 kg at mid-span and q = 20 kg/cm (2 000 kg/m) over 10 m. To do: verify FG, size the cable (diameter,
-// elongation), bar forces, size the bars (IPB). C sits 8.66 m to the right of B. The weight of FG
-// (IPB 260, 92.6 kg/m) is added to the load the cable carries; the SVG's reactions do not include it.
+// elongation), bar forces, size the bars (IPB). C sits 8.66 m to the right of B. FG is verified for the load alone; its
+// weight (IPB 260, 92.6 kg/m) is added to what the cable carries. The SVG's reactions do not include it.
 const trussCableBeamIpb260: FrameModel = {
   nodes: [
     { id: "A", x: 0, y: 0, support: "roller-v" },

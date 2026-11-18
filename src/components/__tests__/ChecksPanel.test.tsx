@@ -28,13 +28,13 @@ describe("ChecksPanel", () => {
     expect(text).toMatch(/ninguno de la tabla|none in the table/);
   });
 
-  test("a verified beam shows its deflection (FG: ≈ 22 cm)", () => {
+  test("a verified beam shows its deflection (FG: ≈ 21.6 cm, for the load alone)", () => {
     renderChecks(preset("Truss + Cable + Beam IPB 260"));
     const text = screen
       .getByRole("region")
       .textContent!.replace(/\u00a0/g, " ");
     expect(text).toMatch(/Flecha máxima|Max deflection/);
-    expect(text).toMatch(/= 22\.0 cm \(x = 5\.00 m, L\/f = 45\)/);
+    expect(text).toMatch(/= 21\.6 cm \(x = 5\.00 m, L\/f = 46\)/);
   });
 
   test("σ adm is shown in the title", () => {
@@ -51,7 +51,7 @@ describe("ChecksPanel", () => {
       .textContent!.replace(/\u00a0/g, " ");
     expect(text).toContain("cable");
     expect(text).toContain("21 573"); // T = (40 000 + 262.2·12)/2, the beam's own weight included
-    expect(text).toMatch(/Peso propio incluido|Own weight included/);
+    expect(text).toMatch(/Peso propio sumado|Own weight added/);
     expect(text).toContain("EF IPB 800");
     expect(text).toContain("4.14"); // d req
     expect(text).toMatch(/l0 \(m\)/); // header: length l₀ with subscript

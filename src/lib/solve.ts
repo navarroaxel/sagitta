@@ -21,6 +21,10 @@ export interface SolveOutput {
   // already included in `result` / `stations`; the equilibrium check sums them too.
   extraLoads: Load[];
   selfWeight: SelfWeight[];
+  // Stations of the members with `selfWeight` WITHOUT their own weight (member id -> stations): the
+  // weight only travels to the supports and the other members, a beam is verified / sized for the
+  // applied loads alone (how the course does it). Members without selfWeight are not listed.
+  ownStations: Record<string, Station[]>;
 }
 
 // Profile weights are in kg/m; the model's force unit decides the factor (0: unknown unit, no weight).
@@ -56,23 +60,37 @@ export function solveModel(model: FrameModel): SolveOutput {
       if (p) weights.set(m.id, p);
     }
   }
-  let out = solveWith(model, weights);
+  const without = (id: string) => {
+    const w = new Map(weights);
+    w.delete(id);
+    return w;
+  };
+  // A `size` pick comes from the member's stations without its own weight, so with one sized member
+  // it does not depend on the weight at all; with several, their weights reach each other: iterate.
   const sized = flagged.filter((m) => m.section?.kind === "size");
   if (sized.length && model.sigmaAdm && model.sigmaAdm > 0) {
     for (let pass = 0; pass < 12; pass++) {
       let changed = false;
       for (const m of sized) {
-        const pick = bestPick(model, out, out.memberIndex.get(m.id)!);
+        const e = model.members.findIndex((x) => x.id === m.id);
+        const pick = bestPick(model, solveWith(model, without(m.id)), e);
         if (pick && pick.profile.name !== weights.get(m.id)?.name) {
           weights.set(m.id, pick.profile);
           changed = true;
         }
       }
       if (!changed) break;
-      out = solveWith(model, weights);
     }
   }
-  return out;
+  const out = solveWith(model, weights);
+  const ownStations: Record<string, Station[]> = {};
+  for (const m of flagged) {
+    if (!weights.has(m.id)) continue;
+    ownStations[m.id] = solveWith(model, without(m.id)).stations[
+      out.memberIndex.get(m.id)!
+    ];
+  }
+  return { ...out, ownStations };
 }
 
 function solveWith(
@@ -155,5 +173,6 @@ function solveWith(
     memberIndex,
     extraLoads: extra,
     selfWeight,
+    ownStations: {},
   };
 }

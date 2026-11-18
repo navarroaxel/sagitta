@@ -171,7 +171,7 @@ describe("Truss + Cable + Beam (sizing)", () => {
   const T = (40000 + wEF * 12) / 2; // cable = half of the beam's load (symmetric)
   const D = 10000 + T; // load on D: its own 10 000 kg + what the cable pulls down
 
-  test("EF's weight is included: IPB 800 · 12 m = 3 146 kg, and the solver agrees with itself", () => {
+  test("EF's weight is included: IPB 800 · 12 m = 3 146 kg (it only goes to the supports and the cable)", () => {
     expect(solved.selfWeight).toHaveLength(1);
     expect(solved.selfWeight[0].profile).toBe("IPB 800");
     expect(solved.selfWeight[0].w).toBeCloseTo(wEF, 6);
@@ -206,14 +206,14 @@ describe("Truss + Cable + Beam (sizing)", () => {
     expect(c.elongation).toBeCloseTo((1600 * 433.01) / 2.1e6, 4);
   });
 
-  test("beam E-F: M = P·L/4 + w·L²/8, no IPN fits, the lightest IPB is IPB 800", () => {
+  test("beam E-F: sized for the load alone (M = P·L/4 = 120 000 kg·m, its weight is not in it); no IPN fits, the lightest IPB is IPB 800", () => {
     const c = byMember<SizeCheck>(checks, "EF");
-    expect(c.demand.M).toBeCloseTo(120000 + (wEF * 144) / 8, 0);
+    expect(c.demand.M).toBeCloseTo(120000, 0);
     expect(c.results.map((x) => x.series)).toEqual(["IPN", "IPB"]);
     expect(c.results[0].pick).toBeNull();
     expect(c.results[1].pick?.profile.name).toBe("IPB 800");
-    // its weight does not push it out: σ with the weight included is still within σ adm
-    expect(c.results[1].pick!.sigma).toBeLessThanOrEqual(1600);
+    // σ for the load alone: M / Wx = 12 000 000 / 8980 ≈ 1336 kg/cm²
+    expect(c.results[1].pick!.sigma).toBeCloseTo(12_000_000 / 8980, 0);
   });
 
   test("b4 is in compression (D/sin 60° = 36 457 kg): IPB 140 by Euler; b5 is in tension (D/√3): IPB 100", () => {
@@ -299,6 +299,15 @@ describe("Truss + Cable + Beam IPB 260", () => {
     expect(solved.selfWeight[0].total).toBeCloseTo(wFG * 10, 6);
   });
 
+  test("the weight travels to the supports, not into the beam's own check: ownStations = load only", () => {
+    const e = solved.memberIndex.get("FG")!;
+    const maxM = (st: { M: number }[]) =>
+      Math.max(...st.map((x) => Math.abs(x.M)));
+    expect(maxM(solved.ownStations["FG"])).toBeCloseTo(75000, 0); // the load alone
+    expect(maxM(solved.stations[e])).toBeCloseTo(75000 + (wFG * 100) / 8, 0); // the actual M with its weight
+    expect(Object.keys(solved.ownStations)).toEqual(["FG"]);
+  });
+
   test("stable; reactions from statics (ΣM about B with the cable's T at C, 8.66 m to its right)", () => {
     expect(solved.result.stable).toBe(true);
     const VA = (40000 * 5 - 5000 * 8.66 - T * 8.66) / 5; // negative: downward
@@ -309,23 +318,23 @@ describe("Truss + Cable + Beam IPB 260", () => {
     expect(r("G").rx).toBeCloseTo(0, 2);
   });
 
-  test("a) beam F-G (IPB 260): M = P·L/4 + q·L²/8, σ ≈ 6 623 kg/cm², does not pass; IPB 550 would", () => {
+  test("a) beam F-G (IPB 260), verified for the load alone: M = P·L/4 + q·L²/8 = 75 000 kg·m, σ ≈ 6 522 kg/cm², does not pass; IPB 550 would", () => {
     const c = byMember<VerifyCheck>(checks, "FG");
-    const M = (20000 * 10) / 4 + (qTot * 100) / 8; // ≈ 76 158 kg·m
+    const M = (20000 * 10) / 4 + (2000 * 100) / 8; // 75 000 kg·m: q = 20 kg/cm, not its own weight
     expect(c.demand.M).toBeCloseTo(M, 0);
     expect(c.sigma).toBeCloseTo((M * 100) / 1150, 0);
     expect(c.ok).toBe(false);
     expect(c.suggestion?.profile.name).toBe("IPB 550");
   });
 
-  test("b) deflection of FG alone (its own weight included): 5·q·L⁴/(384·E·I) + P·L³/(48·E·I) ≈ 22 cm", () => {
+  test("b) deflection of FG for the load alone: 5·q·L⁴/(384·E·I) + P·L³/(48·E·I) ≈ 21.6 cm", () => {
     const c = byMember<VerifyCheck>(checks, "FG");
     const EI = 2.1e6 * 14920;
-    const fq = (5 * (qTot / 100) * 1000 ** 4) / (384 * EI);
+    const fq = (5 * (2000 / 100) * 1000 ** 4) / (384 * EI);
     const fp = (20000 * 1000 ** 3) / (48 * EI);
     expect(c.deflection!.f).toBeCloseTo(fq + fp, 0);
-    expect(c.deflection!.f).toBeGreaterThan(21.9);
-    expect(c.deflection!.f).toBeLessThan(22.1);
+    expect(c.deflection!.f).toBeGreaterThan(21.5);
+    expect(c.deflection!.f).toBeLessThan(21.7);
     expect(c.deflection!.x).toBeCloseTo(5, 1);
     expect(c.deflection!.L).toBeCloseTo(10, 9);
   });

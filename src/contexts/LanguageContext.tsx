@@ -151,7 +151,7 @@ const EN = {
   "editor.material.sigma_note":
     "Used by the Results tab for members with a section (check a profile, size one, or size a cable). Forces in kg and lengths in m give kg/cm²; E is then in kg/m² (steel: 2.1e10).",
   "checks.title": "Verification and sizing",
-  "checks.self_weight": "Own weight included",
+  "checks.self_weight": "Own weight added to the supports and the members (the beam itself is verified / sized for the loads alone)",
   "checks.d_min_long": "Minimum cable diameter",
   "checks.d_adopted": "adopt",
   "checks.deflection": "Max deflection f (bending of the member alone, relative to the chord between its ends)",
@@ -731,7 +731,7 @@ const ES: Record<TranslationKey, string> = {
   "editor.material.sigma_note":
     "Lo usa la pestaña de resultados para las barras con sección (verificar un perfil, dimensionarlo o dimensionar un cable). Fuerzas en kg y longitudes en m dan kg/cm²; E queda en kg/m² (acero: 2,1e10).",
   "checks.title": "Verificación y dimensionado",
-  "checks.self_weight": "Peso propio incluido",
+  "checks.self_weight": "Peso propio sumado a los apoyos y a las demás barras (la propia viga se verifica / dimensiona solo con las cargas)",
   "checks.d_min_long": "Diámetro mínimo del cable",
   "checks.d_adopted": "adoptar",
   "checks.deflection": "Flecha máxima f (solo la flexión de la barra, respecto de la cuerda entre sus extremos)",

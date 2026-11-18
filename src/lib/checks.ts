@@ -56,7 +56,10 @@ export interface Deflection {
   L: number; // m
 }
 
-export function chordDeflection(stations: Station[], EI: number): Deflection | null {
+export function chordDeflection(
+  stations: Station[],
+  EI: number,
+): Deflection | null {
   const n = stations.length;
   if (n < 3 || !(EI > 0)) return null;
   const x = stations.map((s) => s.x * 100); // cm
@@ -170,10 +173,24 @@ const maxAbs = (stations: Station[], key: "N" | "M"): Station =>
     stations[0],
   );
 
-function bending(model: FrameModel, st: Station[], p: Profile): Deflection | null {
+function bending(
+  model: FrameModel,
+  st: Station[],
+  p: Profile,
+): Deflection | null {
   if (!st.some((s) => Math.abs(s.M) > TOL)) return null;
   const d = chordDeflection(st, (model.material.E / 1e4) * p.Ix);
   return d && d.f > 1e-9 ? d : null;
+}
+
+// The stations a member is checked / sized with: without its own weight when it has `selfWeight`
+// (the weight only travels to the supports; see SolveOutput.ownStations).
+export function checkStations(
+  solved: SolveOutput,
+  id: string,
+  e: number,
+): Station[] {
+  return solved.ownStations?.[id] ?? solved.stations[e];
 }
 
 // Compression of member `e` (null when no station is in compression).
@@ -182,17 +199,21 @@ function bucklingOf(
   solved: SolveOutput,
   e: number,
 ): Buckling | null {
-  const st = solved.stations[e];
+  const st = checkStations(solved, model.members[e].id, e);
   const P = -Math.min(...st.map((s) => s.N));
   if (!(P > TOL)) return null;
   return { P, L: solved.result.geo[e].L, E: model.material.E / 1e4 };
 }
 
 // The profile a `size` section picks for member `e`: the lightest of its series that passes.
-export function bestPick(model: FrameModel, solved: SolveOutput, e: number): Pick | null {
+export function bestPick(
+  model: FrameModel,
+  solved: SolveOutput,
+  e: number,
+): Pick | null {
   const sec = model.members[e].section;
   const sigmaAdm = model.sigmaAdm;
-  const st = solved.stations[e];
+  const st = checkStations(solved, model.members[e].id, e);
   if (sec?.kind !== "size" || !sigmaAdm || !st) return null;
   const buck = bucklingOf(model, solved, e) ?? undefined;
   const picks = sec.series
@@ -211,7 +232,7 @@ export function runChecks(
   const out: MemberCheck[] = [];
   model.members.forEach((m: Member, e) => {
     const sec = m.section;
-    const st = solved.stations[e];
+    const st = checkStations(solved, m.id, e);
     if (!sec || !st || st.length === 0) return;
 
     if (sec.kind === "profile") {
