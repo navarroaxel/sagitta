@@ -37,6 +37,8 @@ import {
 // menu: 1 NUDOS, 2 BARRAS, 3 APOYOS, 4 AGREGAR CARGAS, 5 VER ESTRUCTURA, 6 BORRAR CARGAS, 7 RESOLVER, 0 salir
 const K_RIGHT = 27, K_EXE = 31, K_EXIT = 47;
 const pickNode = (k: number) => [...Array(k - 1).fill(K_RIGHT), K_EXE]; // the cursor starts on node 1
+// right after a `?` prompt the first EXE of a choice is ignored (it may be the prompt's own), so node 1 is chosen with its number key
+const pickAfterPrompt = (k: number) => (k === 1 ? [1] : pickNode(k));
 function reticInputs(o: {
   nodes: [number, number][];
   bars: number[][];
@@ -50,7 +52,7 @@ function reticInputs(o: {
     1, o.nodes.length, ...o.nodes.flat(), K_EXIT,
     2, ...o.bars.flatMap(([a, b]) => [...pickNode(a), ...pickNode(b)]), K_EXIT,
     3, ...pickNode(o.pinned), ...pickNode(o.roller), o.dir,
-    4, o.loads.length, ...o.loads.flatMap((l) => [...pickNode(l.node), l.fx, l.fy, 1]),
+    4, o.loads.length, ...o.loads.flatMap((l) => [...pickAfterPrompt(l.node), l.fx, l.fy, 1]),
     ...(o.tail ?? [7, 0]),
   ];
 }
@@ -914,6 +916,15 @@ describe("Casio program RETIC (bar forces of a truss of up to 9 bars)", () => {
     expect(last.segments.some(([x1, y1, x2, y2]) => x1 === n1.x && y1 === n1.y && x2 === n3.x && y2 === n3.y)).toBe(true);
   });
 
+  test("a stale EXE right after the count prompt does not choose node 1 for a load: the first EXE is ignored, then ► ► EXE chooses node 3", () => {
+    const gfx = newGfx(), mem = newMem();
+    const inputs = [4, 0, 0, 5, 0, 2.5, 4, 7.5, 4, 1, 0, -100];
+    // NUDOS, EXIT; AGREGAR CARGAS; EXE (stale: ignored), ► ► EXE; OK; leave
+    runBasic(RETIC_LINES, inputs, gfx, mem, [31, 47, 37, 37, 37, 31, 31, 27, 27, 31, 31, 47]);
+    expect(mem.L[6][3]).toBe(-100);
+    expect(mem.L[6][1]).toBe(0);
+  });
+
   test("the cursor wraps: ◄ from the first node goes to the last, and EXIT leaves a choice without changing anything", () => {
     const m = trussPreset("Tower Truss");
     const gfx = newGfx();
@@ -970,12 +981,12 @@ describe("Casio program RETIC (bar forces of a truss of up to 9 bars)", () => {
       RETIC_LINES,
       [
         1, 3, 9, 9, n2.x, n2.y, n3.x, n3.y, // node 1 typed wrong...
-        K_EXE, n1.x, n1.y, K_EXIT, // ...chosen on the drawing (the cursor starts on node 1) and typed again; EXIT = done
+        1, n1.x, n1.y, K_EXIT, // ...chosen on the drawing (key 1: node 1) and typed again; EXIT = done
         2, ...pickNode(2), ...pickNode(3), ...bars.slice(1).flatMap(([a, b]) => [...pickNode(a), ...pickNode(b)]), // bar 1 chosen wrong (2-3)
         K_EXE, ...pickNode(bars[0][0]), ...pickNode(bars[0][1]), K_EXIT, // chosen on the bar list (the cursor starts on bar 1) and redone
         3, ...pickNode(idx(pinned.id)), ...pickNode(idx(roller.id)), roller.support === "roller-h" ? 2 : 1,
-        4, loads.length, ...pickNode(1), 7, 7, 2, // a wrong load → 2 = REPETIR: the same slot is asked again
-        ...loads.flatMap((l) => [...pickNode(idx(l.node)), l.fx, l.fy, 1]),
+        4, loads.length, ...pickAfterPrompt(1), 7, 7, 2, // a wrong load → 2 = REPETIR: the same slot is asked again
+        ...loads.flatMap((l) => [...pickAfterPrompt(idx(l.node)), l.fx, l.fy, 1]),
         7, 0,
       ],
       gfx,

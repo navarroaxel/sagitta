@@ -1193,8 +1193,10 @@ const RET_DRAW = [
 const RET_DIGIT_KEYS = [72, 62, 52, 73, 63, 53, 74, 64, 54];
 const retDigits = (count: string) => RET_DIGIT_KEYS.map((k, i) => `If W=${k}:Then If ${count}>${i}:Then ${i + 1}→S:31→W:IfEnd:IfEnd`);
 // Choose a node on the drawing: ◄ ▲ / ► ▼ move the cursor, EXE chooses (not the marked node), EXIT leaves with S = 0.
-const retPickNode = (msg: string[]) => [
+const retPickNode = (msg: string[], afterPrompt = false) => [
   "1→S:1→Y",
+  // after a `?` prompt the EXE that ended it can still be pending: the first EXE of the choice is ignored (use a number key or move first)
+  ...(afterPrompt ? ["1→List 9[20]"] : []),
   "While Y=1",
   ...RET_DRAW,
   "List 1[S]→J:List 2[S]→K:List 9[11]×5→L",
@@ -1205,6 +1207,7 @@ const retPickNode = (msg: string[]) => [
   "While W=0",
   "Getkey→W",
   "WhileEnd",
+  ...(afterPrompt ? ["If List 9[20]=1:Then 0→List 9[20]:If W=31:Then 0→W:IfEnd:IfEnd"] : []),
   "If W=38:Then S–1→S:IfEnd",
   "If W=28:Then S–1→S:IfEnd",
   "If W=27:Then S+1→S:IfEnd",
@@ -1366,7 +1369,7 @@ export const RETIC_LINES = [
   "Next",
   "1→X",
   "While X=1",
-  ...retPickNode(['Text 51,1,"EXE: CORREGIR NUDO"', 'Text 57,1,"EXIT: LISTO"']),
+  ...retPickNode(['Text 51,1,"EXE: CORREGIR NUDO"', 'Text 57,1,"EXIT: LISTO"'], true),
   "If S=0:Then 0→X:IfEnd",
   "If S>0:Then",
   "S→G",
@@ -1411,7 +1414,7 @@ export const RETIC_LINES = [
   "ClrText",
   '"CARGAS A AGREGAR"?→R',
   "For 1→G To R",
-  ...retPickNode(['Text 51,1,"CARGA":Text 51,24,G:Text 51,32,"DE":Text 51,44,R', 'Text 57,1,"ELEGI EL NUDO"']),
+  ...retPickNode(['Text 51,1,"CARGA":Text 51,24,G:Text 51,32,"DE":Text 51,44,R', 'Text 57,1,"ELEGI EL NUDO"'], true),
   "S→U",
   "If U>0:Then",
   "ClrText",
