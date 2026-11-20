@@ -259,6 +259,9 @@ export const REACC_LINES = [
   "IfEnd",
   "IfEnd",
   "Next",
+  // the last page stays until a key is pressed: the menu clears the screen
+  "While Getkey>0:WhileEnd",
+  "While Getkey=0:WhileEnd",
   ...menuLines({
     count: 2,
     exit: 1,

@@ -180,6 +180,18 @@ describe("Casio program REACC", () => {
     expect([at(p2, 1, 2), at(p2, 3, 2), at(p2, 5, 2), at(p2, 11, 2), at(p2, 17, 2), at(p2, 5, 3), at(p2, 11, 3), at(p2, 17, 3)]).toEqual([4, "P", 1, 2, 3, 4, 5, 6]);
   });
 
+  test("running REACC: every page of the list waits for a key before the screen is cleared (the last one too: the menu clears it)", () => {
+    // 1 to 5 loads: 1 page (≤ 3 loads) or 2 pages; each page is a screen and must be followed by a wait
+    for (const n of [1, 3, 4, 5]) {
+      const loads = Array.from({ length: n }, () => pointLoad(0, 0, 3, 0, 300, 0)).flat();
+      const { gfx } = reacc([1, n, ...loads, 2, 1, 0]);
+      const listIdx = gfx.screens.map((sc, i) => [sc, i] as const).filter(([sc]) => sc[0]?.[2] === "N T  X     Y     Z").map(([, i]) => i);
+      expect(listIdx).toHaveLength(Math.ceil(n / 3));
+      // a wait happened while each page was the last screen (the screens count is its index + 1)
+      listIdx.forEach((i) => expect(gfx.waits).toContain(i + 1));
+    }
+  });
+
   test("running REACC: a load can be deleted from the list, and the reactions are rebuilt without it", () => {
     const keep = reacc([1, 1, ...pointLoad(0, 0, 3, 0, 300, 0), 3, 0]).rea; // only the second load, as the reference
     const both = reacc([1, 2, ...pointLoad(0, 0, 3, 0, 300, 0), ...pointLoad(0, 0, 3, 0, 300, 0), 3, 0]).rea;

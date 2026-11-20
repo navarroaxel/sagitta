@@ -26,6 +26,7 @@ export interface Gfx {
   texts: [number, number, number | string][];
   locates: [number, number, number | string][]; // the text-screen summary of REACC (column, line, value)
   clearTexts: number;
+  waits: number[]; // for each wait for a key (While Getkey=0): how many text screens there were then (to see what the user could read)
   screens: [number, number, number | string][][]; // the text screens, one per ClrText (what Locate wrote on each)
   clears: number;
 }
@@ -35,7 +36,7 @@ export interface Mem {
   L: Record<number, number[]>;
 }
 export const newMem = (): Mem => ({ v: {}, L: {} });
-export const newGfx = (): Gfx => ({ pages: [newPage()], window: null, segments: [], horizontals: [], verticals: [], plots: [], texts: [], locates: [], clearTexts: 0, screens: [[]], clears: 0 });
+export const newGfx = (): Gfx => ({ pages: [newPage()], window: null, segments: [], horizontals: [], verticals: [], plots: [], texts: [], locates: [], clearTexts: 0, screens: [[]], waits: [], clears: 0 });
 
 const splitTop = (line: string, sep: string): string[] => {
   const parts: string[] = [];
@@ -141,6 +142,7 @@ export function runBasic(lines: string[], inputs: number[], gfx: Gfx = newGfx(),
       pc++;
     } else if (s.startsWith("While ")) {
       // the waits for a key (While Getkey>0 / While Getkey=0) are over at once; any other condition is evaluated
+      if (/Getkey=0/.test(s)) gfx.waits.push(gfx.screens.length);
       const go = /Getkey/.test(s) ? false : !!expr(s.slice(6));
       if (go) {
         if (whileStack[whileStack.length - 1] !== pc) whileStack.push(pc);
