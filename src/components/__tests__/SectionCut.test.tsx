@@ -195,6 +195,18 @@ describe("SectionCut: the point load at the free end of the column (preset #9)",
   });
 });
 
+describe("SectionCut: the load a joint hands to the column (preset #2)", () => {
+  const kg = PRESETS_3D.find((p) => p.key === "t_frame_kg")!.model;
+
+  test("the prism shows, at the column's top, the (−300, 0, 600) kg the beams and the 300 kg load send through B", () => {
+    render(<Harness model={kg} start={0.5} />);
+    const prism = screen.getByTestId("section-prism");
+    expect(prism.contains(screen.getByTestId("sload-P-B"))).toBe(true);
+    expect(prism.textContent).toMatch(/Load received at B|Carga recibida en B/);
+    expect(prism.textContent).toContain("(-300, 0, 600)");
+  });
+});
+
 describe("SectionCut local triad", () => {
   test("draws the section's own x, y and z in the 3D prism", () => {
     render(<Harness start={1} />);

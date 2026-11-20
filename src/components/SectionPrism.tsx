@@ -648,7 +648,7 @@ export default function SectionPrism({
                   <text x={LEGEND_X + 16} y={y}>
                     {l.kind === "q"
                       ? `q ${l.id}${l.zSpan && (l.zSpan[0] > 1e-6 || l.zSpan[1] < L - 1e-6) ? ` (z ${l.zSpan[0].toFixed(1)}–${l.zSpan[1].toFixed(1)} m)` : ""}`
-                      : `${t(l.kind === "P" ? "f3d.cut.point_load" : "f3d.cut.reaction")} ${l.id}`}
+                      : `${t(l.joint ? "f3d.cut.joint_load" : l.kind === "P" ? "f3d.cut.point_load" : "f3d.cut.reaction")} ${l.id}`}
                   </text>
                   <text x={LEGEND_X + 16} y={y + 13}>
                     ({fmt(fx)}, {fmt(fy)}, {fmt(fz)}) {unit}

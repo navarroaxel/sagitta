@@ -39,12 +39,45 @@ describe("sectionLoads", () => {
     expect(at(1.5).some((l) => l.kind === "q")).toBe(false);
   });
 
-  test("a member with no load of its own, no support on the free-body side and only a joint at its end has none", () => {
-    // tFrameKg: M1 is the column; B (its z = 0 end) is a joint with the beams, so L3 (a nodal load at B) is not
-    // listed, and the support A is past the cut
+  test("a joint at the z = 0 end lists what the member receives there (the resultant of its first station)", () => {
+    // tFrameKg: M1 is the column; B (its z = 0 end) is a joint with the beams. The 300 kg of L3 (+Y = −x of the
+    // section) plus the beams' 600 kg of weight and their moment reach the column through B; the support A is
+    // past the cut.
     const kg = PRESETS_3D.find((p) => p.key === "t_frame_kg")!.model;
     const s = solveModel3D(kg)!;
-    expect(sectionLoads(kg, s, 0, nearestStation(s, 0, 0))).toEqual([]);
+    const loads = sectionLoads(kg, s, 0, nearestStation(s, 0, 0));
+    expect(loads).toHaveLength(1);
+    const j = loads[0];
+    expect(j.kind).toBe("P");
+    expect(j.joint).toBe(true);
+    expect(j.id).toBe("B");
+    expect(j.z).toBe(0);
+    near(j.force[0], -300);
+    near(j.force[1], 0);
+    near(j.force[2], 600);
+    near(j.moment![0], -300);
+  });
+
+  test("the end-section mapping reproduces the applied load of every free end (so it is right at a joint)", () => {
+    for (const p of PRESETS_3D) {
+      const m = p.model;
+      const s = solveModel3D(m)!;
+      m.members.forEach((_, e) => {
+        const end = s.stations[e].reduce((a, b) => (b.z < a.z ? b : a));
+        const i = s.stations[e].indexOf(end);
+        sectionLoads(m, s, e, i)
+          .filter((l) => l.kind === "P" && !l.joint && l.z === 0)
+          .forEach((l) => {
+            near(l.force[0], end.Qx);
+            near(l.force[1], -end.Qy);
+            near(l.force[2], -end.N);
+            if (l.moment) {
+              near(l.moment[0], end.Mx);
+              near(l.moment[1], -end.My);
+            }
+          });
+      });
+    }
   });
 
   test("a point load on a FREE end is listed when that end is on the free-body side of the cut (z < cut)", () => {
@@ -53,7 +86,7 @@ describe("sectionLoads", () => {
       const i = e(id);
       const L = solved.result.geo[i].L;
       return sectionLoads(model, solved, i, nearestStation(solved, i, f(L)))
-        .filter((l) => l.kind === "P")
+        .filter((l) => l.kind === "P" && !l.joint) // the joint's resultant is tested above
         .map((l) => l.id);
     };
     // M2 (B to C, z down): its free end C is z = 0, so L2 is on the free body at every cut

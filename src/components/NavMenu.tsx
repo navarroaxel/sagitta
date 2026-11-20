@@ -13,6 +13,7 @@ const LINKS: { href: string; labelKey: TranslationKey }[] = [
   { href: "/frame3d", labelKey: "f3d.link" },
   { href: "/perfiles", labelKey: "prof.link" },
   { href: "/flexion-compuesta", labelKey: "ecc.link" },
+  { href: "/corte-de-seccion", labelKey: "cut.link" },
 ];
 
 export default function NavMenu() {
