@@ -1,5 +1,5 @@
 import { buildG1m, buildG1mFromBytes, programBytes, tokenizeLine } from "../casioG1m";
-import { PANDEO_LINES, PERFILES_LINES, PERFIL_LINES, REACC_LINES, RETIC_LINES, TRACCION_LINES, VIGACAB_LINES } from "../casioPrograms";
+import { EXCENTR_LINES, PANDEO_LINES, PERFILES_LINES, PERFIL_LINES, REACC_LINES, RETIC_LINES, TRACCION_LINES, VIGACAB_LINES } from "../casioPrograms";
 
 // Independent reader, written like Cahute's: inverts the header, walks group → file headers.
 function read(file: Uint8Array) {
@@ -101,7 +101,7 @@ describe("Casio .g1m builder", () => {
   });
 
   test("REACC and PERFIL: every line decodes back to the line typed, and the files are well formed", () => {
-    for (const [name, lines] of [["REACC", REACC_LINES], ["PERFIL", PERFIL_LINES], ["VIGACAB", VIGACAB_LINES], ["TRACCION", TRACCION_LINES], ["PANDEO", PANDEO_LINES], ["RETIC", RETIC_LINES], ["PERFILES", PERFILES_LINES]] as const) {
+    for (const [name, lines] of [["REACC", REACC_LINES], ["PERFIL", PERFIL_LINES], ["VIGACAB", VIGACAB_LINES], ["TRACCION", TRACCION_LINES], ["PANDEO", PANDEO_LINES], ["RETIC", RETIC_LINES], ["PERFILES", PERFILES_LINES], ["EXCENTR", EXCENTR_LINES]] as const) {
       const f = buildG1m(name, lines);
       const r = read(f);
       expect(r.name).toBe(name);

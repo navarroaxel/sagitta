@@ -1,6 +1,7 @@
 import { solveModel3D } from "../solve3d";
 import { PRESETS_3D } from "../presets3d";
 import { PRESETS } from "../presets";
+import { eccentricLoad } from "../eccentric";
 import { criticalCorner, guideCorners, guideOutline, guideSection, plane, sigmaAt } from "../sectionGuide";
 import { solveModel } from "../solve";
 import { runChecks, type CableCheck, type SizeCheck, type VerifyCheck } from "../checks";
@@ -23,6 +24,7 @@ import {
   RETIC_LINES,
   RETIC_MAX_BARS,
   PERFILES_LINES,
+  EXCENTR_LINES,
   SEARCH_TABLE,
   findProfile,
   lightestWith,
@@ -973,5 +975,94 @@ describe("the exam example truss-cable-beam-ipb260-kg, start to finish with the 
     expect(beam.T).toBeCloseTo(c.N, 2);
     expect(beam.d).toBeCloseTo(c.dReq, 6);
     expect(beam.elongation).toBeCloseTo(c.elongation, 4);
+  });
+});
+
+describe("Casio program EXCENTR (eccentric axial load on an IPN / IPB: ipn300-eccentric-tension.svg)", () => {
+  type Screen = [number, number, number | string][];
+  const at = (sc: Screen | undefined, col: number, row: number) => sc?.find((l) => l[0] === col && l[1] === row)?.[2];
+  const scr = (gfx: ReturnType<typeof newGfx>, title: string) => gfx.screens.find((sc) => sc[0]?.[2] === title);
+  const EXE = 31, DOWN = 37, UP = 28, LEFT = 38, RIGHT = 27;
+  // series (1 IPN / 2 IPB) · moves of the profile list ending with EXE · face · unit · P, ex, ey, σ adm · 0 = SALIR
+  const run = (series: 1 | 2, moves: number[], face: 1 | 2, unit: 1 | 2, P: number, ex: number, ey: number, S: number) => {
+    const gfx = newGfx();
+    runBasic(EXCENTR_LINES, [series, ...moves, EXE, face, unit, P, ex, ey, S, 0], gfx);
+    return gfx;
+  };
+  const profileAt = (series: 1 | 2, steps: number) => {
+    const same = SEARCH_TABLE.filter((p) => p.series === (series === 1 ? "IPN" : "IPB"));
+    const start = same.findIndex((p) => p.h === 300);
+    return same[Math.min(Math.max(start + steps, 0), same.length - 1)];
+  };
+
+  test.each([
+    ["the example: IPN 300, 76 kN at ex = 10, ey = 20 cm", 1, [], 1, 1, 76, 10, 20, 0, 0],
+    ["a compression, IPB 300 turned, in kg", 2, [], 2, 2, -5000, 3, -5, 0, 0],
+    ["another profile (IPN 300 ◄ ▼: five and one smaller)", 1, [LEFT, DOWN, UP, DOWN], 1, 1, 30, -2, 7, 0, -5 + 1 - 1 + 1],
+    ["σ adm typed", 2, [RIGHT, UP], 1, 1, 100, 4, 4, 12, 5 - 1],
+  ] as const)("%s", (_name, series, moves, face, unit, P, ex, ey, S, steps) => {
+    const prof = profileAt(series, steps);
+    const r = eccentricLoad({ profile: prof, rotated: face === 2, P, ex, ey, sigmaAdm: S || (unit === 1 ? 14 : 1600) });
+    const gfx = run(series, [...moves], face, unit, P, ex, ey, S);
+    // the profile chosen with the arrows
+    const list = gfx.screens.filter((sc) => sc.some((l) => l[2] === "EXE=ACEPTAR"));
+    expect(at(list.at(-1), 5, 1)).toBe(prof.h);
+    // what it reduces to
+    const c = scr(gfx, "EN EL CENTRO DE GRAV.");
+    expect([at(c, 5, 2), at(c, 5, 3), at(c, 5, 4)].map(Number)).toEqual([P, (P * ey) / 100, (P * ex) / 100].map((v) => (v === 0 ? 0 : v)));
+    // σ at the four corners, the critical one marked, and whether it passes
+    const k = scr(gfx, "SIGMA EN LAS ESQUINAS")!;
+    r.corners.forEach((corner, i) => expect(at(k, 13, i + 2) as number).toBeCloseTo(corner.sigma, 6));
+    expect(at(k, 21, r.corners.indexOf(r.critical) + 2)).toBe("*");
+    expect(at(k, 5, 6)).toBe(S || (unit === 1 ? 14 : 1600));
+    expect(at(k, 1, 7)).toBe(r.ok ? "CUMPLE" : "NO CUMPLE");
+    expect(at(k, 18, 6) as number).toBeCloseTo(r.ratio, 6);
+    // the neutral axis and the largest load
+    const n = scr(gfx, "EJE NEUTRO (CM)")!;
+    const a = 1 / r.A, b = ex / r.Iy, cc = ey / r.Ix;
+    if (Math.abs(b) > 0) expect(at(n, 11, 2) as number).toBeCloseTo(-a / b, 6);
+    else expect(at(n, 1, 2)).toBe("NO CORTA EL EJE X");
+    if (Math.abs(cc) > 0) expect(at(n, 11, 3) as number).toBeCloseTo(-a / cc, 6);
+    else expect(at(n, 1, 3)).toBe("NO CORTA EL EJE Y");
+    expect(at(n, 8, 5) as number).toBeCloseTo(r.Pmax, 6);
+    // the drawing: the outline (12 edges, as the guide's), the load point and the critical corner, the neutral axis
+    const s = guideSection(prof.name, face === 2);
+    const outline = guideOutline(s);
+    const edge = (p: number[], q: number[]) => [p, q].map((v) => v.map((x) => x.toFixed(6)).join(",")).sort().join("|");
+    expect(new Set(gfx.segments.slice(0, 12).map(([x1, y1, x2, y2]) => edge([x1, y1], [x2, y2])))).toEqual(
+      new Set(outline.map((p, i) => edge(p, outline[(i + 1) % 12]))),
+    );
+    expect(gfx.plots).toEqual([[ex, ey], [expect.closeTo(r.critical.x, 9), expect.closeTo(r.critical.y, 9)]]);
+    expect(gfx.texts).toEqual([[1, 1, expect.closeTo(r.critical.sigma, 6)]]);
+    if (Math.abs(cc) > 0) {
+      const [x1, y1, x2, y2] = gfx.segments[12];
+      for (const [px, py] of [[x1, y1], [x2, y2]]) expect(Math.abs(a + b * px + cc * py)).toBeLessThan(1e-9); // σ = 0 per kN along the drawn line
+    } else if (Math.abs(b) > 0) expect(gfx.verticals).toContain(-a / b);
+  });
+
+  test("the SVG's own numbers: σ max 13.96 kN/cm² ≤ 14, P max 76.25 kN (IPN 300, P = 76, ex = 10, ey = 20)", () => {
+    const gfx = run(1, [], 1, 1, 76, 10, 20, 0);
+    const k = scr(gfx, "SIGMA EN LAS ESQUINAS")!;
+    expect(Math.max(...[2, 3, 4, 5].map((r) => Math.abs(at(k, 13, r) as number)))).toBeCloseTo(13.96, 2);
+    expect(at(k, 1, 7)).toBe("CUMPLE");
+    expect(at(scr(gfx, "EJE NEUTRO (CM)")!, 8, 5) as number).toBeCloseTo(76.25, 1);
+    const c = scr(gfx, "EN EL CENTRO DE GRAV.");
+    expect([at(c, 5, 2), at(c, 5, 3), at(c, 5, 4)]).toEqual([76, 15.2, 7.6]); // N, M_y = P·ey, M_z = P·ex of the SVG
+  });
+
+  test("a centred load (ex = ey = 0) is a uniform σ = P/A: no neutral axis, the first corner is the critical one", () => {
+    const gfx = run(2, [], 1, 2, -2000, 0, 0, 0);
+    const n = scr(gfx, "EJE NEUTRO (CM)")!;
+    expect([at(n, 1, 2), at(n, 1, 3)]).toEqual(["NO CORTA EL EJE X", "NO CORTA EL EJE Y"]);
+    const prof = profileAt(2, 0);
+    expect(at(scr(gfx, "SIGMA EN LAS ESQUINAS")!, 13, 2) as number).toBeCloseTo(-2000 / prof.A, 6);
+    expect(gfx.segments).toHaveLength(12); // no line
+  });
+
+  test("after the results a menu offers another load or leaving", () => {
+    const gfx = newGfx();
+    runBasic(EXCENTR_LINES, [1, EXE, 1, 1, 76, 10, 20, 0, 1, /* OTRA CARGA */ 2, EXE, 2, 2, -1000, 1, 1, 0, 0], gfx);
+    expect(gfx.screens.filter((sc) => sc[0]?.[2] === "SIGMA EN LAS ESQUINAS")).toHaveLength(2);
+    expect(gfx.screens.filter((sc) => sc[0]?.[2] === "OTRO CALCULO?")).toHaveLength(2);
   });
 });
