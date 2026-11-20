@@ -885,13 +885,13 @@ describe("Casio program RETIC (bar forces of a truss of up to 9 bars)", () => {
       return [(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...ys) + Math.max(...ys)) / 2];
     };
     const nodeOf = (c: number[]) => m.nodes.findIndex((n) => Math.abs(n.x - c[0]) < 1e-9 && Math.abs(n.y - c[1]) < 1e-9) + 1;
-    const first = pages.filter((p) => p.texts.some((t) => t[2] === "NUDO 1: FLECHAS Y EXE")).map((p) => nodeOf(cursorAt(p)));
+    const first = pages.filter((p) => p.texts.some((t) => t[2] === "NUDO 1: NRO O FLECHAS")).map((p) => nodeOf(cursorAt(p)));
     expect(first).toEqual([1, 1]); // bar 1: EXE on node 1; bar 2: the cursor starts on node 1 again and EXIT leaves
-    const second = pages.filter((p) => p.texts.some((t) => t[2] === "NUDO 2: FLECHAS Y EXE")).map((p) => nodeOf(cursorAt(p)));
+    const second = pages.filter((p) => p.texts.some((t) => t[2] === "NUDO 2: NRO O FLECHAS")).map((p) => nodeOf(cursorAt(p)));
     expect(second).toEqual([1, 1, 2]); // EXE on node 1 did nothing (the bar's first node), ► moved to node 2, EXE chose it
     // while the second node is chosen the first one is marked with a bigger square (3 pixels of half side)
     const E = (pages[0].window![1] - pages[0].window![0]) / 126;
-    const marked = pages.find((p) => p.texts.some((t) => t[2] === "NUDO 2: FLECHAS Y EXE"))!;
+    const marked = pages.find((p) => p.texts.some((t) => t[2] === "NUDO 2: NRO O FLECHAS"))!;
     const big = marked.segments.filter(([x1, y1, x2, y2]) => Math.abs(Math.hypot(x2 - x1, y2 - y1) - 6 * E) < 1e-9);
     expect(big.length).toBeGreaterThanOrEqual(4); // the marked node's square (the nodes' own 2-pixel squares are 2E long)
     // and the bar is in the list: bar 1 joins nodes 1 and 2
@@ -901,6 +901,17 @@ describe("Casio program RETIC (bar forces of a truss of up to 9 bars)", () => {
     const n1 = m.nodes[0], n2 = m.nodes[1];
     expect(last.segments.some(([x1, y1, x2, y2]) => x1 === n1.x && y1 === n1.y && x2 === n2.x && y2 === n2.y)).toBe(true);
     expect(last.segments.filter(([x1, y1, x2, y2]) => Math.hypot(x2 - x1, y2 - y1) > 6 * E && !(x1 === n1.x && y1 === n1.y && x2 === n2.x && y2 === n2.y)).length).toBe(0); // no other bar yet
+  });
+
+  test("a number key chooses that node at once (bars in two key presses); a number past the last node does nothing", () => {
+    const m = trussPreset("Triangular Truss");
+    const nodes = [1, 3, ...m.nodes.flatMap((n) => [n.x, n.y]), K_EXIT];
+    const gfx = newGfx();
+    // bar 1: 1 then 3 (nodes 1 and 3); bar 2: 9 does nothing (3 nodes), EXIT leaves; EXIT leaves the review; VER ESTRUCTURA; leave
+    runBasic(RETIC_LINES, [...nodes, 2, 1, 3, 9, K_EXIT, K_EXIT, 5, 0], gfx);
+    const last = gfx.pages.filter((p) => p.window).at(-1)!;
+    const n1 = m.nodes[0], n3 = m.nodes[2];
+    expect(last.segments.some(([x1, y1, x2, y2]) => x1 === n1.x && y1 === n1.y && x2 === n3.x && y2 === n3.y)).toBe(true);
   });
 
   test("the cursor wraps: ◄ from the first node goes to the last, and EXIT leaves a choice without changing anything", () => {

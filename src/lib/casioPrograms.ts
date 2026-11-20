@@ -1189,6 +1189,9 @@ const RET_DRAW = [
   RET_BOX("J", "K", "L"),
   "IfEnd",
 ];
+// A number key (1-9) jumps to that node / bar and chooses it at once, as EXE would: the keys' codes are the manual's chart
+const RET_DIGIT_KEYS = [72, 62, 52, 73, 63, 53, 74, 64, 54];
+const retDigits = (count: string) => RET_DIGIT_KEYS.map((k, i) => `If W=${k}:Then If ${count}>${i}:Then ${i + 1}→S:31→W:IfEnd:IfEnd`);
 // Choose a node on the drawing: ◄ ▲ / ► ▼ move the cursor, EXE chooses (not the marked node), EXIT leaves with S = 0.
 const retPickNode = (msg: string[]) => [
   "1→S:1→Y",
@@ -1208,6 +1211,7 @@ const retPickNode = (msg: string[]) => [
   "If W=37:Then S+1→S:IfEnd",
   "If S<1:Then List 9[1]→S:IfEnd",
   "If S>List 9[1]:Then 1→S:IfEnd",
+  ...retDigits("List 9[1]"),
   "If W=31:Then",
   "1→Z:If S=List 9[10]:Then 0→Z:IfEnd",
   "If Z=1:Then 0→Y:IfEnd",
@@ -1240,6 +1244,7 @@ const retPickBar = (msg: string[]) => [
   "If W=37:Then S+1→S:IfEnd",
   "If S<1:Then 2×List 9[1]–3→S:IfEnd",
   "If S>2×List 9[1]–3:Then 1→S:IfEnd",
+  ...retDigits("2×List 9[1]–3"),
   "If W=31:Then 0→Y:IfEnd",
   "If W=47:Then 0→S:0→Y:IfEnd",
   "WhileEnd",
@@ -1250,11 +1255,11 @@ const RET_NEED_NODES = ["ClrText", 'Locate 1,1,"PRIMERO LOS NUDOS"', ...PAUSE];
 const retBarEntry = [
   "0→List 9[10]:0→List 3[G]:0→List 4[G]",
   "1→V",
-  ...retPickNode(['Text 51,1,"BARRA":Text 51,24,G:Text 51,32,"DE":Text 51,44,R', 'Text 57,1,"NUDO 1: FLECHAS Y EXE"']),
+  ...retPickNode(['Text 51,1,"BARRA":Text 51,24,G:Text 51,32,"DE":Text 51,44,R', 'Text 57,1,"NUDO 1: NRO O FLECHAS"']),
   "If S=0:Then 0→V:IfEnd",
   "If V=1:Then",
   "S→List 3[G]:S→List 9[10]",
-  ...retPickNode(['Text 51,1,"BARRA":Text 51,24,G:Text 51,32,"DE":Text 51,44,R', 'Text 57,1,"NUDO 2: FLECHAS Y EXE"']),
+  ...retPickNode(['Text 51,1,"BARRA":Text 51,24,G:Text 51,32,"DE":Text 51,44,R', 'Text 57,1,"NUDO 2: NRO O FLECHAS"']),
   "0→List 9[10]",
   "If S=0:Then 0→V:0→List 3[G]:IfEnd",
   "If V=1:Then S→List 4[G]:IfEnd",
