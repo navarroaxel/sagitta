@@ -5,36 +5,54 @@
 // about A, M = r × F (the same formula as examples/t-frame-3d-fixed-kg.svg). Units: kg, m, kg·m. Presentation only.
 
 // An interactive menu: ▲ (28) and ▼ (37) move a > marker, EXE (31) chooses, a number key chooses that item at once and
-// 0 (71) or EXIT (47) leaves. Key codes: the fx-9860GIII manual's Getkey chart (cap. 8). `count` items on lines 2..count+1
-// (the text screen has 7 lines: up to 6); with `exitItem` the last one is "0 SALIR" and chooses 0. The choice ends in
-// `choice` (1..n, or 0 for exit); `flag` is a free letter used as the loop's flag; S is the selection and W the key.
+// 0 (71) / EXIT (47) leave. Key codes: the fx-9860GIII manual's Getkey chart (cap. 8). `count` items on the lines row0..
+// (default 2; the text screen has 7 lines). The choice ends in `choice` (1..n). `exit` says what 0 / EXIT do: "item" = the
+// last item is "0 SALIR" and chooses 0, "zero" = chooses 0 with no item for it, a number = chooses that item (the safe one
+// of a yes/no), none = nothing. `flag` is a free letter used as the loop's flag, `sel` the selection (default S) and `key`
+// the key (default W): each use picks letters that are free at that point of its program. `clear: false` keeps the
+// screen (the summary of a load stays above its OK / REPETIR menu).
 const DIGIT_KEY = [71, 72, 62, 52, 73, 63, 53, 74, 64, 54]; // 0 1 2 3 4 5 6 7 8 9
-function menuLines(o: { count: number; exitItem: boolean; choice: string; flag: string; draw: string[] }): string[] {
-  const items = o.exitItem ? o.count - 1 : o.count;
-  const exit = o.exitItem ? o.count : 0;
+function menuLines(o: {
+  count: number;
+  exit?: "item" | "zero" | number;
+  choice: string;
+  flag: string;
+  draw: string[];
+  sel?: string;
+  key?: string;
+  row0?: number;
+  clear?: boolean;
+  start?: number;
+}): string[] {
+  const sel = o.sel ?? "S";
+  const key = o.key ?? "W";
+  const row0 = o.row0 ?? 2;
+  const items = o.exit === "item" ? o.count - 1 : o.count;
+  const exitSel = o.exit === "item" ? o.count : o.exit === "zero" ? 0 : o.exit;
   return [
-    `1→S:1→${o.flag}`,
-    "ClrText",
+    `${o.start ?? 1}→${sel}:1→${o.flag}`,
+    ...(o.clear === false ? [] : ["ClrText"]),
     ...o.draw,
     `While ${o.flag}=1`,
-    Array.from({ length: o.count }, (_, k) => `Locate 1,${k + 2}," "`).join(":"),
-    'Locate 1,S+1,">"',
+    Array.from({ length: o.count }, (_, k) => `Locate 1,${k + row0}," "`).join(":"),
+    `Locate 1,${sel}+${row0 - 1},">"`,
     "While Getkey>0:WhileEnd",
-    "0→W",
-    "While W=0",
-    "Getkey→W",
+    `0→${key}`,
+    `While ${key}=0`,
+    `Getkey→${key}`,
     "WhileEnd",
-    "If W=28:Then S–1→S:IfEnd",
-    "If W=37:Then S+1→S:IfEnd",
-    `If S<1:Then ${o.count}→S:IfEnd`,
-    `If S>${o.count}:Then 1→S:IfEnd`,
-    `If W=31:Then 0→${o.flag}:IfEnd`,
-    ...Array.from({ length: items }, (_, k) => `If W=${DIGIT_KEY[k + 1]}:Then ${k + 1}→S:0→${o.flag}:IfEnd`),
-    `If W=71:Then ${exit}→S:0→${o.flag}:IfEnd`,
-    `If W=47:Then ${exit}→S:0→${o.flag}:IfEnd`,
+    `If ${key}=28:Then ${sel}–1→${sel}:IfEnd`,
+    `If ${key}=37:Then ${sel}+1→${sel}:IfEnd`,
+    `If ${sel}<1:Then ${o.count}→${sel}:IfEnd`,
+    `If ${sel}>${o.count}:Then 1→${sel}:IfEnd`,
+    `If ${key}=31:Then 0→${o.flag}:IfEnd`,
+    ...Array.from({ length: items }, (_, k) => `If ${key}=${DIGIT_KEY[k + 1]}:Then ${k + 1}→${sel}:0→${o.flag}:IfEnd`),
+    ...(exitSel === undefined
+      ? []
+      : [`If ${key}=71:Then ${exitSel}→${sel}:0→${o.flag}:IfEnd`, `If ${key}=47:Then ${exitSel}→${sel}:0→${o.flag}:IfEnd`]),
     "WhileEnd",
-    `S→${o.choice}`,
-    ...(o.exitItem ? [`If S=${o.count}:Then 0→${o.choice}:IfEnd`] : []),
+    `${sel}→${o.choice}`,
+    ...(o.exit === "item" ? [`If ${sel}=${o.count}:Then 0→${o.choice}:IfEnd`] : []),
   ];
 }
 
@@ -114,7 +132,14 @@ export const REACC_LINES = [
   // the loads live in lists 11-20 (kind, centre, resultant force, applied moment: one slot each, up to 20) and their
   // number in List 21, so they survive leaving the program and running another one (the letters A-Z do not: every
   // program uses them). 0 starts over (the first time it must be 0: the lists do not exist yet), 1 goes on.
-  '"0=NUEVA 1=SEGUIR"?→B',
+  ...menuLines({
+    count: 2,
+    exit: 1,
+    choice: "B",
+    flag: "O",
+    draw: ['Locate 1,1,"REACC"', 'Locate 3,2,"1 SEGUIR GUARDADAS"', 'Locate 3,3,"2 NUEVA BORRA TODO"'],
+  }),
+  "If B=2:Then 0→B:IfEnd",
   "0→F:0→G:0→H:0→I:0→J:0→K:0→E",
   "If B=0:Then",
   ...Array.from({ length: 10 }, (_, k) => `{${Array(20).fill("0").join(",")}}→List ${k + 11}`),
@@ -138,7 +163,7 @@ export const REACC_LINES = [
   "While 1=1",
   ...menuLines({
     count: 6,
-    exitItem: true,
+    exit: "item",
     choice: "B",
     flag: "O",
     draw: [
@@ -153,7 +178,16 @@ export const REACC_LINES = [
   }),
   // the options that do not touch B come first: loading a load reuses B for the end point of a distributed one
   "If B=0:Then Stop:IfEnd",
-  "If B=5:Then 0→F:0→G:0→H:0→I:0→J:0→K:0→E:0→List 21[1]:IfEnd",
+  "If B=5:Then",
+  ...menuLines({
+    count: 2,
+    exit: 1,
+    choice: "N",
+    flag: "O",
+    draw: ['Locate 1,1,"BORRAR TODO?"', 'Locate 3,2,"1 NO"', 'Locate 3,3,"2 SI, BORRAR TODO"'],
+  }),
+  "If N=2:Then 0→F:0→G:0→H:0→I:0→J:0→K:0→E:0→List 21[1]:IfEnd",
+  "IfEnd",
   "If B=3:Then",
   "ClrText",
   'Locate 1,1,"REACCIONES EN A"',
@@ -217,7 +251,17 @@ export const REACC_LINES = [
   "IfEnd",
   "IfEnd",
   "Next",
-  '"BORRAR CARGA N (0=NO)"?→W',
+  ...menuLines({
+    count: 2,
+    exit: 1,
+    choice: "N",
+    flag: "O",
+    draw: ['Locate 1,1,"CARGAS"', 'Locate 3,2,"1 VOLVER AL MENU"', 'Locate 3,3,"2 BORRAR UNA CARGA"'],
+  }),
+  "0→W",
+  "If N=2:Then",
+  '"CARGA N A BORRAR"?→W',
+  "IfEnd",
   "If W>0:Then",
   "If W>E:Then E→W:IfEnd",
   "If W<E:Then",
@@ -257,9 +301,13 @@ export const REACC_LINES = [
   "If N>M:Then M→N:IfEnd",
   "For 1→C To N",
   "0→P:0→Q:0→R:0→U:0→V:0→W:0→X:0→Y:0→Z:1→L",
-  '"CARGA"',
-  "E+1◢",
-  '"1 PUNT 2 DIST 3 MOM"?→T',
+  ...menuLines({
+    count: 3,
+    choice: "T",
+    flag: "D",
+    key: "A",
+    draw: ['Locate 1,1,"CARGA":Locate 7,1,E+1', 'Locate 3,2,"1 PUNTUAL"', 'Locate 3,3,"2 DISTRIBUIDA"', 'Locate 3,4,"3 MOMENTO"'],
+  }),
   "If T=1",
   'Then "X"?→X:"Y"?→Y:"Z"?→Z',
   '"FX"?→U:"FY"?→V:"FZ"?→W',
@@ -294,7 +342,17 @@ export const REACC_LINES = [
   'Locate 1,3,"MY":Locate 4,3,Q',
   'Locate 1,4,"MZ":Locate 4,4,R',
   "IfEnd",
-  '"OK? 1=SI 0=REPETIR"?→O',
+  ...menuLines({
+    count: 2,
+    exit: 2,
+    choice: "O",
+    flag: "D",
+    key: "A",
+    row0: 6,
+    clear: false,
+    draw: ['Locate 3,6,"1 OK, AGREGAR"', 'Locate 3,7,"2 REPETIR"'],
+  }),
+  "If O=2:Then 0→O:IfEnd",
   "If O=0:Then C–1→C:IfEnd",
   "If Abs (O)>0:Then",
   "F+U→F:G+V→G:H+W→H",
@@ -794,7 +852,7 @@ export const RETIC_LINES = [
   "While 1=1",
   ...menuLines({
     count: 6,
-    exitItem: false,
+    exit: "zero",
     choice: "O",
     flag: "Y",
     draw: [
@@ -810,8 +868,19 @@ export const RETIC_LINES = [
   "If O=0:Then Stop:IfEnd",
   // 5: clear the loads
   "If O=5:Then",
+  ...menuLines({
+    count: 2,
+    exit: 1,
+    choice: "X",
+    flag: "Z",
+    sel: "S",
+    key: "M",
+    draw: ['Locate 1,1,"BORRAR CARGAS?"', 'Locate 3,2,"1 NO"', 'Locate 3,3,"2 SI, BORRAR CARGAS"'],
+  }),
+  "If X=2:Then",
   "{0,0,0,0,0,0}→List 5",
   "{0,0,0,0,0,0}→List 6",
+  "IfEnd",
   "IfEnd",
   // 3: supports
   "If O=3:Then",
@@ -825,9 +894,15 @@ export const RETIC_LINES = [
   ...CLAMP("P"),
   '"NUDO RODILLO"?→Q',
   ...CLAMP("Q"),
-  '"REAC ROD 1=V 2=H"?→D',
-  "If D>2:Then 1→D:IfEnd",
-  "If D<1:Then 1→D:IfEnd",
+  ...menuLines({
+    count: 2,
+    exit: 1,
+    choice: "D",
+    flag: "Z",
+    sel: "S",
+    key: "M",
+    draw: ['Locate 1,1,"REACCION DEL RODILLO"', 'Locate 3,2,"1 VERTICAL"', 'Locate 3,3,"2 HORIZONTAL"'],
+  }),
   "IfEnd",
   "IfEnd",
   // 1: nodes
@@ -935,7 +1010,18 @@ export const RETIC_LINES = [
   'Locate 1,1,"NUDO":Locate 6,1,X',
   'Locate 1,2,"FX":Locate 4,2,U',
   'Locate 1,3,"FY":Locate 4,3,V',
-  '"OK? 1=SI 0=REPETIR"?→Y',
+  ...menuLines({
+    count: 2,
+    exit: 2,
+    choice: "Y",
+    flag: "Z",
+    sel: "S",
+    key: "M",
+    row0: 6,
+    clear: false,
+    draw: ['Locate 3,6,"1 OK, AGREGAR"', 'Locate 3,7,"2 REPETIR"'],
+  }),
+  "If Y=2:Then 0→Y:IfEnd",
   "If Y=0:Then K–1→K:IfEnd",
   "If Abs (Y)>0:Then",
   "List 5[X]+U→List 5[X]",
@@ -1096,8 +1182,8 @@ export const RETIC_LINES = [
 
 // ---- Program PERFILES: look up an IPN / IPB, or find the lightest one that meets a requirement ---------------------
 // The properties the course uses: A, weight, Sx, Sy, Ix, Iy.
-// 1 DATOS: series (1 IPN, 2 IPB) and the number (260 for IPB 260) → A (cm²), weight (kg/m), Sx, Sy (cm³), Ix, Iy (cm⁴).
-// 2 BUSCAR: series, which property (1 Sx, 2 Ix, 3 A, 4 Iy, 5 Sy) and the value needed → the lightest profile of the series
+// 1 VER: series (IPN / IPB), then ▲ ▼ scroll the profiles → A (cm²), weight (kg/m), Sx, Sy (cm³), Ix, Iy (cm⁴).
+// 2 BUSCAR: series, which property (Sx, Ix, A, Iy, Sy: a menu) and the value needed → the lightest profile of the series
 // whose property reaches it (the tables are in increasing size), shown with the same data and what it gives.
 // The 23 IPN and 24 IPB of the course's table (profiles.ts) are in lists 1-8: series, h, A, w, Ix, Sx, Iy, Sy.
 export const PERFILES_NAME = "PERFILES";
@@ -1130,74 +1216,97 @@ export const PERFILES_LINES = [
   "While 1=1",
   ...menuLines({
     count: 3,
-    exitItem: true,
+    exit: "item",
     choice: "O",
     flag: "Y",
+    sel: "R",
     draw: [
       'Locate 1,1,"PERFILES  IPN  IPB"',
-      'Locate 3,2,"1 DATOS DE PERFIL"',
+      'Locate 3,2,"1 VER PERFILES"',
       'Locate 3,3,"2 BUSCAR REQUISITO"',
       'Locate 3,4,"0 SALIR"',
     ],
   }),
   "If O=0:Then Stop:IfEnd",
-  "0→K:0→M",
-  "If O=1:Then",
-  '"SERIE 1=IPN 2=IPB"?→S',
-  "If S>2:Then 2→S:IfEnd",
-  "If S<1:Then 1→S:IfEnd",
-  '"NUMERO (EJ 260)"?→H',
-  `For 1→I To ${SEARCH_TABLE.length}`,
-  "If List 1[I]=S:Then",
-  "If List 2[I]=H:Then I→K:IfEnd",
-  "IfEnd",
-  "Next",
-  "If K=0:Then 1→M:IfEnd",
-  "IfEnd",
+  "0→K:0→M:0→G",
+  // the series, then the profile: scrolling (1) or the property and the value needed (2)
+  ...menuLines({
+    count: 2,
+    exit: 1,
+    choice: "S",
+    flag: "Y",
+    sel: "R",
+    draw: ['Locate 1,1,"SERIE"', 'Locate 3,2,"1 IPN"', 'Locate 3,3,"2 IPB"'],
+  }),
+  `If S=1:Then 1→L:${IPN_PROFILES.length}→H:IfEnd`,
+  `If S=2:Then ${IPN_PROFILES.length + 1}→L:${SEARCH_TABLE.length}→H:IfEnd`,
+  "If O=1:Then L→K:IfEnd",
   "If O=2:Then",
-  '"SERIE 1=IPN 2=IPB"?→S',
-  "If S>2:Then 2→S:IfEnd",
-  "If S<1:Then 1→S:IfEnd",
-  '"1SX 2IX 3A 4IY 5SY"?→Q',
-  "If Q>5:Then 5→Q:IfEnd",
-  "If Q<1:Then 1→Q:IfEnd",
+  ...menuLines({
+    count: 5,
+    exit: 1,
+    choice: "Q",
+    flag: "Y",
+    sel: "R",
+    draw: [
+      'Locate 1,1,"PROPIEDAD A BUSCAR"',
+      'Locate 3,2,"1 SX  (CM³)"',
+      'Locate 3,3,"2 IX  (CM⁴)"',
+      'Locate 3,4,"3 A   (CM²)"',
+      'Locate 3,5,"4 IY  (CM⁴)"',
+      'Locate 3,6,"5 SY  (CM³)"',
+    ],
+  }),
   '"VALOR NECESARIO"?→V',
-  `For 1→I To ${SEARCH_TABLE.length}`,
+  "For L→I To H",
   "If K=0:Then",
-  "If List 1[I]=S:Then",
   "List 6[I]→Y",
   "If Q=2:Then List 5[I]→Y:IfEnd",
   "If Q=3:Then List 3[I]→Y:IfEnd",
   "If Q=4:Then List 7[I]→Y:IfEnd",
   "If Q=5:Then List 8[I]→Y:IfEnd",
-  "If V≤Y:Then I→K:Y→Z:IfEnd",
-  "IfEnd",
+  "If V≤Y:Then I→K:I→G:Y→Z:IfEnd",
   "IfEnd",
   "Next",
   "If K=0:Then 2→M:IfEnd",
-  "IfEnd",
-  "If M=1:Then",
-  "ClrText",
-  'Locate 1,1,"NO EXISTE ESE PERFIL"',
-  ...PAUSE2,
   "IfEnd",
   "If M=2:Then",
   "ClrText",
   'Locate 1,1,"NINGUN PERFIL CUMPLE"',
   ...PAUSE2,
   "IfEnd",
+  // the profile, with ▲ ▼ to go to the next smaller / larger one of the series; EXE, EXIT or 0 go back to the menu
   "If K>0:Then",
+  "1→J",
+  "While J=1",
   "ClrText",
   'If S=1:Then Locate 1,1,"IPN":IfEnd',
   'If S=2:Then Locate 1,1,"IPB":IfEnd',
-  "Locate 5,1,List 2[K]",
+  'Locate 5,1,List 2[K]:Locate 13,1,"EXIT=MENU"',
   'Locate 1,2,"A":Locate 4,2,List 3[K]:Locate 11,2,"PESO":Locate 16,2,List 4[K]',
   'Locate 1,3,"SX":Locate 4,3,List 6[K]:Locate 11,3,"SY":Locate 16,3,List 8[K]',
   'Locate 1,4,"IX":Locate 4,4,List 5[K]:Locate 11,4,"IY":Locate 16,4,List 7[K]',
   'Locate 1,5,"A CM²  PESO KG/M"',
   'Locate 1,6,"S CM³  I CM⁴"',
-  'If O=2:Then Locate 1,7,"PIDE":Locate 6,7,V:Locate 12,7,"DA":Locate 15,7,Z:IfEnd',
-  ...PAUSE2,
+  "0→F",
+  "If K=G:Then 1→F:IfEnd",
+  'If F=1:Then Locate 1,7,"PIDE":Locate 6,7,V:Locate 12,7,"DA":Locate 15,7,Z:IfEnd',
+  'If F=0:Then Locate 1,7,"FLECHAS: OTRO PERFIL":IfEnd',
+  "While Getkey>0:WhileEnd",
+  "0→W",
+  "While W=0",
+  "Getkey→W",
+  "WhileEnd",
+  "If W=28:Then",
+  "If K>L:Then K–1→K:IfEnd",
+  "IfEnd",
+  "If W=37:Then",
+  "If K<H:Then K+1→K:IfEnd",
+  "IfEnd",
+  "If W=31:Then 0→J:IfEnd",
+  "If W=47:Then 0→J:IfEnd",
+  "If W=71:Then 0→J:IfEnd",
+  "WhileEnd",
   "IfEnd",
   "WhileEnd",
 ];

@@ -104,7 +104,7 @@ describe("Casio program REACC", () => {
   // the first prompt is 0 = NUEVA (start over) or 1 = SEGUIR (go on with the loads saved in the lists)
   const reacc = (inputs: number[], start = 0, mem: Mem = newMem()) => {
     const gfx = newGfx();
-    const out = runBasic(REACC_LINES, [start, ...inputs], gfx, mem);
+    const out = runBasic(REACC_LINES, [start === 0 ? 2 : 1, ...inputs], gfx, mem); // the first menu: 1 SEGUIR, 2 NUEVA
     return { gfx, out, rea: reacciones(screenOf(gfx, "REACCIONES EN A")), base: corte(screenOf(gfx, "CORTE EN BASE (PILAR)")) };
   };
   // menu: 1 AGREGAR CARGAS, 2 LISTAR CARGAS, 3 REACCIONES, 4 CORTE EN BASE, 5 BORRAR TODO, 0 SALIR; each load ends with 1 = OK
@@ -118,7 +118,9 @@ describe("Casio program REACC", () => {
     ]);
     expect(r.rea).toEqual([0, -300, 600, 900, -300, 0]);
     expect(r.base).toEqual([-600, -300, 0, -300, 900]); // N, QX, QY, MX, MY at the base of the column
-    expect(r.out).toEqual(["CARGA", 1, "CARGA", 2]); // the marker and the number of each load
+    // each load starts on a screen that says which one it is (CARGA 1, CARGA 2) with the kinds to choose from
+    const heads = r.gfx.screens.filter((sc) => sc[0]?.[2] === "CARGA" && sc.some((l) => l[2] === "1 PUNTUAL")).map((sc) => at(sc, 7, 1));
+    expect(heads).toEqual([1, 2]);
   });
 
   test("running REACC: column-3d-fixed-kg (q_y on the whole column + a point load at the top) = the solver's reactions", () => {
@@ -136,17 +138,18 @@ describe("Casio program REACC", () => {
   test("running REACC: a load can be typed again (0) without touching the others, and the number does not advance", () => {
     const r = reacc([
       1, 1,
-      1, 9, 9, 9, 9, 9, 9, 0, // a wrong point load → REPETIR
+      1, 9, 9, 9, 9, 9, 9, 2, // a wrong point load → 2 = REPETIR
       1, 0, 0, 3, 0, 300, 0, 1, // the right one
       3, 0,
     ]);
     expect(r.rea).toEqual([0, -300, 0, 900, 0, 0]);
-    expect(r.out).toEqual(["CARGA", 1, "CARGA", 1]); // the same load number twice
+    const heads = r.gfx.screens.filter((sc) => sc[0]?.[2] === "CARGA" && sc.some((l) => l[2] === "1 PUNTUAL")).map((sc) => at(sc, 7, 1));
+    expect(heads).toEqual([1, 1]); // the same load number twice
   });
 
   test("running REACC: the summary screen shows what the program understood (centre and length of a distributed load)", () => {
     const { gfx } = reacc([1, 1, 2, -1, 2, 0, 0, 3, 3, 0, 0, -200, 1, 0]);
-    const sc = [...gfx.screens].find((x) => x[0]?.[2] === "CARGA")!;
+    const sc = [...gfx.screens].find((x) => x[0]?.[2] === "CARGA" && at(x, 1, 2) === "X")!; // the summary, not the menu of kinds
     expect([at(sc, 3, 2), at(sc, 3, 3), at(sc, 3, 4)]).toEqual([0.5, 0, 3]); // X, Y, Z of the centre
     expect([at(sc, 14, 2), at(sc, 14, 3), at(sc, 14, 4)]).toEqual([0, 0, -600]); // the resultant: q × L
     expect(at(sc, 3, 5)).toBe(3); // L
@@ -162,8 +165,7 @@ describe("Casio program REACC", () => {
       2, -1, 2, 0, 0, 3, 3, 0, 0, -200, 1, // distributed: centre (0.5, 0, 3), resultant −600 along z
       3, 10, -20, 30, 1, // a moment
       ...pointLoad(1, 2, 3, 4, 5, 6),
-      2, 0, // LISTAR, no deletion
-      0,
+      2, 1, 0, // LISTAR → VOLVER AL MENU, then SALIR
     ]);
     const pages = gfx.screens.filter((sc) => sc[0]?.[2] === "N T  X     Y     Z");
     expect(pages).toHaveLength(2); // 3 loads and then the 4th
@@ -185,9 +187,9 @@ describe("Casio program REACC", () => {
       ...pointLoad(2, 0, 3, 100, 0, 0), // the one to delete
       ...pointLoad(0, 0, 3, 0, 300, 0),
       ...pointLoad(5, 5, 5, 7, 7, 7), // and another one after it
-      2, 1, // LISTAR → BORRAR CARGA 1
-      3, // the list again, now with two: 3 is beyond the end, so it deletes the last one (the 7s)
-      0, // the list once more, with one left: no more
+      2, 2, 1, // LISTAR → 2 BORRAR UNA CARGA → load 1
+      2, 3, // the list again, now with two: BORRAR UNA → 3 is beyond the end, so it deletes the last one (the 7s)
+      1, // the list once more, with one left: 1 VOLVER AL MENU
       3, 0,
     ]);
     const lists = gfx.screens.filter((sc) => sc[0]?.[2] === "N T  X     Y     Z");
@@ -233,7 +235,7 @@ describe("Casio program REACC", () => {
       1, 1, 1, 0, 0, 3, 0, 300, 0, 1,
       1, 1, 1, 0, 0, 3, 0, 300, 0, 1, // the same load again: two in
       3, // REACCIONES with both
-      5, // BORRAR TODO
+      5, 2, // BORRAR TODO → 2 SI
       3, 0, // REACCIONES again, SALIR
     ]);
     const counts = gfx.screens.filter((sc) => sc[0]?.[2] === "REACC  CARGAS").map((sc) => at(sc, 15, 1));
@@ -337,7 +339,7 @@ describe("Casio program REACC", () => {
   test("the program text asks for what the TypeScript uses and prints every result", () => {
     const text = REACC_LINES.join("\n");
     for (const v of ["F", "G", "H", "I", "J", "K"]) expect(text).toContain(`→${v}`);
-    expect(text.match(/◢/g)!.length).toBe(REACC_LINES.filter((l) => l.endsWith("◢")).length);
+    expect((text.match(/◢/g) ?? []).length).toBe(REACC_LINES.filter((l) => l.endsWith("◢")).length);
     expect(REACC_LINES.every((l) => l.length <= 120)).toBe(true); // lines the calculator's editor can wrap
   });
 });
@@ -747,7 +749,7 @@ describe("Casio program RETIC (bar forces of a truss of up to 9 bars)", () => {
   });
 });
 
-describe("Casio program PERFILES (look up an IPN / IPB, or find the lightest that meets a requirement)", () => {
+describe("Casio program PERFILES (scroll the IPN / IPB, or find the lightest that meets a requirement)", () => {
   type Screen = [number, number, number | string][];
   const at = (sc: Screen, col: number, row: number) => sc.find((l) => l[0] === col && l[1] === row)?.[2];
   const dataScreens = (gfx: ReturnType<typeof newGfx>) => gfx.screens.filter((sc) => at(sc, 1, 2) === "A");
@@ -756,6 +758,11 @@ describe("Casio program PERFILES (look up an IPN / IPB, or find the lightest tha
     runBasic(PERFILES_LINES, inputs, gfx);
     return gfx;
   };
+  const DOWN = 37;
+  const UP = 28;
+  const EXIT = 47;
+  // menu choices are number keys (1 VER / 2 BUSCAR; 1 IPN / 2 IPB; 1..5 the property) and the arrows are raw key codes
+  const ver = (series: 1 | 2, steps: number[]) => run([1, series, ...steps, EXIT, 0]);
 
   test("the table is the course's: 23 IPN and 24 IPB, in the 8 lists of what the course uses", () => {
     expect(SEARCH_TABLE).toHaveLength(47);
@@ -763,22 +770,31 @@ describe("Casio program PERFILES (look up an IPN / IPB, or find the lightest tha
     expect(PERFILES_LINES.filter((l) => l.includes("→List")).length).toBe(8);
   });
 
-  test.each([[1, 80], [1, 200], [1, 500], [2, 100], [2, 260], [2, 1000]] as const)("DATOS of series %i, %i: every value is the table's", (series, h) => {
+  test.each([[1, 80], [1, 200], [1, 500], [2, 100], [2, 260], [2, 1000]] as const)("VER series %i, scrolling to %i: every value is the table's", (series, h) => {
+    const same = SEARCH_TABLE.filter((p) => (series === 1 ? p.series === "IPN" : p.series === "IPB"));
     const p = findProfile(series, h)!;
-    const [sc] = dataScreens(run([1, series, h, 0]));
-    expect([at(sc, 1, 1), at(sc, 5, 1)]).toEqual([series === 1 ? "IPN" : "IPB", h]);
+    const gfx = ver(series, Array(same.indexOf(p)).fill(DOWN));
+    const sc = dataScreens(gfx).at(-1)!;
+    expect([at(sc, 1, 1), at(sc, 5, 1), at(sc, 13, 1)]).toEqual([series === 1 ? "IPN" : "IPB", h, "EXIT=MENU"]);
     // the six properties the course uses: A, weight, Sx, Sy, Ix, Iy
     expect([at(sc, 4, 2), at(sc, 16, 2)]).toEqual([p.A, p.w]);
     expect([at(sc, 4, 3), at(sc, 16, 3)]).toEqual([p.Sx, p.Sy]);
     expect([at(sc, 4, 4), at(sc, 16, 4)]).toEqual([p.Ix, p.Iy]);
     expect([at(sc, 1, 5), at(sc, 1, 6)]).toEqual(["A CM²  PESO KG/M", "S CM³  I CM⁴"]);
+    expect(at(sc, 1, 7)).toBe("FLECHAS: OTRO PERFIL");
+    expect(dataScreens(gfx)).toHaveLength(same.indexOf(p) + 1); // one screen per step
   });
 
-  test("DATOS of a profile that does not exist (or of the other series) says so; a series out of range is clamped", () => {
-    expect(run([1, 1, 123, 0]).screens.some((sc) => at(sc, 1, 1) === "NO EXISTE ESE PERFIL")).toBe(true);
-    expect(run([1, 1, 1000, 0]).screens.some((sc) => at(sc, 1, 1) === "NO EXISTE ESE PERFIL")).toBe(true); // no IPN 1000
-    const [sc] = dataScreens(run([1, 7, 260, 0])); // 7 → IPB
-    expect([at(sc, 1, 1), at(sc, 5, 1)]).toEqual(["IPB", 260]);
+  test("VER starts on the smallest profile of the series, ▲ and ▼ stop at the ends, and the two series do not mix", () => {
+    const ipn = SEARCH_TABLE.filter((p) => p.series === "IPN");
+    const ipb = SEARCH_TABLE.filter((p) => p.series === "IPB");
+    const first = dataScreens(ver(1, [UP, UP]));
+    expect(first.map((sc) => at(sc, 5, 1))).toEqual([ipn[0].h, ipn[0].h, ipn[0].h]); // ▲ at the first: stays
+    const last = dataScreens(ver(2, Array(40).fill(DOWN))).at(-1)!;
+    expect(at(last, 5, 1)).toBe(ipb[ipb.length - 1].h); // ▼ past the last: stays on IPB 1000
+    expect(at(dataScreens(ver(2, []))[0], 5, 1)).toBe(ipb[0].h); // IPB 100, not the IPN 80 before it in the table
+    // going back up
+    expect(dataScreens(ver(1, [DOWN, DOWN, UP])).map((sc) => at(sc, 5, 1))).toEqual([ipn[0].h, ipn[1].h, ipn[2].h, ipn[1].h]);
   });
 
   test.each([
@@ -793,23 +809,23 @@ describe("Casio program PERFILES (look up an IPN / IPB, or find the lightest tha
     [2, 5, 900],
   ] as const)("BUSCAR series %i, property %i, value %i: the lightest of the series that reaches it", (series, q, v) => {
     const r = lightestWith(series, q, v)!;
-    const [sc] = dataScreens(run([2, series, q, v, 0]));
+    const [sc] = dataScreens(run([2, series, q, v, EXIT, 0]));
     expect([at(sc, 1, 1), at(sc, 5, 1)]).toEqual([series === 1 ? "IPN" : "IPB", r.profile.h]);
     expect([at(sc, 1, 7), at(sc, 6, 7), at(sc, 12, 7), at(sc, 15, 7)]).toEqual(["PIDE", v, "DA", r.value]);
   });
 
-  test("BUSCAR: the previous profile does not reach it; nothing may reach it", () => {
+  test("BUSCAR: from the result ▼ goes to the next larger profile (the request line only shows on the one found); nothing may reach it", () => {
     const r = lightestWith(2, 1, 7500)!;
     const ipb = SEARCH_TABLE.filter((p) => p.series === "IPB");
     const prev = ipb[ipb.indexOf(r.profile) - 1];
     expect(prev.Sx).toBeLessThan(7500);
     expect(r.profile.name).toBe("IPB 800");
+    const screens = dataScreens(run([2, 2, 1, 7500, DOWN, UP, UP, EXIT, 0]));
+    expect(screens.map((sc) => at(sc, 5, 1))).toEqual([800, 900, 800, 700]);
+    expect(screens.map((sc) => at(sc, 1, 7))).toEqual(["PIDE", "FLECHAS: OTRO PERFIL", "PIDE", "FLECHAS: OTRO PERFIL"]);
     expect(lightestWith(2, 1, 1e9)).toBeNull();
     expect(run([2, 2, 1, 1e9, 0]).screens.some((sc) => at(sc, 1, 1) === "NINGUN PERFIL CUMPLE")).toBe(true);
     expect(dataScreens(run([2, 2, 1, 1e9, 0]))).toHaveLength(0);
-    // a property out of range is clamped to the last one (Sy)
-    const [sc] = dataScreens(run([2, 2, 9, 900, 0]));
-    expect(at(sc, 5, 1)).toBe(lightestWith(2, 5, 900)!.profile.h);
   });
 
   test("the lists of the program are the table's columns", () => {
@@ -840,22 +856,23 @@ describe("Casio menus with the arrow keys (▲ 28, ▼ 37, EXE 31, EXIT 47, numb
   });
 
   test("REACC: ▼ ▼ EXE chooses REACCIONES (the marker follows), EXIT leaves", () => {
-    const gfx = run(REACC_LINES, [0], [37, 37, 31, 47]);
-    expect(rows(gfx).slice(0, 3)).toEqual([2, 3, 4]); // starts on item 1 and goes down twice
+    const gfx = run(REACC_LINES, [], [62, 37, 37, 31, 47]); // 62 = the 2 key: NUEVA in the first menu
+    expect(rows(gfx).slice(1, 4)).toEqual([2, 3, 4]); // (the first menu drew its own marker) starts on item 1 and goes down twice
     expect(gfx.screens.some((sc) => sc[0]?.[2] === "REACCIONES EN A")).toBe(true);
   });
 
   test("REACC: ▲ from the first item wraps to the last (0 SALIR); ▼ from the last wraps to the first", () => {
-    const up = run(REACC_LINES, [0], [28, 31]); // S = 6 = SALIR: the program stops
-    expect(rows(up)).toEqual([2, 7]);
+    const up = run(REACC_LINES, [], [62, 28, 31]); // S = 6 = SALIR: the program stops
+    expect(rows(up).slice(1)).toEqual([2, 7]);
     expect(titles(up, "REACC  CARGAS")).toBe(1);
-    const down = run(REACC_LINES, [0, 1, 1, 0, 0, 0, 0, 0, -1, 1], [37, 37, 37, 37, 37, 37, 31, 47]); // 6 × ▼ = back to item 1 → AGREGAR
-    expect(rows(down).slice(0, 7)).toEqual([2, 3, 4, 5, 6, 7, 2]);
+    // 6 × ▼ = back to item 1 → AGREGAR; the kind (1 PUNTUAL) and the OK come from the keys too
+    const down = run(REACC_LINES, [1, 0, 0, 0, 0, 0, -1], [62, 37, 37, 37, 37, 37, 37, 31, 72, 72, 47]);
+    expect(rows(down).slice(1, 8)).toEqual([2, 3, 4, 5, 6, 7, 2]);
     expect(down.screens.some((sc) => sc[0]?.[2] === "CARGA")).toBe(true); // the summary of the load
   });
 
   test("REACC: a number key chooses at once, and 0 leaves", () => {
-    const gfx = run(REACC_LINES, [0], [52, 71]); // 3 = REACCIONES, then 0
+    const gfx = run(REACC_LINES, [], [62, 52, 71]); // NUEVA, then 3 = REACCIONES, then 0
     expect(gfx.screens.some((sc) => sc[0]?.[2] === "REACCIONES EN A")).toBe(true);
     expect(titles(gfx, "REACC  CARGAS")).toBe(2);
   });
@@ -869,15 +886,16 @@ describe("Casio menus with the arrow keys (▲ 28, ▼ 37, EXE 31, EXIT 47, numb
     expect(g2.screens.some((sc) => sc[0]?.[2] === "FALTAN DATOS")).toBe(true);
   });
 
-  test("PERFILES: ▼ EXE is BUSCAR REQUISITO, ▼ ▼ EXE is SALIR", () => {
-    const g = run(PERFILES_LINES, [2, 1, 100], [37, 31, 47]);
+  test("PERFILES: ▼ EXE is BUSCAR REQUISITO, then series, property and the value; ▼ ▼ EXE is SALIR", () => {
+    const g = run(PERFILES_LINES, [100], [37, 31, 62, 72, 37, 47, 71]); // BUSCAR, IPB, Sx, value 100 → IPB 120, ▼ → IPB 140, EXIT, 0
     expect(rows(g).slice(0, 2)).toEqual([2, 3]);
-    expect(g.screens.some((sc) => sc.some((l) => l[1] === 2 && l[2] === "A"))).toBe(true); // the data screen of the profile found
+    const data = g.screens.filter((sc) => sc.some((l) => l[1] === 2 && l[2] === "A"));
+    expect(data.map((sc) => sc.find((l) => l[0] === 5 && l[1] === 1)![2])).toEqual([120, 140]);
     const exit = run(PERFILES_LINES, [], [37, 37, 31]);
     expect(rows(exit)).toEqual([2, 3, 4]);
   });
 
   test("the menus never draw outside the 21 × 7 screen (the interpreter would throw) and the key loop waits for a key", () => {
-    expect(() => run(REACC_LINES, [0], [])).toThrow(/no key left/);
+    expect(() => run(REACC_LINES, [], [])).toThrow(/no key left/);
   });
 });
