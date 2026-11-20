@@ -109,6 +109,13 @@ describe("Casio program REACC", () => {
     }
   });
 
+  test("running PERFIL: σ_adm typed as 0 means the default, 1400", () => {
+    const withDefault = runBasic(PERFIL_LINES, [-600, -300, 900, 0, 2]);
+    expect(withDefault).toEqual(runBasic(PERFIL_LINES, [-600, -300, 900, 1400, 2]));
+    expect(withDefault[1]).toBe(120); // face 2 passes already with IPB 120 at 1400 (1208.7)
+    expect(runBasic(PERFIL_LINES, [-600, -300, 900, 1000, 2])).not.toEqual(withDefault); // another σ_adm is respected
+  });
+
   test("the program text asks for what the TypeScript uses and prints every result", () => {
     const text = REACC_LINES.join("\n");
     for (const v of ["F", "G", "H", "I", "J", "K"]) expect(text).toContain(`→${v}`);

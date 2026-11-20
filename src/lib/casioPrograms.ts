@@ -131,7 +131,7 @@ export const REACC_LINES = [
 
 // ---- Program PERFIL: which IPB goes in the column for a given N, Mx, My --------------------------------------------
 // The IPB 100…600 of the course's table are stored in the program itself (lists 1-5), so nothing has to be typed
-// into the list editor. It tries them from the lightest and stops at the first with max |σ| ≤ σ_adm; face 1 / 2 as in
+// into the list editor. It tries them from the lightest and stops at the first with max |σ| ≤ σ_adm (typing 0 for σ_adm means 1400); face 1 / 2 as in
 // the guide (x against the strong axis / profile turned). Units: kg, kg·m, kg/cm². `chooseIPB` is the same arithmetic.
 import { IPB_PROFILES } from "./profiles";
 
@@ -170,7 +170,8 @@ export const PERFIL_LINES = [
   '"N KG (TRAC POS)"?→N',
   '"MX (KG M)"?→P',
   '"MY (KG M)"?→Q',
-  '"SIGMA ADM"?→S',
+  '"SIGMA ADM (0=1400)"?→S',
+  "If S=0:Then 1400→S:IfEnd",
   '"CARA (1 O 2)"?→T',
   `For 1→I To ${PERFIL_TABLE.length}`,
   "List 1[I]÷20→D:List 2[I]÷20→E",
