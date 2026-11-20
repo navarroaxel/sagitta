@@ -22,6 +22,10 @@ import {
   PANDEO_LINES,
   RETIC_LINES,
   RETIC_MAX_BARS,
+  PERFILES_LINES,
+  SEARCH_TABLE,
+  findProfile,
+  lightestWith,
   TRACCION_LINES,
   type ProgramLoad,
 } from "../casioPrograms";
@@ -703,5 +707,75 @@ describe("Casio program RETIC (bar forces of a truss of up to 9 bars)", () => {
     );
     const sc = first(gfx, "BARRA  N KG    T/C")[0];
     m.members.forEach((_, e) => expect(at(sc, 4, e + 2) as number).toBeCloseTo(Math.abs(solved.stations[e][0].N) < 1e-3 ? 0 : solved.stations[e][0].N, 2));
+  });
+});
+
+describe("Casio program PERFILES (look up an IPN / IPB, or find the lightest that meets a requirement)", () => {
+  type Screen = [number, number, number | string][];
+  const at = (sc: Screen, col: number, row: number) => sc.find((l) => l[0] === col && l[1] === row)?.[2];
+  const dataScreens = (gfx: ReturnType<typeof newGfx>) => gfx.screens.filter((sc) => at(sc, 1, 2) === "H");
+  const run = (inputs: number[]) => {
+    const gfx = newGfx();
+    runBasic(PERFILES_LINES, inputs, gfx);
+    return gfx;
+  };
+
+  test("the table is the course's: 23 IPN and 24 IPB in lists of the same length", () => {
+    expect(SEARCH_TABLE).toHaveLength(47);
+    expect(SEARCH_TABLE.filter((p) => p.series === "IPN")).toHaveLength(23);
+    expect(PERFILES_LINES.filter((l) => l.includes("→List")).length).toBe(11);
+  });
+
+  test.each([[1, 80], [1, 200], [1, 500], [2, 100], [2, 260], [2, 1000]] as const)("DATOS of series %i, %i: every value is the table's", (series, h) => {
+    const p = findProfile(series, h)!;
+    const [sc] = dataScreens(run([1, series, h, 0]));
+    expect([at(sc, 1, 1), at(sc, 5, 1), at(sc, 14, 1)]).toEqual([series === 1 ? "IPN" : "IPB", h, p.w]);
+    expect([at(sc, 3, 2), at(sc, 13, 2), at(sc, 4, 3), at(sc, 14, 3), at(sc, 3, 4)]).toEqual([p.h, p.bf, p.tf, p.tw, p.A]);
+    expect([at(sc, 4, 5), at(sc, 15, 5), at(sc, 4, 6), at(sc, 15, 6)]).toEqual([p.Ix, p.Sx, p.Iy, p.Sy]);
+    expect(at(sc, 1, 8)).toBe("MM CM2 CM3 CM4 KG/M");
+  });
+
+  test("DATOS of a profile that does not exist (or of the other series) says so; a series out of range is clamped", () => {
+    expect(run([1, 1, 123, 0]).screens.some((sc) => at(sc, 1, 1) === "NO EXISTE ESE PERFIL")).toBe(true);
+    expect(run([1, 1, 1000, 0]).screens.some((sc) => at(sc, 1, 1) === "NO EXISTE ESE PERFIL")).toBe(true); // no IPN 1000
+    const [sc] = dataScreens(run([1, 7, 260, 0])); // 7 → IPB
+    expect([at(sc, 1, 1), at(sc, 5, 1)]).toEqual(["IPB", 260]);
+  });
+
+  test.each([
+    [2, 1, 7500], // Sx ≥ 7 500 cm³: IPB 800
+    [2, 1, 1150], // exactly the Sx of IPB 260
+    [2, 1, 1151],
+    [1, 1, 100],
+    [2, 2, 25000],
+    [1, 3, 33],
+    [2, 4, 5000],
+    [1, 5, 30],
+    [2, 5, 900],
+  ] as const)("BUSCAR series %i, property %i, value %i: the lightest of the series that reaches it", (series, q, v) => {
+    const r = lightestWith(series, q, v)!;
+    const [sc] = dataScreens(run([2, series, q, v, 0]));
+    expect([at(sc, 1, 1), at(sc, 5, 1)]).toEqual([series === 1 ? "IPN" : "IPB", r.profile.h]);
+    expect([at(sc, 1, 7), at(sc, 6, 7), at(sc, 12, 7), at(sc, 15, 7)]).toEqual(["PIDE", v, "DA", r.value]);
+  });
+
+  test("BUSCAR: the previous profile does not reach it; nothing may reach it", () => {
+    const r = lightestWith(2, 1, 7500)!;
+    const ipb = SEARCH_TABLE.filter((p) => p.series === "IPB");
+    const prev = ipb[ipb.indexOf(r.profile) - 1];
+    expect(prev.Sx).toBeLessThan(7500);
+    expect(r.profile.name).toBe("IPB 800");
+    expect(lightestWith(2, 1, 1e9)).toBeNull();
+    expect(run([2, 2, 1, 1e9, 0]).screens.some((sc) => at(sc, 1, 1) === "NINGUN PERFIL CUMPLE")).toBe(true);
+    expect(dataScreens(run([2, 2, 1, 1e9, 0]))).toHaveLength(0);
+    // a property out of range is clamped to the last one (Sy)
+    const [sc] = dataScreens(run([2, 2, 9, 900, 0]));
+    expect(at(sc, 5, 1)).toBe(lightestWith(2, 5, 900)!.profile.h);
+  });
+
+  test("the lists of the program are the table's columns", () => {
+    const lines = PERFILES_LINES.filter((l) => l.includes("→List"));
+    expect(lines[1]).toBe(`{${SEARCH_TABLE.map((p) => p.h).join(",")}}→List 2`);
+    expect(lines[8]).toBe(`{${SEARCH_TABLE.map((p) => p.Sx).join(",")}}→List 9`);
   });
 });

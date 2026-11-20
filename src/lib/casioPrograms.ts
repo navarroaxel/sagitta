@@ -255,7 +255,7 @@ export const REACC_LINES = [
 // The IPB 100…600 of the course's table are stored in the program itself (lists 1-5), so nothing has to be typed
 // into the list editor. It tries them from the lightest and stops at the first with max |σ| ≤ σ_adm (typing 0 for σ_adm means 1400); it ends by drawing the face in XY, the face is chosen from the moments as in
 // the guide: the strong axis against the larger moment (face 1 if |Mx| ≥ |My|, face 2 otherwise). Units: kg, kg·m, kg/cm². `chooseIPB` is the same arithmetic.
-import { IPB_PROFILES } from "./profiles";
+import { IPB_PROFILES, IPN_PROFILES } from "./profiles";
 import { guideSection, neutralIntercepts, plane } from "./sectionGuide";
 
 export const PERFIL_NAME = "PERFIL";
@@ -1012,6 +1012,111 @@ export const RETIC_LINES = [
   ...PAUSE,
   "IfEnd",
   "IfEnd",
+  "IfEnd",
+  "WhileEnd",
+];
+
+// ---- Program PERFILES: look up an IPN / IPB, or find the lightest one that meets a requirement ---------------------
+// 1 DATOS: series (1 IPN, 2 IPB) and the number (260 for IPB 260) → h, b, tf, tw (mm), A (cm²), w (kg/m), Ix, Sx, Iy, Sy.
+// 2 BUSCAR: series, which property (1 Sx, 2 Ix, 3 A, 4 Iy, 5 Sy) and the value needed → the lightest profile of the series
+// whose property reaches it (the tables are in increasing size), shown with the same data and what it gives.
+// The 23 IPN and 24 IPB of the course's table (profiles.ts) are in lists 1-11: series, h, bf, tf, tw, A, w, Ix, Sx, Iy, Sy.
+export const PERFILES_NAME = "PERFILES";
+export const SEARCH_TABLE = [...IPN_PROFILES, ...IPB_PROFILES];
+
+export type SearchProp = 1 | 2 | 3 | 4 | 5; // Sx, Ix, A, Iy, Sy
+const propOf = (p: (typeof SEARCH_TABLE)[number], q: SearchProp) => [p.Sx, p.Ix, p.A, p.Iy, p.Sy][q - 1];
+
+export function findProfile(series: 1 | 2, h: number) {
+  return SEARCH_TABLE.find((p) => (series === 1 ? p.series === "IPN" : p.series === "IPB") && p.h === h) ?? null;
+}
+
+export function lightestWith(series: 1 | 2, q: SearchProp, value: number) {
+  const p = SEARCH_TABLE.find((r) => (series === 1 ? r.series === "IPN" : r.series === "IPB") && value <= propOf(r, q));
+  return p ? { profile: p, value: propOf(p, q) } : null;
+}
+
+const tableList = (n: number, f: (p: (typeof SEARCH_TABLE)[number]) => number) => `{${SEARCH_TABLE.map(f).join(",")}}→List ${n}`;
+const PAUSE2 = ["While Getkey>0:WhileEnd", "While Getkey=0:WhileEnd"];
+
+export const PERFILES_LINES = [
+  tableList(1, (p) => (p.series === "IPN" ? 1 : 2)),
+  tableList(2, (p) => p.h),
+  tableList(3, (p) => p.bf),
+  tableList(4, (p) => p.tf),
+  tableList(5, (p) => p.tw),
+  tableList(6, (p) => p.A),
+  tableList(7, (p) => p.w),
+  tableList(8, (p) => p.Ix),
+  tableList(9, (p) => p.Sx),
+  tableList(10, (p) => p.Iy),
+  tableList(11, (p) => p.Sy),
+  "While 1=1",
+  "ClrText",
+  'Locate 1,1,"PERFILES  IPN  IPB"',
+  'Locate 1,2,"1 DATOS DE UN PERFIL"',
+  'Locate 1,3,"2 BUSCAR POR REQUISITO"',
+  'Locate 1,5,"0 SALIR"',
+  '"OPCION"?→O',
+  "If O=0:Then Stop:IfEnd",
+  "0→K:0→M",
+  "If O=1:Then",
+  '"SERIE 1=IPN 2=IPB"?→S',
+  "If S>2:Then 2→S:IfEnd",
+  "If S<1:Then 1→S:IfEnd",
+  '"NUMERO (EJ 260)"?→H',
+  `For 1→I To ${SEARCH_TABLE.length}`,
+  "If List 1[I]=S:Then",
+  "If List 2[I]=H:Then I→K:IfEnd",
+  "IfEnd",
+  "Next",
+  "If K=0:Then 1→M:IfEnd",
+  "IfEnd",
+  "If O=2:Then",
+  '"SERIE 1=IPN 2=IPB"?→S',
+  "If S>2:Then 2→S:IfEnd",
+  "If S<1:Then 1→S:IfEnd",
+  '"1SX 2IX 3A 4IY 5SY"?→Q',
+  "If Q>5:Then 5→Q:IfEnd",
+  "If Q<1:Then 1→Q:IfEnd",
+  '"VALOR NECESARIO"?→V',
+  `For 1→I To ${SEARCH_TABLE.length}`,
+  "If K=0:Then",
+  "If List 1[I]=S:Then",
+  "List 9[I]→Y",
+  "If Q=2:Then List 8[I]→Y:IfEnd",
+  "If Q=3:Then List 6[I]→Y:IfEnd",
+  "If Q=4:Then List 10[I]→Y:IfEnd",
+  "If Q=5:Then List 11[I]→Y:IfEnd",
+  "If V≤Y:Then I→K:Y→Z:IfEnd",
+  "IfEnd",
+  "IfEnd",
+  "Next",
+  "If K=0:Then 2→M:IfEnd",
+  "IfEnd",
+  "If M=1:Then",
+  "ClrText",
+  'Locate 1,1,"NO EXISTE ESE PERFIL"',
+  ...PAUSE2,
+  "IfEnd",
+  "If M=2:Then",
+  "ClrText",
+  'Locate 1,1,"NINGUN PERFIL CUMPLE"',
+  ...PAUSE2,
+  "IfEnd",
+  "If K>0:Then",
+  "ClrText",
+  'If S=1:Then Locate 1,1,"IPN":IfEnd',
+  'If S=2:Then Locate 1,1,"IPB":IfEnd',
+  'Locate 5,1,List 2[K]:Locate 12,1,"W":Locate 14,1,List 7[K]',
+  'Locate 1,2,"H":Locate 3,2,List 2[K]:Locate 11,2,"B":Locate 13,2,List 3[K]',
+  'Locate 1,3,"TF":Locate 4,3,List 4[K]:Locate 11,3,"TW":Locate 14,3,List 5[K]',
+  'Locate 1,4,"A":Locate 3,4,List 6[K]',
+  'Locate 1,5,"IX":Locate 4,5,List 8[K]:Locate 12,5,"SX":Locate 15,5,List 9[K]',
+  'Locate 1,6,"IY":Locate 4,6,List 10[K]:Locate 12,6,"SY":Locate 15,6,List 11[K]',
+  'If O=2:Then Locate 1,7,"PIDE":Locate 6,7,V:Locate 12,7,"DA":Locate 15,7,Z:IfEnd',
+  'Locate 1,8,"MM CM2 CM3 CM4 KG/M"',
+  ...PAUSE2,
   "IfEnd",
   "WhileEnd",
 ];
