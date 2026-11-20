@@ -40,7 +40,13 @@ const splitTop = (line: string, sep: string): string[] => {
   return parts;
 };
 
-export function runBasic(lines: string[], inputs: number[], gfx: Gfx = newGfx(), mem: Mem = newMem()): Out[] {
+// Keys the menus read with `Getkey→W`: the number keys' codes as in the manual's Getkey chart (0 1 2 … 9).
+const DIGIT_KEY = [71, 72, 62, 52, 73, 63, 53, 74, 64, 54];
+
+// `keys`: key codes for the `Getkey→V` of the menus (arrows 28 37, EXE 31, EXIT 47…). Without it a menu takes its choice
+// from `inputs` — where the `?` of the old numeric menu was — as the number key of that item (so a sequence like
+// [..., 3, ...] means "press 3").
+export function runBasic(lines: string[], inputs: number[], gfx: Gfx = newGfx(), mem: Mem = newMem(), keys?: number[]): Out[] {
   const { v, L } = mem;
   const out: Out[] = [];
   const input = [...inputs];
@@ -167,6 +173,13 @@ export function runBasic(lines: string[], inputs: number[], gfx: Gfx = newGfx(),
         pc++;
         continue;
       }
+      if (/^Getkey→[A-Z]$/.test(s)) {
+        const k = keys ? keys.shift() : ((n) => (n === undefined ? undefined : (DIGIT_KEY[n] ?? n)))(input.shift());
+        if (k === undefined) throw new Error("no key left for Getkey");
+        v[s[s.length - 1]] = k;
+        pc++;
+        continue;
+      }
       const m = /^(.*)→(List (\d+)|[A-Z])$/.exec(s);
       if (!m) {
         out.push(expr(s)); // a bare expression at the end of the program is displayed
@@ -183,5 +196,6 @@ export function runBasic(lines: string[], inputs: number[], gfx: Gfx = newGfx(),
     }
   }
   if (input.length) throw new Error(`unused inputs: ${input.join(",")}`);
+  if (keys?.length) throw new Error(`unused keys: ${keys.join(",")}`);
   return out;
 }

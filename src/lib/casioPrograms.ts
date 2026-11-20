@@ -4,6 +4,40 @@
 // Statically determinate (one fixed support): the reactions are minus the sum of the loads and of their moments
 // about A, M = r × F (the same formula as examples/t-frame-3d-fixed-kg.svg). Units: kg, m, kg·m. Presentation only.
 
+// An interactive menu: ▲ (28) and ▼ (37) move a > marker, EXE (31) chooses, a number key chooses that item at once and
+// 0 (71) or EXIT (47) leaves. Key codes: the fx-9860GIII manual's Getkey chart (cap. 8). `count` items on lines 2..count+1
+// (the text screen has 7 lines: up to 6); with `exitItem` the last one is "0 SALIR" and chooses 0. The choice ends in
+// `choice` (1..n, or 0 for exit); `flag` is a free letter used as the loop's flag; S is the selection and W the key.
+const DIGIT_KEY = [71, 72, 62, 52, 73, 63, 53, 74, 64, 54]; // 0 1 2 3 4 5 6 7 8 9
+function menuLines(o: { count: number; exitItem: boolean; choice: string; flag: string; draw: string[] }): string[] {
+  const items = o.exitItem ? o.count - 1 : o.count;
+  const exit = o.exitItem ? o.count : 0;
+  return [
+    `1→S:1→${o.flag}`,
+    "ClrText",
+    ...o.draw,
+    `While ${o.flag}=1`,
+    Array.from({ length: o.count }, (_, k) => `Locate 1,${k + 2}," "`).join(":"),
+    'Locate 1,S+1,">"',
+    "While Getkey>0:WhileEnd",
+    "0→W",
+    "While W=0",
+    "Getkey→W",
+    "WhileEnd",
+    "If W=28:Then S–1→S:IfEnd",
+    "If W=37:Then S+1→S:IfEnd",
+    `If S<1:Then ${o.count}→S:IfEnd`,
+    `If S>${o.count}:Then 1→S:IfEnd`,
+    `If W=31:Then 0→${o.flag}:IfEnd`,
+    ...Array.from({ length: items }, (_, k) => `If W=${DIGIT_KEY[k + 1]}:Then ${k + 1}→S:0→${o.flag}:IfEnd`),
+    `If W=71:Then ${exit}→S:0→${o.flag}:IfEnd`,
+    `If W=47:Then ${exit}→S:0→${o.flag}:IfEnd`,
+    "WhileEnd",
+    `S→${o.choice}`,
+    ...(o.exitItem ? [`If S=${o.count}:Then 0→${o.choice}:IfEnd`] : []),
+  ];
+}
+
 export interface ProgramLoad {
   x: number; // point of application measured from A, m (a distributed load: the centre of its span)
   y: number;
@@ -102,15 +136,21 @@ export const REACC_LINES = [
   "IfEnd",
   
   "While 1=1",
-  "ClrText",
-  'Locate 1,1,"REACC  CARGAS":Locate 15,1,E',
-  'Locate 1,2,"1 AGREGAR CARGAS"',
-  'Locate 1,3,"2 LISTAR CARGAS"',
-  'Locate 1,4,"3 REACCIONES"',
-  'Locate 1,5,"4 CORTE EN BASE"',
-  'Locate 1,6,"5 BORRAR TODO"',
-  'Locate 1,7,"0 SALIR"',
-  '"OPCION"?→B',
+  ...menuLines({
+    count: 6,
+    exitItem: true,
+    choice: "B",
+    flag: "O",
+    draw: [
+      'Locate 1,1,"REACC  CARGAS":Locate 15,1,E',
+      'Locate 3,2,"1 AGREGAR CARGAS"',
+      'Locate 3,3,"2 LISTAR CARGAS"',
+      'Locate 3,4,"3 REACCIONES"',
+      'Locate 3,5,"4 CORTE EN BASE"',
+      'Locate 3,6,"5 BORRAR TODO"',
+      'Locate 3,7,"0 SALIR"',
+    ],
+  }),
   // the options that do not touch B come first: loading a load reuses B for the end point of a distributed one
   "If B=0:Then Stop:IfEnd",
   "If B=5:Then 0→F:0→G:0→H:0→I:0→J:0→K:0→E:0→List 21[1]:IfEnd",
@@ -752,15 +792,21 @@ export const RETIC_LINES = [
   "{0,0,0,0,0,0}→List 6",
   "0→N:0→P:0→Q:1→D",
   "While 1=1",
-  "ClrText",
-  'Locate 1,1,"RETIC N=":Locate 9,1,N:Locate 13,1,"0=SALIR"',
-  'Locate 1,2,"1 NUDOS"',
-  'Locate 1,3,"2 BARRAS"',
-  'Locate 1,4,"3 APOYOS"',
-  'Locate 1,5,"4 AGREGAR CARGAS"',
-  'Locate 1,6,"5 BORRAR CARGAS"',
-  'Locate 1,7,"6 RESOLVER"',
-  '"OPCION"?→O',
+  ...menuLines({
+    count: 6,
+    exitItem: false,
+    choice: "O",
+    flag: "Y",
+    draw: [
+      'Locate 1,1,"RETIC N=":Locate 9,1,N:Locate 12,1,"EXIT=SALIR"',
+      'Locate 3,2,"1 NUDOS"',
+      'Locate 3,3,"2 BARRAS"',
+      'Locate 3,4,"3 APOYOS"',
+      'Locate 3,5,"4 AGREGAR CARGAS"',
+      'Locate 3,6,"5 BORRAR CARGAS"',
+      'Locate 3,7,"6 RESOLVER"',
+    ],
+  }),
   "If O=0:Then Stop:IfEnd",
   // 5: clear the loads
   "If O=5:Then",
@@ -1070,12 +1116,18 @@ export const PERFILES_LINES = [
   tableList(7, (p) => p.Iy),
   tableList(8, (p) => p.Sy),
   "While 1=1",
-  "ClrText",
-  'Locate 1,1,"PERFILES  IPN  IPB"',
-  'Locate 1,2,"1 DATOS DE UN PERFIL"',
-  'Locate 1,3,"2 BUSCAR REQUISITO"',
-  'Locate 1,5,"0 SALIR"',
-  '"OPCION"?→O',
+  ...menuLines({
+    count: 3,
+    exitItem: true,
+    choice: "O",
+    flag: "Y",
+    draw: [
+      'Locate 1,1,"PERFILES  IPN  IPB"',
+      'Locate 3,2,"1 DATOS DE PERFIL"',
+      'Locate 3,3,"2 BUSCAR REQUISITO"',
+      'Locate 3,4,"0 SALIR"',
+    ],
+  }),
   "If O=0:Then Stop:IfEnd",
   "0→K:0→M",
   "If O=1:Then",

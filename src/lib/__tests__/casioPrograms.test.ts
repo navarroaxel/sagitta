@@ -803,3 +803,65 @@ describe("Casio program PERFILES (look up an IPN / IPB, or find the lightest tha
     expect(lines[3]).toBe(`{${SEARCH_TABLE.map((p) => p.w).join(",")}}→List 4`);
   });
 });
+
+describe("Casio menus with the arrow keys (▲ 28, ▼ 37, EXE 31, EXIT 47, number keys, 0)", () => {
+  const rows = (gfx: ReturnType<typeof newGfx>) => gfx.locates.filter((l) => l[2] === ">").map((l) => l[1]); // where the > marker was drawn
+  const titles = (gfx: ReturnType<typeof newGfx>, t: string) => gfx.screens.filter((sc) => sc[0]?.[2] === t).length;
+  const run = (lines: string[], inputs: number[], keys: number[]) => {
+    const gfx = newGfx();
+    runBasic(lines, inputs, gfx, newMem(), keys);
+    return gfx;
+  };
+
+  test("the DIGIT keys used by the test interpreter are the manual's chart (0 = 71, 1 = 72, 2 = 62 ... 5 = 63)", () => {
+    // the generated menu tests each of those codes: 1..5 choose the item, 0 / EXIT leave
+    const text = REACC_LINES.join("\\n");
+    for (const [code, item] of [[72, 1], [62, 2], [52, 3], [73, 4], [63, 5]]) expect(text).toContain(`If W=${code}:Then ${item}→S:0→O:IfEnd`);
+    expect(text).toContain("If W=28:Then S–1→S:IfEnd");
+    expect(text).toContain("If W=37:Then S+1→S:IfEnd");
+    expect(text).toContain("If W=31:Then 0→O:IfEnd");
+    expect(text).toContain("If W=47:Then 6→S:0→O:IfEnd");
+  });
+
+  test("REACC: ▼ ▼ EXE chooses REACCIONES (the marker follows), EXIT leaves", () => {
+    const gfx = run(REACC_LINES, [0], [37, 37, 31, 47]);
+    expect(rows(gfx).slice(0, 3)).toEqual([2, 3, 4]); // starts on item 1 and goes down twice
+    expect(gfx.screens.some((sc) => sc[0]?.[2] === "REACCIONES EN A")).toBe(true);
+  });
+
+  test("REACC: ▲ from the first item wraps to the last (0 SALIR); ▼ from the last wraps to the first", () => {
+    const up = run(REACC_LINES, [0], [28, 31]); // S = 6 = SALIR: the program stops
+    expect(rows(up)).toEqual([2, 7]);
+    expect(titles(up, "REACC  CARGAS")).toBe(1);
+    const down = run(REACC_LINES, [0, 1, 1, 0, 0, 0, 0, 0, -1, 1], [37, 37, 37, 37, 37, 37, 31, 47]); // 6 × ▼ = back to item 1 → AGREGAR
+    expect(rows(down).slice(0, 7)).toEqual([2, 3, 4, 5, 6, 7, 2]);
+    expect(down.screens.some((sc) => sc[0]?.[2] === "CARGA")).toBe(true); // the summary of the load
+  });
+
+  test("REACC: a number key chooses at once, and 0 leaves", () => {
+    const gfx = run(REACC_LINES, [0], [52, 71]); // 3 = REACCIONES, then 0
+    expect(gfx.screens.some((sc) => sc[0]?.[2] === "REACCIONES EN A")).toBe(true);
+    expect(titles(gfx, "REACC  CARGAS")).toBe(2);
+  });
+
+  test("RETIC: six items on lines 2-7; ▼ EXE is BARRAS (it asks for the nodes first), ▲ from the first wraps to RESOLVER; EXIT or 0 leave", () => {
+    const g1 = run(RETIC_LINES, [], [37, 31, 47]);
+    expect(rows(g1).slice(0, 2)).toEqual([2, 3]);
+    expect(g1.screens.some((sc) => sc[0]?.[2] === "PRIMERO LOS NUDOS")).toBe(true);
+    const g2 = run(RETIC_LINES, [], [28, 31, 71]);
+    expect(rows(g2).slice(0, 2)).toEqual([2, 7]);
+    expect(g2.screens.some((sc) => sc[0]?.[2] === "FALTAN DATOS")).toBe(true);
+  });
+
+  test("PERFILES: ▼ EXE is BUSCAR REQUISITO, ▼ ▼ EXE is SALIR", () => {
+    const g = run(PERFILES_LINES, [2, 1, 100], [37, 31, 47]);
+    expect(rows(g).slice(0, 2)).toEqual([2, 3]);
+    expect(g.screens.some((sc) => sc.some((l) => l[1] === 2 && l[2] === "A"))).toBe(true); // the data screen of the profile found
+    const exit = run(PERFILES_LINES, [], [37, 37, 31]);
+    expect(rows(exit)).toEqual([2, 3, 4]);
+  });
+
+  test("the menus never draw outside the 21 × 7 screen (the interpreter would throw) and the key loop waits for a key", () => {
+    expect(() => run(REACC_LINES, [0], [])).toThrow(/no key left/);
+  });
+});

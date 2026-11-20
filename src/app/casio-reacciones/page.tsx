@@ -114,6 +114,7 @@ export default function CasioReaccionesPage() {
           <p className="mb-2 font-mono text-xs font-medium uppercase tracking-wider text-teal-700 dark:text-teal-400">{t("casio.kicker")}</p>
           <h2 className="mb-4 max-w-3xl text-4xl font-bold leading-tight tracking-tight text-balance">{t("casio.title")}</h2>
           <p className="mb-6 max-w-[62ch] text-lg leading-relaxed text-stone-600 dark:text-stone-300">{t("casio.lead")}</p>
+          <p className="mb-6 max-w-[62ch] text-[15px] leading-relaxed text-stone-600 dark:text-stone-300">{t("casio.menu")}</p>
 
           <section className={SECTION}>
             <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("casio.r.title")}</h3>
