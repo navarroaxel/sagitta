@@ -4,7 +4,7 @@ import { PRESETS } from "../presets";
 import { criticalCorner, guideCorners, guideOutline, guideSection, plane, sigmaAt } from "../sectionGuide";
 import { solveModel } from "../solve";
 import { runChecks, type CableCheck, type SizeCheck, type VerifyCheck } from "../checks";
-import { newGfx, runBasic } from "./casioBasic";
+import { newGfx, newMem, runBasic, type Mem } from "./casioBasic";
 import {
   baseForces, distributedLoad,
   chooseIPB,
@@ -101,9 +101,10 @@ describe("Casio program REACC", () => {
   };
   const reacciones = (sc: Screen | undefined) => [at(sc, 4, 2), at(sc, 4, 3), at(sc, 4, 4), at(sc, 14, 2), at(sc, 14, 3), at(sc, 14, 4)];
   const corte = (sc: Screen | undefined) => [2, 3, 4, 5, 6].map((r) => at(sc, 5, r));
-  const reacc = (inputs: number[]) => {
+  // the first prompt is 0 = NUEVA (start over) or 1 = SEGUIR (go on with the loads saved in the lists)
+  const reacc = (inputs: number[], start = 0, mem: Mem = newMem()) => {
     const gfx = newGfx();
-    const out = runBasic(REACC_LINES, inputs, gfx);
+    const out = runBasic(REACC_LINES, [start, ...inputs], gfx, mem);
     return { gfx, out, rea: reacciones(screenOf(gfx, "REACCIONES EN A")), base: corte(screenOf(gfx, "CORTE EN BASE (PILAR)")) };
   };
   // menu: 1 AGREGAR CARGAS, 2 REACCIONES, 3 CORTE EN BASE, 4 LISTAR CARGAS, 5 BORRAR TODO, 0 SALIR; each load ends with 1 = OK
@@ -205,6 +206,26 @@ describe("Casio program REACC", () => {
     const { gfx, rea } = reacc([1, 25, ...Array.from({ length: 20 }, () => one).flat(), 1, 2, 0]);
     expect(rea[2]).toBe(20); // FZ: twenty loads of −1 kg
     expect(gfx.screens.some((sc) => sc[0]?.[2] === "YA HAY 20 CARGAS")).toBe(true);
+  });
+
+  test("running REACC: the loads survive leaving the program, and even running other programs in between (SEGUIR)", () => {
+    const mem = newMem();
+    const first = reacc([1, 2, ...pointLoad(0, 0, 3, 0, 300, 0), 2, -1, 2, 0, 0, 3, 3, 0, 0, -200, 1, 2, 3, 0], 0, mem);
+    expect(first.rea).toEqual([0, -300, 600, 900, -300, 0]);
+    // other programs use the letters and the lists 1-9: PERFIL and TRACCION run in between
+    runBasic(PERFIL_LINES, [-600, -300, 900, 0], newGfx(), mem);
+    runBasic(TRACCION_LINES, [18229, 0], newGfx(), mem);
+    // back in REACC: SEGUIR keeps the two loads, the count in the title and the sums
+    const again = reacc([2, 3, 0], 1, mem);
+    expect(again.rea).toEqual(first.rea);
+    expect(again.base).toEqual(first.base);
+    expect(again.gfx.screens.find((sc) => sc[0]?.[2] === "REACC  CARGAS")!.find((l) => l[0] === 15)![2]).toBe(2);
+    // and the list shows them; adding one more on top of the saved ones works
+    const more = reacc([1, 1, ...pointLoad(1, 0, 0, 0, 0, 50), 2, 4, 0, 0], 1, mem);
+    expect(more.rea[2]).toBe(550); // FZ: 600 up (the saved loads) minus the 50 kg of the new one
+    expect(more.gfx.screens.filter((sc) => sc[0]?.[2] === "N T  X     Y     Z")).toHaveLength(1);
+    // NUEVA starts over even with loads saved
+    expect(reacc([4, 0], 0, mem).gfx.screens.some((sc) => sc[0]?.[2] === "NO HAY CARGAS")).toBe(true);
   });
 
   test("running REACC: the menu shows how many loads are in, adds batches, and BORRAR TODO empties them", () => {

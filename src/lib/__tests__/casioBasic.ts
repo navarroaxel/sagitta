@@ -17,6 +17,12 @@ export interface Gfx {
   screens: [number, number, number | string][][]; // the text screens, one per ClrText (what Locate wrote on each)
   clears: number;
 }
+// The calculator's memory (variables and lists): pass the same one to several runs to see what a program leaves for the next.
+export interface Mem {
+  v: Record<string, number>;
+  L: Record<number, number[]>;
+}
+export const newMem = (): Mem => ({ v: {}, L: {} });
 export const newGfx = (): Gfx => ({ window: null, segments: [], horizontals: [], verticals: [], plots: [], texts: [], locates: [], clearTexts: 0, screens: [[]], clears: 0 });
 
 const splitTop = (line: string, sep: string): string[] => {
@@ -34,9 +40,8 @@ const splitTop = (line: string, sep: string): string[] => {
   return parts;
 };
 
-export function runBasic(lines: string[], inputs: number[], gfx: Gfx = newGfx()): Out[] {
-  const v: Record<string, number> = {};
-  const L: Record<number, number[]> = {};
+export function runBasic(lines: string[], inputs: number[], gfx: Gfx = newGfx(), mem: Mem = newMem()): Out[] {
+  const { v, L } = mem;
   const out: Out[] = [];
   const input = [...inputs];
   // statements, with `Then x` split into the keyword and its statement
