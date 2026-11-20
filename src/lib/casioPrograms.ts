@@ -1194,7 +1194,7 @@ const RET_DIGIT_KEYS = [72, 62, 52, 73, 63, 53, 74, 64, 54];
 const retDigits = (count: string) => RET_DIGIT_KEYS.map((k, i) => `If W=${k}:Then If ${count}>${i}:Then ${i + 1}→S:31→W:IfEnd:IfEnd`);
 // Choose a node on the drawing: ◄ ▲ / ► ▼ move the cursor, EXE chooses (not the marked node), EXIT leaves with S = 0.
 const retPickNode = (msg: string[], afterPrompt = false) => [
-  "1→S:1→Y:{0,0,0}→List 8",
+  "1→S:1→Y",
   // after a `?` prompt the EXE that ended it can still be pending: the first EXE of the choice is ignored (use a number key or move first)
   ...(afterPrompt ? ["1→List 9[20]"] : []),
   "While Y=1",
@@ -1202,13 +1202,11 @@ const retPickNode = (msg: string[], afterPrompt = false) => [
   "List 1[S]→J:List 2[S]→K:List 9[11]×5→L",
   RET_BOX("J", "K", "L"),
   ...msg,
-  "Text 51,84,List 8[1]:Text 51,98,List 8[2]:Text 51,112,List 8[3]", // the last three key codes read (diagnosis of the arrows on the real calculator)
   "While Getkey>0:WhileEnd",
   "0→W",
   "While W=0",
   "Getkey→W",
   "WhileEnd",
-  "List 8[2]→List 8[1]:List 8[3]→List 8[2]:W→List 8[3]",
   ...(afterPrompt ? ["If List 9[20]=1:Then 0→List 9[20]:If W=31:Then 0→W:IfEnd:IfEnd"] : []),
   "If W=38:Then S–1→S:IfEnd",
   "If W=28:Then S–1→S:IfEnd",
@@ -1493,9 +1491,9 @@ export const RETIC_LINES = [
   "If Z=0:Then",
   // the equilibrium matrix
   "2×N→M",
-  "For 1→K To 156",
-  "0→List 7[K]",
-  "Next",
+  // the lists are created here (writing past the end of a list that another program left shorter is a Dimension ERROR)
+  `{${Array(156).fill(0).join(",")}}→List 7`,
+  "{0,0,0,0,0,0,0,0,0,0,0,0}→List 8",
   "For 1→K To B",
   "List 3[K]→I:List 4[K]→J",
   "List 1[J]–List 1[I]→X:List 2[J]–List 2[I]→Y",

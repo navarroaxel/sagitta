@@ -958,6 +958,17 @@ describe("Casio program RETIC (bar forces of a truss of up to 9 bars)", () => {
     expect(first(gfx, "NO SE PUEDE RESOLVER")[0].some((l) => l[2] === "FALTAN NUDOS (3 A 6)")).toBe(true);
   });
 
+  test("RETIC creates its own lists 7 and 8: short lists left by another program do not give a Dimension ERROR", () => {
+    const m = trussPreset("Triangular Truss");
+    const mem = newMem();
+    mem.L[7] = [0, 1, 2];
+    mem.L[8] = [0, 1, 2, 3];
+    const gfx = newGfx();
+    runBasic(RETIC_LINES, inputsFor(m), gfx, mem);
+    expect(first(gfx, "BARRA  N KG    T/C")).toHaveLength(1);
+    expect(mem.L[8].length).toBeGreaterThanOrEqual(13);
+  });
+
   test("solving with a node no bar touches names that node", () => {
     const m = trussPreset("Triangular Truss");
     const gfx = newGfx();
