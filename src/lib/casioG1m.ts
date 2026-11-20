@@ -36,6 +36,9 @@ const KEYWORDS: [string, number[]][] = [
   ["ClrText", [0xf7, 0x18]],
   ["Locate ", [0xf7, 0x10]],
 ];
+// superscript digits of the fx-9860G character set (E5C0-E5C9 in Cahute's table; ² and ³ also in the eActivity files EactMaker
+// writes): allowed inside a string, so a label can say CM² / CM³ / CM⁴
+const SUPERSCRIPT: Record<string, number[]> = { "²": [0xe5, 0xc2], "³": [0xe5, 0xc3], "⁴": [0xe5, 0xc4] };
 const SYMBOLS: Record<string, number> = { "√": 0x86, "→": 0x0e, "◢": 0x0c, "≤": 0x10, "×": 0xa9, "÷": 0xb9 };
 // after one of these a minus is the sign of a number, not a subtraction
 const OPENS = new Set([0x0d, 0x3a, 0x28, 0x0e, 0x3d, 0x3e, 0x3c, 0x89, 0x99, 0xa9, 0xb9, 0x87, 0x2c, 0x5b, 0x7b]);
@@ -48,6 +51,11 @@ export function tokenizeLine(line: string): number[] {
     const ch = line[i];
     if (inString) {
       const o = ch.charCodeAt(0);
+      if (ch in SUPERSCRIPT) {
+        out.push(...SUPERSCRIPT[ch]);
+        i++;
+        continue;
+      }
       if (ch === '"') inString = false;
       else if (o < 0x20 || o > 0x7e || ch === "+" || ch === "-") throw new Error(`character ${JSON.stringify(ch)} not allowed inside a string`);
       out.push(o);

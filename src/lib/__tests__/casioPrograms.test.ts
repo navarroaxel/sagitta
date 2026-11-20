@@ -771,7 +771,7 @@ describe("Casio program PERFILES (look up an IPN / IPB, or find the lightest tha
     expect([at(sc, 4, 2), at(sc, 16, 2)]).toEqual([p.A, p.w]);
     expect([at(sc, 4, 3), at(sc, 16, 3)]).toEqual([p.Sx, p.Sy]);
     expect([at(sc, 4, 4), at(sc, 16, 4)]).toEqual([p.Ix, p.Iy]);
-    expect([at(sc, 1, 5), at(sc, 1, 6)]).toEqual(["A CM2  PESO KG/M", "S CM3  I CM4"]);
+    expect([at(sc, 1, 5), at(sc, 1, 6)]).toEqual(["A CM²  PESO KG/M", "S CM³  I CM⁴"]);
   });
 
   test("DATOS of a profile that does not exist (or of the other series) says so; a series out of range is clamped", () => {
