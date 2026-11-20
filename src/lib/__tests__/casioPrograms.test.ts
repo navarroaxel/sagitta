@@ -37,8 +37,6 @@ import {
 // menu: 1 NUDOS, 2 BARRAS, 3 APOYOS, 4 AGREGAR CARGAS, 5 VER ESTRUCTURA, 6 BORRAR CARGAS, 7 RESOLVER, 0 salir
 const K_RIGHT = 27, K_EXE = 31, K_EXIT = 47;
 const pickNode = (k: number) => [...Array(k - 1).fill(K_RIGHT), K_EXE]; // the cursor starts on node 1
-// right after a `?` prompt the first EXE of a choice is ignored (it may be the prompt's own), so node 1 is chosen with its number key
-const pickAfterPrompt = (k: number) => (k === 1 ? [1] : pickNode(k));
 function reticInputs(o: {
   nodes: [number, number][];
   bars: number[][];
