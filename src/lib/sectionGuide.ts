@@ -118,3 +118,19 @@ export function halfPlanePolygon(k: Plane, s: GuideSection, sign: 1 | -1): [numb
   });
   return out;
 }
+
+// One closed outline of the I section in cm (12 vertices, no fillets): flanges along x on face 1, turned (an H) on
+// face 2. A single polygon, so it can be stroked without the inner lines that overlapping rectangles leave.
+export function guideOutline(s: GuideSection): [number, number][] {
+  const { hx, hy, tf, tw } = s,
+    w = tw / 2;
+  return s.rotated
+    ? [
+        [-hx, -hy], [-hx + tf, -hy], [-hx + tf, -w], [hx - tf, -w], [hx - tf, -hy], [hx, -hy],
+        [hx, hy], [hx - tf, hy], [hx - tf, w], [-hx + tf, w], [-hx + tf, hy], [-hx, hy],
+      ]
+    : [
+        [-hx, -hy], [hx, -hy], [hx, -hy + tf], [w, -hy + tf], [w, hy - tf], [hx, hy - tf],
+        [hx, hy], [-hx, hy], [-hx, hy - tf], [-w, hy - tf], [-w, -hy + tf], [-hx, -hy + tf],
+      ];
+}

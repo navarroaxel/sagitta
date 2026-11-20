@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 import {
   criticalCorner,
   guideCorners,
+  guideOutline,
   guideSection,
   halfPlanePolygon,
   neutralIntercepts,
@@ -73,5 +74,21 @@ describe("sectionGuide (preset #2, base of the column)", () => {
     expect(neutralSegment(u, s)).toBeNull();
     expect(halfPlanePolygon(u, s, -1)).toHaveLength(4);
     expect(halfPlanePolygon(u, s, 1)).toHaveLength(0);
+  });
+
+  test("the outline is one simple I / H polygon: 12 vertices, same area on both faces, close to the table's A", () => {
+    const area = (p: [number, number][]) =>
+      Math.abs(p.reduce((a, [x, y], i) => a + x * p[(i + 1) % p.length][1] - p[(i + 1) % p.length][0] * y, 0)) / 2;
+    const f1 = guideOutline(guideSection("IPB 120", false)),
+      f2 = guideOutline(guideSection("IPB 120", true));
+    expect(f1).toHaveLength(12);
+    expect(f2).toHaveLength(12);
+    near(area(f1), area(f2), 1e-9);
+    expect(area(f1) / 34).toBeGreaterThan(0.95); // the table's A also counts the root fillets
+    expect(area(f1)).toBeLessThan(34);
+    // face 1: flanges along x (wide, thin); face 2: the same shape turned a quarter (tall in y is the flange width)
+    const xs = (p: [number, number][]) => Math.max(...p.map((q) => q[0])) - Math.min(...p.map((q) => q[0]));
+    near(xs(f1), 12, 1e-9);
+    near(xs(f2), 12, 1e-9);
   });
 });

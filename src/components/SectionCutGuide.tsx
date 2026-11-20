@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import {
   criticalCorner,
   guideCorners,
+  guideOutline,
   guideSection,
   halfPlanePolygon,
   neutralIntercepts,
@@ -61,6 +62,11 @@ export function shapeRects(s: GuideSection, S: number, cx: number, cy: number) {
   ));
 }
 
+// The section as ONE polygon (fill + stroke); shapeRects is only for clip paths, where overlaps do not show.
+export function ShapePolygon({ s, S, cx, cy, ...rest }: { s: GuideSection; S: number; cx: number; cy: number } & React.SVGProps<SVGPolygonElement>) {
+  return <polygon points={guideOutline(s).map(([x, y]) => `${(cx + x * S).toFixed(1)},${(cy - y * S).toFixed(1)}`).join(" ")} strokeLinejoin="round" {...rest} />;
+}
+
 const pts = (poly: [number, number][], S: number, cx: number, cy: number) =>
   poly.map(([x, y]) => `${(cx + x * S).toFixed(1)},${(cy - y * S).toFixed(1)}`).join(" ");
 
@@ -89,16 +95,16 @@ function MainFigure({ k, s }: { k: Plane; s: GuideSection }) {
       <defs>
         <clipPath id="cut-clip-main">{shapeRects(s, S, cx, cy)}</clipPath>
       </defs>
-      <g className="fill-stone-200 dark:fill-stone-700">{shapeRects(s, S, cx, cy)}</g>
+      <ShapePolygon s={s} S={S} cx={cx} cy={cy} className="fill-stone-200 dark:fill-stone-700" />
       <Zones k={k} s={s} S={S} cx={cx} cy={cy} clipId="cut-clip-main" />
       <rect x={cx - s.hx * S} y={cy - s.hy * S} width={2 * s.hx * S} height={2 * s.hy * S} fill="none" className="stroke-stone-400" strokeDasharray="4 4" />
-      <g fill="none" className="stroke-stone-800 dark:stroke-stone-200" strokeWidth="1.5">{shapeRects(s, S, cx, cy)}</g>
+      <ShapePolygon s={s} S={S} cx={cx} cy={cy} fill="none" className="stroke-stone-800 dark:stroke-stone-200" strokeWidth="1.5" />
       <g className="stroke-stone-400" strokeWidth="1">
         <line x1={cx - 7.3 * S} y1={cy} x2={cx + 7.3 * S} y2={cy} />
         <line x1={cx} y1={cy + 7.3 * S} x2={cx} y2={cy - 7.3 * S} />
       </g>
-      <text x={cx + 7.3 * S + 4} y={cy + 4} fontSize="13" className="fill-stone-600 dark:fill-stone-300">x</text>
-      <text x={cx - 4} y={cy - 7.3 * S - 5} fontSize="13" className="fill-stone-600 dark:fill-stone-300">y</text>
+      <text x={cx + 7.3 * S + 4} y={cy + 4} fontSize="13" className="fill-stone-600 dark:fill-stone-300">X</text>
+      <text x={cx - 4} y={cy - 7.3 * S - 5} fontSize="13" className="fill-stone-600 dark:fill-stone-300">Y</text>
       {seg && (
         <>
           <line x1={cx + seg[0][0] * S} y1={cy - seg[0][1] * S} x2={cx + seg[1][0] * S} y2={cy - seg[1][1] * S} stroke={EN} strokeWidth="2.5" />
@@ -149,10 +155,10 @@ function MiniFigure({ f, s, label, signs, id }: { f: Plane; s: GuideSection; lab
       <defs>
         <clipPath id={id}>{shapeRects(s, S, cx, cy)}</clipPath>
       </defs>
-      <g className="fill-stone-200 dark:fill-stone-700">{shapeRects(s, S, cx, cy)}</g>
+      <ShapePolygon s={s} S={S} cx={cx} cy={cy} className="fill-stone-200 dark:fill-stone-700" />
       <Zones k={f} s={s} S={S} cx={cx} cy={cy} clipId={id} />
       <rect x={cx - s.hx * S} y={cy - s.hy * S} width={2 * s.hx * S} height={2 * s.hy * S} fill="none" className="stroke-stone-400" strokeDasharray="3 3" />
-      <g fill="none" className="stroke-stone-800 dark:stroke-stone-200">{shapeRects(s, S, cx, cy)}</g>
+      <ShapePolygon s={s} S={S} cx={cx} cy={cy} fill="none" className="stroke-stone-800 dark:stroke-stone-200" />
       <g className="stroke-stone-400" strokeWidth=".8">
         <line x1="6" y1="70" x2="134" y2="70" />
         <line x1="70" y1="134" x2="70" y2="6" />

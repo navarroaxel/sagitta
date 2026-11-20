@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 import NavMenu from "@/components/NavMenu";
 import { Footer } from "@/components/Footer";
-import { FACES, NeutralAxisExample, SectionCutSimulator, shapeRects } from "@/components/SectionCutGuide";
+import { FACES, NeutralAxisExample, SectionCutSimulator, ShapePolygon } from "@/components/SectionCutGuide";
 
 function Kicker({ children }: { children: React.ReactNode }) {
   return (
@@ -89,15 +89,15 @@ function ProfileFacesFigure() {
                 {t(f === 1 ? "cut.fig3.f1" : "cut.fig3.f2")}
               </text>
               <rect x={cx - s.hx * S} y={cy - s.hy * S} width={2 * s.hx * S} height={2 * s.hy * S} fill="none" className="stroke-stone-400" strokeDasharray="3 3" />
-              <g className="fill-stone-300 stroke-stone-700 dark:fill-stone-600 dark:stroke-stone-200" strokeWidth="1.5">{shapeRects(s, S, cx, cy)}</g>
+              <ShapePolygon s={s} S={S} cx={cx} cy={cy} className="fill-stone-300 stroke-stone-700 dark:fill-stone-600 dark:stroke-stone-200" strokeWidth="1.5" />
               <g className="stroke-stone-500" strokeWidth="1.5">
                 <line x1={cx - 7.5 * S} y1={cy} x2={cx + 7.5 * S} y2={cy} />
                 <line x1={cx} y1={cy + 7.5 * S} x2={cx} y2={cy - 7.5 * S} />
               </g>
               <polygon points={`${cx + 7.5 * S + 7},${cy} ${cx + 7.5 * S - 3},${cy - 4} ${cx + 7.5 * S - 3},${cy + 4}`} className="fill-stone-500" />
               <polygon points={`${cx},${cy - 7.5 * S - 7} ${cx - 4},${cy - 7.5 * S + 3} ${cx + 4},${cy - 7.5 * S + 3}`} className="fill-stone-500" />
-              <text x={cx + 7.5 * S + 4} y={cy + 18} fontSize="13" fontWeight="600" className="fill-stone-700 font-mono dark:fill-stone-200">x</text>
-              <text x={cx + 8} y={cy - 7.5 * S - 2} fontSize="13" fontWeight="600" className="fill-stone-700 font-mono dark:fill-stone-200">y</text>
+              <text x={cx + 7.5 * S + 4} y={cy + 18} fontSize="13" fontWeight="600" className="fill-stone-700 font-mono dark:fill-stone-200">X</text>
+              <text x={cx + 8} y={cy - 7.5 * S - 2} fontSize="13" fontWeight="600" className="fill-stone-700 font-mono dark:fill-stone-200">Y</text>
               <text x="130" y="228" fontSize="12" textAnchor="middle" className="fill-stone-700 font-mono dark:fill-stone-200">
                 <tspan fill={strongIx ? "#0B8A8A" : "#C0392B"} fontWeight="600">Ix = {num(s.Ix)} cm⁴</tspan>
                 {" · "}
