@@ -6,7 +6,7 @@ import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 import NavMenu from "@/components/NavMenu";
 import { Footer } from "@/components/Footer";
 import { Sub } from "@/components/Sub";
-import { PERFIL_LINES, PERFIL_NAME, REACC_LINES, REACC_NAME, EXCENTR_LINES, EXCENTR_NAME, PERFILES_LINES, PERFILES_NAME, RETIC_LINES, RETIC_NAME, TRACCION_LINES, TRACCION_NAME, PANDEO_LINES, PANDEO_NAME, VIGACAB_LINES, VIGACAB_NAME } from "@/lib/casioPrograms";
+import { SECCION_LINES, SECCION_NAME, REACC_LINES, REACC_NAME, EXCENTR_LINES, EXCENTR_NAME, PERFILES_LINES, PERFILES_NAME, RETIC_LINES, RETIC_NAME, TRACCION_LINES, TRACCION_NAME, PANDEO_LINES, PANDEO_NAME, VIGACAB_LINES, VIGACAB_NAME } from "@/lib/casioPrograms";
 import { buildG1m } from "@/lib/casioG1m";
 
 const P = "max-w-[66ch] leading-relaxed text-stone-700 dark:text-stone-300";
@@ -132,7 +132,7 @@ export default function CasioReaccionesPage() {
           <section className={SECTION}>
             <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("casio.p.title")}</h3>
             <p className={P}><Sub>{t("casio.p.p1")}</Sub></p>
-            <Program name={PERFIL_NAME} lines={PERFIL_LINES} id="casio-perfil" />
+            <Program name={SECCION_NAME} lines={SECCION_LINES} id="casio-perfil" />
             <p className={P}><Sub>{t("casio.p.q")}</Sub></p>
             <p className={`${P} mt-3`}><Sub>{t("casio.p.ex")}</Sub></p>
             <p className={`${P} mt-3`}>{t("casio.p.draw")}</p>

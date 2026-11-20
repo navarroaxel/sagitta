@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import CasioReaccionesPage from "@/app/casio-reacciones/page";
-import { EXCENTR_LINES, PANDEO_LINES, PERFILES_LINES, PERFIL_LINES, REACC_LINES, RETIC_LINES, TRACCION_LINES, VIGACAB_LINES } from "@/lib/casioPrograms";
+import { EXCENTR_LINES, PANDEO_LINES, PERFILES_LINES, SECCION_LINES, REACC_LINES, RETIC_LINES, TRACCION_LINES, VIGACAB_LINES } from "@/lib/casioPrograms";
 
 describe("/casio-reacciones", () => {
   test("shows both programs line by line, with the data of the IPB table", () => {
@@ -13,7 +13,7 @@ describe("/casio-reacciones", () => {
     const reacc = screen.getByTestId("casio-reacc").textContent!;
     REACC_LINES.forEach((l) => expect(reacc).toContain(l));
     const perfil = screen.getByTestId("casio-perfil").textContent!;
-    PERFIL_LINES.forEach((l) => expect(perfil).toContain(l));
+    SECCION_LINES.forEach((l) => expect(perfil).toContain(l));
     expect(perfil).toContain("→List 1");
     const vigacab = screen.getByTestId("casio-vigacab").textContent!;
     VIGACAB_LINES.forEach((l) => expect(vigacab).toContain(l));
@@ -32,7 +32,7 @@ describe("/casio-reacciones", () => {
       </LanguageProvider>,
     );
     fireEvent.click(screen.getByTestId("casio-perfil-copy"));
-    await waitFor(() => expect(writeText).toHaveBeenCalledWith(PERFIL_LINES.join("\n")));
+    await waitFor(() => expect(writeText).toHaveBeenCalledWith(SECCION_LINES.join("\n")));
     fireEvent.click(screen.getByTestId("casio-reacc-copy"));
     await waitFor(() => expect(writeText).toHaveBeenLastCalledWith(REACC_LINES.join("\n")));
     await waitFor(() => expect(screen.getAllByRole("status").some((e) => /Copied|Copiado/.test(e.textContent!))).toBe(true));
@@ -61,7 +61,7 @@ describe("/casio-reacciones", () => {
     fireEvent.click(screen.getByTestId("casio-perfiles-download"));
     fireEvent.click(screen.getByTestId("casio-excentr-download"));
     HTMLAnchorElement.prototype.click = click;
-    expect(clicks).toEqual(["PERFIL.g1m", "REACC.g1m", "VIGACAB.g1m", "TRACCION.g1m", "PANDEO.g1m", "RETIC.g1m", "PERFILES.g1m", "EXCENTR.g1m"]);
+    expect(clicks).toEqual(["SECCION.g1m", "REACC.g1m", "VIGACAB.g1m", "TRACCION.g1m", "PANDEO.g1m", "RETIC.g1m", "PERFILES.g1m", "EXCENTR.g1m"]);
     expect(created).toHaveLength(8);
     const head = new Uint8Array(await created[1].arrayBuffer()).slice(0, 8);
     expect(String.fromCharCode(...Array.from(head).map((b) => ~b & 255))).toBe("USBPower");

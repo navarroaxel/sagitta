@@ -9,8 +9,8 @@ import { newGfx, newMem, runBasic, type Mem } from "./casioBasic";
 import {
   baseForces, distributedLoad,
   chooseIPB,
-  PERFIL_LINES,
-  PERFIL_TABLE,
+  SECCION_LINES,
+  SECCION_TABLE,
   reactionsFromLoads,
   REACC_LINES,
   sigmaMaxOf,
@@ -228,8 +228,8 @@ describe("Casio program REACC", () => {
     const mem = newMem();
     const first = reacc([1, 2, ...pointLoad(0, 0, 3, 0, 300, 0), 2, -1, 2, 0, 0, 3, 3, 0, 0, -200, 1, 3, 4, 0], 0, mem);
     expect(first.rea).toEqual([0, -300, 600, 900, -300, 0]);
-    // other programs use the letters and the lists 1-9: PERFIL and TRACCION run in between
-    runBasic(PERFIL_LINES, [-600, -300, 900, 0], newGfx(), mem);
+    // other programs use the letters and the lists 1-9: SECCION and TRACCION run in between
+    runBasic(SECCION_LINES, [-600, -300, 900, 0], newGfx(), mem);
     runBasic(TRACCION_LINES, [18229, 0], newGfx(), mem);
     // back in REACC: SEGUIR keeps the two loads, the count in the title and the sums
     const again = reacc([3, 4, 0], 1, mem);
@@ -259,7 +259,7 @@ describe("Casio program REACC", () => {
     expect(rea).toEqual([0, 0, 0, 0, 0, 0]);
   });
 
-  test("running PERFIL = chooseIPB: the face comes from the moments (strong axis against the larger one), and none passing", () => {
+  test("running SECCION = chooseIPB: the face comes from the moments (strong axis against the larger one), and none passing", () => {
     for (const [N, Mx, My, adm, face] of [
       [-600, -300, 900, 1400, 2], // |My| > |Mx|: the turned profile
       [-600, 900, -300, 1400, 1], // |Mx| > |My|: x against the strong axis
@@ -268,7 +268,7 @@ describe("Casio program REACC", () => {
       [-3000, 500, 500, 1400, 1], // equal moments: face 1
       [-1e7, 0, 0, 1400, 1],
     ] as const) {
-      const out = runBasic(PERFIL_LINES, [N, Mx, My, adm]);
+      const out = runBasic(SECCION_LINES, [N, Mx, My, adm]);
       expect(faceFor(Mx, My)).toBe(face);
       const c = chooseIPB(N, Mx, My, adm, face);
       if (c) {
@@ -281,18 +281,18 @@ describe("Casio program REACC", () => {
     }
   });
 
-  test("running PERFIL: neutral axis intercepts of the base of preset #2, and when a moment is 0", () => {
-    const out = runBasic(PERFIL_LINES, [-600, -300, 900, 0]);
+  test("running SECCION: neutral axis intercepts of the base of preset #2, and when a moment is 0", () => {
+    const out = runBasic(SECCION_LINES, [-600, -300, 900, 0]);
     expect(out.slice(6, 8)).toEqual(["X (Y=0) =", expect.closeTo(0.16941, 4)]);
     expect(out.slice(8)).toEqual(["Y (X=0) =", expect.closeTo(-0.18707, 4)]);
-    expect(runBasic(PERFIL_LINES, [-600, 0, 900, 1400]).slice(8)).toEqual(["E.N. NO CORTA Y"]); // Mx = 0: parallel to the x axis
-    expect(runBasic(PERFIL_LINES, [-600, 900, 0, 1400]).slice(6, 7)).toEqual(["E.N. NO CORTA X"]);
+    expect(runBasic(SECCION_LINES, [-600, 0, 900, 1400]).slice(8)).toEqual(["E.N. NO CORTA Y"]); // Mx = 0: parallel to the x axis
+    expect(runBasic(SECCION_LINES, [-600, 900, 0, 1400]).slice(6, 7)).toEqual(["E.N. NO CORTA X"]);
   });
 
-  test("running PERFIL draws the face in XY: outline, axes, neutral axis and critical corner", () => {
+  test("running SECCION draws the face in XY: outline, axes, neutral axis and critical corner", () => {
     const run = (N: number, Mx: number, My: number) => {
       const gfx = newGfx();
-      const out = runBasic(PERFIL_LINES, [N, Mx, My, 0], gfx);
+      const out = runBasic(SECCION_LINES, [N, Mx, My, 0], gfx);
       return { gfx, pg: gfx.pages[1], name: `IPB ${out[1]}`, face: out[5] as 1 | 2 };
     };
     // base of preset #2: face 2, IPB 120. The 12 edges are the closed outline of guideOutline (the guide's figure)
@@ -315,7 +315,7 @@ describe("Casio program REACC", () => {
     expect(xmax).toBeGreaterThan(s.hx);
     expect([pg.horizontals, pg.verticals]).toEqual([[0], [0]]); // the two axes
     // the neutral axis (the 13th segment): both ends have σ = 0
-    expect(pg.segments).toHaveLength(13);
+    expect(pg.segments).toHaveLength(12 + 1 + 4); // the outline, the neutral axis and the square around the critical corner
     const k = plane(-600, -300, 900, s);
     const [ex1, ey1, ex2, ey2] = pg.segments[12];
     expect(Math.abs(sigmaAt(k, ex1, ey1))).toBeLessThan(1e-6);
@@ -323,7 +323,19 @@ describe("Casio program REACC", () => {
     // the critical corner and its signed σ
     const cc = criticalCorner(guideCorners(k, s));
     expect(pg.plots).toEqual([[expect.closeTo(cc.x, 9), expect.closeTo(cc.y, 9)]]);
-    expect(pg.texts).toEqual([[1, 1, expect.closeTo(cc.sigma, 6)]]);
+    // σ at the four corners, written at the corners of the screen as in the app's figure (top-left is −x +y)
+    const corner = (sx: number, sy: number) => sigmaAt(k, sx * s.hx, sy * s.hy);
+    expect(pg.texts.map((t) => [t[0], t[1]])).toEqual([[1, 1], [1, 70], [57, 1], [57, 70]]);
+    [corner(-1, 1), corner(1, 1), corner(-1, -1), corner(1, -1)].forEach((v, i) => expect(pg.texts[i][2] as number).toBeCloseTo(v, 6));
+    expect(Math.max(...pg.texts.map((t) => Math.abs(t[2] as number)))).toBeCloseTo(Math.abs(cc.sigma), 6); // the critical one is the largest
+    // the critical corner is marked: a dot and a square of half side V/10 around it (V = half the height of the window)
+    const sq = pg.segments.slice(-4);
+    const half = (pg.window![4] - pg.window![3]) / 2 / 10;
+    const xs = sq.flatMap(([a, , c]) => [a, c]), ys = sq.flatMap(([, b, , d]) => [b, d]);
+    expect(Math.min(...xs)).toBeCloseTo(cc.x - half, 9);
+    expect(Math.max(...xs)).toBeCloseTo(cc.x + half, 9);
+    expect(Math.min(...ys)).toBeCloseTo(cc.y - half, 9);
+    expect(Math.max(...ys)).toBeCloseTo(cc.y + half, 9);
     // face 1 (|Mx| > |My|) is the outline as drawn, not swapped
     const f1 = run(-600, 900, -300);
     expect(f1.face).toBe(1);
@@ -334,20 +346,20 @@ describe("Casio program REACC", () => {
     );
     // a moment of 0: the neutral axis is parallel to an axis (Mx = 0: vertical line) or there is none (only N)
     const mx0 = run(-600, 0, 900);
-    expect(mx0.pg.segments).toHaveLength(12); // no sloped line: Mx = 0 makes the neutral axis the vertical x = −N·Iy/(A·My)
+    expect(mx0.pg.segments).toHaveLength(12 + 4); // no sloped line: Mx = 0 makes the neutral axis the vertical x = −N·Iy/(A·My)
     const sMx0 = guideSection(mx0.name, mx0.face === 2);
     expect(mx0.pg.verticals).toEqual([0, expect.closeTo(neutralAxisOf(mx0.name, mx0.face, -600, 0, 900).x0!, 9)]);
     expect(sMx0.A).toBeGreaterThan(0);
     const onlyN = run(-600, 0, 0);
-    expect(onlyN.pg.segments).toHaveLength(12); // only N: σ is uniform, no neutral axis
+    expect(onlyN.pg.segments).toHaveLength(12 + 4); // only N: σ is uniform, no neutral axis (the square is there)
     expect(onlyN.pg.verticals).toEqual([0]); // just the axis
   });
 
-  test("running PERFIL: σ_adm typed as 0 means the default, 1400", () => {
-    const withDefault = runBasic(PERFIL_LINES, [-600, -300, 900, 0]);
-    expect(withDefault).toEqual(runBasic(PERFIL_LINES, [-600, -300, 900, 1400]));
+  test("running SECCION: σ_adm typed as 0 means the default, 1400", () => {
+    const withDefault = runBasic(SECCION_LINES, [-600, -300, 900, 0]);
+    expect(withDefault).toEqual(runBasic(SECCION_LINES, [-600, -300, 900, 1400]));
     expect(withDefault[1]).toBe(120); // preset #2's base: the larger moment is My, so face 2: IPB 120 passes at 1400 (1208.7)
-    expect(runBasic(PERFIL_LINES, [-600, -300, 900, 1000])).not.toEqual(withDefault); // another σ_adm is respected
+    expect(runBasic(SECCION_LINES, [-600, -300, 900, 1000])).not.toEqual(withDefault); // another σ_adm is respected
   });
 
   test("the program text asks for what the TypeScript uses and prints every result", () => {
@@ -358,17 +370,17 @@ describe("Casio program REACC", () => {
   });
 });
 
-describe("Casio program PERFIL", () => {
+describe("Casio program SECCION", () => {
   test("table: IPB 100…600 (19 profiles) typed into the lists", () => {
-    expect(PERFIL_TABLE).toHaveLength(19);
-    expect(PERFIL_TABLE[0].name).toBe("IPB 100");
-    expect(PERFIL_TABLE[18].name).toBe("IPB 600");
-    expect(PERFIL_LINES[0]).toMatch(/^\{100,120,.*,600\}→List 1$/);
-    expect(PERFIL_LINES[2]).toMatch(/^\{26,34,.*,270\}→List 3$/);
+    expect(SECCION_TABLE).toHaveLength(19);
+    expect(SECCION_TABLE[0].name).toBe("IPB 100");
+    expect(SECCION_TABLE[18].name).toBe("IPB 600");
+    expect(SECCION_LINES[0]).toMatch(/^\{100,120,.*,600\}→List 1$/);
+    expect(SECCION_LINES[2]).toMatch(/^\{26,34,.*,270\}→List 3$/);
   });
 
   test("the base of preset #2 (N −600, Mx −300, My 900): face 1 = 1924.1 and face 2 = 1208.7 on IPB 120 (the guide's values)", () => {
-    const p = PERFIL_TABLE[1];
+    const p = SECCION_TABLE[1];
     expect(sigmaMaxOf(p, -600, -300, 900, 1)).toBeCloseTo(1924.1, 0);
     expect(sigmaMaxOf(p, -600, -300, 900, 2)).toBeCloseTo(1208.7, 0);
   });
@@ -378,8 +390,8 @@ describe("Casio program PERFIL", () => {
     for (const face of [1, 2] as const) {
       const c = chooseIPB(-600, -300, 900, sigmaAdm, face)!;
       expect(c.sigmaMax).toBeLessThanOrEqual(sigmaAdm);
-      const i = PERFIL_TABLE.findIndex((p) => p.name === c.name);
-      if (i > 0) expect(sigmaMaxOf(PERFIL_TABLE[i - 1], -600, -300, 900, face)).toBeGreaterThan(sigmaAdm);
+      const i = SECCION_TABLE.findIndex((p) => p.name === c.name);
+      if (i > 0) expect(sigmaMaxOf(SECCION_TABLE[i - 1], -600, -300, 900, face)).toBeGreaterThan(sigmaAdm);
     }
     expect(chooseIPB(-600, -300, 900, 1400, 2)!.name).toBe("IPB 120"); // 1208.7 ≤ 1400 already on IPB 120
     expect(chooseIPB(-600, -300, 900, 1400, 1)!.name).not.toBe("IPB 120"); // 1924.1 > 1400
@@ -391,8 +403,8 @@ describe("Casio program PERFIL", () => {
   });
 
   test("the program text matches: every variable it reads is assigned first", () => {
-    expect(PERFIL_LINES.join("\n")).toContain("If T=2:Then X→Z:Y→X:Z→Y:D→Z:E→D:Z→E:IfEnd");
-    expect(PERFIL_LINES.filter((l) => l.includes("→List")).length).toBe(12); // 7 table lists, the vertices of the outline (its own drawing and the diagrams) and the data of the diagrams
+    expect(SECCION_LINES.join("\n")).toContain("If T=2:Then X→Z:Y→X:Z→Y:D→Z:E→D:Z→E:IfEnd");
+    expect(SECCION_LINES.filter((l) => l.includes("→List")).length).toBe(12); // 7 table lists, the vertices of the outline (its own drawing and the diagrams) and the data of the diagrams
   });
 });
 
@@ -1046,7 +1058,14 @@ describe("Casio program EXCENTR (eccentric axial load on an IPN / IPB: ipn300-ec
       new Set(outline.map((p, i) => edge(p, outline[(i + 1) % 12]))),
     );
     expect(pg.plots).toEqual([[ex, ey], [expect.closeTo(r.critical.x, 9), expect.closeTo(r.critical.y, 9)]]);
-    expect(pg.texts).toEqual([[1, 1, expect.closeTo(r.critical.sigma, 6)]]);
+    // the four corners at the corners of the screen: (+x,+y) top-right, (+x,−y) bottom-right, (−x,+y) top-left, (−x,−y) bottom-left
+    expect(pg.texts.map((t) => [t[0], t[1]])).toEqual([[1, 70], [57, 70], [1, 1], [57, 1]]);
+    r.corners.forEach((c, i) => expect(pg.texts[i][2] as number).toBeCloseTo(c.sigma, 6));
+    // and a square around the critical corner
+    const sq = pg.segments.slice(-4);
+    const half = (pg.window![4] - pg.window![3]) / 2 / 10;
+    expect(Math.max(...sq.flatMap(([a, , c]) => [a, c]))).toBeCloseTo(r.critical.x + half, 9);
+    expect(Math.min(...sq.flatMap(([, b, , d]) => [b, d]))).toBeCloseTo(r.critical.y - half, 9);
     if (Math.abs(cc) > 0) {
       const [x1, y1, x2, y2] = pg.segments[12];
       for (const [px, py] of [[x1, y1], [x2, y2]]) expect(Math.abs(a + b * px + cc * py)).toBeLessThan(1e-9); // σ = 0 per kN along the drawn line
@@ -1069,7 +1088,7 @@ describe("Casio program EXCENTR (eccentric axial load on an IPN / IPB: ipn300-ec
     expect([at(n, 1, 2), at(n, 1, 3)]).toEqual(["NO CORTA EL EJE X", "NO CORTA EL EJE Y"]);
     const prof = profileAt(2, 0);
     expect(at(scr(gfx, "SIGMA EN LAS ESQUINAS")!, 13, 2) as number).toBeCloseTo(-2000 / prof.A, 6);
-    expect(gfx.pages[1].segments).toHaveLength(12); // no line
+    expect(gfx.pages[1].segments).toHaveLength(12 + 4); // no line, the square is there
   });
 
   test("after the results a menu offers another load or leaving", () => {
@@ -1080,7 +1099,7 @@ describe("Casio program EXCENTR (eccentric axial load on an IPN / IPB: ipn300-ec
   });
 });
 
-describe("the diagrams of the normal stresses σ(Mx) and σ(My) (PERFIL and EXCENTR) and the lists left to REACC", () => {
+describe("the diagrams of the normal stresses σ(Mx) and σ(My) (SECCION and EXCENTR) and the lists left to REACC", () => {
   const near = (v: number[], w: number[]) => v.forEach((x, i) => expect(x).toBeCloseTo(w[i], 6));
   const inside = (pg: { window: number[] | null; segments: number[][] }) => {
     const [xmin, xmax, , ymin, ymax] = pg.window!;
@@ -1097,14 +1116,14 @@ describe("the diagrams of the normal stresses σ(Mx) and σ(My) (PERFIL and EXCE
   // pages: 0 before any Cls, 1 the face drawing, 2 σ(Mx), 3 σ(My)
   const perfil = (N: number, Mx: number, My: number) => {
     const gfx = newGfx();
-    const out = runBasic(PERFIL_LINES, [N, Mx, My, 0], gfx);
+    const out = runBasic(SECCION_LINES, [N, Mx, My, 0], gfx);
     const name = `IPB ${out[1]}`;
     const face = out[5] as 1 | 2;
     const sec = guideSection(name, face === 2);
     return { gfx, sec, k: plane(N, Mx, My, sec) };
   };
 
-  test("PERFIL, the base of preset #2 (IPB 120 turned): σ(Mx) and σ(My) are bow ties, compression hatched", () => {
+  test("SECCION, the base of preset #2 (IPB 120 turned): σ(Mx) and σ(My) are bow ties, compression hatched", () => {
     const { gfx, sec, k } = perfil(-600, -300, 900);
     expect(gfx.pages).toHaveLength(4); // σ(N) is uniform and has no diagram
     const [, , pMx, pMy] = gfx.pages;
@@ -1178,7 +1197,7 @@ describe("the diagrams of the normal stresses σ(Mx) and σ(My) (PERFIL and EXCE
   });
 
   test("only REACC uses the lists above 10 (it keeps its loads in 11-21): no other program touches them", () => {
-    for (const [name, lines] of [["PERFIL", PERFIL_LINES], ["VIGACAB", VIGACAB_LINES], ["TRACCION", TRACCION_LINES], ["PANDEO", PANDEO_LINES], ["RETIC", RETIC_LINES], ["PERFILES", PERFILES_LINES], ["EXCENTR", EXCENTR_LINES]] as const) {
+    for (const [name, lines] of [["PERFIL", SECCION_LINES], ["VIGACAB", VIGACAB_LINES], ["TRACCION", TRACCION_LINES], ["PANDEO", PANDEO_LINES], ["RETIC", RETIC_LINES], ["PERFILES", PERFILES_LINES], ["EXCENTR", EXCENTR_LINES]] as const) {
       const used = [...new Set(lines.flatMap((l) => [...l.matchAll(/List (\\d+)/g)].map((m) => +m[1])))];
       expect([name, Math.max(...used)]).toEqual([name, expect.any(Number)]);
       expect(Math.max(...used)).toBeLessThanOrEqual(10);

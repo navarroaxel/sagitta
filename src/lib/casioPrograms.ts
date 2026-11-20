@@ -457,15 +457,15 @@ export const SIGMA_DIAGRAMS = [
   ...SCREEN_PAUSE,
 ];
 
-// ---- Program PERFIL: which IPB goes in the column for a given N, Mx, My --------------------------------------------
+// ---- Program SECCION: which IPB a section needs for a given N, Mx, My (the forces of a cut) --------------------------------------------
 // The IPB 100…600 of the course's table are stored in the program itself (lists 1-5), so nothing has to be typed
 // into the list editor. It tries them from the lightest and stops at the first with max |σ| ≤ σ_adm (typing 0 for σ_adm means 1400); it ends by drawing the face in XY, the face is chosen from the moments as in
 // the guide: the strong axis against the larger moment (face 1 if |Mx| ≥ |My|, face 2 otherwise). Units: kg, kg·m, kg/cm². `chooseIPB` is the same arithmetic.
 import { IPB_PROFILES, IPN_PROFILES } from "./profiles";
 import { guideSection, neutralIntercepts, plane } from "./sectionGuide";
 
-export const PERFIL_NAME = "PERFIL";
-export const PERFIL_TABLE = IPB_PROFILES.filter((p) => p.h <= 600);
+export const SECCION_NAME = "SECCION";
+export const SECCION_TABLE = IPB_PROFILES.filter((p) => p.h <= 600);
 
 export interface IPBChoice {
   name: string; // "IPB 140", or null when none of IPB 100…600 passes
@@ -490,7 +490,7 @@ export function chooseIPB(
   sigmaAdm: number,
   face: 1 | 2 = faceFor(MxKgm, MyKgm),
 ): IPBChoice | null {
-  for (const p of PERFIL_TABLE) {
+  for (const p of SECCION_TABLE) {
     const s = sigmaMaxOf(p, N, MxKgm, MyKgm, face);
     if (s <= sigmaAdm) return { name: p.name, sigmaMax: s };
   }
@@ -503,9 +503,9 @@ export function neutralAxisOf(name: string, face: 1 | 2, N: number, MxKgm: numbe
   return neutralIntercepts(plane(N, MxKgm, MyKgm, guideSection(name, face === 2)));
 }
 
-const list = (n: number, f: (p: (typeof PERFIL_TABLE)[number]) => number) => `{${PERFIL_TABLE.map(f).join(",")}}→List ${n}`;
+const list = (n: number, f: (p: (typeof SECCION_TABLE)[number]) => number) => `{${SECCION_TABLE.map(f).join(",")}}→List ${n}`;
 
-export const PERFIL_LINES = [
+export const SECCION_LINES = [
   list(1, (p) => p.h),
   list(2, (p) => p.bf),
   list(3, (p) => p.A),
@@ -520,7 +520,7 @@ export const PERFIL_LINES = [
   "If S=0:Then 1400→S:IfEnd",
   "1→T",
   "If Abs (Q)>Abs (P):Then 2→T:IfEnd",
-  `For 1→I To ${PERFIL_TABLE.length}`,
+  `For 1→I To ${SECCION_TABLE.length}`,
   "List 1[I]÷20→D:List 2[I]÷20→E",
   "List 4[I]→X:List 5[I]→Y",
   "If T=2:Then X→Z:Y→X:Z→Y:D→Z:E→D:Z→E:IfEnd",
@@ -572,8 +572,14 @@ export const PERFIL_LINES = [
   "1→K:If B<0:Then –1→K:IfEnd",
   "1→L:If G<0:Then –1→L:IfEnd",
   "1→J:If Abs (M–W)>Abs (M+W):Then –1→J:IfEnd",
-  "PlotOn J×K×E,J×L×D",
-  "Text 1,1,M+J×W",
+  "J×K×E→X:J×L×D→Y:V÷10→R",
+  "PlotOn X,Y",
+  "F-Line X–R,Y–R,X+R,Y–R:F-Line X+R,Y–R,X+R,Y+R:F-Line X+R,Y+R,X–R,Y+R:F-Line X–R,Y+R,X–R,Y–R",
+  // σ at the four corners of the face, written at the corners of the screen as in the app's figure
+  "Text 1,1,M–B×E+G×D",
+  "Text 1,70,M+B×E+G×D",
+  "Text 57,1,M–B×E–G×D",
+  "Text 57,70,M+B×E–G×D",
   "{M,G,B,E,D,T,A,C,F,H}→List 10",
   "While Getkey>0:WhileEnd",
   "While Getkey=0:WhileEnd",
@@ -1567,8 +1573,13 @@ export const EXCENTR_LINES = [
   "If Abs (B)>0:Then Vertical –Q÷B:IfEnd",
   "IfEnd",
   "PlotOn X,Y",
-  "PlotOn List 10[T]×D,List 10[T+4]×E",
-  "Text 1,1,P×List 9[T]",
+  "List 10[T]×D→Z:List 10[T+4]×E→W:V÷10→N",
+  "PlotOn Z,W",
+  "F-Line Z–N,W–N,Z+N,W–N:F-Line Z+N,W–N,Z+N,W+N:F-Line Z+N,W+N,Z–N,W+N:F-Line Z–N,W+N,Z–N,W–N",
+  "Text 1,70,P×List 9[1]",
+  "Text 57,70,P×List 9[2]",
+  "Text 1,1,P×List 9[3]",
+  "Text 57,1,P×List 9[4]",
   "{P×Q,P×C,P×B,D,E,F,R,List 2[K]÷20,O,G}→List 10",
   "While Getkey>0:WhileEnd",
   "While Getkey=0:WhileEnd",
