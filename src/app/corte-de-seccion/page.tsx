@@ -33,7 +33,7 @@ export default function CorteDeSeccionPage() {
   const { t } = useLanguage();
   const full: TranslationKey[] = [
     "cut.full.1", "cut.full.2", "cut.full.3", "cut.full.4", "cut.full.5",
-    "cut.full.6", "cut.full.7", "cut.full.8", "cut.full.9",
+    "cut.full.6", "cut.full.7", "cut.full.8", "cut.full.9", "cut.full.10",
   ];
   return (
     <div className="flex min-h-screen flex-col bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100">
@@ -70,6 +70,14 @@ export default function CorteDeSeccionPage() {
             <p className={P}>{t("cut.s2.example")}</p>
             <div className={EQ}>σ(x, y) = N/A + Mx·y/Ix + My·x/Iy</div>
             <p className={P}>{t("cut.s2.units")}</p>
+          </section>
+
+          <section className={SECTION}>
+            <Kicker>{t("cut.f.kicker")}</Kicker>
+            <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("cut.f.title")}</h3>
+            <p className={P}>{t("cut.f.p1")}</p>
+            <Bullets keys={["cut.f.b1", "cut.f.b2", "cut.f.b3"]} />
+            <p className={P}>{t("cut.f.p2")}</p>
           </section>
 
           <section className={SECTION}>

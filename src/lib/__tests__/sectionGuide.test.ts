@@ -36,6 +36,13 @@ describe("sectionGuide (preset #2, base of the column)", () => {
     near(crit.sMy, -625.0, 0.1);
   });
 
+  test("face 1 (x against the strong axis) is worse for this load: max |σ| = 1924 vs 1209 kg/cm²", () => {
+    const f1 = guideSection("IPB 120", false);
+    expect(f1).toMatchObject({ Ix: 864, Iy: 318 });
+    near(criticalCorner(guideCorners(plane(-600, -300, 900, f1), f1)).sigma, -1924.0, 0.1);
+    near(criticalCorner(guideCorners(k, s)).sigma, -1208.7);
+  });
+
   test("it is the same maximum as the app's stress check (stress3d)", () => {
     const m = PRESETS_3D.find((p) => p.key === "t_frame_kg")!.model;
     const sol = solveModel3D(m)!;

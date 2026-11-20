@@ -22,6 +22,18 @@ describe("SectionCutSimulator (base of the preset #2 column)", () => {
     expect(text("cut-reading")).toContain("(−6; 6)");
   });
 
+  test("compares both faces: face 2 (turned) is the lower one for the preset #2 base, and the toggle switches the section", () => {
+    setup();
+    expect(text("cut-compare")).toMatch(/1924\.\d/);
+    expect(text("cut-compare")).toMatch(/1208\.7|1208\.8/);
+    expect(text("cut-compare")).toMatch(/→\s*(face 2|cara 2)/);
+    expect(text("cut-section-line")).toContain("Ix = 318");
+    fireEvent.click(screen.getByRole("button", { name: /Face 1|Cara 1/ }));
+    expect(text("cut-section-line")).toContain("Ix = 864");
+    expect(text("cut-sigma-0")).not.toBe("41.3"); // another face, other corner values
+    expect(text("cut-sigma-1")).toContain("−1924.1");
+  });
+
   test("neutral-axis example gives (0; −0.187) and (0.169; 0)", () => {
     setup();
     expect(text("cut-en-example")).toContain("−0.187 cm");

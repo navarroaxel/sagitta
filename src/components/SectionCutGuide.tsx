@@ -18,7 +18,9 @@ import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 const TENS = "#0B8A8A";
 const COMP = "#C0392B";
 const EN = "#B7791F";
-const SECTION = guideSection("IPB 120", true); // the column of preset #2 (rotated: web along x)
+// The column of preset #2. Face 1: the x axis against the strong axis (flanges along x). Face 2: the profile turned.
+const FACES = { 1: guideSection("IPB 120", false), 2: guideSection("IPB 120", true) } as const;
+type Face = 1 | 2;
 
 interface State {
   N: number;
@@ -41,13 +43,19 @@ function useFmt() {
   };
 }
 
-// The I section as three rectangles (rotated: the flanges are vertical plates, the web runs along x).
+// The I section as three rectangles: face 1 has horizontal flanges and a vertical web; face 2 (turned) the opposite.
 function shapeRects(s: GuideSection, S: number, cx: number, cy: number) {
-  const r: [number, number, number, number][] = [
-    [-s.hx, -s.hy, s.tf, 2 * s.hy],
-    [s.hx - s.tf, -s.hy, s.tf, 2 * s.hy],
-    [-s.hx, -s.tw / 2, 2 * s.hx, s.tw],
-  ];
+  const r: [number, number, number, number][] = s.rotated
+    ? [
+        [-s.hx, -s.hy, s.tf, 2 * s.hy],
+        [s.hx - s.tf, -s.hy, s.tf, 2 * s.hy],
+        [-s.hx, -s.tw / 2, 2 * s.hx, s.tw],
+      ]
+    : [
+        [-s.hx, -s.hy, 2 * s.hx, s.tf],
+        [-s.hx, s.hy - s.tf, 2 * s.hx, s.tf],
+        [-s.tw / 2, -s.hy, s.tw, 2 * s.hy],
+      ];
   return r.map(([x, y, w, h], i) => (
     <rect key={i} x={cx + x * S} y={cy - (y + h) * S} width={w * S} height={h * S} />
   ));
@@ -56,9 +64,9 @@ function shapeRects(s: GuideSection, S: number, cx: number, cy: number) {
 const pts = (poly: [number, number][], S: number, cx: number, cy: number) =>
   poly.map(([x, y]) => `${(cx + x * S).toFixed(1)},${(cy - y * S).toFixed(1)}`).join(" ");
 
-function Zones({ k, S, cx, cy, clipId }: { k: Plane; S: number; cx: number; cy: number; clipId: string }) {
-  const tp = halfPlanePolygon(k, SECTION, 1),
-    cp = halfPlanePolygon(k, SECTION, -1);
+function Zones({ k, s, S, cx, cy, clipId }: { k: Plane; s: GuideSection; S: number; cx: number; cy: number; clipId: string }) {
+  const tp = halfPlanePolygon(k, s, 1),
+    cp = halfPlanePolygon(k, s, -1);
   return (
     <>
       {tp.length > 2 && <polygon points={pts(tp, S, cx, cy)} fill={TENS} fillOpacity=".3" clipPath={`url(#${clipId})`} />}
@@ -67,13 +75,12 @@ function Zones({ k, S, cx, cy, clipId }: { k: Plane; S: number; cx: number; cy: 
   );
 }
 
-function MainFigure({ k }: { k: Plane }) {
+function MainFigure({ k, s }: { k: Plane; s: GuideSection }) {
   const fmt = useFmt();
   const { t } = useLanguage();
   const S = 24,
     cx = 280,
-    cy = 215,
-    s = SECTION;
+    cy = 215;
   const cs = guideCorners(k, s),
     best = criticalCorner(cs),
     seg = neutralSegment(k, s);
@@ -83,7 +90,7 @@ function MainFigure({ k }: { k: Plane }) {
         <clipPath id="cut-clip-main">{shapeRects(s, S, cx, cy)}</clipPath>
       </defs>
       <g className="fill-stone-200 dark:fill-stone-700">{shapeRects(s, S, cx, cy)}</g>
-      <Zones k={k} S={S} cx={cx} cy={cy} clipId="cut-clip-main" />
+      <Zones k={k} s={s} S={S} cx={cx} cy={cy} clipId="cut-clip-main" />
       <rect x={cx - s.hx * S} y={cy - s.hy * S} width={2 * s.hx * S} height={2 * s.hy * S} fill="none" className="stroke-stone-400" strokeDasharray="4 4" />
       <g fill="none" className="stroke-stone-800 dark:stroke-stone-200" strokeWidth="1.5">{shapeRects(s, S, cx, cy)}</g>
       <g className="stroke-stone-400" strokeWidth="1">
@@ -133,18 +140,17 @@ function MainFigure({ k }: { k: Plane }) {
 }
 
 // One effect on its own: it compresses one half of the section.
-function MiniFigure({ f, label, signs, id }: { f: Plane; label: string; signs: [number, number, number][]; id: string }) {
+function MiniFigure({ f, s, label, signs, id }: { f: Plane; s: GuideSection; label: string; signs: [number, number, number][]; id: string }) {
   const S = 9,
     cx = 70,
-    cy = 70,
-    s = SECTION;
+    cy = 70;
   return (
     <svg viewBox="0 0 140 140" className="mx-auto h-auto w-full max-w-[200px]" role="img" aria-label={label}>
       <defs>
         <clipPath id={id}>{shapeRects(s, S, cx, cy)}</clipPath>
       </defs>
       <g className="fill-stone-200 dark:fill-stone-700">{shapeRects(s, S, cx, cy)}</g>
-      <Zones k={f} S={S} cx={cx} cy={cy} clipId={id} />
+      <Zones k={f} s={s} S={S} cx={cx} cy={cy} clipId={id} />
       <rect x={cx - s.hx * S} y={cy - s.hy * S} width={2 * s.hx * S} height={2 * s.hy * S} fill="none" className="stroke-stone-400" strokeDasharray="3 3" />
       <g fill="none" className="stroke-stone-800 dark:stroke-stone-200">{shapeRects(s, S, cx, cy)}</g>
       <g className="stroke-stone-400" strokeWidth=".8">
@@ -201,19 +207,23 @@ export function SectionCutSimulator() {
   const { t } = useLanguage();
   const fmt = useFmt();
   const [st, setSt] = useState<State>(CASES[0].v);
-  const k = plane(st.N, st.Mx, st.My, SECTION);
-  const cs = guideCorners(k, SECTION),
+  const [face, setFace] = useState<Face>(2);
+  const sec = FACES[face];
+  const k = plane(st.N, st.Mx, st.My, sec);
+  const peak = (f: Face) => Math.abs(criticalCorner(guideCorners(plane(st.N, st.Mx, st.My, FACES[f]), FACES[f])).sigma);
+  const peaks = { 1: peak(1), 2: peak(2) };
+  const cs = guideCorners(k, sec),
     best = criticalCorner(cs);
   const maxT = cs.reduce((a, b) => (b.sigma > a.sigma ? b : a)),
     maxC = cs.reduce((a, b) => (b.sigma < a.sigma ? b : a));
-  const seg = neutralSegment(k, SECTION);
+  const seg = neutralSegment(k, sec);
   const sgn = (n: number) => (n < 0 ? "−" : "+") + fmt(Math.abs(n));
   const sigTone = (n: number) => (n < 0 ? "text-[#C0392B] dark:text-red-400" : "text-teal-700 dark:text-teal-400");
 
   return (
     <div className="grid gap-5 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
       <div className="rounded-lg border border-stone-200 bg-white p-4 shadow-sm dark:border-stone-700 dark:bg-stone-900">
-        <MainFigure k={k} />
+        <MainFigure k={k} s={sec} />
         <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-[13px] text-stone-600 dark:text-stone-400">
           <span><b style={{ color: TENS }}>■</b> {t("cut.leg.tension")}</span>
           <span><b style={{ color: COMP }}>■</b> {t("cut.leg.compression")}</span>
@@ -246,7 +256,32 @@ export function SectionCutSimulator() {
         <Control id="cut-n" label="N (kg)" value={st.N} min={-5000} max={5000} step={50} onChange={(v) => setSt({ ...st, N: v })} />
         <Control id="cut-mx" label="Mx (kg·m)" value={st.Mx} min={-3000} max={3000} step={10} onChange={(v) => setSt({ ...st, Mx: v })} />
         <Control id="cut-my" label="My (kg·m)" value={st.My} min={-3000} max={3000} step={10} onChange={(v) => setSt({ ...st, My: v })} />
-        <p className="font-mono text-xs uppercase tracking-wide text-stone-500 dark:text-stone-400">{t("cut.sim.section")}</p>
+        <div className="flex flex-wrap gap-2" role="group" aria-label={t("cut.face.label")}>
+          {([1, 2] as const).map((f) => (
+            <button
+              key={f}
+              type="button"
+              aria-pressed={face === f}
+              onClick={() => setFace(f)}
+              className={`rounded border px-2.5 py-1 text-sm transition-colors ${
+                face === f
+                  ? "border-amber-700 bg-amber-700 text-white dark:border-amber-400 dark:bg-amber-500 dark:text-stone-950"
+                  : "border-stone-200 bg-stone-100 hover:bg-stone-200 dark:border-stone-600 dark:bg-stone-800 dark:hover:bg-stone-700"
+              }`}
+            >
+              {t(f === 1 ? "cut.face.1" : "cut.face.2")}
+            </button>
+          ))}
+        </div>
+        <p className="font-mono text-xs uppercase tracking-wide text-stone-500 dark:text-stone-400" data-testid="cut-section-line">
+          {t("cut.sim.section")} · A = {fmt(sec.A, 0)} cm² · Ix = {fmt(sec.Ix, 0)} cm⁴ · Iy = {fmt(sec.Iy, 0)} cm⁴
+        </p>
+        <p className="text-[14px] leading-relaxed" data-testid="cut-compare">
+          {t("cut.face.compare")} {t("cut.face.1.short")} <b>{fmt(peaks[1])}</b> · {t("cut.face.2.short")} <b>{fmt(peaks[2])}</b> kg/cm² →{" "}
+          <b className="text-amber-700 dark:text-amber-400">
+            {peaks[1] === peaks[2] ? t("cut.face.tie") : peaks[1] < peaks[2] ? t("cut.face.1.short") : t("cut.face.2.short")}
+          </b>
+        </p>
         <div className="border-l-4 border-amber-600 pl-3 text-[15px] leading-relaxed" data-testid="cut-reading">
           {seg ? (
             <>
@@ -266,14 +301,14 @@ export function SectionCutSimulator() {
             <p>{Math.abs(k.c) < 1e-9 ? t("cut.read.zero") : k.c < 0 ? t("cut.read.uniform_comp") : t("cut.read.uniform_tens")}</p>
           )}
         </div>
-        <ThreeEffects k={k} />
-        <CornerTable k={k} sgn={sgn} fmt={fmt} />
+        <ThreeEffects k={k} s={sec} />
+        <CornerTable k={k} s={sec} sgn={sgn} fmt={fmt} />
       </div>
     </div>
   );
 }
 
-function ThreeEffects({ k }: { k: Plane }) {
+function ThreeEffects({ k, s }: { k: Plane; s: GuideSection }) {
   const { t } = useLanguage();
   const col = (v: number) => (v < 0 ? -1 : 1);
   const items = [
@@ -304,7 +339,7 @@ function ThreeEffects({ k }: { k: Plane }) {
       {items.map((it) => (
         <div key={it.id} className="flex flex-col gap-1 text-center">
           <p className="font-mono text-xs font-semibold uppercase tracking-wide text-stone-500 dark:text-stone-400">{it.title}</p>
-          <MiniFigure f={it.f} label={it.title} signs={it.signs} id={it.id} />
+          <MiniFigure f={it.f} s={s} label={it.title} signs={it.signs} id={it.id} />
           <p className="text-[12px] leading-snug text-stone-600 dark:text-stone-400">{it.note}</p>
         </div>
       ))}
@@ -312,11 +347,11 @@ function ThreeEffects({ k }: { k: Plane }) {
   );
 }
 
-function CornerTable({ k, sgn, fmt }: { k: Plane; sgn: (n: number) => string; fmt: (n: number, d?: number) => string }) {
+function CornerTable({ k, s, sgn, fmt }: { k: Plane; s: GuideSection; sgn: (n: number) => string; fmt: (n: number, d?: number) => string }) {
   const { t } = useLanguage();
-  const cs = guideCorners(k, SECTION),
+  const cs = guideCorners(k, s),
     best = criticalCorner(cs),
-    uniform = !neutralSegment(k, SECTION); // equal σ everywhere: no corner is "the" critical one
+    uniform = !neutralSegment(k, s); // equal σ everywhere: no corner is "the" critical one
   return (
     <div className="overflow-x-auto">
       <table className="w-full font-mono text-[13px] tabular-nums" data-testid="cut-table">
@@ -352,7 +387,7 @@ function CornerTable({ k, sgn, fmt }: { k: Plane; sgn: (n: number) => string; fm
 export function NeutralAxisExample() {
   const { t } = useLanguage();
   const fmt = useFmt();
-  const k = plane(-600, -300, 900, SECTION);
+  const k = plane(-600, -300, 900, FACES[2]);
   const { x0, y0 } = neutralIntercepts(k);
   return (
     <div className="rounded-lg border border-stone-200 bg-white p-4 font-mono text-sm leading-relaxed shadow-sm dark:border-stone-700 dark:bg-stone-900" data-testid="cut-en-example">
