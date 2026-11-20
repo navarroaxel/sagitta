@@ -260,7 +260,7 @@ describe("Casio program REACC", () => {
       expect(faceFor(Mx, My)).toBe(face);
       const c = chooseIPB(N, Mx, My, adm, face);
       if (c) {
-        expect(out.slice(0, 6)).toEqual(["USAR IPB", +c.name.replace("IPB ", ""), "SIGMA MAX =", expect.closeTo(c.sigmaMax, 6), "CARA =", face]);
+        expect(out.slice(0, 6)).toEqual(["USAR IPB", +c.name.replace("IPB ", ""), "SIGMAₘₐₓ =", expect.closeTo(c.sigmaMax, 6), "CARA =", face]);
         // the neutral axis: where it crosses X (Y = 0) and Y (X = 0), cm; "NO CORTA" when that moment is 0
         const en = neutralAxisOf(c.name, face, N, Mx, My);
         const fix = (n: number | null, label: string, none: string) => (n === null ? [none] : [label, expect.closeTo(n === 0 ? 0 : n, 6)]);
@@ -455,7 +455,7 @@ describe("Casio program VIGACAB (beam + cable of the two truss-cable-beam exampl
 
   test("running the listing: both examples, typed as on the calculator", () => {
     const expected = (r: ReturnType<typeof cableBeam>) => [
-      "M MAX KG M", expect.closeTo(r.Mmax, 6), "SX NEC CM3", expect.closeTo(r.sxReq, 6),
+      "Mₘₐₓ KG M", expect.closeTo(r.Mmax, 6), "SX NEC CM3", expect.closeTo(r.sxReq, 6),
       "IPB MIN", +r.min!.name.replace("IPB ", ""), "SIGMA CON IPB MIN", expect.closeTo(r.min!.sigma, 6),
       "TENSION CABLE KG", expect.closeTo(r.T, 6), "A CABLE CM2", expect.closeTo(r.A, 6),
       "D CABLE CM", expect.closeTo(r.d, 6), "ALARG CABLE CM", expect.closeTo(r.elongation, 6),
@@ -606,7 +606,7 @@ describe("Casio program PANDEO (IPB of a bar in compression: Euler)", () => {
       const r = compressionBar(P, L, beta, S);
       const out = runBasic(PANDEO_LINES, [P, L, beta, S]);
       expect(out).toEqual([
-        "I MIN CM4 EULER", expect.closeTo(r.Imin, 6),
+        "Iₘᵢₙ CM4 EULER", expect.closeTo(r.Imin, 6),
         "IPB", +r.name!.replace("IPB ", ""), "IY CM4", r.Iy, "PCR KG", expect.closeTo(r.pcr, 3),
         "A DEL IPB CM2", r.A, "SIGMA KG CM2", expect.closeTo(r.sigma, 6),
         ...(r.sigmaOk ? [] : ["OJO SIGMA SUPERA ADM"]),
@@ -615,7 +615,7 @@ describe("Casio program PANDEO (IPB of a bar in compression: Euler)", () => {
     }
     expect(runBasic(PANDEO_LINES, [80000, 0.5, 0, 0])).toContain("OJO SIGMA SUPERA ADM");
     expect(runBasic(PANDEO_LINES, [36457, 5, 0, 0])).not.toContain("OJO SIGMA SUPERA ADM");
-    expect(runBasic(PANDEO_LINES, [1e7, 8, 0, 0])).toEqual(["I MIN CM4 EULER", expect.any(Number), "NINGUN IPB HASTA 1000"]);
+    expect(runBasic(PANDEO_LINES, [1e7, 8, 0, 0])).toEqual(["Iₘᵢₙ CM4 EULER", expect.any(Number), "NINGUN IPB HASTA 1000"]);
   });
 });
 

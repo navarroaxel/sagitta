@@ -39,6 +39,9 @@ const KEYWORDS: [string, number[]][] = [
 // superscript digits of the fx-9860G character set (E5C0-E5C9 in Cahute's table; ² and ³ also in the eActivity files EactMaker
 // writes): allowed inside a string, so a label can say CM² / CM³ / CM⁴ or end with the number key of a menu item (¹ ² …)
 const SUPERSCRIPT: Record<string, number[]> = Object.fromEntries([..."⁰¹²³⁴⁵⁶⁷⁸⁹"].map((c, d) => [c, [0xe5, 0xc0 + d]]));
+// the "Mini Latin" letters of the fx-9860G (E7 followed by the ASCII code: E761-E77A small letters, E741-E75A capitals; EactMaker
+// uses them for subscripts): inside a string, the Unicode subscript letters write the subscripts of Mmax, Imin, Pmax…
+const MINI: Record<string, number> = { "ₐ": 0x61, "ₘ": 0x6d, "ₓ": 0x78, "ᵢ": 0x69, "ₙ": 0x6e };
 const SYMBOLS: Record<string, number> = { "√": 0x86, "→": 0x0e, "◢": 0x0c, "≤": 0x10, "×": 0xa9, "÷": 0xb9 };
 // after one of these a minus is the sign of a number, not a subtraction
 const OPENS = new Set([0x0d, 0x3a, 0x28, 0x0e, 0x3d, 0x3e, 0x3c, 0x89, 0x99, 0xa9, 0xb9, 0x87, 0x2c, 0x5b, 0x7b]);
@@ -51,6 +54,11 @@ export function tokenizeLine(line: string): number[] {
     const ch = line[i];
     if (inString) {
       const o = ch.charCodeAt(0);
+      if (ch in MINI) {
+        out.push(0xe7, MINI[ch]);
+        i++;
+        continue;
+      }
       if (ch in SUPERSCRIPT) {
         out.push(...SUPERSCRIPT[ch]);
         i++;
