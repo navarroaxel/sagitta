@@ -136,6 +136,7 @@ export default function CasioReaccionesPage() {
             <p className={P}><Sub>{t("casio.p.q")}</Sub></p>
             <p className={`${P} mt-3`}><Sub>{t("casio.p.ex")}</Sub></p>
             <p className={`${P} mt-3`}>{t("casio.p.draw")}</p>
+            <p className={`${P} mt-3`}>{t("casio.sig")}</p>
             <p className={`${P} mt-3`}>{t("casio.p.how")}</p>
           </section>
 
@@ -188,6 +189,7 @@ export default function CasioReaccionesPage() {
             <Program name={EXCENTR_NAME} lines={EXCENTR_LINES} id="casio-excentr" />
             <p className={P}>{t("casio.x.q")}</p>
             <p className={`${P} mt-3`}>{t("casio.x.ex")}</p>
+            <p className={`${P} mt-3`}>{t("casio.sig")}</p>
           </section>
 
           <section className="mt-12 rounded-lg border border-[#B7791F] p-5">

@@ -5,7 +5,19 @@
 export type Out = string | number;
 
 // What the graphics commands drew (the window, the segments, the texts), for the tests.
+// One graph screen: what was drawn since the last Cls.
+export interface Page {
+  window: number[] | null;
+  segments: [number, number, number, number][];
+  horizontals: number[];
+  verticals: number[];
+  plots: [number, number][];
+  texts: [number, number, number | string][];
+}
+const newPage = (): Page => ({ window: null, segments: [], horizontals: [], verticals: [], plots: [], texts: [] });
+
 export interface Gfx {
+  pages: Page[]; // one per Cls, in order (the first drawing before any Cls goes to page 0)
   window: number[] | null;
   segments: [number, number, number, number][];
   horizontals: number[];
@@ -23,7 +35,7 @@ export interface Mem {
   L: Record<number, number[]>;
 }
 export const newMem = (): Mem => ({ v: {}, L: {} });
-export const newGfx = (): Gfx => ({ window: null, segments: [], horizontals: [], verticals: [], plots: [], texts: [], locates: [], clearTexts: 0, screens: [[]], clears: 0 });
+export const newGfx = (): Gfx => ({ pages: [newPage()], window: null, segments: [], horizontals: [], verticals: [], plots: [], texts: [], locates: [], clearTexts: 0, screens: [[]], clears: 0 });
 
 const splitTop = (line: string, sep: string): string[] => {
   const parts: string[] = [];
@@ -100,25 +112,32 @@ export function runBasic(lines: string[], inputs: number[], gfx: Gfx = newGfx(),
       pc++;
     } else if (s === "Cls") {
       gfx.clears++;
+      gfx.pages.push(newPage());
       pc++;
     } else if (s.startsWith("ViewWindow ")) {
       gfx.window = args(s.slice(11));
+      gfx.pages[gfx.pages.length - 1].window = gfx.window;
       pc++;
     } else if (s.startsWith("Horizontal ")) {
       gfx.horizontals.push(expr(s.slice(11)));
+      gfx.pages[gfx.pages.length - 1].horizontals.push(gfx.horizontals[gfx.horizontals.length - 1]);
       pc++;
     } else if (s.startsWith("Vertical ")) {
       gfx.verticals.push(expr(s.slice(9)));
+      gfx.pages[gfx.pages.length - 1].verticals.push(gfx.verticals[gfx.verticals.length - 1]);
       pc++;
     } else if (s.startsWith("PlotOn ")) {
       gfx.plots.push(args(s.slice(7)) as [number, number]);
+      gfx.pages[gfx.pages.length - 1].plots.push(gfx.plots[gfx.plots.length - 1]);
       pc++;
     } else if (s.startsWith("F-Line ")) {
       gfx.segments.push(args(s.slice(7)) as [number, number, number, number]);
+      gfx.pages[gfx.pages.length - 1].segments.push(gfx.segments[gfx.segments.length - 1]);
       pc++;
     } else if (s.startsWith("Text ")) {
       const [r, c, e] = splitTop(s.slice(5), ",");
       gfx.texts.push([expr(r), expr(c), /^"/.test(e.trim()) ? e.trim().slice(1, -1) : expr(e)]);
+      gfx.pages[gfx.pages.length - 1].texts.push(gfx.texts[gfx.texts.length - 1]);
       pc++;
     } else if (s.startsWith("While ")) {
       // the waits for a key (While Getkey>0 / While Getkey=0) are over at once; any other condition is evaluated

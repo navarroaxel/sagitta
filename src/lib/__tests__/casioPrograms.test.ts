@@ -281,54 +281,54 @@ describe("Casio program REACC", () => {
     const run = (N: number, Mx: number, My: number) => {
       const gfx = newGfx();
       const out = runBasic(PERFIL_LINES, [N, Mx, My, 0], gfx);
-      return { gfx, name: `IPB ${out[1]}`, face: out[5] as 1 | 2 };
+      return { gfx, pg: gfx.pages[1], name: `IPB ${out[1]}`, face: out[5] as 1 | 2 };
     };
     // base of preset #2: face 2, IPB 120. The 12 edges are the closed outline of guideOutline (the guide's figure)
-    const { gfx, name, face } = run(-600, -300, 900);
+    const { pg, name, face } = run(-600, -300, 900);
     expect([name, face]).toEqual(["IPB 120", 2]);
     const s = guideSection(name, true);
     const outline = guideOutline(s);
-    expect(gfx.segments.slice(0, 12)).toHaveLength(12);
+    expect(pg.segments.slice(0, 12)).toHaveLength(12);
     // the same 12 edges (the program walks the vertices in its own order, so compare them as undirected edges)
     const edge = (a: number[], b: number[]) => [a, b].map((v) => v.map((c) => c.toFixed(6)).join(",")).sort().join("|");
-    expect(new Set(gfx.segments.slice(0, 12).map(([x1, y1, x2, y2]) => edge([x1, y1], [x2, y2])))).toEqual(
+    expect(new Set(pg.segments.slice(0, 12).map(([x1, y1, x2, y2]) => edge([x1, y1], [x2, y2])))).toEqual(
       new Set(outline.map((p, k) => edge(p, outline[(k + 1) % 12]))),
     );
     // equal scale on a 127 x 63 screen, the section inside the window
-    const [xmin, xmax, , ymin, ymax] = gfx.window!;
+    const [xmin, xmax, , ymin, ymax] = pg.window!;
     expect(xmax).toBeCloseTo(-xmin, 9);
     expect(ymax).toBeCloseTo(-ymin, 9);
     expect(xmax / ymax).toBeCloseTo(2, 9);
     expect(ymax).toBeGreaterThan(s.hy);
     expect(xmax).toBeGreaterThan(s.hx);
-    expect([gfx.horizontals, gfx.verticals]).toEqual([[0], [0]]); // the two axes
+    expect([pg.horizontals, pg.verticals]).toEqual([[0], [0]]); // the two axes
     // the neutral axis (the 13th segment): both ends have σ = 0
-    expect(gfx.segments).toHaveLength(13);
+    expect(pg.segments).toHaveLength(13);
     const k = plane(-600, -300, 900, s);
-    const [ex1, ey1, ex2, ey2] = gfx.segments[12];
+    const [ex1, ey1, ex2, ey2] = pg.segments[12];
     expect(Math.abs(sigmaAt(k, ex1, ey1))).toBeLessThan(1e-6);
     expect(Math.abs(sigmaAt(k, ex2, ey2))).toBeLessThan(1e-6);
     // the critical corner and its signed σ
     const cc = criticalCorner(guideCorners(k, s));
-    expect(gfx.plots).toEqual([[expect.closeTo(cc.x, 9), expect.closeTo(cc.y, 9)]]);
-    expect(gfx.texts).toEqual([[1, 1, expect.closeTo(cc.sigma, 6)]]);
+    expect(pg.plots).toEqual([[expect.closeTo(cc.x, 9), expect.closeTo(cc.y, 9)]]);
+    expect(pg.texts).toEqual([[1, 1, expect.closeTo(cc.sigma, 6)]]);
     // face 1 (|Mx| > |My|) is the outline as drawn, not swapped
     const f1 = run(-600, 900, -300);
     expect(f1.face).toBe(1);
     const s1 = guideSection(f1.name, false);
     const o1 = guideOutline(s1);
-    expect(new Set(f1.gfx.segments.slice(0, 12).map(([x1, y1, x2, y2]) => edge([x1, y1], [x2, y2])))).toEqual(
+    expect(new Set(f1.pg.segments.slice(0, 12).map(([x1, y1, x2, y2]) => edge([x1, y1], [x2, y2])))).toEqual(
       new Set(o1.map((p, k) => edge(p, o1[(k + 1) % 12]))),
     );
     // a moment of 0: the neutral axis is parallel to an axis (Mx = 0: vertical line) or there is none (only N)
     const mx0 = run(-600, 0, 900);
-    expect(mx0.gfx.segments).toHaveLength(12); // no sloped line: Mx = 0 makes the neutral axis the vertical x = −N·Iy/(A·My)
+    expect(mx0.pg.segments).toHaveLength(12); // no sloped line: Mx = 0 makes the neutral axis the vertical x = −N·Iy/(A·My)
     const sMx0 = guideSection(mx0.name, mx0.face === 2);
-    expect(mx0.gfx.verticals).toEqual([0, expect.closeTo(neutralAxisOf(mx0.name, mx0.face, -600, 0, 900).x0!, 9)]);
+    expect(mx0.pg.verticals).toEqual([0, expect.closeTo(neutralAxisOf(mx0.name, mx0.face, -600, 0, 900).x0!, 9)]);
     expect(sMx0.A).toBeGreaterThan(0);
     const onlyN = run(-600, 0, 0);
-    expect(onlyN.gfx.segments).toHaveLength(12); // only N: σ is uniform, no neutral axis
-    expect(onlyN.gfx.verticals).toEqual([0]); // just the axis
+    expect(onlyN.pg.segments).toHaveLength(12); // only N: σ is uniform, no neutral axis
+    expect(onlyN.pg.verticals).toEqual([0]); // just the axis
   });
 
   test("running PERFIL: σ_adm typed as 0 means the default, 1400", () => {
@@ -380,7 +380,7 @@ describe("Casio program PERFIL", () => {
 
   test("the program text matches: every variable it reads is assigned first", () => {
     expect(PERFIL_LINES.join("\n")).toContain("If T=2:Then X→Z:Y→X:Z→Y:D→Z:E→D:Z→E:IfEnd");
-    expect(PERFIL_LINES.filter((l) => l.includes("→List")).length).toBe(9); // 7 table lists + the 2 of the outline's vertices
+    expect(PERFIL_LINES.filter((l) => l.includes("→List")).length).toBe(12); // 7 table lists, the vertices of the outline (its own drawing and the diagrams) and the data of the diagrams
   });
 });
 
@@ -1004,6 +1004,7 @@ describe("Casio program EXCENTR (eccentric axial load on an IPN / IPB: ipn300-ec
     const prof = profileAt(series, steps);
     const r = eccentricLoad({ profile: prof, rotated: face === 2, P, ex, ey, sigmaAdm: S || (unit === 1 ? 14 : 1600) });
     const gfx = run(series, [...moves], face, unit, P, ex, ey, S);
+    const pg = gfx.pages[1]; // the face drawing: the first graph screen
     // the profile chosen with the arrows
     const list = gfx.screens.filter((sc) => sc.some((l) => l[2] === "EXE=ACEPTAR"));
     expect(at(list.at(-1), 5, 1)).toBe(prof.h);
@@ -1029,15 +1030,15 @@ describe("Casio program EXCENTR (eccentric axial load on an IPN / IPB: ipn300-ec
     const s = guideSection(prof.name, face === 2);
     const outline = guideOutline(s);
     const edge = (p: number[], q: number[]) => [p, q].map((v) => v.map((x) => x.toFixed(6)).join(",")).sort().join("|");
-    expect(new Set(gfx.segments.slice(0, 12).map(([x1, y1, x2, y2]) => edge([x1, y1], [x2, y2])))).toEqual(
+    expect(new Set(pg.segments.slice(0, 12).map(([x1, y1, x2, y2]) => edge([x1, y1], [x2, y2])))).toEqual(
       new Set(outline.map((p, i) => edge(p, outline[(i + 1) % 12]))),
     );
-    expect(gfx.plots).toEqual([[ex, ey], [expect.closeTo(r.critical.x, 9), expect.closeTo(r.critical.y, 9)]]);
-    expect(gfx.texts).toEqual([[1, 1, expect.closeTo(r.critical.sigma, 6)]]);
+    expect(pg.plots).toEqual([[ex, ey], [expect.closeTo(r.critical.x, 9), expect.closeTo(r.critical.y, 9)]]);
+    expect(pg.texts).toEqual([[1, 1, expect.closeTo(r.critical.sigma, 6)]]);
     if (Math.abs(cc) > 0) {
-      const [x1, y1, x2, y2] = gfx.segments[12];
+      const [x1, y1, x2, y2] = pg.segments[12];
       for (const [px, py] of [[x1, y1], [x2, y2]]) expect(Math.abs(a + b * px + cc * py)).toBeLessThan(1e-9); // σ = 0 per kN along the drawn line
-    } else if (Math.abs(b) > 0) expect(gfx.verticals).toContain(-a / b);
+    } else if (Math.abs(b) > 0) expect(pg.verticals).toContain(-a / b);
   });
 
   test("the SVG's own numbers: σ max 13.96 kN/cm² ≤ 14, P max 76.25 kN (IPN 300, P = 76, ex = 10, ey = 20)", () => {
@@ -1056,7 +1057,7 @@ describe("Casio program EXCENTR (eccentric axial load on an IPN / IPB: ipn300-ec
     expect([at(n, 1, 2), at(n, 1, 3)]).toEqual(["NO CORTA EL EJE X", "NO CORTA EL EJE Y"]);
     const prof = profileAt(2, 0);
     expect(at(scr(gfx, "SIGMA EN LAS ESQUINAS")!, 13, 2) as number).toBeCloseTo(-2000 / prof.A, 6);
-    expect(gfx.segments).toHaveLength(12); // no line
+    expect(gfx.pages[1].segments).toHaveLength(12); // no line
   });
 
   test("after the results a menu offers another load or leaving", () => {
@@ -1064,5 +1065,128 @@ describe("Casio program EXCENTR (eccentric axial load on an IPN / IPB: ipn300-ec
     runBasic(EXCENTR_LINES, [1, EXE, 1, 1, 76, 10, 20, 0, 1, /* OTRA CARGA */ 2, EXE, 2, 2, -1000, 1, 1, 0, 0], gfx);
     expect(gfx.screens.filter((sc) => sc[0]?.[2] === "SIGMA EN LAS ESQUINAS")).toHaveLength(2);
     expect(gfx.screens.filter((sc) => sc[0]?.[2] === "OTRO CALCULO?")).toHaveLength(2);
+  });
+});
+
+describe("the diagrams of the normal stresses σ(N), σ(Mx), σ(My) (PERFIL and EXCENTR) and the lists left to REACC", () => {
+  const near = (v: number[], w: number[]) => v.forEach((x, i) => expect(x).toBeCloseTo(w[i], 6));
+  const inside = (pg: { window: number[] | null; segments: number[][] }) => {
+    const [xmin, xmax, , ymin, ymax] = pg.window!;
+    expect((xmax - xmin) / (ymax - ymin)).toBeCloseTo(4.032 / 2, 3); // equal scale on the 127 x 63 screen (2.016)
+    pg.segments.forEach(([x1, y1, x2, y2]) =>
+      [[x1, y1], [x2, y2]].forEach(([x, y]) => {
+        expect(x).toBeGreaterThanOrEqual(xmin - 1e-9);
+        expect(x).toBeLessThanOrEqual(xmax + 1e-9);
+        expect(y).toBeGreaterThanOrEqual(ymin - 1e-9);
+        expect(y).toBeLessThanOrEqual(ymax + 1e-9);
+      }),
+    );
+  };
+  // pages: 0 before any Cls, 1 the face drawing, 2 σ(N), 3 σ(Mx), 4 σ(My)
+  const perfil = (N: number, Mx: number, My: number) => {
+    const gfx = newGfx();
+    const out = runBasic(PERFIL_LINES, [N, Mx, My, 0], gfx);
+    const name = `IPB ${out[1]}`;
+    const face = out[5] as 1 | 2;
+    const sec = guideSection(name, face === 2);
+    return { gfx, sec, k: plane(N, Mx, My, sec) };
+  };
+
+  test("PERFIL, the base of preset #2 (IPB 120 turned): σ(Mx) and σ(My) are bow ties, σ(N) a rectangle, compression hatched", () => {
+    const { gfx, sec, k } = perfil(-600, -300, 900);
+    expect(gfx.pages).toHaveLength(5);
+    const [, , pN, pMx, pMy] = gfx.pages;
+    [pN, pMx, pMy].forEach((pg) => inside(pg));
+    // σ(N): uniform, compression (c < 0): the rectangle to the left of its baseline, hatched with the 17 lines
+    const L = 0.9 * sec.hy;
+    const X = 1.1 * sec.hx + L;
+    expect(k.c).toBeLessThan(0);
+    expect(pN.segments.slice(12, 16)).toEqual([[X, sec.hy, X, -sec.hy], [X, sec.hy, X - L, sec.hy], [X, -sec.hy, X - L, -sec.hy], [X - L, sec.hy, X - L, -sec.hy]]);
+    expect(pN.segments).toHaveLength(12 + 4 + 17);
+    near([pN.texts[0][1] as number, pN.texts[1][1] as number, pN.texts[1][2] as number], [1, 70, k.c]);
+    // σ(Mx) = b·y: ends ±b·hy, zero on the baseline's middle, the slope joins the two tips
+    const K = L / Math.abs(k.b * sec.hy);
+    const tip = k.b * sec.hy * K;
+    expect(pMx.segments[12]).toEqual([X, sec.hy, X, -sec.hy]);
+    near(pMx.segments[13], [X, sec.hy, X + tip, sec.hy]);
+    near(pMx.segments[14], [X, -sec.hy, X - tip, -sec.hy]);
+    near(pMx.segments[15], [X + tip, sec.hy, X - tip, -sec.hy]);
+    expect((pMx.segments[15][0] + pMx.segments[15][2]) / 2).toBeCloseTo(X, 9); // the bow tie's waist is on the baseline
+    expect(Math.abs(tip)).toBeCloseTo(L, 9);
+    // the hatch is the compressed half only: σ < 0 at those y, drawn from the baseline to the sloped side
+    const hatch = pMx.segments.slice(16);
+    expect(hatch).toHaveLength(8);
+    hatch.forEach(([x1, y1, x2, y2]) => {
+      expect(y1).toBe(y2);
+      expect(k.b * y1).toBeLessThan(0);
+      expect(x1).toBe(X);
+      expect(x2).toBeCloseTo(X + K * k.b * y1, 9);
+    });
+    expect(pMx.texts.map((t) => t[2])).toEqual(["S(MX)", expect.closeTo(k.b * sec.hy, 6), expect.closeTo(-k.b * sec.hy, 6)]);
+    // σ(My) = a·x: the diagram below the section
+    const L2 = 0.6 * sec.hy;
+    const yb = -1.1 * sec.hy - L2;
+    const K2 = L2 / Math.abs(k.a * sec.hx);
+    const tip2 = k.a * sec.hx * K2;
+    near(pMy.segments[12], [-sec.hx, yb, sec.hx, yb]);
+    near(pMy.segments[13], [-sec.hx, yb, -sec.hx, yb + tip2]);
+    near(pMy.segments[14], [sec.hx, yb, sec.hx, yb - tip2]);
+    near(pMy.segments[15], [-sec.hx, yb + tip2, sec.hx, yb - tip2]);
+    const hatch2 = pMy.segments.slice(16);
+    expect(hatch2).toHaveLength(8);
+    hatch2.forEach(([x1, y1, x2, y2]) => {
+      expect(x1).toBe(x2);
+      expect(k.a * x1).toBeLessThan(0);
+      expect(y1).toBe(yb);
+      expect(y2).toBeCloseTo(yb - K2 * k.a * x1, 9);
+    });
+    expect(pMy.texts.map((t) => t[2])).toEqual(["S(MY)", expect.closeTo(-k.a * sec.hx, 6), expect.closeTo(k.a * sec.hx, 6)]);
+  });
+
+  test("a diagram of an effect that is zero is not drawn (only the section and its label)", () => {
+    const noMx = perfil(-600, 0, 900).gfx.pages;
+    expect(noMx[3].segments).toHaveLength(12); // Mx = 0
+    expect(noMx[4].segments.length).toBeGreaterThan(12);
+    const noMy = perfil(-600, -300, 0).gfx.pages;
+    expect(noMy[4].segments).toHaveLength(12); // My = 0
+    const onlyM = perfil(0, -300, 900).gfx.pages;
+    expect(onlyM[2].segments).toHaveLength(12); // N = 0
+    expect(onlyM[2].texts.map((t) => t[2])).toEqual(["S(N)", 0]);
+  });
+
+  test("tension on the other side: with N > 0 the rectangle goes to the right and has no hatch", () => {
+    const { gfx, sec } = perfil(2000, -300, 900);
+    const L = 0.9 * sec.hy;
+    const X = 1.1 * sec.hx + L;
+    const pN = gfx.pages[2];
+    expect(pN.segments[13]).toEqual([X, sec.hy, X + L, sec.hy]); // the top goes to the right of the baseline
+    expect(pN.segments).toHaveLength(12 + 4); // tension is only outlined
+  });
+
+  test("EXCENTR: the same diagrams from the eccentric load (σ(N) = P/A, σ(Mx) at the top, σ(My) at the right)", () => {
+    const prof = SEARCH_TABLE.find((p) => p.series === "IPN" && p.h === 300)!;
+    const r = eccentricLoad({ profile: prof, rotated: false, P: 76, ex: 10, ey: 20, sigmaAdm: 14 });
+    const gfx = newGfx();
+    runBasic(EXCENTR_LINES, [1, 31, 1, 1, 76, 10, 20, 0, 0], gfx);
+    expect(gfx.pages).toHaveLength(5);
+    const [, , pN, pMx, pMy] = gfx.pages;
+    [pN, pMx, pMy].forEach((pg) => inside(pg));
+    const top = r.corners[0]; // (+x, +y)
+    expect(pN.texts[1][2] as number).toBeCloseTo(top.sN, 9);
+    expect(pMx.texts.map((t) => t[2])).toEqual(["S(MX)", expect.closeTo(top.sMx, 9), expect.closeTo(-top.sMx, 9)]);
+    expect(pMy.texts.map((t) => t[2])).toEqual(["S(MY)", expect.closeTo(-top.sMy, 9), expect.closeTo(top.sMy, 9)]);
+    // tension everywhere on N and on the +y side of Mx: the hatch is on the other side
+    expect(top.sN).toBeGreaterThan(0);
+    expect(pN.segments).toHaveLength(12 + 4);
+  });
+
+  test("only REACC uses the lists above 10 (it keeps its loads in 11-21): no other program touches them", () => {
+    for (const [name, lines] of [["PERFIL", PERFIL_LINES], ["VIGACAB", VIGACAB_LINES], ["TRACCION", TRACCION_LINES], ["PANDEO", PANDEO_LINES], ["RETIC", RETIC_LINES], ["PERFILES", PERFILES_LINES], ["EXCENTR", EXCENTR_LINES]] as const) {
+      const used = [...new Set(lines.flatMap((l) => [...l.matchAll(/List (\\d+)/g)].map((m) => +m[1])))];
+      expect([name, Math.max(...used)]).toEqual([name, expect.any(Number)]);
+      expect(Math.max(...used)).toBeLessThanOrEqual(10);
+    }
+    const reacc = [...new Set(REACC_LINES.flatMap((l) => [...l.matchAll(/List (\\d+)/g)].map((m) => +m[1])))];
+    expect(Math.min(...reacc)).toBeGreaterThanOrEqual(11);
   });
 });
