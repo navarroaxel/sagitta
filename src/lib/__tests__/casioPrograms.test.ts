@@ -932,7 +932,17 @@ describe("Casio program RETIC (bar forces of a truss of up to 9 bars)", () => {
     const gfx = newGfx();
     runBasic(RETIC_LINES, [2, 3, 4, 7, 0], gfx); // BARRAS, APOYOS and AGREGAR CARGAS with no nodes, then RESOLVER, then leave
     expect(first(gfx, "PRIMERO LOS NUDOS")).toHaveLength(3);
-    expect(first(gfx, "FALTAN DATOS")).toHaveLength(1);
+    expect(first(gfx, "NO SE PUEDE RESOLVER")).toHaveLength(1);
+    expect(first(gfx, "NO SE PUEDE RESOLVER")[0].some((l) => l[2] === "FALTAN NUDOS (3 A 6)")).toBe(true);
+  });
+
+  test("solving with a node no bar touches names that node", () => {
+    const m = trussPreset("Triangular Truss");
+    const gfx = newGfx();
+    runBasic(RETIC_LINES, inputsFor(m, { bars: [[1, 2], [1, 2], [1, 2]] }), gfx);
+    const sc = first(gfx, "NO SE PUEDE RESOLVER")[0];
+    expect(sc.some((l) => l[2] === "NUDO SIN BARRAS:")).toBe(true);
+    expect(at(sc, 17, 3)).toBe(3);
   });
 
   test("corrections: a node (chosen on the drawing), a bar (chosen) and a load (REPETIR) typed again leave the rest alone", () => {
@@ -1098,7 +1108,7 @@ describe("Casio menus with the arrow keys (▲ 28, ▼ 37, EXE 31, EXIT 47, numb
     expect(g1.screens.some((sc) => sc[0]?.[2] === "PRIMERO LOS NUDOS")).toBe(true);
     const g2 = run(RETIC_LINES, [], [28, 31, 71]);
     expect(rows(g2).slice(0, 2)).toEqual([1, 7]);
-    expect(g2.screens.some((sc) => sc[0]?.[2] === "FALTAN DATOS")).toBe(true);
+    expect(g2.screens.some((sc) => sc[0]?.[2] === "NO SE PUEDE RESOLVER")).toBe(true);
   });
 
   test("PERFILES: ▼ EXE is BUSCAR REQUISITO, then series, property and the value; ▼ ▼ EXE is SALIR", () => {
