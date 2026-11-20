@@ -9,11 +9,13 @@ import {
   halfPlanePolygon,
   neutralIntercepts,
   neutralSegment,
+  isUniform,
   plane,
   resultantGuide,
   type GuideSection,
   type Plane,
 } from "@/lib/sectionGuide";
+import { SIGMA_EPS } from "@/lib/sectionCut";
 import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 import { Sub, SvgSub } from "@/components/Sub";
 
@@ -95,7 +97,10 @@ export function ShapePolygon({ s, S, cx, cy, ...rest }: { s: GuideSection; S: nu
 const pts = (poly: [number, number][], S: number, cx: number, cy: number) =>
   poly.map(([x, y]) => `${(cx + x * S).toFixed(1)},${(cy - y * S).toFixed(1)}`).join(" ");
 
+const ZERO = SIGMA_EPS;
+
 function Zones({ k, s, S, cx, cy, clipId }: { k: Plane; s: GuideSection; S: number; cx: number; cy: number; clipId: string }) {
+  if (Math.abs(k.a) < ZERO && Math.abs(k.b) < ZERO && Math.abs(k.c) < ZERO) return null; // zero plane: nothing to colour
   const tp = halfPlanePolygon(k, s, 1),
     cp = halfPlanePolygon(k, s, -1);
   return (
@@ -156,7 +161,7 @@ function MainFigure({ k, s }: { k: Plane; s: GuideSection }) {
         return (
           <g key={i} data-testid={`cut-corner-${i}`}>
             <circle cx={px} cy={py} r="5" fill={col} />
-            {seg && q === best && <circle cx={px} cy={py} r="11" fill="none" stroke={EN} strokeWidth="2.5" />}
+            {!isUniform(k, s) && q === best && <circle cx={px} cy={py} r="11" fill="none" stroke={EN} strokeWidth="2.5" />}
             <text x={tx} y={py + (up ? -14 : 24)} fontSize="12" fontWeight="600" textAnchor={anchor} fill={col} className="font-mono">
               σ = {fmt(q.sigma)}
             </text>
@@ -246,7 +251,6 @@ export function SectionCutSimulator() {
     best = criticalCorner(cs);
   const maxT = cs.reduce((a, b) => (b.sigma > a.sigma ? b : a)),
     maxC = cs.reduce((a, b) => (b.sigma < a.sigma ? b : a));
-  const seg = neutralSegment(k, sec);
   const sgn = (n: number) => (n < 0 ? "−" : "+") + fmt(Math.abs(n));
   const sigTone = (n: number) => (n < 0 ? "text-[#C0392B] dark:text-red-400" : "text-teal-700 dark:text-teal-400");
 
@@ -313,7 +317,7 @@ export function SectionCutSimulator() {
           </b>
         </p>
         <div className="border-l-4 border-amber-600 pl-3 text-[15px] leading-relaxed" data-testid="cut-reading">
-          {seg ? (
+          {!isUniform(k, sec) ? (
             <>
               <p>
                 {t("cut.read.critical")} ({fmt(best.x, 0)}; {fmt(best.y, 0)}): σ ={" "}
@@ -328,7 +332,7 @@ export function SectionCutSimulator() {
               </p>
             </>
           ) : (
-            <p>{Math.abs(k.c) < 1e-9 ? t("cut.read.zero") : k.c < 0 ? t("cut.read.uniform_comp") : t("cut.read.uniform_tens")}</p>
+            <p>{Math.abs(k.c) < SIGMA_EPS ? t("cut.read.zero") : k.c < 0 ? t("cut.read.uniform_comp") : t("cut.read.uniform_tens")}</p>
           )}
         </div>
         <ThreeEffects k={k} s={sec} />
@@ -345,21 +349,21 @@ function ThreeEffects({ k, s }: { k: Plane; s: GuideSection }) {
     {
       title: t("cut.eff.n"),
       f: { a: 0, b: 0, c: k.c },
-      signs: [[70, 78, col(k.c)]] as [number, number, number][],
+      signs: (k.c === 0 ? [] : [[70, 78, col(k.c)]]) as [number, number, number][],
       note: k.c === 0 ? t("cut.eff.none") : k.c < 0 ? t("cut.eff.n.comp") : t("cut.eff.n.tens"),
       id: "cut-clip-n",
     },
     {
       title: t("cut.eff.mx"),
       f: { a: 0, b: k.b, c: 0 },
-      signs: [[104, 40, col(k.b)], [104, 112, -col(k.b)]] as [number, number, number][],
+      signs: (k.b === 0 ? [] : [[104, 40, col(k.b)], [104, 112, -col(k.b)]]) as [number, number, number][],
       note: k.b === 0 ? t("cut.eff.none") : k.b < 0 ? t("cut.eff.mx.top") : t("cut.eff.mx.bottom"),
       id: "cut-clip-mx",
     },
     {
       title: t("cut.eff.my"),
       f: { a: k.a, b: 0, c: 0 },
-      signs: [[36, 78, -col(k.a)], [104, 78, col(k.a)]] as [number, number, number][],
+      signs: (k.a === 0 ? [] : [[36, 78, -col(k.a)], [104, 78, col(k.a)]]) as [number, number, number][],
       note: k.a === 0 ? t("cut.eff.none") : k.a < 0 ? t("cut.eff.my.right") : t("cut.eff.my.left"),
       id: "cut-clip-my",
     },
@@ -381,7 +385,7 @@ function CornerTable({ k, s, sgn, fmt }: { k: Plane; s: GuideSection; sgn: (n: n
   const { t } = useLanguage();
   const cs = guideCorners(k, s),
     best = criticalCorner(cs),
-    uniform = !neutralSegment(k, s); // equal σ everywhere: no corner is "the" critical one
+    uniform = isUniform(k, s); // equal σ everywhere: no corner is "the" critical one
   return (
     <div className="overflow-x-auto">
       <table className="w-full font-mono text-[13px] tabular-nums" data-testid="cut-table">
@@ -441,7 +445,7 @@ export function ResultantFigure() {
     return (
       <figure className="my-5 max-w-2xl rounded-lg border border-stone-200 bg-white p-4 shadow-sm dark:border-stone-700 dark:bg-stone-900" data-testid="cut-resultant-figure">
         <p data-testid="cut-resultant-uniform" className="text-[15px] leading-relaxed text-stone-700 dark:text-stone-300">
-          {Math.abs(k.c) < 0.5 ? t("cut.res.zero") : t("cut.res.uniform")}
+          {Math.abs(k.c) < SIGMA_EPS ? t("cut.res.zero") : t("cut.res.uniform")}
         </p>
       </figure>
     );

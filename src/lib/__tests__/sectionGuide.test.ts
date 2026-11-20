@@ -1,10 +1,11 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, it } from "vitest";
 import {
   criticalCorner,
   guideCorners,
   guideOutline,
   guideSection,
   halfPlanePolygon,
+  isUniform,
   neutralIntercepts,
   neutralSegment,
   plane,
@@ -114,5 +115,15 @@ describe("sectionGuide (preset #2, base of the column)", () => {
 
   test("resultant diagram: none when σ is uniform", () => {
     expect(resultantGuide(plane(-1000, 0, 0, s), s, 12)).toBeNull();
+  });
+});
+
+describe("uniform stress / zero tolerance", () => {
+  const s = guideSection("IPB 120", true);
+  it("small nonuniform stress is not uniform; N-only is", () => {
+    expect(isUniform(plane(-2000, 10, 0, s), s)).toBe(false); // neutral axis outside the section
+    expect(isUniform(plane(10, 0, 0, s), s)).toBe(true);
+    expect(resultantGuide(plane(0, 0.1, 0, s), s, 11)).not.toBeNull();
+    expect(resultantGuide(plane(10, 0, 0, s), s, 11)).toBeNull();
   });
 });

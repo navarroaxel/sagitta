@@ -3,6 +3,7 @@
 // typed in kg·m, as the solver prints them). Same convention as stress3d.ts / sectionCut.ts: Mx > 0
 // tensions the +y fibres, My > 0 the +x fibres, N > 0 is tension. Presentation only.
 import { getProfile } from "./profiles";
+import { SIGMA_EPS } from "./sectionCut";
 
 export interface GuideSection {
   A: number; // cm²
@@ -63,6 +64,12 @@ export function guideCorners(k: Plane, s: GuideSection): GuideCorner[] {
     return { x, y, sN: k.c, sMx: k.b * y, sMy: k.a * x, sigma: sigmaAt(k, x, y) };
   });
 }
+
+// σ is the same over the whole section (range of the corner values below the app's zero tolerance): no E.N.
+export const isUniform = (k: Plane, s: GuideSection): boolean => {
+  const sig = guideCorners(k, s).map((c) => c.sigma);
+  return Math.max(...sig) - Math.min(...sig) < SIGMA_EPS;
+};
 
 export const criticalCorner = (cs: GuideCorner[]): GuideCorner =>
   cs.reduce((m, q) => (Math.abs(q.sigma) > Math.abs(m.sigma) ? q : m));
@@ -152,7 +159,7 @@ export function resultantGuide(k: Plane, s: GuideSection, dist: number): GuideRe
   const gn = Math.hypot(k.a, k.b);
   const cs = guideCorners(k, s);
   const sig = cs.map((c) => c.sigma);
-  if (gn < 1e-9 || Math.max(...sig) - Math.min(...sig) < 0.5) return null; // uniform σ: no E.N.
+  if (gn < 1e-9 || Math.max(...sig) - Math.min(...sig) < SIGMA_EPS) return null; // uniform σ: no E.N.
   const u: [number, number] = [k.a / gn, k.b / gn];
   const e: [number, number] = [-u[1], u[0]];
   const n: [number, number] = e[1] < -1e-9 || (Math.abs(e[1]) <= 1e-9 && e[0] > 0) ? e : [-e[0], -e[1]];
