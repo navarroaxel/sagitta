@@ -7,7 +7,7 @@
 //   content: 10 bytes (8 of password, none = zeros, + 2 zeros) + the program tokens, each line closed by 0x0D, then 1-4
 //   zero bytes so that the content length is a multiple of 4.
 // Tokens: ASCII for letters, digits and most symbols; one byte for → (0E) ◢ (0C) ≤ (10) (–) (87) + (89) − (99) × (A9) ÷ (B9)
-// Abs (97) √ (86) Cls (D1) ViewWindow (EB); two bytes for If / Then / Else / IfEnd / For / To / Next / Stop / While / WhileEnd / Text / Horizontal / Vertical / F-Line / PlotOn (F7xx), List (7F51) and Getkey (7F8F). Codes from Cahute's
+// Abs (97) √ (86) Cls (D1) ViewWindow (EB); two bytes for If / Then / Else / IfEnd / For / To / Next / Stop / While / WhileEnd / Text / Horizontal / Vertical / F-Line / PlotOn / ClrText / Locate (F7xx), List (7F51) and Getkey (7F8F). Codes from Cahute's
 // chars.toml, the same table as the fx-9860G's own. Presentation of the program only; the calculator is the judge.
 
 const KEYWORDS: [string, number[]][] = [
@@ -33,6 +33,8 @@ const KEYWORDS: [string, number[]][] = [
   ["Text ", [0xf7, 0xa5]],
   ["Vertical ", [0xf7, 0xa3]],
   ["PlotOn ", [0xf7, 0xa8]],
+  ["ClrText", [0xf7, 0x18]],
+  ["Locate ", [0xf7, 0x10]],
 ];
 const SYMBOLS: Record<string, number> = { "√": 0x86, "→": 0x0e, "◢": 0x0c, "≤": 0x10, "×": 0xa9, "÷": 0xb9 };
 // after one of these a minus is the sign of a number, not a subtraction

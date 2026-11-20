@@ -77,12 +77,48 @@ export const baseForces = (r: Reactions): BaseForces => ({ N: -r.fz, Qx: r.fy, Q
 // What is typed on the calculator, line by line (PRGM mode, file name REACC).
 export const REACC_NAME = "REACC";
 export const REACC_LINES = [
-  "0→F:0→G:0→H:0→I:0→J:0→K",
-  '"N CARGAS"?→N',
+  "0→F:0→G:0→H:0→I:0→J:0→K:0→E",
+  "While 1=1",
+  "ClrText",
+  'Locate 1,1,"REACC  CARGAS":Locate 15,1,E',
+  'Locate 1,2,"1 CARGAR"',
+  'Locate 1,3,"2 REACCIONES"',
+  'Locate 1,4,"3 CORTE EN BASE"',
+  'Locate 1,5,"4 BORRAR TODO"',
+  'Locate 1,6,"0 SALIR"',
+  '"OPCION"?→B',
+  // the options that do not touch B come first: loading a load reuses B for the end point of a distributed one
+  "If B=0:Then Stop:IfEnd",
+  "If B=4:Then 0→F:0→G:0→H:0→I:0→J:0→K:0→E:IfEnd",
+  "If B=2:Then",
+  "ClrText",
+  'Locate 1,1,"REACCIONES EN A"',
+  'Locate 1,2,"FX":Locate 4,2,–F',
+  'Locate 1,3,"FY":Locate 4,3,–G',
+  'Locate 1,4,"FZ":Locate 4,4,–H',
+  'Locate 12,2,"MX":Locate 14,2,–I',
+  'Locate 12,3,"MY":Locate 14,3,–J',
+  'Locate 12,4,"MZ":Locate 14,4,–K',
+  "While Getkey>0:WhileEnd",
+  "While Getkey=0:WhileEnd",
+  "IfEnd",
+  "If B=3:Then",
+  "ClrText",
+  'Locate 1,1,"CORTE EN BASE (PILAR)"',
+  'Locate 1,2,"N":Locate 5,2,H',
+  'Locate 1,3,"QX":Locate 5,3,–G',
+  'Locate 1,4,"QY":Locate 5,4,–F',
+  'Locate 1,5,"MX":Locate 5,5,–J',
+  'Locate 1,6,"MY":Locate 5,6,–I',
+  "While Getkey>0:WhileEnd",
+  "While Getkey=0:WhileEnd",
+  "IfEnd",
+  "If B=1:Then",
+  '"CARGAS A AGREGAR"?→N',
   "For 1→C To N",
   "0→P:0→Q:0→R:0→U:0→V:0→W:0→X:0→Y:0→Z:1→L",
   '"CARGA"',
-  "C◢",
+  "E+1◢",
   '"1 PUNT 2 DIST 3 MOM"?→T',
   "If T=1",
   'Then "X"?→X:"Y"?→Y:"Z"?→Z',
@@ -100,33 +136,35 @@ export const REACC_LINES = [
   'Then "MX"?→P:"MY"?→Q:"MZ"?→R',
   "IfEnd",
   "U×L→U:V×L→V:W×L→W",
+  // what the program understood, to confirm it (or type the load again) before it is added
+  "ClrText",
+  'Locate 1,1,"CARGA":Locate 7,1,E+1',
+  "If T<3:Then",
+  'Locate 1,2,"X":Locate 3,2,X',
+  'Locate 1,3,"Y":Locate 3,3,Y',
+  'Locate 1,4,"Z":Locate 3,4,Z',
+  'Locate 11,2,"FX":Locate 14,2,U',
+  'Locate 11,3,"FY":Locate 14,3,V',
+  'Locate 11,4,"FZ":Locate 14,4,W',
+  "IfEnd",
+  'If T=2:Then Locate 1,5,"L":Locate 3,5,L:IfEnd',
+  "If T=3:Then",
+  'Locate 1,2,"MX":Locate 4,2,P',
+  'Locate 1,3,"MY":Locate 4,3,Q',
+  'Locate 1,4,"MZ":Locate 4,4,R',
+  "IfEnd",
+  '"OK? 1=SI 0=REPETIR"?→O',
+  "If O=0:Then C–1→C:IfEnd",
+  "If Abs (O)>0:Then",
   "F+U→F:G+V→G:H+W→H",
   "I+Y×W–Z×V+P→I",
   "J+Z×U–X×W+Q→J",
   "K+X×V–Y×U+R→K",
+  "E+1→E",
+  "IfEnd",
   "Next",
-  '"FX A ="',
-  "–F◢",
-  '"FY A ="',
-  "–G◢",
-  '"FZ A ="',
-  "–H◢",
-  '"MX A ="',
-  "–I◢",
-  '"MY A ="',
-  "–J◢",
-  '"MZ A ="',
-  "–K◢",
-  '"BASE PILAR: N ="',
-  "H◢",
-  '"QX ="',
-  "–G◢",
-  '"QY ="',
-  "–F◢",
-  '"MX ="',
-  "–J◢",
-  '"MY ="',
-  "–I",
+  "IfEnd",
+  "WhileEnd",
 ];
 
 // ---- Program PERFIL: which IPB goes in the column for a given N, Mx, My --------------------------------------------
@@ -246,6 +284,7 @@ export const PERFIL_LINES = [
   "1→J:If Abs (M–W)>Abs (M+W):Then –1→J:IfEnd",
   "PlotOn J×K×E,J×L×D",
   "Text 1,1,M+J×W",
+  "While Getkey>0:WhileEnd",
   "While Getkey=0:WhileEnd",
   "Stop",
   "IfEnd",
@@ -256,7 +295,7 @@ export const PERFIL_LINES = [
 // ---- Program VIGACAB: the beam and the cable of truss-cable-beam(-ipb260)-kg.svg ----------------------------------
 // A horizontal beam held at one end by a vertical cable and pinned at the other (so the beam has no axial force and
 // only bending), loaded by ONE point load and a uniform load q over the whole span. The beam is sized/verified for the
-// applied load alone (its own weight is not in its M, as the professor does) but its weight goes to the cable (half) and
+// applied load alone (its own weight is not in its M, as the professor does) but the weight of the lightest profile goes to the cable (half) and
 // to the pin (half). Cable: A = T/σ_adm, d = √(4A/π), elongation σ_adm·L/E with E = 2.1e6 kg/cm². The IPB 100…1000 of the
 // course's table (h, Sx, kg/m) are stored in the program (lists 1-3). It ends by drawing the diagram of moments. Units: kg, m, kg/cm². `cableBeam` is the same
 // arithmetic; casioPrograms.test.ts compares both with the app's own checks (checks.ts) on the two examples.
@@ -265,19 +304,16 @@ export const VIGACAB_NAME = "VIGACAB";
 export interface CableBeamInput {
   L: number; // span of the beam, m
   Lc: number; // length of the cable, m
-  P: number; // point load, kg (downward positive)
-  a: number; // its distance from the cable end, m
+  loads: { P: number; a: number }[]; // point loads: kg (downward positive) and their distance from the cable end, m
   q: number; // uniform load over the whole span, kg/m
   sigmaAdm?: number; // kg/cm², default 1600
-  given?: number; // IPB designation already chosen (260 for IPB 260), to verify it
 }
 
 export interface CableBeamResult {
   Mmax: number; // kg·m, of the applied loads alone
   sxReq: number; // cm³
   min: { name: string; sigma: number; w: number } | null; // lightest IPB of 100…1000 that passes
-  given: { name: string; sigma: number; ok: boolean; w: number } | null;
-  T: number; // cable tension, kg (with half of the weight of the profile used: the given one, else the lightest)
+  T: number; // cable tension, kg (with half of the weight of that lightest profile)
   A: number; // cm²
   d: number; // cm
   elongation: number; // cm
@@ -286,31 +322,45 @@ export interface CableBeamResult {
 
 export function cableBeam(i: CableBeamInput): CableBeamResult {
   const S = i.sigmaAdm || 1600;
-  const R = (i.P * (i.L - i.a)) / i.L + (i.q * i.L) / 2; // reaction at the cable end from the applied loads
-  let M = R * i.a - (i.q * i.a * i.a) / 2; // under the point load
+  const R = i.loads.reduce((r, { P, a }) => r + (P * (i.L - a)) / i.L, (i.q * i.L) / 2); // reaction at the cable end
+  const M_at = (x: number) =>
+    R * x - (i.q * x * x) / 2 - i.loads.reduce((m, { P, a }) => (a < x ? m + P * (x - a) : m), 0);
+  // M is piecewise a parabola (concave with q) with corners under the loads, so the maximum is under a load or where
+  // the shear is zero: the same search as the program (a grid of 200 steps + under each load, then the exact zero
+  // of the shear next to the best grid point)
+  const h = i.L / 200;
+  const xs = [...Array.from({ length: 201 }, (_, k) => k * h), ...i.loads.map((l) => l.a)];
+  let M = 0;
+  let xg = 0;
+  for (const x of xs) {
+    const m = M_at(x);
+    if (m > M) {
+      M = m;
+      xg = x;
+    }
+  }
   if (i.q > 0) {
-    const x0 = R / i.q; // zero shear before the point load
-    if (x0 > 0 && x0 < i.a) M = Math.max(M, (R * R) / (2 * i.q));
-    const x1 = (R - i.P) / i.q; // zero shear after it
-    if (x1 > i.a && x1 < i.L) M = Math.max(M, R * x1 - i.P * (x1 - i.a) - (i.q * x1 * x1) / 2);
+    const left = i.loads.reduce((m, { P, a }) => (a < xg ? m + P : m), 0);
+    const x1 = (R - left) / i.q; // zero shear with the loads left of the best point
+    const leftAt = i.loads.reduce((m, { P, a }) => (a < x1 ? m + P : m), 0);
+    if (x1 > 0 && x1 < i.L && leftAt === left) M = Math.max(M, M_at(x1));
   }
   const sx = (M * 100) / S;
   const table = IPB_PROFILES;
   const minP = table.find((p) => sx <= p.Sx) ?? null;
-  const givenP = i.given ? table.find((p) => p.h === i.given) ?? null : null;
-  const w = givenP?.w ?? minP?.w ?? 0;
+  const w = minP?.w ?? 0;
   const T = R + (w * i.L) / 2;
   const A = T / S;
+  const total = i.loads.reduce((t, l) => t + l.P, 0);
   return {
     Mmax: M,
     sxReq: sx,
     min: minP && { name: minP.name, sigma: (M * 100) / minP.Sx, w: minP.w },
-    given: givenP && { name: givenP.name, sigma: (M * 100) / givenP.Sx, ok: (M * 100) / givenP.Sx <= S, w: givenP.w },
     T,
     A,
     d: Math.sqrt((4 * A) / Math.PI),
     elongation: (S * i.Lc * 100) / 2100000,
-    vPin: i.P + i.q * i.L + w * i.L - T,
+    vPin: total + i.q * i.L + w * i.L - T,
   };
 }
 
@@ -322,38 +372,69 @@ export const VIGACAB_LINES = [
   listOf(3, (p) => p.w),
   '"LUZ VIGA M"?→L',
   '"LARGO CABLE M"?→C',
-  '"P PUNTUAL KG"?→P',
-  '"DIST DESDE CABLE M"?→D',
+  '"CARGAS PUNTUALES"?→N',
+  "If N>0:Then",
+  "For 1→J To N",
+  '"DIST DESDE CABLE M"?→X:X→List 4[J]',
+  '"P KG"?→Y:Y→List 5[J]',
+  "Next",
+  "IfEnd",
   '"Q KG/M"?→Q',
   '"SIGMA ADM (0=1600)"?→S',
   "If S=0:Then 1600→S:IfEnd",
-  '"IPB DADO (0=NO)"?→G',
-  "P×(L–D)÷L+Q×L÷2→R",
-  "R×D–Q×D×D÷2→M",
+  "Q×L÷2→R:0→B",
+  "If N>0:Then",
+  "For 1→J To N",
+  "R+List 5[J]×(L–List 4[J])÷L→R:B+List 5[J]→B",
+  "Next",
+  "IfEnd",
+  // the maximum moment: a grid of 200 steps plus the section under each load...
+  "0→M:0→G",
+  "For 0→K To 200+N",
+  "K×L÷200→X",
+  "If K>200:Then List 4[K–200]→X:IfEnd",
+  "R×X–Q×X×X÷2→Y",
+  "If N>0:Then",
+  "For 1→J To N",
+  "If List 4[J]<X:Then Y–List 5[J]×(X–List 4[J])→Y:IfEnd",
+  "Next",
+  "IfEnd",
+  "If Y>M:Then Y→M:X→G:IfEnd",
+  "Next",
+  // ...and, with q, the exact zero of the shear next to the best point (the loads to its left decide it)
   "If Q>0:Then",
-  "R÷Q→X",
+  "0→V",
+  "If N>0:Then",
+  "For 1→J To N",
+  "If List 4[J]<G:Then V+List 5[J]→V:IfEnd",
+  "Next",
+  "IfEnd",
+  "(R–V)÷Q→X",
+  "0→Z",
+  "If N>0:Then",
+  "For 1→J To N",
+  "If List 4[J]<X:Then Z+List 5[J]→Z:IfEnd",
+  "Next",
+  "IfEnd",
   "If X>0:Then",
-  "If X<D:Then",
-  "R×R÷(2×Q)→Y",
-  "If Y>M:Then Y→M:IfEnd",
-  "IfEnd",
-  "IfEnd",
-  "(R–P)÷Q→X",
-  "If X>D:Then",
   "If X<L:Then",
-  "R×X–P×(X–D)–Q×X×X÷2→Y",
+  "If Z=V:Then",
+  "R×X–Q×X×X÷2→Y",
+  "If N>0:Then",
+  "For 1→J To N",
+  "If List 4[J]<X:Then Y–List 5[J]×(X–List 4[J])→Y:IfEnd",
+  "Next",
+  "IfEnd",
   "If Y>M:Then Y→M:IfEnd",
+  "IfEnd",
   "IfEnd",
   "IfEnd",
   "IfEnd",
   "M×100÷S→W",
-  "0→K:0→J",
+  "0→K",
   `For 1→I To ${IPB_PROFILES.length}`,
   "If K=0:Then",
   "If W≤List 2[I]:Then I→K:IfEnd",
-  "IfEnd",
-  "If G>0:Then",
-  "If List 1[I]=G:Then I→J:IfEnd",
   "IfEnd",
   "Next",
   '"M MAX KG M"',
@@ -371,20 +452,6 @@ export const VIGACAB_LINES = [
   '"SIGMA CON IPB MIN"',
   "M×100÷List 2[K]◢",
   "IfEnd",
-  "If G>0:Then",
-  "If J=0:Then",
-  '"IPB DADO NO ESTA"',
-  "IfEnd",
-  "If J>0:Then",
-  "List 3[J]→Z",
-  '"SIGMA IPB DADO"',
-  "M×100÷List 2[J]◢",
-  '"CUMPLE 1=SI 0=NO"',
-  "0→U",
-  "If M×100÷List 2[J]≤S:Then 1→U:IfEnd",
-  "U◢",
-  "IfEnd",
-  "IfEnd",
   "R+Z×L÷2→T",
   '"TENSION CABLE KG"',
   "T◢",
@@ -396,7 +463,7 @@ export const VIGACAB_LINES = [
   '"ALARG CABLE CM"',
   "S×C×100÷2100000◢",
   '"V PIN KG"',
-  "P+Q×L+Z×L–T◢",
+  "B+Q×L+Z×L–T◢",
   // the diagram of moments: positive M plotted downward (the tension side), 40 segments, the value of Mmax on top;
   // it stays on screen until a key is pressed
   "If M>0:Then",
@@ -407,11 +474,16 @@ export const VIGACAB_LINES = [
   "For 1→I To 40",
   "I×L÷40→B",
   "R×B–Q×B×B÷2→E",
-  "If B>D:Then E–P×(B–D)→E:IfEnd",
+  "If N>0:Then",
+  "For 1→J To N",
+  "If List 4[J]<B:Then E–List 5[J]×(B–List 4[J])→E:IfEnd",
+  "Next",
+  "IfEnd",
   "F-Line X,–Y,B,–E",
   "B→X:E→Y",
   "Next",
   "Text 1,1,M",
+  "While Getkey>0:WhileEnd",
   "While Getkey=0:WhileEnd",
   "IfEnd",
 ];

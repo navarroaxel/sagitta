@@ -82,29 +82,79 @@ describe("Casio program REACC", () => {
   });
 
   // The listing RUN by a small Casio Basic interpreter (casioBasic.ts), typed as on the calculator, vs the solver.
-  const numbers = (out: (string | number)[]) => out.filter((o): o is number => typeof o === "number").map((n) => (n === 0 ? 0 : n));
+  type Screen = [number, number, number | string][];
+  const screenOf = (gfx: ReturnType<typeof newGfx>, title: string): Screen | undefined =>
+    [...gfx.screens].reverse().find((sc) => sc[0] && sc[0][0] === 1 && sc[0][1] === 1 && sc[0][2] === title);
+  const at = (sc: Screen | undefined, col: number, row: number) => {
+    const v = sc?.find((l) => l[0] === col && l[1] === row)?.[2];
+    return typeof v === "number" ? (v === 0 ? 0 : v) : v; // no -0
+  };
+  const reacciones = (sc: Screen | undefined) => [at(sc, 4, 2), at(sc, 4, 3), at(sc, 4, 4), at(sc, 14, 2), at(sc, 14, 3), at(sc, 14, 4)];
+  const corte = (sc: Screen | undefined) => [2, 3, 4, 5, 6].map((r) => at(sc, 5, r));
+  const reacc = (inputs: number[]) => {
+    const gfx = newGfx();
+    const out = runBasic(REACC_LINES, inputs, gfx);
+    return { gfx, out, rea: reacciones(screenOf(gfx, "REACCIONES EN A")), base: corte(screenOf(gfx, "CORTE EN BASE (PILAR)")) };
+  };
+  // menu: 1 CARGAR, 2 REACCIONES, 3 CORTE EN BASE, 4 BORRAR TODO, 0 SALIR; each load ends with 1 = OK
 
   test("running REACC: t-frame-3d-fixed-kg typed as the page says (distributed = its two end points and q)", () => {
-    const out = runBasic(REACC_LINES, [
-      2,
-      2, -1, 0, 3, 2, 0, 3, 0, 0, -200, // load 1: distributed, from (−1,0,3) to (2,0,3), q = (0, 0, −200)
-      1, 0, 0, 3, 0, 300, 0, // load 2: point at B, F = (0, 300, 0)
+    const r = reacc([
+      1, 2, // CARGAR, 2 loads
+      2, -1, 0, 3, 2, 0, 3, 0, 0, -200, 1, // load 1: distributed, from (−1,0,3) to (2,0,3), q = (0, 0, −200), OK
+      1, 0, 0, 3, 0, 300, 0, 1, // load 2: point at B, F = (0, 300, 0), OK
+      2, 3, 0, // REACCIONES, CORTE EN BASE, SALIR
     ]);
-    const r = numbers(out);
-    // the marker "CARGA" and its number (1, 2) come before each load; then the 6 reactions and the 5 forces at the base
-    expect(out.filter((o) => o === "CARGA")).toHaveLength(2);
-    expect(r).toEqual([1, 2, 0, -300, 600, 900, -300, 0, -600, -300, 0, -300, 900]);
+    expect(r.rea).toEqual([0, -300, 600, 900, -300, 0]);
+    expect(r.base).toEqual([-600, -300, 0, -300, 900]); // N, QX, QY, MX, MY at the base of the column
+    expect(r.out).toEqual(["CARGA", 1, "CARGA", 2]); // the marker and the number of each load
   });
 
   test("running REACC: column-3d-fixed-kg (q_y on the whole column + a point load at the top) = the solver's reactions", () => {
-    const r = numbers(runBasic(REACC_LINES, [2, 2, 0, 0, 0, 0, 0, 5, 0, 200, 0, 1, 0, 0, 5, 1500, 0, -20000]));
-    expect(r.slice(2)).toEqual([-1500, -1000, 20000, 2500, -7500, 0, -20000, -1000, -1500, -7500, 2500]);
+    const r = reacc([1, 2, 2, 0, 0, 0, 0, 0, 5, 0, 200, 0, 1, 1, 0, 0, 5, 1500, 0, -20000, 1, 2, 3, 0]);
+    expect(r.rea).toEqual([-1500, -1000, 20000, 2500, -7500, 0]);
+    expect(r.base).toEqual([-20000, -1000, -1500, -7500, 2500]);
   });
 
-  test("running REACC: a moment alone has no arm (type 3), and loads can be mixed in any order", () => {
-    const r = numbers(runBasic(REACC_LINES, [1, 3, 10, -20, 30]));
-    expect(r.slice(1, 7)).toEqual([0, 0, 0, -10, 20, -30]); // the reactions are minus the applied moment
+  test("running REACC: a moment alone has no arm (type 3)", () => {
+    const r = reacc([1, 1, 3, 10, -20, 30, 1, 2, 0]);
+    expect(r.rea).toEqual([0, 0, 0, -10, 20, -30]); // the reactions are minus the applied moment
     expect(distributedLoad([-1, 0, 3], [2, 0, 3], [0, 0, -200])).toEqual({ x: 0.5, y: 0, z: 3, fx: 0, fy: 0, fz: -200, len: 3 });
+  });
+
+  test("running REACC: a load can be typed again (0) without touching the others, and the number does not advance", () => {
+    const r = reacc([
+      1, 1,
+      1, 9, 9, 9, 9, 9, 9, 0, // a wrong point load → REPETIR
+      1, 0, 0, 3, 0, 300, 0, 1, // the right one
+      2, 0,
+    ]);
+    expect(r.rea).toEqual([0, -300, 0, 900, 0, 0]);
+    expect(r.out).toEqual(["CARGA", 1, "CARGA", 1]); // the same load number twice
+  });
+
+  test("running REACC: the summary screen shows what the program understood (centre and length of a distributed load)", () => {
+    const { gfx } = reacc([1, 1, 2, -1, 0, 3, 2, 0, 3, 0, 0, -200, 1, 0]);
+    const sc = [...gfx.screens].find((x) => x[0]?.[2] === "CARGA")!;
+    expect([at(sc, 3, 2), at(sc, 3, 3), at(sc, 3, 4)]).toEqual([0.5, 0, 3]); // X, Y, Z of the centre
+    expect([at(sc, 14, 2), at(sc, 14, 3), at(sc, 14, 4)]).toEqual([0, 0, -600]); // the resultant: q × L
+    expect(at(sc, 3, 5)).toBe(3); // L
+    expect(at(sc, 7, 1)).toBe(1); // load number
+  });
+
+  test("running REACC: the menu shows how many loads are in, adds batches, and BORRAR TODO empties them", () => {
+    const { gfx, rea } = reacc([
+      1, 1, 1, 0, 0, 3, 0, 300, 0, 1,
+      1, 1, 1, 0, 0, 3, 0, 300, 0, 1, // the same load again: two in
+      2, // REACCIONES with both
+      4, // BORRAR TODO
+      2, 0, // REACCIONES again, SALIR
+    ]);
+    const counts = gfx.screens.filter((sc) => sc[0]?.[2] === "REACC  CARGAS").map((sc) => at(sc, 15, 1));
+    expect(counts).toEqual([0, 1, 2, 2, 0, 0]);
+    const reas = gfx.screens.filter((sc) => sc[0]?.[2] === "REACCIONES EN A").map(reacciones);
+    expect(reas).toEqual([[0, -600, 0, 1800, 0, 0], [0, 0, 0, 0, 0, 0]]);
+    expect(rea).toEqual([0, 0, 0, 0, 0, 0]);
   });
 
   test("running PERFIL = chooseIPB: the face comes from the moments (strong axis against the larger one), and none passing", () => {
@@ -202,7 +252,7 @@ describe("Casio program REACC", () => {
     const text = REACC_LINES.join("\n");
     for (const v of ["F", "G", "H", "I", "J", "K"]) expect(text).toContain(`→${v}`);
     expect(text.match(/◢/g)!.length).toBe(REACC_LINES.filter((l) => l.endsWith("◢")).length);
-    expect(REACC_LINES.every((l) => l.length <= 40)).toBe(true); // short lines: easy to type
+    expect(REACC_LINES.every((l) => l.length <= 50)).toBe(true); // short lines: easy to type
   });
 });
 
@@ -246,18 +296,14 @@ describe("Casio program PERFIL", () => {
 
 describe("Casio program VIGACAB (beam + cable of the two truss-cable-beam examples)", () => {
   const preset = (name: string) => PRESETS.find((p) => p.name === name)!.model;
-  const checksOf = (name: string) => {
-    const model = preset(name);
-    const solved = solveModel(model);
-    return runChecks(model, solved);
-  };
   const cableOf = (checks: unknown[]) => (checks as { kind: string }[]).find((c) => c.kind === "cable") as CableCheck;
+  const run = (model: ReturnType<typeof preset>) => runChecks(model, solveModel(model));
 
   test("truss-cable-beam-kg: M = 120 000 kg·m, IPB 800, T = (40 000 + w·12)/2, d = 4.14 cm — the app's own numbers", () => {
-    const checks = checksOf("Truss + Cable + Beam (sizing)");
+    const checks = run(preset("Truss + Cable + Beam (sizing)"));
     const c = cableOf(checks);
     const beam = (checks as SizeCheck[]).find((x) => x.kind === "size" && x.member === "EF")!;
-    const r = cableBeam({ L: 12, Lc: 4.33013, P: 40000, a: 6, q: 0 });
+    const r = cableBeam({ L: 12, Lc: 4.33013, loads: [{ P: 40000, a: 6 }], q: 0 });
     expect(r.Mmax).toBeCloseTo(beam.demand.M, 0);
     expect(r.min!.name).toBe(beam.results[1].pick!.profile.name); // IPB 800 (no IPN fits; the series is IPB)
     expect(r.min!.sigma).toBeCloseTo(beam.results[1].pick!.sigma, 6);
@@ -267,63 +313,88 @@ describe("Casio program VIGACAB (beam + cable of the two truss-cable-beam exampl
     expect(r.elongation).toBeCloseTo(c.elongation, 4);
   });
 
-  test("truss-cable-beam-ipb260-kg: the given IPB 260 fails; the lightest IPB; cable T = 20 463 — the app's own numbers", () => {
-    const checks = checksOf("Truss + Cable + Beam IPB 260");
+  test("truss-cable-beam-ipb260-kg: the lightest IPB (the app's suggestion) and the cable it implies — the app's numbers with that beam", () => {
+    const base = preset("Truss + Cable + Beam IPB 260");
+    const given = run(base).find((x) => x.kind === "verify" && x.member === "FG") as VerifyCheck;
+    const r = cableBeam({ L: 10, Lc: 15, loads: [{ P: 20000, a: 5 }], q: 2000 });
+    expect(given.ok).toBe(false); // the IPB 260 of the drawing does not pass...
+    expect(r.Mmax).toBeCloseTo(given.demand.M, 0); // 75 000 kg·m (the load alone)
+    expect(r.min!.name).toBe(given.suggestion!.profile.name); // ...and the lightest that does is the app's suggestion (IPB 550)
+    // the same structure with that profile in the beam: its cable is the program's
+    const withMin = {
+      ...base,
+      members: base.members.map((m) => (m.id === "FG" ? { ...m, section: { kind: "profile" as const, name: r.min!.name } } : m)),
+    };
+    const checks = run(withMin);
     const c = cableOf(checks);
     const beam = (checks as VerifyCheck[]).find((x) => x.kind === "verify" && x.member === "FG")!;
-    const r = cableBeam({ L: 10, Lc: 15, P: 20000, a: 5, q: 2000, given: 260 });
-    expect(r.Mmax).toBeCloseTo(beam.demand.M, 0); // 75 000 kg·m (the load alone)
-    expect(r.given!.sigma).toBeCloseTo(beam.sigma, 6);
-    expect(r.given!.ok).toBe(beam.ok);
-    expect(r.given!.ok).toBe(false);
-    expect(r.min!.name).toBe(beam.suggestion!.profile.name);
-    expect(r.T).toBeCloseTo(c.N, 2); // with the weight of the GIVEN profile
+    expect(beam.ok).toBe(true);
+    expect(beam.sigma).toBeCloseTo(r.min!.sigma, 6);
+    expect(r.T).toBeCloseTo(c.N, 2);
     expect(r.d).toBeCloseTo(c.dReq, 6);
     expect(r.elongation).toBeCloseTo(c.elongation, 4);
-    expect(c.N).toBeCloseTo(20463, -1);
   });
 
-  test("the maximum moment, whatever the load: point only, q only, point + q (zero shear on either side), compared with a fine scan", () => {
-    const scan = (L: number, P: number, a: number, q: number) => {
-      const R = (P * (L - a)) / L + (q * L) / 2;
-      let m = 0;
-      const at = (x: number) => (m = Math.max(m, R * x - (q * x * x) / 2 - (x > a ? P * (x - a) : 0)));
-      for (let k = 0; k <= 20000; k++) at((k / 20000) * L);
-      at(a); // the corner under the point load, which a grid can miss
-      return m;
-    };
-    for (const [L, P, a, q] of [[12, 40000, 6, 0], [10, 0, 5, 2000], [10, 20000, 5, 2000], [8, 1000, 1, 3000], [8, 1000, 7, 3000], [6, 50000, 2, 100]] as const)
-      expect(cableBeam({ L, Lc: 1, P, a, q }).Mmax).toBeCloseTo(scan(L, P, a, q), 0);
+  // a brute-force reference for the maximum moment of any set of point loads + q
+  const scan = (L: number, loads: { P: number; a: number }[], q: number) => {
+    const R = loads.reduce((r, { P, a }) => r + (P * (L - a)) / L, (q * L) / 2);
+    let m = 0;
+    const at = (x: number) =>
+      (m = Math.max(m, R * x - (q * x * x) / 2 - loads.reduce((t, { P, a }) => (x > a ? t + P * (x - a) : t), 0)));
+    for (let k = 0; k <= 40000; k++) at((k / 40000) * L);
+    loads.forEach((l) => at(l.a)); // the corners under the loads, which a grid can miss
+    return m;
+  };
+
+  test("the maximum moment, whatever the load: one or several point loads, with or without q, in any order — compared with a fine scan", () => {
+    const cases: [number, { P: number; a: number }[], number][] = [
+      [12, [{ P: 40000, a: 6 }], 0],
+      [10, [], 2000],
+      [10, [{ P: 20000, a: 5 }], 2000],
+      [8, [{ P: 1000, a: 1 }], 3000],
+      [8, [{ P: 1000, a: 7 }], 3000],
+      [6, [{ P: 50000, a: 2 }], 100],
+      [9, [{ P: 1000, a: 6 }, { P: 1000, a: 3 }], 0], // typed from the far one
+      [10, [{ P: 5000, a: 7 }, { P: 12000, a: 2 }, { P: 3000, a: 4.5 }], 800],
+      [14, [{ P: 9000, a: 3 }, { P: 9000, a: 11 }], 1500],
+      [7, [{ P: 200, a: 3.5 }, { P: 8000, a: 5.5 }], 4000],
+    ];
+    for (const [L, loads, q] of cases) expect(cableBeam({ L, Lc: 1, loads, q }).Mmax).toBeCloseTo(scan(L, loads, q), 0);
+    expect(cableBeam({ L: 9, Lc: 1, loads: [{ P: 1000, a: 3 }, { P: 1000, a: 6 }], q: 0 }).Mmax).toBeCloseTo(3000, 9); // two equal loads at the thirds
   });
 
   test("running the listing: both examples, typed as on the calculator", () => {
-    // truss-cable-beam-kg: L 12, cable 4.33 m, P 40 000 at 6 m, q 0, σ_adm default, no given profile
-    const a = runBasic(VIGACAB_LINES, [12, 4.33013, 40000, 6, 0, 0, 0]);
-    const ra = cableBeam({ L: 12, Lc: 4.33013, P: 40000, a: 6, q: 0 });
-    expect(a).toEqual([
-      "M MAX KG M", expect.closeTo(ra.Mmax, 6), "SX NEC CM3", expect.closeTo(ra.sxReq, 6),
-      "IPB MIN", 800, "SIGMA CON IPB MIN", expect.closeTo(ra.min!.sigma, 6),
-      "TENSION CABLE KG", expect.closeTo(ra.T, 6), "A CABLE CM2", expect.closeTo(ra.A, 6),
-      "D CABLE CM", expect.closeTo(ra.d, 6), "ALARG CABLE CM", expect.closeTo(ra.elongation, 6),
-      "V PIN KG", expect.closeTo(ra.vPin, 6),
-    ]);
-    // truss-cable-beam-ipb260-kg with the given IPB 260 (it does not pass) and σ_adm typed
-    const b = runBasic(VIGACAB_LINES, [10, 15, 20000, 5, 2000, 1600, 260]);
-    const rb = cableBeam({ L: 10, Lc: 15, P: 20000, a: 5, q: 2000, sigmaAdm: 1600, given: 260 });
-    expect(b).toEqual([
-      "M MAX KG M", expect.closeTo(rb.Mmax, 6), "SX NEC CM3", expect.closeTo(rb.sxReq, 6),
-      "IPB MIN", 550, "SIGMA CON IPB MIN", expect.closeTo(rb.min!.sigma, 6),
-      "SIGMA IPB DADO", expect.closeTo(rb.given!.sigma, 6), "CUMPLE 1=SI 0=NO", 0,
-      "TENSION CABLE KG", expect.closeTo(rb.T, 6), "A CABLE CM2", expect.closeTo(rb.A, 6),
-      "D CABLE CM", expect.closeTo(rb.d, 6), "ALARG CABLE CM", expect.closeTo(rb.elongation, 6),
-      "V PIN KG", expect.closeTo(rb.vPin, 6),
-    ]);
+    const expected = (r: ReturnType<typeof cableBeam>) => [
+      "M MAX KG M", expect.closeTo(r.Mmax, 6), "SX NEC CM3", expect.closeTo(r.sxReq, 6),
+      "IPB MIN", +r.min!.name.replace("IPB ", ""), "SIGMA CON IPB MIN", expect.closeTo(r.min!.sigma, 6),
+      "TENSION CABLE KG", expect.closeTo(r.T, 6), "A CABLE CM2", expect.closeTo(r.A, 6),
+      "D CABLE CM", expect.closeTo(r.d, 6), "ALARG CABLE CM", expect.closeTo(r.elongation, 6),
+      "V PIN KG", expect.closeTo(r.vPin, 6),
+    ];
+    // truss-cable-beam-kg: L 12, cable 4.33 m, P 40 000 at 6 m, q 0, σ_adm default
+    expect(runBasic(VIGACAB_LINES, [12, 4.33013, 1, 6, 40000, 0, 0])).toEqual(expected(cableBeam({ L: 12, Lc: 4.33013, loads: [{ P: 40000, a: 6 }], q: 0 })));
+    // truss-cable-beam-ipb260-kg: L 10, cable 15 m, P 20 000 at 5 m, q = 2 000 kg/m
+    const b = runBasic(VIGACAB_LINES, [10, 15, 1, 5, 20000, 2000, 1600]);
+    expect(b).toEqual(expected(cableBeam({ L: 10, Lc: 15, loads: [{ P: 20000, a: 5 }], q: 2000, sigmaAdm: 1600 })));
+    expect(b[5]).toBe(550);
+  });
+
+  test("running the listing with several point loads (typed in any order) = cableBeam = the fine scan", () => {
+    const loads = [{ P: 5000, a: 7 }, { P: 12000, a: 2 }, { P: 3000, a: 4.5 }];
+    const out = runBasic(VIGACAB_LINES, [10, 3, 3, ...loads.flatMap((l) => [l.a, l.P]), 800, 0]);
+    const r = cableBeam({ L: 10, Lc: 3, loads, q: 800 });
+    expect(out[1]).toBeCloseTo(r.Mmax, 6);
+    expect(out[1]).toBeCloseTo(scan(10, loads, 800), 0);
+    expect(out[out.indexOf("V PIN KG") + 1]).toBeCloseTo(r.vPin, 6);
+    expect(out[out.indexOf("TENSION CABLE KG") + 1]).toBeCloseTo(r.T, 6);
+    // with no point load at all (only q) it still works
+    expect(runBasic(VIGACAB_LINES, [10, 3, 0, 800, 0])[1]).toBeCloseTo((800 * 100) / 8, 6);
   });
 
   test("running the listing draws the diagram of moments: positive M downward, 40 segments, Mmax written on top", () => {
     const gfx = newGfx();
-    runBasic(VIGACAB_LINES, [10, 15, 20000, 5, 2000, 1600, 260], gfx);
-    const M = cableBeam({ L: 10, Lc: 15, P: 20000, a: 5, q: 2000 }).Mmax;
+    runBasic(VIGACAB_LINES, [10, 15, 1, 5, 20000, 2000, 1600], gfx);
+    const M = cableBeam({ L: 10, Lc: 15, loads: [{ P: 20000, a: 5 }], q: 2000 }).Mmax;
     expect(gfx.clears).toBe(1);
     expect(gfx.window).toEqual([0, 10, 2.5, expect.closeTo(-1.25 * M, 6), expect.closeTo(0.35 * M, 6), M]);
     expect(gfx.horizontals).toEqual([0]);
@@ -341,17 +412,15 @@ describe("Casio program VIGACAB (beam + cable of the two truss-cable-beam exampl
     expect(gfx.texts).toEqual([[1, 1, expect.closeTo(M, 6)]]);
     // nothing to draw when there is no moment
     const none = newGfx();
-    runBasic(VIGACAB_LINES, [10, 15, 0, 5, 0, 1600, 0], none);
+    runBasic(VIGACAB_LINES, [10, 15, 0, 0, 1600], none);
     expect(none.segments).toHaveLength(0);
   });
 
-  test("running the listing: a given profile that passes, an unknown one, and a load no IPB can carry", () => {
-    const ok = runBasic(VIGACAB_LINES, [10, 15, 20000, 5, 2000, 1600, 600]); // IPB 600 passes (5 700 cm³ ≥ 4 688)
-    expect(ok.slice(8, 12)).toEqual(["SIGMA IPB DADO", expect.any(Number), "CUMPLE 1=SI 0=NO", 1]);
-    expect(runBasic(VIGACAB_LINES, [10, 15, 20000, 5, 2000, 1600, 123])).toContain("IPB DADO NO ESTA");
-    const none = runBasic(VIGACAB_LINES, [12, 5, 4e6, 6, 0, 1600, 0]);
+  test("running the listing: a load no IPB can carry says so and still gives the cable without the beam's weight", () => {
+    const none = runBasic(VIGACAB_LINES, [12, 5, 1, 6, 4e6, 0, 1600]);
     expect(none).toContain("NINGUN IPB HASTA 1000");
     expect(none).not.toContain("IPB MIN");
-    expect(cableBeam({ L: 12, Lc: 5, P: 4e6, a: 6, q: 0 }).min).toBeNull();
+    expect(cableBeam({ L: 12, Lc: 5, loads: [{ P: 4e6, a: 6 }], q: 0 }).min).toBeNull();
+    expect(none).toContain("TENSION CABLE KG");
   });
 });

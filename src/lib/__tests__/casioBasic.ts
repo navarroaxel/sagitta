@@ -1,7 +1,7 @@
 // A tiny interpreter of the Casio Basic subset the programs of casioPrograms.ts use, so the tests can RUN the listings
 // (control flow, variables, prompts) and compare their output with the solver. Not a general Casio Basic: If/Then/IfEnd
 // (no Else), For/Next, Stop, the graphics commands (Cls, ViewWindow, Horizontal, Vertical, F-Line, PlotOn, Text: recorded in a Gfx) and
-// While Getkey=0:WhileEnd (a key is always pressed), `"prompt"?→V`, `expr→V`, `{list}→List n`, `expr◢`, a lone string, Abs, √, List n[i].
+// While loops (the waits for a key, While Getkey>0 / =0, are over at once), `"prompt"?→V`, `expr→V`, `{list}→List n`, `expr→List n[i]`, `expr◢`, a lone string, Abs, √, List n[i].
 export type Out = string | number;
 
 // What the graphics commands drew (the window, the segments, the texts), for the tests.
@@ -12,9 +12,12 @@ export interface Gfx {
   verticals: number[];
   plots: [number, number][];
   texts: [number, number, number | string][];
+  locates: [number, number, number | string][]; // the text-screen summary of REACC (column, line, value)
+  clearTexts: number;
+  screens: [number, number, number | string][][]; // the text screens, one per ClrText (what Locate wrote on each)
   clears: number;
 }
-export const newGfx = (): Gfx => ({ window: null, segments: [], horizontals: [], verticals: [], plots: [], texts: [], clears: 0 });
+export const newGfx = (): Gfx => ({ window: null, segments: [], horizontals: [], verticals: [], plots: [], texts: [], locates: [], clearTexts: 0, screens: [[]], clears: 0 });
 
 const splitTop = (line: string, sep: string): string[] => {
   const parts: string[] = [];
@@ -62,14 +65,26 @@ export function runBasic(lines: string[], inputs: number[], gfx: Gfx = newGfx())
       .replace(/(?<![.\w])([A-Z])(?![\w(])/g, "v.$1");
     return Function("v", "LL", `return (${js});`)(v, L) as number;
   };
+  const whileStack: number[] = [];
   const forStack: { start: number; name: string; end: number }[] = [];
   let pc = 0;
   let steps = 0;
   while (pc < st.length) {
     if (++steps > 100000) throw new Error("program does not stop");
     const s = st[pc];
-    if (s === "Then" || s === "IfEnd" || s === "WhileEnd") pc++;
-    else if (s === "Cls") {
+    if (s === "Then" || s === "IfEnd") pc++;
+    else if (s === "WhileEnd") pc = whileStack.length ? whileStack[whileStack.length - 1] : pc + 1; // back to the condition
+    else if (s === "ClrText") {
+      gfx.clearTexts++;
+      gfx.screens.push([]);
+      pc++;
+    } else if (s.startsWith("Locate ")) {
+      const [c, r, e] = splitTop(s.slice(7), ",");
+      const loc: [number, number, number | string] = [expr(c), expr(r), /^"/.test(e.trim()) ? e.trim().slice(1, -1) : expr(e)];
+      gfx.locates.push(loc);
+      gfx.screens[gfx.screens.length - 1].push(loc);
+      pc++;
+    } else if (s === "Cls") {
       gfx.clears++;
       pc++;
     } else if (s.startsWith("ViewWindow ")) {
@@ -92,8 +107,20 @@ export function runBasic(lines: string[], inputs: number[], gfx: Gfx = newGfx())
       gfx.texts.push([expr(r), expr(c), /^"/.test(e.trim()) ? e.trim().slice(1, -1) : expr(e)]);
       pc++;
     } else if (s.startsWith("While ")) {
-      if (expr(s.slice(6))) throw new Error("a wait loop that never ends");
-      pc++;
+      // the waits for a key (While Getkey>0 / While Getkey=0) are over at once; any other condition is evaluated
+      const go = /Getkey/.test(s) ? false : !!expr(s.slice(6));
+      if (go) {
+        if (whileStack[whileStack.length - 1] !== pc) whileStack.push(pc);
+        pc++;
+      } else {
+        if (whileStack[whileStack.length - 1] === pc) whileStack.pop();
+        let depth = 0;
+        for (pc++; pc < st.length; pc++) {
+          if (st[pc].startsWith("While ")) depth++;
+          if (st[pc] === "WhileEnd" && depth-- === 0) break;
+        }
+        pc++;
+      }
     }
     else if (s === "Stop") break;
     else if (s.startsWith("If ")) {
@@ -126,6 +153,12 @@ export function runBasic(lines: string[], inputs: number[], gfx: Gfx = newGfx())
       out.push(s.slice(1, -1));
       pc++;
     } else {
+      const el = /^(.*)→List (\d)\[(.+)\]$/.exec(s); // value→List n[index]
+      if (el) {
+        (L[+el[2]] ??= [0])[expr(el[3])] = expr(el[1]);
+        pc++;
+        continue;
+      }
       const m = /^(.*)→(List (\d)|[A-Z])$/.exec(s);
       if (!m) {
         out.push(expr(s)); // a bare expression at the end of the program is displayed
