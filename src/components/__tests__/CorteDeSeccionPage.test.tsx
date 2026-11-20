@@ -19,5 +19,13 @@ describe("/corte-de-seccion", () => {
     expect(faces.querySelectorAll("svg")).toHaveLength(2);
     expect(faces.textContent).toContain("Ix = 864");
     expect(faces.textContent).toContain("Ix = 318");
+    expect(document.body.textContent).not.toMatch(/σ_|\|_/); // σ_max / σ_min are rendered as real subscripts
+    expect(document.querySelectorAll("sub").length).toBeGreaterThan(2);
+    expect(screen.getByTestId("cut-resultant-figure").querySelectorAll("tspan").length).toBeGreaterThanOrEqual(2);
+    // step 8: the resultant diagram with both ordinates
+    const res = screen.getByTestId("cut-resultant-figure");
+    expect(res.textContent).toMatch(/1173\.\d/);
+    expect(res.textContent).toMatch(/1208\.\d/);
+    expect(res.querySelectorAll("polygon").length).toBeGreaterThanOrEqual(3); // section + two triangles
   });
 });

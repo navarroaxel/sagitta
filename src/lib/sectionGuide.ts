@@ -134,3 +134,34 @@ export function guideOutline(s: GuideSection): [number, number][] {
         [hx, hy], [-hx, hy], [-hx, hy - tf], [-w, hy - tf], [-w, -hy + tf], [-hx, -hy + tf],
       ];
 }
+
+// Geometry of the professor's resultant diagram (the same construction as resultantDiagram.ts, here in cm with
+// y up and without the screen): the E.N., two lines PARALLEL to it through the extreme fibres, and a baseline
+// PERPENDICULAR to the E.N. (σ grows along it) with the ordinates lying along the parallels. null: σ uniform.
+export interface GuideResultant {
+  u: [number, number]; // unit direction of the baseline (σ grows along it)
+  e: [number, number]; // unit direction of the E.N. and of the ordinates, e ⟂ u
+  n: [number, number]; // e pointing away from the section (down): the + ordinates go this way
+  gn: number; // |∇σ|, kg/cm² per cm
+  hi: { corner: [number, number]; sigma: number; t: number };
+  lo: { corner: [number, number]; sigma: number; t: number };
+  at: (t: number) => [number, number]; // point of the baseline at t (t = 0 is where the E.N. crosses it)
+}
+
+export function resultantGuide(k: Plane, s: GuideSection, dist: number): GuideResultant | null {
+  const gn = Math.hypot(k.a, k.b);
+  const cs = guideCorners(k, s);
+  const sig = cs.map((c) => c.sigma);
+  if (gn < 1e-9 || Math.max(...sig) - Math.min(...sig) < 0.5) return null; // uniform σ: no E.N.
+  const u: [number, number] = [k.a / gn, k.b / gn];
+  const e: [number, number] = [-u[1], u[0]];
+  const n: [number, number] = e[1] < -1e-9 || (Math.abs(e[1]) <= 1e-9 && e[0] > 0) ? e : [-e[0], -e[1]];
+  const tau = -k.c / gn; // the point of the E.N. nearest to the centroid is u·tau
+  const q0: [number, number] = [u[0] * tau + n[0] * dist, u[1] * tau + n[1] * dist];
+  const at = (t: number): [number, number] => [q0[0] + u[0] * t, q0[1] + u[1] * t];
+  const sorted = [...cs].sort((a, b) => a.sigma - b.sigma);
+  const loC = sorted[0],
+    hiC = sorted[sorted.length - 1];
+  const end = (c: GuideCorner) => ({ corner: [c.x, c.y] as [number, number], sigma: c.sigma, t: c.sigma / gn });
+  return { u, e, n, gn, hi: end(hiC), lo: end(loC), at };
+}

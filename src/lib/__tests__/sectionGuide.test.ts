@@ -8,6 +8,7 @@ import {
   neutralIntercepts,
   neutralSegment,
   plane,
+  resultantGuide,
   sigmaAt,
 } from "../sectionGuide";
 import { PRESETS_3D } from "../presets3d";
@@ -90,5 +91,28 @@ describe("sectionGuide (preset #2, base of the column)", () => {
     const xs = (p: [number, number][]) => Math.max(...p.map((q) => q[0])) - Math.min(...p.map((q) => q[0]));
     near(xs(f1), 12, 1e-9);
     near(xs(f2), 12, 1e-9);
+  });
+
+  test("resultant diagram: baseline ⟂ E.N., the parallels through the extreme corners, σ = gn·t on the baseline", () => {
+    const r = resultantGuide(k, s, 12)!;
+    near(r.u[0] * r.e[0] + r.u[1] * r.e[1], 0, 1e-12); // baseline ⟂ the E.N. direction
+    near(r.hi.sigma, 1173.4);
+    near(r.lo.sigma, -1208.7);
+    near(r.hi.t * r.gn, r.hi.sigma, 1e-6);
+    near(r.lo.t * r.gn, r.lo.sigma, 1e-6);
+    // the point of the baseline at t = 0 is on the E.N., and the corner is on the line through it along e
+    const [bx, by] = r.at(0);
+    near(sigmaAt(k, bx - r.n[0] * 12, by - r.n[1] * 12), 0, 1e-6); // slide back along the E.N.: σ = 0
+    [r.hi, r.lo].forEach((q) => {
+      const [px, py] = r.at(q.t);
+      const cross = (q.corner[0] - px) * r.e[1] - (q.corner[1] - py) * r.e[0]; // corner − baseline point ∥ e
+      near(cross, 0, 1e-6);
+    });
+    expect(r.n[1]).toBeLessThan(0); // the + ordinates point down, away from the section
+    expect(r.hi.t).toBeGreaterThan(r.lo.t);
+  });
+
+  test("resultant diagram: none when σ is uniform", () => {
+    expect(resultantGuide(plane(-1000, 0, 0, s), s, 12)).toBeNull();
   });
 });

@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 import NavMenu from "@/components/NavMenu";
 import { Footer } from "@/components/Footer";
-import { FACES, NeutralAxisExample, SectionCutSimulator, ShapePolygon } from "@/components/SectionCutGuide";
+import { Sub } from "@/components/Sub";
+import { FACES, NeutralAxisExample, ResultantFigure, SectionCutSimulator, ShapePolygon } from "@/components/SectionCutGuide";
 
 function Kicker({ children }: { children: React.ReactNode }) {
   return (
@@ -23,7 +24,9 @@ function Bullets({ keys }: { keys: TranslationKey[] }) {
   return (
     <ul className="my-3 max-w-[66ch] list-disc space-y-2 pl-5 text-[15px] leading-relaxed text-stone-700 dark:text-stone-300">
       {keys.map((k) => (
-        <li key={k}>{t(k)}</li>
+        <li key={k}>
+                  <Sub>{t(k)}</Sub>
+                </li>
       ))}
     </ul>
   );
@@ -207,11 +210,30 @@ export default function CorteDeSeccionPage() {
           </section>
 
           <section className={SECTION}>
+            <Kicker>{t("cut.s8.kicker")}</Kicker>
+            <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("cut.s8.title")}</h3>
+            <p className={P}>{t("cut.s8.p1")}</p>
+            <ol className="my-3 max-w-[70ch] list-decimal space-y-3 pl-6 text-[15px] leading-relaxed text-stone-700 marker:font-mono marker:font-semibold marker:text-teal-700 dark:text-stone-300 dark:marker:text-teal-400">
+              {(["cut.s8.1", "cut.s8.2", "cut.s8.3", "cut.s8.4", "cut.s8.5"] as TranslationKey[]).map((k) => (
+                <li key={k}>
+                  <Sub>{t(k)}</Sub>
+                </li>
+              ))}
+            </ol>
+            <ResultantFigure />
+            <p className={P}>
+              <Sub>{t("cut.s8.p2")}</Sub>
+            </p>
+          </section>
+
+          <section className={SECTION}>
             <Kicker>{t("cut.s6.kicker")}</Kicker>
             <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("cut.s6.title")}</h3>
             <ol className="my-3 max-w-[70ch] list-decimal space-y-3 pl-6 text-[15px] leading-relaxed text-stone-700 marker:font-mono marker:font-semibold marker:text-teal-700 dark:text-stone-300 dark:marker:text-teal-400">
               {full.map((k) => (
-                <li key={k}>{t(k)}</li>
+                <li key={k}>
+                  <Sub>{t(k)}</Sub>
+                </li>
               ))}
             </ol>
             <p className={P}>{t("cut.s6.note")}</p>

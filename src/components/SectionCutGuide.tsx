@@ -10,10 +10,12 @@ import {
   neutralIntercepts,
   neutralSegment,
   plane,
+  resultantGuide,
   type GuideSection,
   type Plane,
 } from "@/lib/sectionGuide";
 import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
+import { Sub, SvgSub } from "@/components/Sub";
 
 // Colours mirror the app: tension teal, compression red; the neutral axis in amber.
 const TENS = "#0B8A8A";
@@ -401,5 +403,114 @@ export function NeutralAxisExample() {
       <p>(0; y₀) → y₀ = −N·Ix/(A·Mx) = −(−600)(318)/(34·(−30000)) = <b>{fmt(y0 ?? 0, 3)} cm</b></p>
       <p>(x₀; 0) → x₀ = −N·Iy/(A·My) = −(−600)(864)/(34·90000) = <b>{fmt(x0 ?? 0, 3)} cm</b></p>
     </div>
+  );
+}
+
+// Step 8: the resultant diagram of the example (face 2), built exactly as the list says.
+export function ResultantFigure() {
+  const { t } = useLanguage();
+  const fmt = useFmt();
+  const s = FACES[2];
+  const k = plane(-600, -300, 900, s);
+  const r = resultantGuide(k, s, 11);
+  if (!r) return null;
+  const S = 12; // px per cm
+  const P = (x: number, y: number): [number, number] => [x * S, -y * S];
+  const f = (v: [number, number]) => `${v[0].toFixed(1)},${v[1].toFixed(1)}`;
+  const K = 5; // cm of the largest ordinate
+  const kk = K / Math.max(Math.abs(r.hi.sigma), Math.abs(r.lo.sigma));
+  const at = (tt: number) => r.at(tt);
+  const ord = (tt: number): [number, number] => {
+    const [x, y] = at(tt);
+    const v = r.gn * tt * kk;
+    return [x + r.n[0] * v, y + r.n[1] * v];
+  };
+  const tLo = Math.min(r.lo.t, r.hi.t),
+    tHi = Math.max(r.lo.t, r.hi.t);
+  const par = (end: { corner: [number, number]; t: number }) => {
+    const b = at(end.t);
+    const d = Math.hypot(end.corner[0] - b[0], end.corner[1] - b[1]);
+    const w: [number, number] = [(end.corner[0] - b[0]) / d, (end.corner[1] - b[1]) / d];
+    return { from: b, to: [end.corner[0] + w[0] * 2, end.corner[1] + w[1] * 2] as [number, number] };
+  };
+  const b0 = at(0);
+  const lam = -(b0[0] * r.e[0] + b0[1] * r.e[1]);
+  const reach = lam + (lam >= 0 ? 1 : -1) * 9;
+  const enEnd: [number, number] = [b0[0] + r.e[0] * reach, b0[1] + r.e[1] * reach];
+  const parts = [
+    { key: "neg", pts: [at(r.lo.t), ord(r.lo.t), at(0)], sign: -1 },
+    { key: "pos", pts: [at(0), ord(r.hi.t), at(r.hi.t)], sign: 1 },
+  ];
+  const label = (end: typeof r.hi, other: typeof r.hi, name: string) => {
+    const dir = end.t >= other.t ? 1 : -1;
+    const [bx, by] = at(end.t + dir * 1.4);
+    const right = dir * r.u[0] >= 0;
+    return { x: bx, y: by, anchor: right ? "start" : "end", text: `${name} = ${fmt(end.sigma)}` };
+  };
+  const lh = label(r.hi, r.lo, t("cut.res.smax")),
+    ll = label(r.lo, r.hi, t("cut.res.smin"));
+  // the baseline label sits on the section side of the baseline, clear of both triangles
+  const bl = at(tHi * 0.5);
+  const bm: [number, number] = [bl[0] - r.n[0] * 0.9, bl[1] - r.n[1] * 0.9];
+  const ang = (Math.atan2(-r.u[1], r.u[0]) * 180) / Math.PI;
+  const baseAngle = ang > 90 ? ang - 180 : ang < -90 ? ang + 180 : ang; // keep the text upright
+  const all: [number, number][] = [
+    [-s.hx, -s.hy], [s.hx, s.hy], b0, enEnd, at(tLo - 1.5), at(tHi + 1.5), par(r.hi).to, par(r.lo).to, ord(r.hi.t), ord(r.lo.t),
+    [lh.x + (lh.anchor === "start" ? 14 : -14), lh.y], [ll.x + (ll.anchor === "start" ? 14 : -14), ll.y],
+  ];
+  const xs = all.map((q) => P(q[0], q[1])[0]),
+    ys = all.map((q) => P(q[0], q[1])[1]);
+  const M = 26,
+    x0 = Math.min(...xs) - M,
+    y0 = Math.min(...ys) - M,
+    w = Math.max(...xs) - Math.min(...xs) + 2 * M + 40,
+    h = Math.max(...ys) - Math.min(...ys) + 2 * M;
+  const outline = guideOutline(s).map(([x, y]) => f(P(x, y))).join(" ");
+  const line = (a: [number, number], b: [number, number], props: React.SVGProps<SVGLineElement>) => {
+    const A = P(a[0], a[1]),
+      B = P(b[0], b[1]);
+    return <line x1={A[0]} y1={A[1]} x2={B[0]} y2={B[1]} {...props} />;
+  };
+  return (
+    <figure className="my-5 max-w-2xl rounded-lg border border-stone-200 bg-white p-4 shadow-sm dark:border-stone-700 dark:bg-stone-900" data-testid="cut-resultant-figure">
+      <svg viewBox={`${x0} ${y0} ${w} ${h}`} className="h-auto w-full" role="img" aria-label={t("cut.res.aria")}>
+        <polygon points={outline} strokeLinejoin="round" className="fill-stone-200 stroke-stone-800 dark:fill-stone-700 dark:stroke-stone-200" strokeWidth="1.5" />
+        {[r.hi, r.lo].map((end, i) => {
+          const pl = par(end);
+          const col = end.sigma < 0 ? COMP : TENS;
+          return (
+            <g key={i}>
+              {line(pl.from, pl.to, { stroke: col, strokeWidth: 1.4 })}
+              <circle cx={P(end.corner[0], end.corner[1])[0]} cy={P(end.corner[0], end.corner[1])[1]} r="3.5" fill={col} />
+            </g>
+          );
+        })}
+        {line(b0, enEnd, { stroke: EN, strokeWidth: 2, strokeDasharray: "7 4" })}
+        <text x={P(enEnd[0], enEnd[1])[0] + 6} y={P(enEnd[0], enEnd[1])[1] - 6} fontSize="12" fontWeight="600" fill={EN}>{t("cut.en.short")}</text>
+        {line(at(tLo - 1.5), at(tHi + 1.5), { className: "stroke-stone-500", strokeWidth: 1.2 })}
+        {parts.map(({ key, pts, sign }) => {
+          const c: [number, number] = [pts.reduce((a, q) => a + q[0], 0) / 3, pts.reduce((a, q) => a + q[1], 0) / 3];
+          const [cx, cy] = P(c[0], c[1]);
+          const col = sign < 0 ? COMP : TENS;
+          return (
+            <g key={key}>
+              <polygon points={pts.map((q) => f(P(q[0], q[1]))).join(" ")} fill={col} fillOpacity=".4" stroke={col} />
+              <circle cx={cx} cy={cy} r="7" fill="none" stroke={col} strokeWidth="1.5" />
+              <text x={cx} y={cy + 4.5} fontSize="13" fontWeight="700" textAnchor="middle" fill={col}>{sign < 0 ? "−" : "+"}</text>
+            </g>
+          );
+        })}
+        {[{ l: lh, end: r.hi }, { l: ll, end: r.lo }].map(({ l, end }, i) => {
+          const [lx, ly] = P(l.x, l.y);
+          return (
+            <text key={i} x={lx + (l.anchor === "start" ? 6 : -6)} y={ly + 4} fontSize="12" fontWeight="700" textAnchor={l.anchor as "start" | "end"} fill={end.sigma < 0 ? COMP : TENS} className="font-mono">
+              <SvgSub>{l.text}</SvgSub>
+            </text>
+          );
+        })}
+        <text x={P(bm[0], bm[1])[0]} y={P(bm[0], bm[1])[1]} fontSize="11" textAnchor="middle" transform={`rotate(${baseAngle.toFixed(1)} ${P(bm[0], bm[1])[0].toFixed(1)} ${P(bm[0], bm[1])[1].toFixed(1)})`} className="fill-stone-600 dark:fill-stone-300">{t("cut.res.baseline")}</text>
+      </svg>
+      <figcaption className="mt-2 text-[13px] leading-snug text-stone-600 dark:text-stone-400"><Sub>{t("cut.res.cap")}</Sub></figcaption>
+    </figure>
   );
 }
