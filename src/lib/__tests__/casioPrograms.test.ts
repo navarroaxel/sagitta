@@ -107,14 +107,14 @@ describe("Casio program REACC", () => {
     const out = runBasic(REACC_LINES, [start, ...inputs], gfx, mem);
     return { gfx, out, rea: reacciones(screenOf(gfx, "REACCIONES EN A")), base: corte(screenOf(gfx, "CORTE EN BASE (PILAR)")) };
   };
-  // menu: 1 AGREGAR CARGAS, 2 REACCIONES, 3 CORTE EN BASE, 4 LISTAR CARGAS, 5 BORRAR TODO, 0 SALIR; each load ends with 1 = OK
+  // menu: 1 AGREGAR CARGAS, 2 LISTAR CARGAS, 3 REACCIONES, 4 CORTE EN BASE, 5 BORRAR TODO, 0 SALIR; each load ends with 1 = OK
 
   test("running REACC: t-frame-3d-fixed-kg typed as the page says (distributed = its two end points and q)", () => {
     const r = reacc([
       1, 2, // CARGAR, 2 loads
       2, -1, 2, 0, 0, 3, 3, 0, 0, -200, 1, // load 1: distributed, X from −1 to 2, Y 0 to 0, Z 3 to 3, q = (0, 0, −200), OK
       1, 0, 0, 3, 0, 300, 0, 1, // load 2: point at B, F = (0, 300, 0), OK
-      2, 3, 0, // REACCIONES, CORTE EN BASE, SALIR
+      3, 4, 0, // REACCIONES, CORTE EN BASE, SALIR
     ]);
     expect(r.rea).toEqual([0, -300, 600, 900, -300, 0]);
     expect(r.base).toEqual([-600, -300, 0, -300, 900]); // N, QX, QY, MX, MY at the base of the column
@@ -122,13 +122,13 @@ describe("Casio program REACC", () => {
   });
 
   test("running REACC: column-3d-fixed-kg (q_y on the whole column + a point load at the top) = the solver's reactions", () => {
-    const r = reacc([1, 2, 2, 0, 0, 0, 0, 0, 5, 0, 200, 0, 1, 1, 0, 0, 5, 1500, 0, -20000, 1, 2, 3, 0]);
+    const r = reacc([1, 2, 2, 0, 0, 0, 0, 0, 5, 0, 200, 0, 1, 1, 0, 0, 5, 1500, 0, -20000, 1, 3, 4, 0]);
     expect(r.rea).toEqual([-1500, -1000, 20000, 2500, -7500, 0]);
     expect(r.base).toEqual([-20000, -1000, -1500, -7500, 2500]);
   });
 
   test("running REACC: a moment alone has no arm (type 3)", () => {
-    const r = reacc([1, 1, 3, 10, -20, 30, 1, 2, 0]);
+    const r = reacc([1, 1, 3, 10, -20, 30, 1, 3, 0]);
     expect(r.rea).toEqual([0, 0, 0, -10, 20, -30]); // the reactions are minus the applied moment
     expect(distributedLoad([-1, 0, 3], [2, 0, 3], [0, 0, -200])).toEqual({ x: 0.5, y: 0, z: 3, fx: 0, fy: 0, fz: -200, len: 3 });
   });
@@ -138,7 +138,7 @@ describe("Casio program REACC", () => {
       1, 1,
       1, 9, 9, 9, 9, 9, 9, 0, // a wrong point load → REPETIR
       1, 0, 0, 3, 0, 300, 0, 1, // the right one
-      2, 0,
+      3, 0,
     ]);
     expect(r.rea).toEqual([0, -300, 0, 900, 0, 0]);
     expect(r.out).toEqual(["CARGA", 1, "CARGA", 1]); // the same load number twice
@@ -162,7 +162,7 @@ describe("Casio program REACC", () => {
       2, -1, 2, 0, 0, 3, 3, 0, 0, -200, 1, // distributed: centre (0.5, 0, 3), resultant −600 along z
       3, 10, -20, 30, 1, // a moment
       ...pointLoad(1, 2, 3, 4, 5, 6),
-      4, 0, // LISTAR, no deletion
+      2, 0, // LISTAR, no deletion
       0,
     ]);
     const pages = gfx.screens.filter((sc) => sc[0]?.[2] === "N T  X     Y     Z");
@@ -177,18 +177,18 @@ describe("Casio program REACC", () => {
   });
 
   test("running REACC: a load can be deleted from the list, and the reactions are rebuilt without it", () => {
-    const keep = reacc([1, 1, ...pointLoad(0, 0, 3, 0, 300, 0), 2, 0]).rea; // only the second load, as the reference
-    const both = reacc([1, 2, ...pointLoad(0, 0, 3, 0, 300, 0), ...pointLoad(0, 0, 3, 0, 300, 0), 2, 0]).rea;
+    const keep = reacc([1, 1, ...pointLoad(0, 0, 3, 0, 300, 0), 3, 0]).rea; // only the second load, as the reference
+    const both = reacc([1, 2, ...pointLoad(0, 0, 3, 0, 300, 0), ...pointLoad(0, 0, 3, 0, 300, 0), 3, 0]).rea;
     expect(both).not.toEqual(keep);
     const { gfx, rea } = reacc([
       1, 3,
       ...pointLoad(2, 0, 3, 100, 0, 0), // the one to delete
       ...pointLoad(0, 0, 3, 0, 300, 0),
       ...pointLoad(5, 5, 5, 7, 7, 7), // and another one after it
-      4, 1, // LISTAR → BORRAR CARGA 1
+      2, 1, // LISTAR → BORRAR CARGA 1
       3, // the list again, now with two: 3 is beyond the end, so it deletes the last one (the 7s)
       0, // the list once more, with one left: no more
-      2, 0,
+      3, 0,
     ]);
     const lists = gfx.screens.filter((sc) => sc[0]?.[2] === "N T  X     Y     Z");
     expect(lists).toHaveLength(3); // the list is shown again after each deletion
@@ -198,43 +198,43 @@ describe("Casio program REACC", () => {
     expect(rea).toEqual(keep); // 100 kg at x = 2 and the 7s are gone: only the 300 kg at B is left
     expect(gfx.screens.filter((sc) => sc[0]?.[2] === "REACC  CARGAS").map((sc) => at(sc, 15, 1)).slice(-2)).toEqual([1, 1]);
     // an empty list says so
-    expect(reacc([4, 0]).gfx.screens.some((sc) => sc[0]?.[2] === "NO HAY CARGAS")).toBe(true);
+    expect(reacc([2, 0]).gfx.screens.some((sc) => sc[0]?.[2] === "NO HAY CARGAS")).toBe(true);
   });
 
   test("running REACC: at most 20 loads (the batch is cut to what is left, then the program says it is full)", () => {
     const one = pointLoad(0, 0, 0, 0, 0, -1);
-    const { gfx, rea } = reacc([1, 25, ...Array.from({ length: 20 }, () => one).flat(), 1, 2, 0]);
+    const { gfx, rea } = reacc([1, 25, ...Array.from({ length: 20 }, () => one).flat(), 1, 3, 0]);
     expect(rea[2]).toBe(20); // FZ: twenty loads of −1 kg
     expect(gfx.screens.some((sc) => sc[0]?.[2] === "YA HAY 20 CARGAS")).toBe(true);
   });
 
   test("running REACC: the loads survive leaving the program, and even running other programs in between (SEGUIR)", () => {
     const mem = newMem();
-    const first = reacc([1, 2, ...pointLoad(0, 0, 3, 0, 300, 0), 2, -1, 2, 0, 0, 3, 3, 0, 0, -200, 1, 2, 3, 0], 0, mem);
+    const first = reacc([1, 2, ...pointLoad(0, 0, 3, 0, 300, 0), 2, -1, 2, 0, 0, 3, 3, 0, 0, -200, 1, 3, 4, 0], 0, mem);
     expect(first.rea).toEqual([0, -300, 600, 900, -300, 0]);
     // other programs use the letters and the lists 1-9: PERFIL and TRACCION run in between
     runBasic(PERFIL_LINES, [-600, -300, 900, 0], newGfx(), mem);
     runBasic(TRACCION_LINES, [18229, 0], newGfx(), mem);
     // back in REACC: SEGUIR keeps the two loads, the count in the title and the sums
-    const again = reacc([2, 3, 0], 1, mem);
+    const again = reacc([3, 4, 0], 1, mem);
     expect(again.rea).toEqual(first.rea);
     expect(again.base).toEqual(first.base);
     expect(again.gfx.screens.find((sc) => sc[0]?.[2] === "REACC  CARGAS")!.find((l) => l[0] === 15)![2]).toBe(2);
     // and the list shows them; adding one more on top of the saved ones works
-    const more = reacc([1, 1, ...pointLoad(1, 0, 0, 0, 0, 50), 2, 4, 0, 0], 1, mem);
+    const more = reacc([1, 1, ...pointLoad(1, 0, 0, 0, 0, 50), 3, 2, 0, 0], 1, mem);
     expect(more.rea[2]).toBe(550); // FZ: 600 up (the saved loads) minus the 50 kg of the new one
     expect(more.gfx.screens.filter((sc) => sc[0]?.[2] === "N T  X     Y     Z")).toHaveLength(1);
     // NUEVA starts over even with loads saved
-    expect(reacc([4, 0], 0, mem).gfx.screens.some((sc) => sc[0]?.[2] === "NO HAY CARGAS")).toBe(true);
+    expect(reacc([2, 0], 0, mem).gfx.screens.some((sc) => sc[0]?.[2] === "NO HAY CARGAS")).toBe(true);
   });
 
   test("running REACC: the menu shows how many loads are in, adds batches, and BORRAR TODO empties them", () => {
     const { gfx, rea } = reacc([
       1, 1, 1, 0, 0, 3, 0, 300, 0, 1,
       1, 1, 1, 0, 0, 3, 0, 300, 0, 1, // the same load again: two in
-      2, // REACCIONES with both
+      3, // REACCIONES with both
       5, // BORRAR TODO
-      2, 0, // REACCIONES again, SALIR
+      3, 0, // REACCIONES again, SALIR
     ]);
     const counts = gfx.screens.filter((sc) => sc[0]?.[2] === "REACC  CARGAS").map((sc) => at(sc, 15, 1));
     expect(counts).toEqual([0, 1, 2, 2, 0, 0]);
