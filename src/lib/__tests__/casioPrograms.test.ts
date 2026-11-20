@@ -119,7 +119,7 @@ describe("Casio program REACC", () => {
     expect(r.rea).toEqual([0, -300, 600, 900, -300, 0]);
     expect(r.base).toEqual([-600, -300, 0, -300, 900]); // N, QX, QY, MX, MY at the base of the column
     // each load starts on a screen that says which one it is (CARGA 1, CARGA 2) with the kinds to choose from
-    const heads = r.gfx.screens.filter((sc) => sc[0]?.[2] === "CARGA" && sc.some((l) => l[2] === "1 PUNTUAL")).map((sc) => at(sc, 7, 1));
+    const heads = r.gfx.screens.filter((sc) => sc[0]?.[2] === "CARGA" && sc.some((l) => l[2] === "PUNTUAL")).map((sc) => at(sc, 7, 1));
     expect(heads).toEqual([1, 2]);
   });
 
@@ -143,7 +143,7 @@ describe("Casio program REACC", () => {
       3, 0,
     ]);
     expect(r.rea).toEqual([0, -300, 0, 900, 0, 0]);
-    const heads = r.gfx.screens.filter((sc) => sc[0]?.[2] === "CARGA" && sc.some((l) => l[2] === "1 PUNTUAL")).map((sc) => at(sc, 7, 1));
+    const heads = r.gfx.screens.filter((sc) => sc[0]?.[2] === "CARGA" && sc.some((l) => l[2] === "PUNTUAL")).map((sc) => at(sc, 7, 1));
     expect(heads).toEqual([1, 1]); // the same load number twice
   });
 
@@ -893,6 +893,26 @@ describe("Casio menus with the arrow keys (▲ 28, ▼ 37, EXE 31, EXIT 47, numb
     expect(data.map((sc) => sc.find((l) => l[0] === 5 && l[1] === 1)![2])).toEqual([120, 140]);
     const exit = run(PERFILES_LINES, [], [37, 37, 31]);
     expect(rows(exit)).toEqual([2, 3, 4]);
+  });
+
+  test("the items are not numbered on the screen (the arrows are the way in; the number keys are hidden shortcuts)", () => {
+    for (const lines of [REACC_LINES, RETIC_LINES, PERFILES_LINES]) {
+      const items = lines.flatMap((l) => [...l.matchAll(/Locate 3,\d,"([^"]*)"/g)].map((m) => m[1]));
+      expect(items.length).toBeGreaterThan(0);
+      items.forEach((t) => expect(t).not.toMatch(/^\d /));
+    }
+  });
+
+  test("the prompts that follow a menu start on a clean screen (no menu left behind the question)", () => {
+    // PERFILES: the value needed is asked under its own title, not under the list of properties
+    const g = run(PERFILES_LINES, [100], [37, 31, 62, 72, 47, 71]);
+    const ask = g.screens.find((sc) => sc[0]?.[2] === "BUSCAR")!;
+    expect(ask.map((l) => l[2])).toEqual(["BUSCAR", "IPB", "SX (CM³)"]);
+    // REACC: the data of a load are asked under CARGA n, without the kinds
+    const r = run(REACC_LINES, [1, 0, 0, 3, 0, 300, 0], [62, 72, 72, 72, 47]); // NUEVA, AGREGAR, PUNTUAL, ..., OK, EXIT
+    const load = r.screens.filter((sc) => sc[0]?.[2] === "CARGA" && sc.length === 2);
+    expect(load.length).toBeGreaterThan(0);
+    load.forEach((sc) => expect(sc.map((l) => l[2])).toEqual(["CARGA", 1]));
   });
 
   test("the menus never draw outside the 21 × 7 screen (the interpreter would throw) and the key loop waits for a key", () => {
