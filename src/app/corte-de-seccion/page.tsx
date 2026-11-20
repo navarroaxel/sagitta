@@ -65,7 +65,10 @@ export default function CorteDeSeccionPage() {
           <section className={SECTION}>
             <Kicker>{t("cut.s2.kicker")}</Kicker>
             <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("cut.s2.title")}</h3>
-            <p className={P}>{t("cut.s2.p1")}</p>
+            <p className={P}>{t("cut.s2.tri.p")}</p>
+            <Bullets keys={["cut.s2.tri.z", "cut.s2.tri.x", "cut.s2.tri.y"]} />
+            <p className={P}>{t("cut.s2.tri.note")}</p>
+            <p className={`${P} mt-4`}>{t("cut.s2.p1")}</p>
             <Bullets keys={["cut.s2.n", "cut.s2.m"]} />
             <p className={P}>{t("cut.s2.example")}</p>
             <div className={EQ}>σ(x, y) = N/A + Mx·y/Ix + My·x/Iy</div>
@@ -120,7 +123,7 @@ export default function CorteDeSeccionPage() {
 
           <section className="mt-12 rounded-lg border border-[#C0392B] p-5">
             <h3 className="mb-3 text-xl font-semibold tracking-tight">{t("cut.err.title")}</h3>
-            <Bullets keys={["cut.err.1", "cut.err.2", "cut.err.3", "cut.err.4"]} />
+            <Bullets keys={["cut.err.1", "cut.err.2", "cut.err.3", "cut.err.4", "cut.err.5"]} />
             <p className={P}>{t("cut.err.app")}</p>
           </section>
         </article>
