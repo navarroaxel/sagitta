@@ -52,7 +52,7 @@ function reticInputs(o: {
     1, o.nodes.length, ...o.nodes.flat(), K_EXIT,
     2, ...o.bars.flatMap(([a, b]) => [...pickNode(a), ...pickNode(b)]), K_EXIT,
     3, ...pickNode(o.pinned), ...pickNode(o.roller), o.dir,
-    4, o.loads.length, ...o.loads.flatMap((l) => [...pickAfterPrompt(l.node), l.fx, l.fy, 1]),
+    4, ...o.loads.flatMap((l) => [...pickNode(l.node), l.fx, l.fy, 1]), K_EXIT,
     ...(o.tail ?? [7, 0]),
   ];
 }
@@ -916,13 +916,15 @@ describe("Casio program RETIC (bar forces of a truss of up to 9 bars)", () => {
     expect(last.segments.some(([x1, y1, x2, y2]) => x1 === n1.x && y1 === n1.y && x2 === n3.x && y2 === n3.y)).toBe(true);
   });
 
-  test("a stale EXE right after the count prompt does not choose node 1 for a load: the first EXE is ignored, then ► ► EXE chooses node 3", () => {
+  test("AGREGAR CARGAS asks no count: it goes straight to the choice of node (► ► EXE is node 3), loads are added until EXIT", () => {
     const gfx = newGfx(), mem = newMem();
-    const inputs = [4, 0, 0, 5, 0, 2.5, 4, 7.5, 4, 1, 0, -100];
-    // NUDOS, EXIT; AGREGAR CARGAS; EXE (stale: ignored), ► ► EXE; OK; leave
-    runBasic(RETIC_LINES, inputs, gfx, mem, [31, 47, 37, 37, 37, 31, 31, 27, 27, 31, 31, 47]);
+    const inputs = [4, 0, 0, 5, 0, 2.5, 4, 7.5, 4, 0, -100, 10, 0];
+    // NUDOS, EXIT; AGREGAR CARGAS: ► ► EXE (node 3), OK; ▲ ... node 1 by its key: second load; EXIT; leave
+    runBasic(RETIC_LINES, inputs, gfx, mem, [31, 47, 37, 37, 37, 31, 27, 27, 31, 31, 72, 31, 47, 47]);
     expect(mem.L[6][3]).toBe(-100);
+    expect(mem.L[5][1]).toBe(10);
     expect(mem.L[6][1]).toBe(0);
+    expect(gfx.screens.some((sc) => sc.some((l) => l[2] === "CARGAS A AGREGAR"))).toBe(false);
   });
 
   test("the cursor wraps: ◄ from the first node goes to the last, and EXIT leaves a choice without changing anything", () => {
@@ -985,8 +987,8 @@ describe("Casio program RETIC (bar forces of a truss of up to 9 bars)", () => {
         2, ...pickNode(2), ...pickNode(3), ...bars.slice(1).flatMap(([a, b]) => [...pickNode(a), ...pickNode(b)]), // bar 1 chosen wrong (2-3)
         K_EXE, ...pickNode(bars[0][0]), ...pickNode(bars[0][1]), K_EXIT, // chosen on the bar list (the cursor starts on bar 1) and redone
         3, ...pickNode(idx(pinned.id)), ...pickNode(idx(roller.id)), roller.support === "roller-h" ? 2 : 1,
-        4, loads.length, ...pickAfterPrompt(1), 7, 7, 2, // a wrong load → 2 = REPETIR: the same slot is asked again
-        ...loads.flatMap((l) => [...pickAfterPrompt(idx(l.node)), l.fx, l.fy, 1]),
+        4, ...pickNode(1), 7, 7, 2, // a wrong load → 2 = REPETIR: the same slot is asked again
+        ...loads.flatMap((l) => [...pickNode(idx(l.node)), l.fx, l.fy, 1]), K_EXIT,
         7, 0,
       ],
       gfx,
