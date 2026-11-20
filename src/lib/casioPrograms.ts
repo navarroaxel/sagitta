@@ -27,12 +27,20 @@ function menuLines(o: {
   const sel = o.sel ?? "S";
   const key = o.key ?? "W";
   const row0 = o.row0 ?? 2;
+  // each item ends with a superscript of its number key (the hidden shortcut): ¹ ² … and ⁰ for "SALIR"
+  const draw = o.draw.map((line) => {
+    const m = /^Locate 3,(\d+),"(.*)"$/.exec(line);
+    if (!m || +m[1] < row0 || +m[1] >= row0 + o.count) return line;
+    const idx = +m[1] - row0 + 1;
+    const digit = o.exit === "item" && idx === o.count ? 0 : idx;
+    return `Locate 3,${m[1]},"${m[2]}${"⁰¹²³⁴⁵⁶⁷⁸⁹"[digit]}"`;
+  });
   const items = o.exit === "item" ? o.count - 1 : o.count;
   const exitSel = o.exit === "item" ? o.count : o.exit === "zero" ? 0 : o.exit;
   return [
     `${o.start ?? 1}→${sel}:1→${o.flag}`,
     ...(o.clear === false ? [] : ["ClrText"]),
-    ...o.draw,
+    ...draw,
     `While ${o.flag}=1`,
     Array.from({ length: o.count }, (_, k) => `Locate 1,${k + row0}," "`).join(":"),
     `Locate 1,${sel}+${row0 - 1},">"`,

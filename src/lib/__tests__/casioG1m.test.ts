@@ -24,7 +24,7 @@ function read(file: Uint8Array) {
 }
 
 // The same table the other way round, for the few tokens the programs use (display text of each code).
-const TWO = new Map([["f700", "If "], ["f701", "Then "], ["f702", "Else "], ["f703", "IfEnd"], ["f704", "For "], ["f705", " To "], ["f707", "Next"], ["f70e", "Stop"], ["7f51", "List "], ["f708", "While "], ["f709", "WhileEnd"], ["f7a4", "Horizontal "], ["f7a7", "F-Line "], ["f7a5", "Text "], ["f7a3", "Vertical "], ["f7a8", "PlotOn "], ["7f8f", "Getkey"], ["f718", "ClrText"], ["f710", "Locate "], ["e5c2", "²"], ["e5c3", "³"], ["e5c4", "⁴"]]);
+const TWO = new Map([["f700", "If "], ["f701", "Then "], ["f702", "Else "], ["f703", "IfEnd"], ["f704", "For "], ["f705", " To "], ["f707", "Next"], ["f70e", "Stop"], ["7f51", "List "], ["f708", "While "], ["f709", "WhileEnd"], ["f7a4", "Horizontal "], ["f7a7", "F-Line "], ["f7a5", "Text "], ["f7a3", "Vertical "], ["f7a8", "PlotOn "], ["7f8f", "Getkey"], ["f718", "ClrText"], ["f710", "Locate "], ...[..."⁰¹²³⁴⁵⁶⁷⁸⁹"].map((c, d) => [`e5c${d}`, c] as [string, string])]);
 const ONE = new Map([[0x0e, "→"], [0x0c, "◢"], [0x10, "≤"], [0x87, "–"], [0x89, "+"], [0x99, "–"], [0xa9, "×"], [0xb9, "÷"], [0x97, "Abs "], [0x86, "√"], [0xd1, "Cls"], [0xeb, "ViewWindow "]]);
 function decode(bytes: number[]): string {
   let out = "";
@@ -84,6 +84,7 @@ describe("Casio .g1m builder", () => {
     expect(hex("ClrText")).toBe("f7 18");
     expect(hex('"CM²"')).toBe("22 43 4d e5 c2 22"); // superscript digits inside a string (CM² CM³ CM⁴)
     expect(hex('"CM³ CM⁴"')).toBe("22 43 4d e5 c3 20 43 4d e5 c4 22");
+    expect(hex('"SALIR⁰ A¹"')).toBe("22 53 41 4c 49 52 e5 c0 20 41 e5 c1 22"); // the number keys of the menu items
     expect(hex('Locate 1,2,"FX"')).toBe("f7 10 31 2c 32 2c 22 46 58 22");
     expect(hex("Locate 4,2,–F")).toBe("f7 10 34 2c 32 2c 87 46"); // (–) as a value after a comma
     expect(hex("Vertical –M÷B")).toBe("f7 a3 87 4d b9 42"); // (–) right after a command

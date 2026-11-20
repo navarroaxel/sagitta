@@ -119,7 +119,7 @@ describe("Casio program REACC", () => {
     expect(r.rea).toEqual([0, -300, 600, 900, -300, 0]);
     expect(r.base).toEqual([-600, -300, 0, -300, 900]); // N, QX, QY, MX, MY at the base of the column
     // each load starts on a screen that says which one it is (CARGA 1, CARGA 2) with the kinds to choose from
-    const heads = r.gfx.screens.filter((sc) => sc[0]?.[2] === "CARGA" && sc.some((l) => l[2] === "PUNTUAL")).map((sc) => at(sc, 7, 1));
+    const heads = r.gfx.screens.filter((sc) => sc[0]?.[2] === "CARGA" && sc.some((l) => l[2] === "PUNTUAL¹")).map((sc) => at(sc, 7, 1));
     expect(heads).toEqual([1, 2]);
   });
 
@@ -143,7 +143,7 @@ describe("Casio program REACC", () => {
       3, 0,
     ]);
     expect(r.rea).toEqual([0, -300, 0, 900, 0, 0]);
-    const heads = r.gfx.screens.filter((sc) => sc[0]?.[2] === "CARGA" && sc.some((l) => l[2] === "PUNTUAL")).map((sc) => at(sc, 7, 1));
+    const heads = r.gfx.screens.filter((sc) => sc[0]?.[2] === "CARGA" && sc.some((l) => l[2] === "PUNTUAL¹")).map((sc) => at(sc, 7, 1));
     expect(heads).toEqual([1, 1]); // the same load number twice
   });
 
@@ -895,12 +895,18 @@ describe("Casio menus with the arrow keys (▲ 28, ▼ 37, EXE 31, EXIT 47, numb
     expect(rows(exit)).toEqual([2, 3, 4]);
   });
 
-  test("the items are not numbered on the screen (the arrows are the way in; the number keys are hidden shortcuts)", () => {
+  test("each menu item ends with a superscript of its number key (¹ ² … , ⁰ for SALIR): the hidden shortcut, shown small", () => {
     for (const lines of [REACC_LINES, RETIC_LINES, PERFILES_LINES]) {
-      const items = lines.flatMap((l) => [...l.matchAll(/Locate 3,\d,"([^"]*)"/g)].map((m) => m[1]));
+      const items = lines.flatMap((l) => [...l.matchAll(/Locate 3,(\d),"([^"]*)"/g)].map((m) => [+m[1], m[2]] as [number, string]));
       expect(items.length).toBeGreaterThan(0);
-      items.forEach((t) => expect(t).not.toMatch(/^\d /));
+      items.forEach(([, t]) => expect(t).toMatch(/[⁰¹²³⁴⁵⁶⁷⁸⁹]$/));
     }
+    // the order of the main menu of REACC: ¹ AGREGAR … ⁵ BORRAR TODO, ⁰ SALIR
+    const reacc = REACC_LINES.join("\n");
+    ["AGREGAR CARGAS¹", "LISTAR CARGAS²", "REACCIONES³", "CORTE EN BASE⁴", "BORRAR TODO⁵", "SALIR⁰"].forEach((t) => expect(reacc).toContain(`"${t}"`));
+    // the safe answer of a yes / no is the first one: NO¹ SI, BORRAR TODO²
+    expect(reacc).toContain('"NO¹"');
+    // and the number keys still choose, which the screens run in the tests above show
   });
 
   test("the prompts that follow a menu start on a clean screen (no menu left behind the question)", () => {
