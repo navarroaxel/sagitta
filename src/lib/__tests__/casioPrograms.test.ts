@@ -686,6 +686,22 @@ describe("Casio program RETIC (bar forces of a truss of up to 9 bars)", () => {
     expect(at(rea, 12, 4) as number).toBeCloseTo(roller.support === "roller-h" ? rr.rx : rr.ry, 2);
   });
 
+  test("the node and bar screens say what is asked: X horizontal, Y vertical, in metres from a fixed origin; a bar joins two nodes in any order", () => {
+    const m = trussPreset("Triangular Truss");
+    const gfx = newGfx();
+    runBasic(RETIC_LINES, inputsFor(m), gfx);
+    const nodeScreens = gfx.screens.filter((sc) => at(sc, 1, 2) === "X: HORIZONTAL (M)");
+    expect(nodeScreens).toHaveLength(3); // one per node
+    nodeScreens.forEach((sc, k) => {
+      expect([at(sc, 1, 1), at(sc, 6, 1), at(sc, 9, 1), at(sc, 12, 1)]).toEqual(["NUDO", k + 1, "DE", 3]);
+      expect([at(sc, 1, 3), at(sc, 1, 4), at(sc, 1, 5)]).toEqual(["Y: VERTICAL (M)", "ORIGEN: UN PUNTO FIJO", "EJ: APOYO IZQ = 0,0"]);
+    });
+    const barScreens = gfx.screens.filter((sc) => at(sc, 1, 2) === "UNE DOS NUDOS");
+    expect(barScreens).toHaveLength(3);
+    expect([at(barScreens[0], 1, 1), at(barScreens[0], 7, 1), at(barScreens[0], 10, 1), at(barScreens[0], 13, 1)]).toEqual(["BARRA", 1, "DE", 3]);
+    expect(at(barScreens[0], 1, 3)).toBe("EL ORDEN NO IMPORTA");
+  });
+
   test("a mechanism (one bar twice) is detected instead of giving numbers", () => {
     const m = trussPreset("Tower Truss");
     const idx = (id: string) => m.nodes.findIndex((n) => n.id === id) + 1;

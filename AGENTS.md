@@ -17,7 +17,7 @@ A Next.js 16 + React 19 client-side app that renders structural internal force d
 ```bash
 npm install     # required: installs jsdom + testing-library for the component tests
 npm run dev     # dev server on localhost:3000
-npm test        # full Vitest suite (1025 checks, 2 projects — must stay green)
+npm test        # full Vitest suite (1026 checks, 2 projects — must stay green)
 npm run build   # production build (must stay clean)
 npm run lint    # ESLint
 npx tsc --noEmit  # TypeScript check
@@ -119,7 +119,7 @@ How diagrams are *drawn and labelled* is selected by the **sign-convention setti
 - `sectionCut.test.ts`, `sectionLoads.test.ts`, `resultantDiagram.test.ts` — the cut's σ field (`stressAt`, `sectionRects`, `memberStressField`: equals the cut's field at its own z, varies along the member, same maximum as the stress check), the loads in the section's axes (free body only), and the resultant diagram's geometry (σ max / σ min where the parallels meet the baseline, σ = 0 on the E.N., baseline ⟂ E.N.).
 - Components: `SectionCut.test.tsx` (figures, loads on the prism, σ along z on the prism's sides and the plate moving with the slider, legend width, full screen + the Z slider inside it), `Frame3DPage.test.tsx` (collapsible editor panel, full screen on the frame canvas).
 
-Total 1025 checks (`npm test`). Component tests render with `@testing-library/react`; remember to add a test there when adding a canvas layer or fixing a rendering bug.
+Total 1026 checks (`npm test`). Component tests render with `@testing-library/react`; remember to add a test there when adding a canvas layer or fixing a rendering bug.
 
 ## 3D presets: numbering (do not "fix" this)
 
