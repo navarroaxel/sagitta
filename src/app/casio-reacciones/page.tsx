@@ -137,6 +137,7 @@ export default function CasioReaccionesPage() {
             <p className={`${P} mt-3`}><Sub>{t("casio.p.ex")}</Sub></p>
             <p className={`${P} mt-3`}>{t("casio.p.draw")}</p>
             <p className={`${P} mt-3`}>{t("casio.sig")}</p>
+            <p className={`${P} mt-3`}>{t("casio.p.res")}</p>
             <p className={`${P} mt-3`}>{t("casio.p.how")}</p>
           </section>
 

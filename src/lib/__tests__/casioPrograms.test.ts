@@ -2,7 +2,7 @@ import { solveModel3D } from "../solve3d";
 import { PRESETS_3D } from "../presets3d";
 import { PRESETS } from "../presets";
 import { eccentricLoad } from "../eccentric";
-import { criticalCorner, guideCorners, guideOutline, guideSection, plane, sigmaAt } from "../sectionGuide";
+import { criticalCorner, guideCorners, guideOutline, guideSection, plane, resultantGuide, sigmaAt } from "../sectionGuide";
 import { solveModel } from "../solve";
 import { runChecks, type CableCheck, type SizeCheck, type VerifyCheck } from "../checks";
 import { newGfx, newMem, runBasic, type Mem } from "./casioBasic";
@@ -33,7 +33,7 @@ import {
 } from "../casioPrograms";
 
 // SECCION: a pass is the four numbers (N, Mx, My, σ adm) and then a menu of views: 1 DATOS, 2 CARA Y EJE NEUTRO, 3 SIGMA DE MX,
-// 4 SIGMA DE MY, 5 OTRA SECCION, 0 SALIR. `views` are the choices before leaving. Returns the screens and what DATOS shows.
+// 4 SIGMA DE MY, 5 CORTE RESULTANTE, 6 OTRA SECCION, 0 SALIR. `views` are the choices before leaving. Returns the screens and what DATOS shows.
 type Loc = [number, number, number | string][];
 const locAt = (sc: Loc | undefined, col: number, row: number) => sc?.find((l) => l[0] === col && l[1] === row)?.[2];
 function seccionRun(N: number, Mx: number, My: number, S: number, views: number[] = [1]) {
@@ -397,10 +397,10 @@ describe("Casio program REACC", () => {
     const { gfx } = seccionRun(-600, -300, 900, 0, [2, 3, 4, 2, 3, 4, 1, 1]);
     expect(gfx.pages).toHaveLength(1 + 6); // the face, σ(Mx) and σ(My) twice each (a page per drawing)
     expect(gfx.screens.filter((sc) => locAt(sc, 11, 1) === "CARA")).toHaveLength(2); // DATOS twice
-    // the menu comes back after every view, with the IPB in its title
-    const menus = gfx.screens.filter((sc) => sc[0]?.[2] === "SECCION IPB");
+    // the menu comes back after every view (7 items on the 7 lines)
+    const menus = gfx.screens.filter((sc) => locAt(sc, 3, 1) === "DATOS¹");
     expect(menus).toHaveLength(9); // 8 views and the one where SALIR is chosen
-    menus.forEach((m) => expect(locAt(m, 13, 1)).toBe(120));
+    menus.forEach((m) => expect(locAt(m, 3, 7)).toBe("SALIR⁰"));
     // every drawing is the same as the first of its kind (the data are read again from the list)
     const [f1, mx1, my1, f2, mx2, my2] = gfx.pages.slice(1);
     expect(f2.segments).toEqual(f1.segments);
@@ -410,7 +410,7 @@ describe("Casio program REACC", () => {
 
   test("the SECCION menu: OTRA SECCION asks the four numbers again; with no IPB it offers OTRA SECCION or SALIR", () => {
     const gfx = newGfx();
-    runBasic(SECCION_LINES, [-600, -300, 900, 0, 1, 5, 2000, 100, 100, 0, 1, 0], gfx); // DATOS, OTRA SECCION, new numbers, DATOS, SALIR
+    runBasic(SECCION_LINES, [-600, -300, 900, 0, 1, 6, 2000, 100, 100, 0, 1, 0], gfx); // DATOS, OTRA SECCION (6), new numbers, DATOS, SALIR
     const datos = gfx.screens.filter((sc) => locAt(sc, 11, 1) === "CARA");
     expect(datos.map((sc) => locAt(sc, 5, 1))).toEqual([120, seccionRun(2000, 100, 100, 0).data!.h]);
     // no IPB passes: the message and a menu (1 = OTRA SECCION), then a normal pass
@@ -1263,5 +1263,113 @@ describe("the diagrams of the normal stresses σ(Mx) and σ(My) (SECCION and EXC
     }
     const reacc = [...new Set(REACC_LINES.flatMap((l) => [...l.matchAll(/List (\\d+)/g)].map((m) => +m[1])))];
     expect(Math.min(...reacc)).toBeGreaterThanOrEqual(11);
+  });
+});
+
+describe("SECCION: the resultant (oblique) cut — E.N., parallels through the extreme corners, baseline ⟂ E.N., ordinates (the guide's step 8)", () => {
+  type Seg = number[];
+  const edge = (p: number[], q: number[]) => [p, q].map((v) => v.map((x) => x.toFixed(5)).join(",")).sort().join("|");
+  const resultantPage = (N: number, Mx: number, My: number) => {
+    const { gfx, data } = seccionRun(N, Mx, My, 0, [1, 5]); // DATOS (for the profile) and CORTE RESULTANTE
+    const sec = guideSection(`IPB ${data!.h}`, data!.face === 2);
+    const k = plane(N, Mx, My, sec);
+    const R = Math.hypot(sec.hx, sec.hy);
+    const r = resultantGuide(k, sec, 1.3 * R)!;
+    return { pg: gfx.pages[1], sec, k, R, r };
+  };
+
+  // the expected drawing from resultantGuide (same constants: baseline at 1.3·R, longest ordinate 0.6·R, margins 0.18·R)
+  const expected = (N: number, Mx: number, My: number) => {
+    const { pg, sec, k, R, r } = resultantPage(N, Mx, My);
+    const m = 0.18 * R;
+    const kk = (0.6 * R) / Math.max(Math.abs(r.hi.sigma), Math.abs(r.lo.sigma));
+    const atHi = r.at(r.hi.t), atLo = r.at(r.lo.t), b0 = r.at(0);
+    const ord = (t: number, a: number[]) => [a[0] + r.n[0] * r.gn * t * kk, a[1] + r.n[1] * r.gn * t * kk];
+    const ordHi = ord(r.hi.t, atHi), ordLo = ord(r.lo.t, atLo);
+    const par = (end: { corner: [number, number] }, a: number[]) => {
+      const d = Math.hypot(end.corner[0] - a[0], end.corner[1] - a[1]);
+      return [end.corner[0] + ((end.corner[0] - a[0]) / d) * m, end.corner[1] + ((end.corner[1] - a[1]) / d) * m];
+    };
+    return { pg, sec, k, R, r, m, kk, atHi, atLo, b0, ordHi, ordLo, parHi: par(r.hi, atHi), parLo: par(r.lo, atLo) };
+  };
+
+  test("the base of preset #2 (σ of both signs): the E.N., the baseline, the two parallels, two triangles, the compression hatched", () => {
+    const e = expected(-600, -300, 900);
+    const { pg, r, k } = e;
+    expect(e.r.lo.sigma).toBeLessThan(0);
+    expect(e.r.hi.sigma).toBeGreaterThan(0);
+    const seg = pg.segments.slice(12); // after the 12 edges of the outline
+    const cmp = (a: Seg, p: number[], q: number[]) => [a[0], a[1], a[2], a[3]].forEach((v, i) => expect(v).toBeCloseTo([p[0], p[1], q[0], q[1]][i], 6));
+    // the E.N.: σ = 0 at both ends, and its foot is where the baseline meets it
+    expect(Math.abs(sigmaAt(k, seg[0][0], seg[0][1]))).toBeLessThan(1e-6);
+    expect(Math.abs(sigmaAt(k, seg[0][2], seg[0][3]))).toBeLessThan(1e-6);
+    cmp(seg[0], e.b0, [seg[0][2], seg[0][3]]);
+    // the baseline: from 0.18·R before the minimum to 0.18·R past the maximum, perpendicular to the E.N.
+    cmp(seg[1], r.at(r.lo.t - e.m), r.at(r.hi.t + e.m));
+    const du = [seg[1][2] - seg[1][0], seg[1][3] - seg[1][1]], de = [seg[0][2] - seg[0][0], seg[0][3] - seg[0][1]];
+    expect(Math.abs(du[0] * de[0] + du[1] * de[1]) / (Math.hypot(...du) * Math.hypot(...de))).toBeLessThan(1e-9);
+    // the parallels: from the baseline to 0.18·R past the extreme corner, parallel to the E.N.
+    cmp(seg[2], e.atHi, e.parHi);
+    cmp(seg[3], e.atLo, e.parLo);
+    [seg[2], seg[3]].forEach((p) => expect(Math.abs((p[2] - p[0]) * de[1] - (p[3] - p[1]) * de[0]) / (Math.hypot(p[2] - p[0], p[3] - p[1]) * Math.hypot(...de))).toBeLessThan(1e-9));
+    expect(pg.plots).toEqual([[expect.closeTo(r.hi.corner[0], 9), expect.closeTo(r.hi.corner[1], 9)], [expect.closeTo(r.lo.corner[0], 9), expect.closeTo(r.lo.corner[1], 9)]]);
+    // the two triangles meet at the foot of the E.N.
+    cmp(seg[4], e.atLo, e.ordLo);
+    cmp(seg[5], e.ordLo, e.b0);
+    cmp(seg[6], e.b0, e.ordHi);
+    cmp(seg[7], e.ordHi, e.atHi);
+    // the longest ordinate is 0.6·R and the ordinates fold back where σ < 0 (the minimum's goes the other way)
+    const len = (a: number[], b: number[]) => Math.hypot(a[0] - b[0], a[1] - b[1]);
+    expect(Math.max(len(e.atHi, e.ordHi), len(e.atLo, e.ordLo))).toBeCloseTo(0.6 * e.R, 9);
+    expect((e.ordHi[0] - e.atHi[0]) * (e.ordLo[0] - e.atLo[0]) + (e.ordHi[1] - e.atHi[1]) * (e.ordLo[1] - e.atLo[1])).toBeLessThan(0);
+    // the compression (σ < 0, the lower triangle) is hatched with 7 ordinates from the baseline to its side
+    const hatch = seg.slice(8);
+    expect(hatch).toHaveLength(7);
+    hatch.forEach(([x1, y1, x2, y2]) => {
+      expect(Math.abs((x1 - e.atLo[0]) * (e.r.u[1]) - (y1 - e.atLo[1]) * e.r.u[0])).toBeLessThan(1e-6); // starts on the baseline
+      expect((x2 - x1) * e.r.n[0] + (y2 - y1) * e.r.n[1]).toBeLessThan(0); // folded back: against n
+    });
+    expect(pg.texts.map((t) => t[2])).toEqual(["SMAX", expect.closeTo(r.hi.sigma, 6), "SMIN", expect.closeTo(r.lo.sigma, 6)]);
+    // everything fits the window, at equal scale
+    const [xmin, xmax, , ymin, ymax] = pg.window!;
+    expect((xmax - xmin) / (ymax - ymin)).toBeCloseTo(2.016 * 2 / 2, 3);
+    pg.segments.forEach(([x1, y1, x2, y2]) => [[x1, y1], [x2, y2]].forEach(([x, y]) => {
+      expect(x).toBeGreaterThanOrEqual(xmin - 1e-9);
+      expect(x).toBeLessThanOrEqual(xmax + 1e-9);
+      expect(y).toBeGreaterThanOrEqual(ymin - 1e-9);
+      expect(y).toBeLessThanOrEqual(ymax + 1e-9);
+    }));
+  });
+
+  test("σ of one sign: a trapezoid; hatched when all compression (9 ordinates), outlined when all tension", () => {
+    const comp = expected(-20000, -300, 100);
+    expect(comp.r.hi.sigma).toBeLessThan(0);
+    const sc = comp.pg.segments.slice(12);
+    // E.N. (maybe), baseline, 2 parallels, the trapezoid's three sides, 9 ordinates
+    const hasEN = Math.abs(comp.k.c) / comp.r.gn <= 3 * comp.R;
+    expect(sc).toHaveLength((hasEN ? 1 : 0) + 1 + 2 + 3 + 9);
+    const tens = expected(20000, 300, 100);
+    expect(tens.r.lo.sigma).toBeGreaterThan(0);
+    const st = tens.pg.segments.slice(12);
+    expect(st).toHaveLength((Math.abs(tens.k.c) / tens.r.gn <= 3 * tens.R ? 1 : 0) + 1 + 2 + 3); // no hatch: tension is only outlined
+    // the trapezoid's sides: lo-baseline → lo-ordinate, lo-ordinate → hi-ordinate, hi-ordinate → hi-baseline
+    const i = st.length - 3;
+    [[tens.atLo, tens.ordLo], [tens.ordLo, tens.ordHi], [tens.ordHi, tens.atHi]].forEach(([p, q], j) =>
+      [st[i + j][0], st[i + j][1], st[i + j][2], st[i + j][3]].forEach((v, n) => expect(v).toBeCloseTo([p[0], p[1], q[0], q[1]][n], 6)),
+    );
+  });
+
+  test("with only N σ is uniform: no neutral axis, no diagram — it says so", () => {
+    const { gfx } = seccionRun(-600, 0, 0, 0, [1, 5]);
+    expect(gfx.screens.some((sc) => sc[0]?.[2] === "SIGMA UNIFORME")).toBe(true);
+    expect(gfx.pages).toHaveLength(1); // nothing was drawn
+  });
+
+  test("the menu has it as CORTE RESULTANTE (5) and OTRA SECCION is 6", () => {
+    const { gfx } = seccionRun(-600, -300, 900, 0, [5, 5]);
+    expect(gfx.pages).toHaveLength(3); // twice, the same
+    expect(gfx.pages[1].segments).toEqual(gfx.pages[2].segments);
+    const menu = gfx.screens.find((sc) => locAt(sc, 3, 1) === "DATOS¹")!;
+    expect([1, 2, 3, 4, 5, 6, 7].map((r) => locAt(menu, 3, r))).toEqual(["DATOS¹", "CARA Y EJE NEUTRO²", "SIGMA DE MX³", "SIGMA DE MY⁴", "CORTE RESULTANTE⁵", "OTRA SECCION⁶", "SALIR⁰"]);
   });
 });
