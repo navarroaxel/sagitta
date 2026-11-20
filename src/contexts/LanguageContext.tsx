@@ -511,6 +511,8 @@ const EN = {
   "casio.n.2": "Type the spaces and symbols as shown. → is the assignment key, ◢ is in PRGM › I/O (the display command), ≤ and ≠ are in PRGM › REL.",
   "casio.n.3": "REACC only works with one fixed support (A). For other supports write the equilibrium by hand.",
   "casio.n.4": "Rounding: the calculator works with its own 15 digits, so a result may differ in the last decimals from the app.",
+  "casio.copy": "Copy code",
+  "casio.copied": "Copied",
   "ecc.title": "Eccentric axial load on a profile (oblique compound bending)",
   "ecc.intro":
     "A load P_z along the member axis, applied e_x (perpendicular to the web) and e_y (parallel to the web) off the centroid, equals N = P_z plus the moments M_x = P_z·e_y and M_y = P_z·e_x. σ = N/A + M_x·y/I_x + M_y·x/I_y.",
@@ -1264,6 +1266,8 @@ const ES: Record<TranslationKey, string> = {
   "casio.n.2": "Tipeá los espacios y símbolos como se muestran. → es la tecla de asignación, ◢ está en PRGM › I/O (comando de display), ≤ y ≠ en PRGM › REL.",
   "casio.n.3": "REACC solo sirve con un empotramiento (A). Con otros apoyos plantéa el equilibrio a mano.",
   "casio.n.4": "Redondeo: la calculadora trabaja con sus 15 dígitos, así que el último decimal puede diferir de la app.",
+  "casio.copy": "Copiar código",
+  "casio.copied": "Copiado",
   "ecc.title": "Carga axial excéntrica en un perfil (flexión compuesta oblicua)",
   "ecc.intro":
     "Una carga P_z a lo largo del eje de la barra, aplicada a e_x (perpendicular al alma) y e_y (paralela al alma) del baricentro, equivale a N = P_z más los momentos M_x = P_z·e_y y M_y = P_z·e_x. σ = N/A + M_x·y/I_x + M_y·x/I_y.",

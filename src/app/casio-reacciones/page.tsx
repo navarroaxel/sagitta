@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 import NavMenu from "@/components/NavMenu";
@@ -12,10 +12,53 @@ const P = "max-w-[66ch] leading-relaxed text-stone-700 dark:text-stone-300";
 const SECTION = "mt-12 border-t border-stone-200 pt-8 dark:border-stone-800";
 
 function Program({ name, lines, id }: { name: string; lines: string[]; id: string }) {
+  const { t } = useLanguage();
+  const [copied, setCopied] = useState(false);
+  // the plain lines, without the line numbers shown on the page, ready for the calculator's program editor
+  const copy = async () => {
+    const text = lines.join("\n");
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const ta = document.createElement("textarea"); // older browsers / no permission: select and copy
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy");
+      } finally {
+        ta.remove();
+      }
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
   return (
     <figure className="my-4 max-w-3xl overflow-hidden rounded-lg border border-stone-200 bg-white shadow-sm dark:border-stone-700 dark:bg-stone-900">
-      <figcaption className="border-b border-stone-200 px-3 py-1.5 font-mono text-xs uppercase tracking-wider text-teal-700 dark:border-stone-700 dark:text-teal-400">
-        PRGM › {name} · {lines.length}
+      <figcaption className="flex items-center justify-between border-b border-stone-200 px-3 py-1.5 font-mono text-xs uppercase tracking-wider text-teal-700 dark:border-stone-700 dark:text-teal-400">
+        <span>
+          PRGM › {name} · {lines.length}
+        </span>
+        <button
+          type="button"
+          onClick={copy}
+          data-testid={`${id}-copy`}
+          aria-label={t("casio.copy")}
+          title={t("casio.copy")}
+          className="flex items-center gap-1 rounded px-1.5 py-0.5 normal-case tracking-normal text-stone-600 transition-colors hover:bg-stone-100 hover:text-stone-900 dark:text-stone-300 dark:hover:bg-stone-800 dark:hover:text-stone-50"
+        >
+          {copied ? (
+            <svg viewBox="0 0 24 24" className="h-4 w-4 text-teal-600" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M5 13l4 4L19 7" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <rect x="9" y="9" width="11" height="11" rx="2" />
+              <path d="M5 15V6a2 2 0 0 1 2-2h9" />
+            </svg>
+          )}
+          <span role="status">{copied ? t("casio.copied") : t("casio.copy")}</span>
+        </button>
       </figcaption>
       <pre data-testid={id} className="overflow-x-auto px-3 py-2 font-mono text-[13px] leading-relaxed text-stone-800 dark:text-stone-100">
         {lines.map((l, i) => `${String(i + 1).padStart(2, " ")}  ${l}`).join("\n")}

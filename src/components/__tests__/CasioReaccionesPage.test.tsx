@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import CasioReaccionesPage from "@/app/casio-reacciones/page";
 import { PERFIL_LINES, REACC_LINES } from "@/lib/casioPrograms";
@@ -16,5 +16,20 @@ describe("/casio-reacciones", () => {
     PERFIL_LINES.forEach((l) => expect(perfil).toContain(l));
     expect(perfil).toContain("→List 1");
     expect(document.body.textContent).toMatch(/Dos programas|Two programs/);
+  });
+
+  test("the copy button puts the plain program lines (no line numbers) on the clipboard", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", { value: { writeText }, configurable: true });
+    render(
+      <LanguageProvider>
+        <CasioReaccionesPage />
+      </LanguageProvider>,
+    );
+    fireEvent.click(screen.getByTestId("casio-perfil-copy"));
+    await waitFor(() => expect(writeText).toHaveBeenCalledWith(PERFIL_LINES.join("\n")));
+    fireEvent.click(screen.getByTestId("casio-reacc-copy"));
+    await waitFor(() => expect(writeText).toHaveBeenLastCalledWith(REACC_LINES.join("\n")));
+    await waitFor(() => expect(screen.getAllByRole("status").some((e) => /Copied|Copiado/.test(e.textContent!))).toBe(true));
   });
 });
