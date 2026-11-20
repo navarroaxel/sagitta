@@ -456,7 +456,7 @@ describe("Casio program VIGACAB (beam + cable of the two truss-cable-beam exampl
   test("running the listing: both examples, typed as on the calculator", () => {
     const expected = (r: ReturnType<typeof cableBeam>) => [
       "Mₘₐₓ KG M", expect.closeTo(r.Mmax, 6), "SX NEC CM3", expect.closeTo(r.sxReq, 6),
-      "IPB MIN", +r.min!.name.replace("IPB ", ""), "SIGMA CON IPB MIN", expect.closeTo(r.min!.sigma, 6),
+      "IPBₘᵢₙ", +r.min!.name.replace("IPB ", ""), "SIGMA CON IPBₘᵢₙ", expect.closeTo(r.min!.sigma, 6),
       "TENSION CABLE KG", expect.closeTo(r.T, 6), "A CABLE CM2", expect.closeTo(r.A, 6),
       "D CABLE CM", expect.closeTo(r.d, 6), "ALARG CABLE CM", expect.closeTo(r.elongation, 6),
       "V PIN KG", expect.closeTo(r.vPin, 6),
@@ -509,7 +509,7 @@ describe("Casio program VIGACAB (beam + cable of the two truss-cable-beam exampl
   test("running the listing: a load no IPB can carry says so and still gives the cable without the beam's weight", () => {
     const none = runBasic(VIGACAB_LINES, [12, 5, 1, 6, 4e6, 0, 1600]);
     expect(none).toContain("NINGUN IPB HASTA 1000");
-    expect(none).not.toContain("IPB MIN");
+    expect(none).not.toContain("IPBₘᵢₙ");
     expect(cableBeam({ L: 12, Lc: 5, loads: [{ P: 4e6, a: 6 }], q: 0 }).min).toBeNull();
     expect(none).toContain("TENSION CABLE KG");
   });
