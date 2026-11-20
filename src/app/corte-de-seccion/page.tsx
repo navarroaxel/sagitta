@@ -167,7 +167,6 @@ export default function CorteDeSeccionPage() {
           <section className="mt-12 rounded-lg border border-[#C0392B] p-5">
             <h3 className="mb-3 text-xl font-semibold tracking-tight">{t("cut.err.title")}</h3>
             <Bullets keys={["cut.err.1", "cut.err.2", "cut.err.3", "cut.err.4", "cut.err.5"]} />
-            <p className={P}>{t("cut.err.app")}</p>
           </section>
         </article>
       </main>
