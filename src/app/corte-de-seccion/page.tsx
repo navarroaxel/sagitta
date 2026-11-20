@@ -29,6 +29,48 @@ function Bullets({ keys }: { keys: TranslationKey[] }) {
   );
 }
 
+function CutPartsFigure() {
+  const { t } = useLanguage();
+  return (
+    <figure className="my-5 max-w-xl rounded-lg border border-stone-200 bg-white p-4 shadow-sm dark:border-stone-700 dark:bg-stone-900">
+      <svg viewBox="0 0 520 300" className="h-auto w-full" role="img" aria-label={t("cut.fig1.aria")} data-testid="cut-parts-figure">
+        {/* column: part A (free body) above the cut, part B below */}
+        <rect x="150" y="40" width="34" height="100" fill="#0B8A8A" fillOpacity=".22" stroke="#0B8A8A" strokeWidth="2" />
+        <rect x="150" y="140" width="34" height="110" className="fill-stone-200 stroke-stone-500 dark:fill-stone-700" strokeWidth="2" />
+        {/* the cut */}
+        <line x1="120" y1="140" x2="214" y2="140" stroke="#B7791F" strokeWidth="2.5" strokeDasharray="6 4" />
+        <text x="118" y="136" fontSize="12" textAnchor="end" fill="#B7791F" fontWeight="600">{t("cut.fig1.cut")}</text>
+        <text x="118" y="154" fontSize="11" textAnchor="end" className="fill-stone-600 dark:fill-stone-300">{t("cut.fig1.face")}</text>
+        {/* load on part A */}
+        <line x1="60" y1="60" x2="146" y2="60" stroke="#C0392B" strokeWidth="2.5" />
+        <polygon points="150,60 138,54 138,66" fill="#C0392B" />
+        <text x="60" y="50" fontSize="12" fill="#C0392B" fontWeight="600">{t("cut.fig1.load")}</text>
+        {/* fixed support at the base */}
+        <line x1="128" y1="250" x2="206" y2="250" className="stroke-stone-700 dark:stroke-stone-200" strokeWidth="3" />
+        {[0, 1, 2, 3, 4, 5].map((i) => (
+          <line key={i} x1={132 + i * 14} y1="250" x2={124 + i * 14} y2="262" className="stroke-stone-500" strokeWidth="1.5" />
+        ))}
+        <text x="118" y="276" fontSize="11" textAnchor="end" className="fill-stone-600 dark:fill-stone-300">{t("cut.fig1.support")}</text>
+        {/* z axis, z = 0 at the top of the column */}
+        <line x1="250" y1="40" x2="250" y2="244" className="stroke-stone-500" strokeWidth="1.5" />
+        <polygon points="250,252 244,240 256,240" className="fill-stone-500" />
+        <line x1="244" y1="40" x2="256" y2="40" className="stroke-stone-500" strokeWidth="1.5" />
+        <text x="262" y="44" fontSize="12" className="fill-stone-700 font-mono dark:fill-stone-200">z = 0</text>
+        <text x="262" y="244" fontSize="13" fontWeight="600" className="fill-stone-700 font-mono dark:fill-stone-200">z</text>
+        {/* brackets with the two parts */}
+        <path d="M 340 42 L 346 42 L 346 138 L 340 138" fill="none" stroke="#0B8A8A" strokeWidth="2" />
+        <text x="354" y="84" fontSize="12" fontWeight="600" fill="#0B8A8A">A</text>
+        <path d="M 340 142 L 346 142 L 346 248 L 340 248" fill="none" className="stroke-stone-500" strokeWidth="2" />
+        <text x="354" y="198" fontSize="12" fontWeight="600" className="fill-stone-600 dark:fill-stone-300">B</text>
+      </svg>
+      <figcaption className="mt-2 space-y-1 text-[13px] leading-snug text-stone-600 dark:text-stone-400">
+        <p><b className="text-teal-700 dark:text-teal-400">A</b> — {t("cut.fig1.a")}</p>
+        <p><b>B</b> — {t("cut.fig1.b")}</p>
+      </figcaption>
+    </figure>
+  );
+}
+
 export default function CorteDeSeccionPage() {
   const { t } = useLanguage();
   const full: TranslationKey[] = [
@@ -58,6 +100,7 @@ export default function CorteDeSeccionPage() {
             <Kicker>{t("cut.s1.kicker")}</Kicker>
             <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("cut.s1.title")}</h3>
             <p className={P}>{t("cut.s1.p1")}</p>
+            <CutPartsFigure />
             <Bullets keys={["cut.s1.b1", "cut.s1.b2"]} />
             <p className={P}>{t("cut.s1.p2")}</p>
           </section>
