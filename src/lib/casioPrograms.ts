@@ -1017,10 +1017,11 @@ export const RETIC_LINES = [
 ];
 
 // ---- Program PERFILES: look up an IPN / IPB, or find the lightest one that meets a requirement ---------------------
-// 1 DATOS: series (1 IPN, 2 IPB) and the number (260 for IPB 260) → h, b, tf, tw (mm), A (cm²), w (kg/m), Ix, Sx, Iy, Sy.
+// The properties the course uses: A, weight, Sx, Sy, Ix, Iy.
+// 1 DATOS: series (1 IPN, 2 IPB) and the number (260 for IPB 260) → A (cm²), weight (kg/m), Sx, Sy (cm³), Ix, Iy (cm⁴).
 // 2 BUSCAR: series, which property (1 Sx, 2 Ix, 3 A, 4 Iy, 5 Sy) and the value needed → the lightest profile of the series
 // whose property reaches it (the tables are in increasing size), shown with the same data and what it gives.
-// The 23 IPN and 24 IPB of the course's table (profiles.ts) are in lists 1-11: series, h, bf, tf, tw, A, w, Ix, Sx, Iy, Sy.
+// The 23 IPN and 24 IPB of the course's table (profiles.ts) are in lists 1-8: series, h, A, w, Ix, Sx, Iy, Sy.
 export const PERFILES_NAME = "PERFILES";
 export const SEARCH_TABLE = [...IPN_PROFILES, ...IPB_PROFILES];
 
@@ -1042,15 +1043,12 @@ const PAUSE2 = ["While Getkey>0:WhileEnd", "While Getkey=0:WhileEnd"];
 export const PERFILES_LINES = [
   tableList(1, (p) => (p.series === "IPN" ? 1 : 2)),
   tableList(2, (p) => p.h),
-  tableList(3, (p) => p.bf),
-  tableList(4, (p) => p.tf),
-  tableList(5, (p) => p.tw),
-  tableList(6, (p) => p.A),
-  tableList(7, (p) => p.w),
-  tableList(8, (p) => p.Ix),
-  tableList(9, (p) => p.Sx),
-  tableList(10, (p) => p.Iy),
-  tableList(11, (p) => p.Sy),
+  tableList(3, (p) => p.A),
+  tableList(4, (p) => p.w),
+  tableList(5, (p) => p.Ix),
+  tableList(6, (p) => p.Sx),
+  tableList(7, (p) => p.Iy),
+  tableList(8, (p) => p.Sy),
   "While 1=1",
   "ClrText",
   'Locate 1,1,"PERFILES  IPN  IPB"',
@@ -1083,11 +1081,11 @@ export const PERFILES_LINES = [
   `For 1→I To ${SEARCH_TABLE.length}`,
   "If K=0:Then",
   "If List 1[I]=S:Then",
-  "List 9[I]→Y",
-  "If Q=2:Then List 8[I]→Y:IfEnd",
-  "If Q=3:Then List 6[I]→Y:IfEnd",
-  "If Q=4:Then List 10[I]→Y:IfEnd",
-  "If Q=5:Then List 11[I]→Y:IfEnd",
+  "List 6[I]→Y",
+  "If Q=2:Then List 5[I]→Y:IfEnd",
+  "If Q=3:Then List 3[I]→Y:IfEnd",
+  "If Q=4:Then List 7[I]→Y:IfEnd",
+  "If Q=5:Then List 8[I]→Y:IfEnd",
   "If V≤Y:Then I→K:Y→Z:IfEnd",
   "IfEnd",
   "IfEnd",
@@ -1108,14 +1106,13 @@ export const PERFILES_LINES = [
   "ClrText",
   'If S=1:Then Locate 1,1,"IPN":IfEnd',
   'If S=2:Then Locate 1,1,"IPB":IfEnd',
-  'Locate 5,1,List 2[K]:Locate 12,1,"W":Locate 14,1,List 7[K]',
-  'Locate 1,2,"H":Locate 3,2,List 2[K]:Locate 11,2,"B":Locate 13,2,List 3[K]',
-  'Locate 1,3,"TF":Locate 4,3,List 4[K]:Locate 11,3,"TW":Locate 14,3,List 5[K]',
-  'Locate 1,4,"A":Locate 3,4,List 6[K]',
-  'Locate 1,5,"IX":Locate 4,5,List 8[K]:Locate 12,5,"SX":Locate 15,5,List 9[K]',
-  'Locate 1,6,"IY":Locate 4,6,List 10[K]:Locate 12,6,"SY":Locate 15,6,List 11[K]',
-  'If O=2:Then Locate 1,7,"PIDE":Locate 6,7,V:Locate 12,7,"DA":Locate 15,7,Z:IfEnd',
-  'Locate 1,8,"MM CM2 CM3 CM4 KG/M"',
+  "Locate 5,1,List 2[K]",
+  'Locate 1,2,"A":Locate 4,2,List 3[K]:Locate 11,2,"PESO":Locate 16,2,List 4[K]',
+  'Locate 1,3,"SX":Locate 4,3,List 6[K]:Locate 11,3,"SY":Locate 16,3,List 8[K]',
+  'Locate 1,4,"IX":Locate 4,4,List 5[K]:Locate 11,4,"IY":Locate 16,4,List 7[K]',
+  'If O=2:Then Locate 1,6,"PIDE":Locate 6,6,V:Locate 12,6,"DA":Locate 15,6,Z:IfEnd',
+  'Locate 1,7,"A CM2  PESO KG/M"',
+  'Locate 1,8,"S CM3  I CM4"',
   ...PAUSE2,
   "IfEnd",
   "WhileEnd",

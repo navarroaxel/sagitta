@@ -713,26 +713,28 @@ describe("Casio program RETIC (bar forces of a truss of up to 9 bars)", () => {
 describe("Casio program PERFILES (look up an IPN / IPB, or find the lightest that meets a requirement)", () => {
   type Screen = [number, number, number | string][];
   const at = (sc: Screen, col: number, row: number) => sc.find((l) => l[0] === col && l[1] === row)?.[2];
-  const dataScreens = (gfx: ReturnType<typeof newGfx>) => gfx.screens.filter((sc) => at(sc, 1, 2) === "H");
+  const dataScreens = (gfx: ReturnType<typeof newGfx>) => gfx.screens.filter((sc) => at(sc, 1, 2) === "A");
   const run = (inputs: number[]) => {
     const gfx = newGfx();
     runBasic(PERFILES_LINES, inputs, gfx);
     return gfx;
   };
 
-  test("the table is the course's: 23 IPN and 24 IPB in lists of the same length", () => {
+  test("the table is the course's: 23 IPN and 24 IPB, in the 8 lists of what the course uses", () => {
     expect(SEARCH_TABLE).toHaveLength(47);
     expect(SEARCH_TABLE.filter((p) => p.series === "IPN")).toHaveLength(23);
-    expect(PERFILES_LINES.filter((l) => l.includes("→List")).length).toBe(11);
+    expect(PERFILES_LINES.filter((l) => l.includes("→List")).length).toBe(8);
   });
 
   test.each([[1, 80], [1, 200], [1, 500], [2, 100], [2, 260], [2, 1000]] as const)("DATOS of series %i, %i: every value is the table's", (series, h) => {
     const p = findProfile(series, h)!;
     const [sc] = dataScreens(run([1, series, h, 0]));
-    expect([at(sc, 1, 1), at(sc, 5, 1), at(sc, 14, 1)]).toEqual([series === 1 ? "IPN" : "IPB", h, p.w]);
-    expect([at(sc, 3, 2), at(sc, 13, 2), at(sc, 4, 3), at(sc, 14, 3), at(sc, 3, 4)]).toEqual([p.h, p.bf, p.tf, p.tw, p.A]);
-    expect([at(sc, 4, 5), at(sc, 15, 5), at(sc, 4, 6), at(sc, 15, 6)]).toEqual([p.Ix, p.Sx, p.Iy, p.Sy]);
-    expect(at(sc, 1, 8)).toBe("MM CM2 CM3 CM4 KG/M");
+    expect([at(sc, 1, 1), at(sc, 5, 1)]).toEqual([series === 1 ? "IPN" : "IPB", h]);
+    // the six properties the course uses: A, weight, Sx, Sy, Ix, Iy
+    expect([at(sc, 4, 2), at(sc, 16, 2)]).toEqual([p.A, p.w]);
+    expect([at(sc, 4, 3), at(sc, 16, 3)]).toEqual([p.Sx, p.Sy]);
+    expect([at(sc, 4, 4), at(sc, 16, 4)]).toEqual([p.Ix, p.Iy]);
+    expect([at(sc, 1, 7), at(sc, 1, 8)]).toEqual(["A CM2  PESO KG/M", "S CM3  I CM4"]);
   });
 
   test("DATOS of a profile that does not exist (or of the other series) says so; a series out of range is clamped", () => {
@@ -756,7 +758,7 @@ describe("Casio program PERFILES (look up an IPN / IPB, or find the lightest tha
     const r = lightestWith(series, q, v)!;
     const [sc] = dataScreens(run([2, series, q, v, 0]));
     expect([at(sc, 1, 1), at(sc, 5, 1)]).toEqual([series === 1 ? "IPN" : "IPB", r.profile.h]);
-    expect([at(sc, 1, 7), at(sc, 6, 7), at(sc, 12, 7), at(sc, 15, 7)]).toEqual(["PIDE", v, "DA", r.value]);
+    expect([at(sc, 1, 6), at(sc, 6, 6), at(sc, 12, 6), at(sc, 15, 6)]).toEqual(["PIDE", v, "DA", r.value]);
   });
 
   test("BUSCAR: the previous profile does not reach it; nothing may reach it", () => {
@@ -776,6 +778,7 @@ describe("Casio program PERFILES (look up an IPN / IPB, or find the lightest tha
   test("the lists of the program are the table's columns", () => {
     const lines = PERFILES_LINES.filter((l) => l.includes("→List"));
     expect(lines[1]).toBe(`{${SEARCH_TABLE.map((p) => p.h).join(",")}}→List 2`);
-    expect(lines[8]).toBe(`{${SEARCH_TABLE.map((p) => p.Sx).join(",")}}→List 9`);
+    expect(lines[5]).toBe(`{${SEARCH_TABLE.map((p) => p.Sx).join(",")}}→List 6`);
+    expect(lines[3]).toBe(`{${SEARCH_TABLE.map((p) => p.w).join(",")}}→List 4`);
   });
 });
