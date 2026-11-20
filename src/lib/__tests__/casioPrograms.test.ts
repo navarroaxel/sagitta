@@ -507,26 +507,31 @@ describe("Casio program PANDEO (IPB of a bar in compression: Euler)", () => {
     expect(compressionBar(36457, 5).name).toBe("IPB 140");
   });
 
-  test("σ_adm can be what decides, β scales the buckling length, and no profile may fit", () => {
-    const stocky = compressionBar(80000, 0.5); // a short, heavily loaded bar: A ≥ 50 cm² governs, not Euler
-    expect(stocky.Amin).toBe(50);
-    expect(stocky.A).toBeGreaterThanOrEqual(50);
-    expect(stocky.Imin).toBeLessThan(stocky.Iy);
+  test("Euler decides, β scales the buckling length, a stocky bar gets a warning, and no profile may fit", () => {
     expect(compressionBar(30000, 5, 2).Imin).toBeCloseTo(4 * compressionBar(30000, 5).Imin, 9); // β = 2: Le doubles, I × 4
     expect(compressionBar(30000, 5, 0).Imin).toBe(compressionBar(30000, 5, 1).Imin); // 0 = default 1
+    const stocky = compressionBar(80000, 0.5); // short and heavily loaded: Euler alone gives the lightest IPB...
+    expect(stocky.name).toBe("IPB 100");
+    expect(stocky.sigmaOk).toBe(false); // ...whose σ = 80 000 / 26 = 3 077 kg/cm² is over 1600: the program warns
+    expect(compressionBar(36457, 5).sigmaOk).toBe(true);
     expect(compressionBar(1e7, 8).name).toBeNull();
   });
 
-  test("running the listing = compressionBar", () => {
+  test("running the listing = compressionBar (with the warning only when σ is over σ_adm)", () => {
     for (const [P, L, beta, S] of [[36457, 5, 0, 0], [-36457, 5, 1, 1600], [30000, 5, 2, 0], [80000, 0.5, 0, 2000]] as const) {
       const r = compressionBar(P, L, beta, S);
-      expect(runBasic(PANDEO_LINES, [P, L, beta, S])).toEqual([
-        "I MIN CM4 EULER", expect.closeTo(r.Imin, 6), "A MIN CM2", expect.closeTo(r.Amin, 6),
-        "IPB", +r.name!.replace("IPB ", ""), "IY CM4", r.Iy, "A DEL IPB CM2", r.A,
-        "PCR KG", expect.closeTo(r.pcr, 3), "SIGMA KG CM2", expect.closeTo(r.sigma, 6), "PESO KG M", r.w,
+      const out = runBasic(PANDEO_LINES, [P, L, beta, S]);
+      expect(out).toEqual([
+        "I MIN CM4 EULER", expect.closeTo(r.Imin, 6),
+        "IPB", +r.name!.replace("IPB ", ""), "IY CM4", r.Iy, "PCR KG", expect.closeTo(r.pcr, 3),
+        "A DEL IPB CM2", r.A, "SIGMA KG CM2", expect.closeTo(r.sigma, 6),
+        ...(r.sigmaOk ? [] : ["OJO SIGMA SUPERA ADM"]),
+        "PESO KG M", r.w,
       ]);
     }
-    expect(runBasic(PANDEO_LINES, [1e7, 8, 0, 0])).toEqual(["I MIN CM4 EULER", expect.any(Number), "A MIN CM2", expect.closeTo(1e7 / 1600, 6), "NINGUN IPB HASTA 1000"]);
+    expect(runBasic(PANDEO_LINES, [80000, 0.5, 0, 0])).toContain("OJO SIGMA SUPERA ADM");
+    expect(runBasic(PANDEO_LINES, [36457, 5, 0, 0])).not.toContain("OJO SIGMA SUPERA ADM");
+    expect(runBasic(PANDEO_LINES, [1e7, 8, 0, 0])).toEqual(["I MIN CM4 EULER", expect.any(Number), "NINGUN IPB HASTA 1000"]);
   });
 });
 

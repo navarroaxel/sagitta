@@ -544,18 +544,20 @@ export const TRACCION_LINES = [
 
 // ---- Program PANDEO: the IPB of a bar of a truss in compression (Euler) -------------------------------------------
 // P_cr = π²·E·I/(β·L)² must reach the load, so I_min = P·(β·L)²/(π²·E) (weak axis Iy; E = 2.1e6 kg/cm²; β = 1 for the pinned
-// ends of a truss bar, as the app does) and the area must still reach P/σ_adm. The lightest IPB 100…1000 that meets BOTH.
-// Units: kg, m, kg/cm² (σ_adm typed as 0 is 1600, β typed as 0 is 1). Table (h, A, Iy, kg/m) in lists 1-4.
+// ends of a truss bar, as the app does) and the profile is the lightest IPB 100…1000 with Iy ≥ I_min. The area plays no part
+// in the choice; σ = P/A of that profile is shown and the program warns if it exceeds σ_adm (a short, heavily loaded bar,
+// which the app would size by area). Units: kg, m, kg/cm² (σ_adm typed as 0 is 1600, β typed as 0 is 1). Table (h, A, Iy,
+// kg/m) in lists 1-4.
 export const PANDEO_NAME = "PANDEO";
 
 export interface CompressionBar {
   Imin: number; // cm⁴, from Euler
-  Amin: number; // cm², from σ_adm
-  name: string | null; // lightest IPB with Iy ≥ Imin and A ≥ Amin; null when none up to IPB 1000
+  name: string | null; // lightest IPB with Iy ≥ Imin; null when none up to IPB 1000
   Iy: number;
   A: number;
   pcr: number; // kg, of that profile
   sigma: number; // kg/cm²
+  sigmaOk: boolean; // σ ≤ σ_adm (when false the bar is too short / loaded for Euler to be the only check)
   w: number; // kg/m
 }
 
@@ -564,16 +566,16 @@ export function compressionBar(P: number, L: number, beta = 0, sigmaAdm = 0): Co
   const Le = (beta || 1) * L * 100; // cm
   const E = 2100000;
   const Imin = (Math.abs(P) * Le * Le) / (Math.PI ** 2 * E);
-  const Amin = Math.abs(P) / S;
-  const p = IPB_PROFILES.find((q) => Imin <= q.Iy && Amin <= q.A) ?? null;
+  const p = IPB_PROFILES.find((q) => Imin <= q.Iy) ?? null;
+  const sigma = p ? Math.abs(P) / p.A : 0;
   return {
     Imin,
-    Amin,
     name: p?.name ?? null,
     Iy: p?.Iy ?? 0,
     A: p?.A ?? 0,
     pcr: p ? (Math.PI ** 2 * E * p.Iy) / (Le * Le) : 0,
-    sigma: p ? Math.abs(P) / p.A : 0,
+    sigma,
+    sigmaOk: sigma <= S,
     w: p?.w ?? 0,
   };
 }
@@ -591,19 +593,14 @@ export const PANDEO_LINES = [
   "If S=0:Then 1600→S:IfEnd",
   "B×L×100→E",
   "Abs (P)×E×E÷(9.869604401×2100000)→M",
-  "Abs (P)÷S→A",
   "0→K",
   `For 1→I To ${IPB_PROFILES.length}`,
   "If K=0:Then",
-  "If M≤List 3[I]:Then",
-  "If A≤List 2[I]:Then I→K:IfEnd",
-  "IfEnd",
+  "If M≤List 3[I]:Then I→K:IfEnd",
   "IfEnd",
   "Next",
   '"I MIN CM4 EULER"',
   "M◢",
-  '"A MIN CM2"',
-  "A◢",
   "If K=0:Then",
   '"NINGUN IPB HASTA 1000"',
   "IfEnd",
@@ -612,12 +609,15 @@ export const PANDEO_LINES = [
   "List 1[K]◢",
   '"IY CM4"',
   "List 3[K]◢",
-  '"A DEL IPB CM2"',
-  "List 2[K]◢",
   '"PCR KG"',
   "9.869604401×2100000×List 3[K]÷(E×E)◢",
+  '"A DEL IPB CM2"',
+  "List 2[K]◢",
   '"SIGMA KG CM2"',
   "Abs (P)÷List 2[K]◢",
+  "If Abs (P)÷List 2[K]>S:Then",
+  '"OJO SIGMA SUPERA ADM"',
+  "IfEnd",
   '"PESO KG M"',
   "List 4[K]",
   "IfEnd",
