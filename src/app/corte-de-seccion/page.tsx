@@ -6,7 +6,7 @@ import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 import NavMenu from "@/components/NavMenu";
 import { Footer } from "@/components/Footer";
 import { Sub } from "@/components/Sub";
-import { FACES, NeutralAxisExample, ResultantFigure, SectionCutSimulator, ShapePolygon } from "@/components/SectionCutGuide";
+import { FACES, NeutralAxisExample, ResultantFigure, SectionCutLab, SectionCutSimulator, ShapePolygon } from "@/components/SectionCutGuide";
 
 function Kicker({ children }: { children: React.ReactNode }) {
   return (
@@ -42,18 +42,18 @@ function CutPartsFigure() {
         <rect x="150" y="140" width="34" height="110" className="fill-stone-200 stroke-stone-500 dark:fill-stone-700" strokeWidth="2" />
         {/* the cut */}
         <line x1="120" y1="140" x2="214" y2="140" stroke="#B7791F" strokeWidth="2.5" strokeDasharray="6 4" />
-        <text x="118" y="136" fontSize="12" textAnchor="end" fill="#B7791F" fontWeight="600">{t("cut.fig1.cut")}</text>
-        <text x="118" y="154" fontSize="11" textAnchor="end" className="fill-stone-600 dark:fill-stone-300">{t("cut.fig1.face")}</text>
+        <text x="118" y="136" fontSize="12" textAnchor="end" fill="#B7791F" fontWeight="600"><Sub>{t("cut.fig1.cut")}</Sub></text>
+        <text x="118" y="154" fontSize="11" textAnchor="end" className="fill-stone-600 dark:fill-stone-300"><Sub>{t("cut.fig1.face")}</Sub></text>
         {/* load on part A */}
         <line x1="60" y1="60" x2="146" y2="60" stroke="#C0392B" strokeWidth="2.5" />
         <polygon points="150,60 138,54 138,66" fill="#C0392B" />
-        <text x="60" y="50" fontSize="12" fill="#C0392B" fontWeight="600">{t("cut.fig1.load")}</text>
+        <text x="60" y="50" fontSize="12" fill="#C0392B" fontWeight="600"><Sub>{t("cut.fig1.load")}</Sub></text>
         {/* fixed support at the base */}
         <line x1="128" y1="250" x2="206" y2="250" className="stroke-stone-700 dark:stroke-stone-200" strokeWidth="3" />
         {[0, 1, 2, 3, 4, 5].map((i) => (
           <line key={i} x1={132 + i * 14} y1="250" x2={124 + i * 14} y2="262" className="stroke-stone-500" strokeWidth="1.5" />
         ))}
-        <text x="118" y="276" fontSize="11" textAnchor="end" className="fill-stone-600 dark:fill-stone-300">{t("cut.fig1.support")}</text>
+        <text x="118" y="276" fontSize="11" textAnchor="end" className="fill-stone-600 dark:fill-stone-300"><Sub>{t("cut.fig1.support")}</Sub></text>
         {/* z axis, z = 0 at the top of the column */}
         <line x1="250" y1="40" x2="250" y2="244" className="stroke-stone-500" strokeWidth="1.5" />
         <polygon points="250,252 244,240 256,240" className="fill-stone-500" />
@@ -113,7 +113,7 @@ function ProfileFacesFigure() {
           );
         })}
       </div>
-      <figcaption className="mt-2 text-[13px] leading-snug text-stone-600 dark:text-stone-400">{t("cut.fig3.cap")}</figcaption>
+      <figcaption className="mt-2 text-[13px] leading-snug text-stone-600 dark:text-stone-400"><Sub>{t("cut.fig3.cap")}</Sub></figcaption>
     </figure>
   );
 }
@@ -131,88 +131,89 @@ export default function CorteDeSeccionPage() {
           {t("quiz.back")}
         </Link>
         <span className="text-stone-300 dark:text-stone-600">|</span>
-        <h1 className="text-base font-semibold tracking-tight text-stone-800 dark:text-stone-100">{t("cut.link")}</h1>
+        <h1 className="text-base font-semibold tracking-tight text-stone-800 dark:text-stone-100"><Sub>{t("cut.link")}</Sub></h1>
         <div className="ml-auto">
           <NavMenu />
         </div>
       </header>
 
       <main className="flex-1">
+        <SectionCutLab>
         <article className="mx-auto max-w-5xl px-6 py-12">
-          <Kicker>{t("cut.kicker")}</Kicker>
-          <h2 className="mb-4 max-w-3xl text-4xl font-bold leading-tight tracking-tight text-balance">{t("cut.title")}</h2>
-          <p className="mb-6 max-w-[62ch] text-lg leading-relaxed text-stone-600 dark:text-stone-300">{t("cut.lead")}</p>
+          <Kicker><Sub>{t("cut.kicker")}</Sub></Kicker>
+          <h2 className="mb-4 max-w-3xl text-4xl font-bold leading-tight tracking-tight text-balance"><Sub>{t("cut.title")}</Sub></h2>
+          <p className="mb-6 max-w-[62ch] text-lg leading-relaxed text-stone-600 dark:text-stone-300"><Sub>{t("cut.lead")}</Sub></p>
 
           <section className={SECTION}>
-            <Kicker>{t("cut.s1.kicker")}</Kicker>
-            <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("cut.s1.title")}</h3>
-            <p className={P}>{t("cut.s1.p1")}</p>
+            <Kicker><Sub>{t("cut.s1.kicker")}</Sub></Kicker>
+            <h3 className="mb-3 text-2xl font-semibold tracking-tight"><Sub>{t("cut.s1.title")}</Sub></h3>
+            <p className={P}><Sub>{t("cut.s1.p1")}</Sub></p>
             <CutPartsFigure />
             <Bullets keys={["cut.s1.b1", "cut.s1.b2"]} />
-            <p className={P}>{t("cut.s1.p2")}</p>
+            <p className={P}><Sub>{t("cut.s1.p2")}</Sub></p>
           </section>
 
           <section className={SECTION}>
-            <Kicker>{t("cut.s2.kicker")}</Kicker>
-            <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("cut.s2.title")}</h3>
-            <p className={P}>{t("cut.s2.tri.p")}</p>
+            <Kicker><Sub>{t("cut.s2.kicker")}</Sub></Kicker>
+            <h3 className="mb-3 text-2xl font-semibold tracking-tight"><Sub>{t("cut.s2.title")}</Sub></h3>
+            <p className={P}><Sub>{t("cut.s2.tri.p")}</Sub></p>
             <Bullets keys={["cut.s2.tri.z", "cut.s2.tri.x", "cut.s2.tri.y"]} />
-            <p className={P}>{t("cut.s2.tri.note")}</p>
-            <p className={`${P} mt-4`}>{t("cut.s2.p1")}</p>
+            <p className={P}><Sub>{t("cut.s2.tri.note")}</Sub></p>
+            <p className={`${P} mt-4`}><Sub>{t("cut.s2.p1")}</Sub></p>
             <Bullets keys={["cut.s2.n", "cut.s2.m"]} />
-            <p className={P}>{t("cut.s2.example")}</p>
+            <p className={P}><Sub>{t("cut.s2.example")}</Sub></p>
             <div className={EQ}>σ(x, y) = N/A + Mx·y/Ix + My·x/Iy</div>
-            <p className={P}>{t("cut.s2.units")}</p>
+            <p className={P}><Sub>{t("cut.s2.units")}</Sub></p>
           </section>
 
           <section className={SECTION}>
-            <Kicker>{t("cut.f.kicker")}</Kicker>
-            <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("cut.f.title")}</h3>
-            <p className={P}>{t("cut.f.p1")}</p>
+            <Kicker><Sub>{t("cut.f.kicker")}</Sub></Kicker>
+            <h3 className="mb-3 text-2xl font-semibold tracking-tight"><Sub>{t("cut.f.title")}</Sub></h3>
+            <p className={P}><Sub>{t("cut.f.p1")}</Sub></p>
             <ProfileFacesFigure />
             <Bullets keys={["cut.f.b1", "cut.f.b2", "cut.f.b3"]} />
-            <p className={P}>{t("cut.f.p2")}</p>
+            <p className={P}><Sub>{t("cut.f.p2")}</Sub></p>
           </section>
 
           <section className={SECTION}>
-            <Kicker>{t("cut.g.kicker")}</Kicker>
-            <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("cut.g.title")}</h3>
-            <p className={P}>{t("cut.g.p1")}</p>
+            <Kicker><Sub>{t("cut.g.kicker")}</Sub></Kicker>
+            <h3 className="mb-3 text-2xl font-semibold tracking-tight"><Sub>{t("cut.g.title")}</Sub></h3>
+            <p className={P}><Sub>{t("cut.g.p1")}</Sub></p>
             <Bullets keys={["cut.g.n", "cut.g.mx", "cut.g.my"]} />
-            <p className={P}>{t("cut.g.p2")}</p>
+            <p className={P}><Sub>{t("cut.g.p2")}</Sub></p>
           </section>
 
           <section className={SECTION}>
-            <Kicker>{t("cut.s3.kicker")}</Kicker>
-            <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("cut.s3.title")}</h3>
-            <p className="mb-5 max-w-[66ch] leading-relaxed text-stone-700 dark:text-stone-300">{t("cut.s3.p1")}</p>
+            <Kicker><Sub>{t("cut.s3.kicker")}</Sub></Kicker>
+            <h3 className="mb-3 text-2xl font-semibold tracking-tight"><Sub>{t("cut.s3.title")}</Sub></h3>
+            <p className="mb-5 max-w-[66ch] leading-relaxed text-stone-700 dark:text-stone-300"><Sub>{t("cut.s3.p1")}</Sub></p>
             <SectionCutSimulator />
-            <p className="mt-5 max-w-[66ch] leading-relaxed text-stone-700 dark:text-stone-300">{t("cut.s3.p2")}</p>
+            <p className="mt-5 max-w-[66ch] leading-relaxed text-stone-700 dark:text-stone-300"><Sub>{t("cut.s3.p2")}</Sub></p>
           </section>
 
           <section className={SECTION}>
-            <Kicker>{t("cut.s4.kicker")}</Kicker>
-            <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("cut.s4.title")}</h3>
-            <p className={P}>{t("cut.s4.p1")}</p>
+            <Kicker><Sub>{t("cut.s4.kicker")}</Sub></Kicker>
+            <h3 className="mb-3 text-2xl font-semibold tracking-tight"><Sub>{t("cut.s4.title")}</Sub></h3>
+            <p className={P}><Sub>{t("cut.s4.p1")}</Sub></p>
             <div className={EQ}>x₀ = −N·Iy / (A·My) &nbsp;→ (x₀; 0)</div>
             <div className={EQ}>y₀ = −N·Ix / (A·Mx) &nbsp;→ (0; y₀)</div>
-            <p className={`${P} mb-3`}>{t("cut.s4.p2")}</p>
+            <p className={`${P} mb-3`}><Sub>{t("cut.s4.p2")}</Sub></p>
             <NeutralAxisExample />
             <Bullets keys={["cut.s4.b1", "cut.s4.b2", "cut.s4.b3"]} />
           </section>
 
           <section className={SECTION}>
-            <Kicker>{t("cut.s5.kicker")}</Kicker>
-            <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("cut.s5.title")}</h3>
-            <p className={P}>{t("cut.s5.p1")}</p>
+            <Kicker><Sub>{t("cut.s5.kicker")}</Sub></Kicker>
+            <h3 className="mb-3 text-2xl font-semibold tracking-tight"><Sub>{t("cut.s5.title")}</Sub></h3>
+            <p className={P}><Sub>{t("cut.s5.p1")}</Sub></p>
             <Bullets keys={["cut.s5.b1", "cut.s5.b2", "cut.s5.b4"]} />
-            <p className={P}>{t("cut.s5.p2")}</p>
+            <p className={P}><Sub>{t("cut.s5.p2")}</Sub></p>
           </section>
 
           <section className={SECTION}>
-            <Kicker>{t("cut.s8.kicker")}</Kicker>
-            <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("cut.s8.title")}</h3>
-            <p className={P}>{t("cut.s8.p1")}</p>
+            <Kicker><Sub>{t("cut.s8.kicker")}</Sub></Kicker>
+            <h3 className="mb-3 text-2xl font-semibold tracking-tight"><Sub>{t("cut.s8.title")}</Sub></h3>
+            <p className={P}><Sub>{t("cut.s8.p1")}</Sub></p>
             <ol className="my-3 max-w-[70ch] list-decimal space-y-3 pl-6 text-[15px] leading-relaxed text-stone-700 marker:font-mono marker:font-semibold marker:text-teal-700 dark:text-stone-300 dark:marker:text-teal-400">
               {(["cut.s8.1", "cut.s8.2", "cut.s8.3", "cut.s8.4", "cut.s8.5"] as TranslationKey[]).map((k) => (
                 <li key={k}>
@@ -227,8 +228,8 @@ export default function CorteDeSeccionPage() {
           </section>
 
           <section className={SECTION}>
-            <Kicker>{t("cut.s6.kicker")}</Kicker>
-            <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("cut.s6.title")}</h3>
+            <Kicker><Sub>{t("cut.s6.kicker")}</Sub></Kicker>
+            <h3 className="mb-3 text-2xl font-semibold tracking-tight"><Sub>{t("cut.s6.title")}</Sub></h3>
             <ol className="my-3 max-w-[70ch] list-decimal space-y-3 pl-6 text-[15px] leading-relaxed text-stone-700 marker:font-mono marker:font-semibold marker:text-teal-700 dark:text-stone-300 dark:marker:text-teal-400">
               {full.map((k) => (
                 <li key={k}>
@@ -236,14 +237,15 @@ export default function CorteDeSeccionPage() {
                 </li>
               ))}
             </ol>
-            <p className={P}>{t("cut.s6.note")}</p>
+            <p className={P}><Sub>{t("cut.s6.note")}</Sub></p>
           </section>
 
           <section className="mt-12 rounded-lg border border-[#C0392B] p-5">
-            <h3 className="mb-3 text-xl font-semibold tracking-tight">{t("cut.err.title")}</h3>
+            <h3 className="mb-3 text-xl font-semibold tracking-tight"><Sub>{t("cut.err.title")}</Sub></h3>
             <Bullets keys={["cut.err.1", "cut.err.2", "cut.err.3", "cut.err.4", "cut.err.5"]} />
           </section>
         </article>
+        </SectionCutLab>
       </main>
       <Footer />
     </div>

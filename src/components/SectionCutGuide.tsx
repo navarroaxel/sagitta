@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import {
   criticalCorner,
   guideCorners,
@@ -37,6 +37,29 @@ const CASES: { key: TranslationKey; v: State }[] = [
   { key: "cut.case.my", v: { N: 0, Mx: 0, My: 600 } },
   { key: "cut.case.oblique", v: { N: 0, Mx: 600, My: 600 } },
 ];
+
+// The state of the step-5 simulator (values + face), shared with the resultant diagram of step 8 so both follow the sliders.
+interface Lab {
+  st: State;
+  setSt: (s: State) => void;
+  face: Face;
+  setFace: (f: Face) => void;
+}
+const LabContext = createContext<Lab | null>(null);
+
+export function SectionCutLab({ children }: { children: React.ReactNode }) {
+  const [st, setSt] = useState<State>(CASES[0].v);
+  const [face, setFace] = useState<Face>(2);
+  return <LabContext.Provider value={{ st, setSt, face, setFace }}>{children}</LabContext.Provider>;
+}
+
+// Inside a SectionCutLab the state is shared; standalone (tests, a single figure) each component keeps its own.
+function useLab(): Lab {
+  const ctx = useContext(LabContext);
+  const [st, setSt] = useState<State>(CASES[0].v);
+  const [face, setFace] = useState<Face>(2);
+  return ctx ?? { st, setSt, face, setFace };
+}
 
 function useFmt() {
   const { language } = useLanguage();
@@ -214,8 +237,7 @@ function Control({
 export function SectionCutSimulator() {
   const { t } = useLanguage();
   const fmt = useFmt();
-  const [st, setSt] = useState<State>(CASES[0].v);
-  const [face, setFace] = useState<Face>(2);
+  const { st, setSt, face, setFace } = useLab();
   const sec = FACES[face];
   const k = plane(st.N, st.Mx, st.My, sec);
   const peak = (f: Face) => Math.abs(criticalCorner(guideCorners(plane(st.N, st.Mx, st.My, FACES[f]), FACES[f])).sigma);
@@ -285,7 +307,7 @@ export function SectionCutSimulator() {
           {t("cut.sim.section")} · A = {fmt(sec.A, 0)} cm² · Ix = {fmt(sec.Ix, 0)} cm⁴ · Iy = {fmt(sec.Iy, 0)} cm⁴
         </p>
         <p className="text-[14px] leading-relaxed" data-testid="cut-compare">
-          {t("cut.face.compare")} {t("cut.face.1.short")} <b>{fmt(peaks[1])}</b> · {t("cut.face.2.short")} <b>{fmt(peaks[2])}</b> kg/cm² →{" "}
+          <Sub>{t("cut.face.compare")}</Sub> {t("cut.face.1.short")} <b>{fmt(peaks[1])}</b> · {t("cut.face.2.short")} <b>{fmt(peaks[2])}</b> kg/cm² →{" "}
           <b className="text-amber-700 dark:text-amber-400">
             {peaks[1] === peaks[2] ? t("cut.face.tie") : peaks[1] < peaks[2] ? t("cut.face.1.short") : t("cut.face.2.short")}
           </b>
@@ -410,10 +432,20 @@ export function NeutralAxisExample() {
 export function ResultantFigure() {
   const { t } = useLanguage();
   const fmt = useFmt();
-  const s = FACES[2];
-  const k = plane(-600, -300, 900, s);
+  const { st, face } = useLab();
+  const s = FACES[face];
+  const k = plane(st.N, st.Mx, st.My, s);
   const r = resultantGuide(k, s, 11);
-  if (!r) return null;
+  if (!r) {
+    // σ is the same everywhere (zero, or only N): there is no E.N. and so no diagram
+    return (
+      <figure className="my-5 max-w-2xl rounded-lg border border-stone-200 bg-white p-4 shadow-sm dark:border-stone-700 dark:bg-stone-900" data-testid="cut-resultant-figure">
+        <p data-testid="cut-resultant-uniform" className="text-[15px] leading-relaxed text-stone-700 dark:text-stone-300">
+          {Math.abs(k.c) < 0.5 ? t("cut.res.zero") : t("cut.res.uniform")}
+        </p>
+      </figure>
+    );
+  }
   const S = 12; // px per cm
   const P = (x: number, y: number): [number, number] => [x * S, -y * S];
   const f = (v: [number, number]) => `${v[0].toFixed(1)},${v[1].toFixed(1)}`;
@@ -437,10 +469,16 @@ export function ResultantFigure() {
   const lam = -(b0[0] * r.e[0] + b0[1] * r.e[1]);
   const reach = lam + (lam >= 0 ? 1 : -1) * 9;
   const enEnd: [number, number] = [b0[0] + r.e[0] * reach, b0[1] + r.e[1] * reach];
-  const parts = [
-    { key: "neg", pts: [at(r.lo.t), ord(r.lo.t), at(0)], sign: -1 },
-    { key: "pos", pts: [at(0), ord(r.hi.t), at(r.hi.t)], sign: 1 },
-  ];
+  // with σ of both signs the E.N. falls inside the baseline: two triangles. Otherwise one trapezoid.
+  const crosses = r.lo.sigma < 0 && r.hi.sigma > 0;
+  const parts: { key: string; pts: [number, number][]; sign: number }[] = crosses
+    ? [
+        { key: "neg", pts: [at(r.lo.t), ord(r.lo.t), at(0)], sign: -1 },
+        { key: "pos", pts: [at(0), ord(r.hi.t), at(r.hi.t)], sign: 1 },
+      ]
+    : [{ key: r.hi.sigma > 0 ? "pos" : "neg", pts: [at(r.lo.t), ord(r.lo.t), ord(r.hi.t), at(r.hi.t)], sign: r.hi.sigma > 0 ? 1 : -1 }];
+  // with a big N and little bending the E.N. is far from the section: it is left out (and out of the framing)
+  const enNear = Math.abs(k.c) / r.gn <= 27;
   const label = (end: typeof r.hi, other: typeof r.hi, name: string) => {
     const dir = end.t >= other.t ? 1 : -1;
     const [bx, by] = at(end.t + dir * 1.4);
@@ -450,12 +488,14 @@ export function ResultantFigure() {
   const lh = label(r.hi, r.lo, t("cut.res.smax")),
     ll = label(r.lo, r.hi, t("cut.res.smin"));
   // the baseline label sits on the section side of the baseline, clear of both triangles
-  const bl = at(tHi * 0.5);
-  const bm: [number, number] = [bl[0] - r.n[0] * 0.9, bl[1] - r.n[1] * 0.9];
+  const tl = crosses ? (Math.abs(tHi) >= Math.abs(tLo) ? tHi : tLo) * 0.5 : (tLo + tHi) / 2; // clear of the junction and of the end labels
+  const bl = at(tl);
+  const side = tl >= 0 ? 1 : -1; // the ordinates lie on the +n side where σ > 0 and fold back where σ < 0: label on the other
+  const bm: [number, number] = [bl[0] - r.n[0] * 0.9 * side, bl[1] - r.n[1] * 0.9 * side];
   const ang = (Math.atan2(-r.u[1], r.u[0]) * 180) / Math.PI;
   const baseAngle = ang > 90 ? ang - 180 : ang < -90 ? ang + 180 : ang; // keep the text upright
   const all: [number, number][] = [
-    [-s.hx, -s.hy], [s.hx, s.hy], b0, enEnd, at(tLo - 1.5), at(tHi + 1.5), par(r.hi).to, par(r.lo).to, ord(r.hi.t), ord(r.lo.t),
+    [-s.hx, -s.hy], [s.hx, s.hy], ...(enNear ? [b0, enEnd] : []), at(tLo - 1.5), at(tHi + 1.5), par(r.hi).to, par(r.lo).to, ord(r.hi.t), ord(r.lo.t),
     [lh.x + (lh.anchor === "start" ? 14 : -14), lh.y], [ll.x + (ll.anchor === "start" ? 14 : -14), ll.y],
   ];
   const xs = all.map((q) => P(q[0], q[1])[0]),
@@ -485,11 +525,15 @@ export function ResultantFigure() {
             </g>
           );
         })}
-        {line(b0, enEnd, { stroke: EN, strokeWidth: 2, strokeDasharray: "7 4" })}
-        <text x={P(enEnd[0], enEnd[1])[0] + 6} y={P(enEnd[0], enEnd[1])[1] - 6} fontSize="12" fontWeight="600" fill={EN}>{t("cut.en.short")}</text>
+        {enNear && (
+          <>
+            {line(b0, enEnd, { stroke: EN, strokeWidth: 2, strokeDasharray: "7 4" })}
+            <text x={P(enEnd[0], enEnd[1])[0] + 6} y={P(enEnd[0], enEnd[1])[1] - 6} fontSize="12" fontWeight="600" fill={EN}>{t("cut.en.short")}</text>
+          </>
+        )}
         {line(at(tLo - 1.5), at(tHi + 1.5), { className: "stroke-stone-500", strokeWidth: 1.2 })}
         {parts.map(({ key, pts, sign }) => {
-          const c: [number, number] = [pts.reduce((a, q) => a + q[0], 0) / 3, pts.reduce((a, q) => a + q[1], 0) / 3];
+          const c: [number, number] = [pts.reduce((a, q) => a + q[0], 0) / pts.length, pts.reduce((a, q) => a + q[1], 0) / pts.length];
           const [cx, cy] = P(c[0], c[1]);
           const col = sign < 0 ? COMP : TENS;
           return (
