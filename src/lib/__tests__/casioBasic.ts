@@ -1,7 +1,20 @@
 // A tiny interpreter of the Casio Basic subset the programs of casioPrograms.ts use, so the tests can RUN the listings
 // (control flow, variables, prompts) and compare their output with the solver. Not a general Casio Basic: If/Then/IfEnd
-// (no Else), For/Next, Stop, `"prompt"?→V`, `expr→V`, `{list}→List n`, `expr◢`, a lone string, Abs, √, List n[i].
+// (no Else), For/Next, Stop, the graphics commands (Cls, ViewWindow, Horizontal, Vertical, F-Line, PlotOn, Text: recorded in a Gfx) and
+// While Getkey=0:WhileEnd (a key is always pressed), `"prompt"?→V`, `expr→V`, `{list}→List n`, `expr◢`, a lone string, Abs, √, List n[i].
 export type Out = string | number;
+
+// What the graphics commands drew (the window, the segments, the texts), for the tests.
+export interface Gfx {
+  window: number[] | null;
+  segments: [number, number, number, number][];
+  horizontals: number[];
+  verticals: number[];
+  plots: [number, number][];
+  texts: [number, number, number | string][];
+  clears: number;
+}
+export const newGfx = (): Gfx => ({ window: null, segments: [], horizontals: [], verticals: [], plots: [], texts: [], clears: 0 });
 
 const splitTop = (line: string, sep: string): string[] => {
   const parts: string[] = [];
@@ -18,7 +31,7 @@ const splitTop = (line: string, sep: string): string[] => {
   return parts;
 };
 
-export function runBasic(lines: string[], inputs: number[]): Out[] {
+export function runBasic(lines: string[], inputs: number[], gfx: Gfx = newGfx()): Out[] {
   const v: Record<string, number> = {};
   const L: Record<number, number[]> = {};
   const out: Out[] = [];
@@ -33,9 +46,11 @@ export function runBasic(lines: string[], inputs: number[]): Out[] {
         if (s.slice(4).trim()) st.push(s.slice(4).trim());
       } else if (s) st.push(s);
     }
+  const args = (a: string) => splitTop(a, ",").map((x) => expr(x.trim()));
   const expr = (e: string): number => {
     const js = e
       .replace(/List (\d)\[/g, "LL[$1][")
+      .replace(/Getkey/g, "1") // a key is "pressed" at once: the wait loops do not hang
       .replace(/Abs \(/g, "Math.abs(")
       .replace(/√\(/g, "Math.sqrt(")
       .replace(/×/g, "*")
@@ -53,7 +68,33 @@ export function runBasic(lines: string[], inputs: number[]): Out[] {
   while (pc < st.length) {
     if (++steps > 100000) throw new Error("program does not stop");
     const s = st[pc];
-    if (s === "Then" || s === "IfEnd") pc++;
+    if (s === "Then" || s === "IfEnd" || s === "WhileEnd") pc++;
+    else if (s === "Cls") {
+      gfx.clears++;
+      pc++;
+    } else if (s.startsWith("ViewWindow ")) {
+      gfx.window = args(s.slice(11));
+      pc++;
+    } else if (s.startsWith("Horizontal ")) {
+      gfx.horizontals.push(expr(s.slice(11)));
+      pc++;
+    } else if (s.startsWith("Vertical ")) {
+      gfx.verticals.push(expr(s.slice(9)));
+      pc++;
+    } else if (s.startsWith("PlotOn ")) {
+      gfx.plots.push(args(s.slice(7)) as [number, number]);
+      pc++;
+    } else if (s.startsWith("F-Line ")) {
+      gfx.segments.push(args(s.slice(7)) as [number, number, number, number]);
+      pc++;
+    } else if (s.startsWith("Text ")) {
+      const [r, c, e] = splitTop(s.slice(5), ",");
+      gfx.texts.push([expr(r), expr(c), /^"/.test(e.trim()) ? e.trim().slice(1, -1) : expr(e)]);
+      pc++;
+    } else if (s.startsWith("While ")) {
+      if (expr(s.slice(6))) throw new Error("a wait loop that never ends");
+      pc++;
+    }
     else if (s === "Stop") break;
     else if (s.startsWith("If ")) {
       if (expr(s.slice(3))) pc++;
@@ -91,7 +132,7 @@ export function runBasic(lines: string[], inputs: number[]): Out[] {
         pc++;
         continue;
       }
-      if (m[3]) L[+m[3]] = [0, ...m[1].slice(1, -1).split(",").map(Number)];
+      if (m[3]) L[+m[3]] = [0, ...args(m[1].slice(1, -1))];
       else if (/^"[^"]*"\?$/.test(m[1])) {
         const x = input.shift();
         if (x === undefined) throw new Error(`no input left for ${m[1]}`);

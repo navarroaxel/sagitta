@@ -7,7 +7,7 @@
 //   content: 10 bytes (8 of password, none = zeros, + 2 zeros) + the program tokens, each line closed by 0x0D, then 1-4
 //   zero bytes so that the content length is a multiple of 4.
 // Tokens: ASCII for letters, digits and most symbols; one byte for → (0E) ◢ (0C) ≤ (10) (–) (87) + (89) − (99) × (A9) ÷ (B9)
-// Abs (97) √ (86); two bytes for If / Then / Else / IfEnd / For / To / Next / Stop (F7xx) and List (7F51). Codes from Cahute's
+// Abs (97) √ (86) Cls (D1) ViewWindow (EB); two bytes for If / Then / Else / IfEnd / For / To / Next / Stop / While / WhileEnd / Text / Horizontal / Vertical / F-Line / PlotOn (F7xx), List (7F51) and Getkey (7F8F). Codes from Cahute's
 // chars.toml, the same table as the fx-9860G's own. Presentation of the program only; the calculator is the judge.
 
 const KEYWORDS: [string, number[]][] = [
@@ -23,6 +23,16 @@ const KEYWORDS: [string, number[]][] = [
   ["Stop", [0xf7, 0x0e]],
   ["Abs ", [0x97]],
   ["List ", [0x7f, 0x51]],
+  ["WhileEnd", [0xf7, 0x09]],
+  ["While ", [0xf7, 0x08]],
+  ["Getkey", [0x7f, 0x8f]],
+  ["Cls", [0xd1]],
+  ["ViewWindow ", [0xeb]],
+  ["Horizontal ", [0xf7, 0xa4]],
+  ["F-Line ", [0xf7, 0xa7]],
+  ["Text ", [0xf7, 0xa5]],
+  ["Vertical ", [0xf7, 0xa3]],
+  ["PlotOn ", [0xf7, 0xa8]],
 ];
 const SYMBOLS: Record<string, number> = { "√": 0x86, "→": 0x0e, "◢": 0x0c, "≤": 0x10, "×": 0xa9, "÷": 0xb9 };
 // after one of these a minus is the sign of a number, not a subtraction
@@ -31,6 +41,7 @@ const OPENS = new Set([0x0d, 0x3a, 0x28, 0x0e, 0x3d, 0x3e, 0x3c, 0x89, 0x99, 0xa
 export function tokenizeLine(line: string): number[] {
   const out: number[] = [];
   let inString = false;
+  let afterKeyword = false; // a minus right after a command (Vertical –M÷B) is a sign
   for (let i = 0; i < line.length; ) {
     const ch = line[i];
     if (inString) {
@@ -45,16 +56,18 @@ export function tokenizeLine(line: string): number[] {
     if (kw) {
       out.push(...kw[1]);
       i += kw[0].length;
+      afterKeyword = true;
       continue;
     }
     if (ch === '"') {
       inString = true;
       out.push(0x22);
     } else if (ch in SYMBOLS) out.push(SYMBOLS[ch]);
-    else if (ch === "–" || ch === "-") out.push(out.length === 0 || OPENS.has(out[out.length - 1]) ? 0x87 : 0x99);
+    else if (ch === "–" || ch === "-") out.push(out.length === 0 || afterKeyword || OPENS.has(out[out.length - 1]) ? 0x87 : 0x99);
     else if (ch === "+") out.push(0x89);
     else if (ch.charCodeAt(0) >= 0x20 && ch.charCodeAt(0) <= 0x7e) out.push(ch.charCodeAt(0));
     else throw new Error(`no Casio code for ${JSON.stringify(ch)}`);
+    afterKeyword = false;
     i++;
   }
   return out;

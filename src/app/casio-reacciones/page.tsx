@@ -134,6 +134,7 @@ export default function CasioReaccionesPage() {
             <Program name={PERFIL_NAME} lines={PERFIL_LINES} id="casio-perfil" />
             <p className={P}><Sub>{t("casio.p.q")}</Sub></p>
             <p className={`${P} mt-3`}><Sub>{t("casio.p.ex")}</Sub></p>
+            <p className={`${P} mt-3`}>{t("casio.p.draw")}</p>
             <p className={`${P} mt-3`}>{t("casio.p.how")}</p>
           </section>
 
@@ -143,6 +144,7 @@ export default function CasioReaccionesPage() {
             <Program name={VIGACAB_NAME} lines={VIGACAB_LINES} id="casio-vigacab" />
             <p className={P}>{t("casio.v.q")}</p>
             <p className={`${P} mt-3`}>{t("casio.v.ex")}</p>
+            <p className={`${P} mt-3`}>{t("casio.v.draw")}</p>
             <p className={`${P} mt-3`}>{t("casio.v.limits")}</p>
           </section>
 

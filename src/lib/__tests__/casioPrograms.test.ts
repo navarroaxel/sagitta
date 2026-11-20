@@ -1,9 +1,10 @@
 import { solveModel3D } from "../solve3d";
 import { PRESETS_3D } from "../presets3d";
 import { PRESETS } from "../presets";
+import { criticalCorner, guideCorners, guideOutline, guideSection, plane, sigmaAt } from "../sectionGuide";
 import { solveModel } from "../solve";
 import { runChecks, type CableCheck, type SizeCheck, type VerifyCheck } from "../checks";
-import { runBasic } from "./casioBasic";
+import { newGfx, runBasic } from "./casioBasic";
 import {
   baseForces, distributedLoad,
   chooseIPB,
@@ -136,6 +137,60 @@ describe("Casio program REACC", () => {
     expect(runBasic(PERFIL_LINES, [-600, 900, 0, 1400]).slice(6, 7)).toEqual(["E.N. NO CORTA X"]);
   });
 
+  test("running PERFIL draws the face in XY: outline, axes, neutral axis and critical corner", () => {
+    const run = (N: number, Mx: number, My: number) => {
+      const gfx = newGfx();
+      const out = runBasic(PERFIL_LINES, [N, Mx, My, 0], gfx);
+      return { gfx, name: `IPB ${out[1]}`, face: out[5] as 1 | 2 };
+    };
+    // base of preset #2: face 2, IPB 120. The 12 edges are the closed outline of guideOutline (the guide's figure)
+    const { gfx, name, face } = run(-600, -300, 900);
+    expect([name, face]).toEqual(["IPB 120", 2]);
+    const s = guideSection(name, true);
+    const outline = guideOutline(s);
+    expect(gfx.segments.slice(0, 12)).toHaveLength(12);
+    // the same 12 edges (the program walks the vertices in its own order, so compare them as undirected edges)
+    const edge = (a: number[], b: number[]) => [a, b].map((v) => v.map((c) => c.toFixed(6)).join(",")).sort().join("|");
+    expect(new Set(gfx.segments.slice(0, 12).map(([x1, y1, x2, y2]) => edge([x1, y1], [x2, y2])))).toEqual(
+      new Set(outline.map((p, k) => edge(p, outline[(k + 1) % 12]))),
+    );
+    // equal scale on a 127 x 63 screen, the section inside the window
+    const [xmin, xmax, , ymin, ymax] = gfx.window!;
+    expect(xmax).toBeCloseTo(-xmin, 9);
+    expect(ymax).toBeCloseTo(-ymin, 9);
+    expect(xmax / ymax).toBeCloseTo(2, 9);
+    expect(ymax).toBeGreaterThan(s.hy);
+    expect(xmax).toBeGreaterThan(s.hx);
+    expect([gfx.horizontals, gfx.verticals]).toEqual([[0], [0]]); // the two axes
+    // the neutral axis (the 13th segment): both ends have σ = 0
+    expect(gfx.segments).toHaveLength(13);
+    const k = plane(-600, -300, 900, s);
+    const [ex1, ey1, ex2, ey2] = gfx.segments[12];
+    expect(Math.abs(sigmaAt(k, ex1, ey1))).toBeLessThan(1e-6);
+    expect(Math.abs(sigmaAt(k, ex2, ey2))).toBeLessThan(1e-6);
+    // the critical corner and its signed σ
+    const cc = criticalCorner(guideCorners(k, s));
+    expect(gfx.plots).toEqual([[expect.closeTo(cc.x, 9), expect.closeTo(cc.y, 9)]]);
+    expect(gfx.texts).toEqual([[1, 1, expect.closeTo(cc.sigma, 6)]]);
+    // face 1 (|Mx| > |My|) is the outline as drawn, not swapped
+    const f1 = run(-600, 900, -300);
+    expect(f1.face).toBe(1);
+    const s1 = guideSection(f1.name, false);
+    const o1 = guideOutline(s1);
+    expect(new Set(f1.gfx.segments.slice(0, 12).map(([x1, y1, x2, y2]) => edge([x1, y1], [x2, y2])))).toEqual(
+      new Set(o1.map((p, k) => edge(p, o1[(k + 1) % 12]))),
+    );
+    // a moment of 0: the neutral axis is parallel to an axis (Mx = 0: vertical line) or there is none (only N)
+    const mx0 = run(-600, 0, 900);
+    expect(mx0.gfx.segments).toHaveLength(12); // no sloped line: Mx = 0 makes the neutral axis the vertical x = −N·Iy/(A·My)
+    const sMx0 = guideSection(mx0.name, mx0.face === 2);
+    expect(mx0.gfx.verticals).toEqual([0, expect.closeTo(neutralAxisOf(mx0.name, mx0.face, -600, 0, 900).x0!, 9)]);
+    expect(sMx0.A).toBeGreaterThan(0);
+    const onlyN = run(-600, 0, 0);
+    expect(onlyN.gfx.segments).toHaveLength(12); // only N: σ is uniform, no neutral axis
+    expect(onlyN.gfx.verticals).toEqual([0]); // just the axis
+  });
+
   test("running PERFIL: σ_adm typed as 0 means the default, 1400", () => {
     const withDefault = runBasic(PERFIL_LINES, [-600, -300, 900, 0]);
     expect(withDefault).toEqual(runBasic(PERFIL_LINES, [-600, -300, 900, 1400]));
@@ -152,7 +207,7 @@ describe("Casio program REACC", () => {
 });
 
 describe("Casio program PERFIL", () => {
-  test("table: IPB 100…600 (19 profiles) typed into the five lists", () => {
+  test("table: IPB 100…600 (19 profiles) typed into the lists", () => {
     expect(PERFIL_TABLE).toHaveLength(19);
     expect(PERFIL_TABLE[0].name).toBe("IPB 100");
     expect(PERFIL_TABLE[18].name).toBe("IPB 600");
@@ -185,7 +240,7 @@ describe("Casio program PERFIL", () => {
 
   test("the program text matches: every variable it reads is assigned first", () => {
     expect(PERFIL_LINES.join("\n")).toContain("If T=2:Then X→Z:Y→X:Z→Y:D→Z:E→D:Z→E:IfEnd");
-    expect(PERFIL_LINES.filter((l) => l.includes("→List")).length).toBe(5);
+    expect(PERFIL_LINES.filter((l) => l.includes("→List")).length).toBe(9); // 7 table lists + the 2 of the outline's vertices
   });
 });
 
@@ -263,6 +318,31 @@ describe("Casio program VIGACAB (beam + cable of the two truss-cable-beam exampl
       "D CABLE CM", expect.closeTo(rb.d, 6), "ALARG CABLE CM", expect.closeTo(rb.elongation, 6),
       "V PIN KG", expect.closeTo(rb.vPin, 6),
     ]);
+  });
+
+  test("running the listing draws the diagram of moments: positive M downward, 40 segments, Mmax written on top", () => {
+    const gfx = newGfx();
+    runBasic(VIGACAB_LINES, [10, 15, 20000, 5, 2000, 1600, 260], gfx);
+    const M = cableBeam({ L: 10, Lc: 15, P: 20000, a: 5, q: 2000 }).Mmax;
+    expect(gfx.clears).toBe(1);
+    expect(gfx.window).toEqual([0, 10, 2.5, expect.closeTo(-1.25 * M, 6), expect.closeTo(0.35 * M, 6), M]);
+    expect(gfx.horizontals).toEqual([0]);
+    expect(gfx.segments).toHaveLength(40);
+    // every segment joins two points of −M(x), and they chain from x = 0 to x = L
+    const R = (20000 * 5) / 10 + (2000 * 10) / 2;
+    const Mx = (x: number) => R * x - (2000 * x * x) / 2 - (x > 5 ? 20000 * (x - 5) : 0);
+    gfx.segments.forEach(([x1, y1, x2, y2], k) => {
+      expect(x1).toBeCloseTo(k * 0.25, 9);
+      expect(x2).toBeCloseTo((k + 1) * 0.25, 9);
+      expect(y1).toBeCloseTo(-Mx(x1), 6);
+      expect(y2).toBeCloseTo(-Mx(x2), 6);
+    });
+    expect(Math.min(...gfx.segments.map((s) => s[3]))).toBeCloseTo(-M, 6); // x = 5 is on the grid: the peak is drawn
+    expect(gfx.texts).toEqual([[1, 1, expect.closeTo(M, 6)]]);
+    // nothing to draw when there is no moment
+    const none = newGfx();
+    runBasic(VIGACAB_LINES, [10, 15, 0, 5, 0, 1600, 0], none);
+    expect(none.segments).toHaveLength(0);
   });
 
   test("running the listing: a given profile that passes, an unknown one, and a load no IPB can carry", () => {

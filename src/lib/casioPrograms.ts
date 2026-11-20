@@ -131,7 +131,7 @@ export const REACC_LINES = [
 
 // ---- Program PERFIL: which IPB goes in the column for a given N, Mx, My --------------------------------------------
 // The IPB 100…600 of the course's table are stored in the program itself (lists 1-5), so nothing has to be typed
-// into the list editor. It tries them from the lightest and stops at the first with max |σ| ≤ σ_adm (typing 0 for σ_adm means 1400); the face is chosen from the moments as in
+// into the list editor. It tries them from the lightest and stops at the first with max |σ| ≤ σ_adm (typing 0 for σ_adm means 1400); it ends by drawing the face in XY, the face is chosen from the moments as in
 // the guide: the strong axis against the larger moment (face 1 if |Mx| ≥ |My|, face 2 otherwise). Units: kg, kg·m, kg/cm². `chooseIPB` is the same arithmetic.
 import { IPB_PROFILES } from "./profiles";
 import { guideSection, neutralIntercepts, plane } from "./sectionGuide";
@@ -183,6 +183,8 @@ export const PERFIL_LINES = [
   list(3, (p) => p.A),
   list(4, (p) => p.Ix),
   list(5, (p) => p.Iy),
+  list(6, (p) => p.tf),
+  list(7, (p) => p.tw),
   '"N KG (TRAC POS)"?→N',
   '"MX (KG M)"?→P',
   '"MY (KG M)"?→Q',
@@ -219,6 +221,32 @@ export const PERFIL_LINES = [
   "If P=0:Then",
   '"E.N. NO CORTA Y"',
   "IfEnd",
+  // the face drawn in XY: outline of the section (12 edges), the axes, the neutral axis and the critical corner
+  "List 2[I]÷20→A:List 1[I]÷20→C",
+  "List 6[I]÷10→F:List 7[I]÷20→H",
+  "{–A,A,A,H,H,A,A,–A,–A,–H,–H,–A}→List 8",
+  "{–C,–C,F–C,F–C,C–F,C–F,C,C,C–F,C–F,F–C,F–C}→List 9",
+  "D→Z:If E÷2>Z:Then E÷2→Z:IfEnd",
+  "1.25×Z→V:2×V→O",
+  "Cls",
+  "ViewWindow –O,O,1,–V,V,1",
+  "For 1→J To 12",
+  "J+1→K:If K=13:Then 1→K:IfEnd",
+  "If T=1:Then F-Line List 8[J],List 9[J],List 8[K],List 9[K]:IfEnd",
+  "If T=2:Then F-Line List 9[J],List 8[J],List 9[K],List 8[K]:IfEnd",
+  "Next",
+  "Horizontal 0:Vertical 0",
+  "Q×100÷Y→B:P×100÷X→G",
+  "If Abs (G)>0:Then F-Line –O,–(M–B×O)÷G,O,–(M+B×O)÷G:IfEnd",
+  "If G=0:Then",
+  "If Abs (B)>0:Then Vertical –M÷B:IfEnd",
+  "IfEnd",
+  "1→K:If B<0:Then –1→K:IfEnd",
+  "1→L:If G<0:Then –1→L:IfEnd",
+  "1→J:If Abs (M–W)>Abs (M+W):Then –1→J:IfEnd",
+  "PlotOn J×K×E,J×L×D",
+  "Text 1,1,M+J×W",
+  "While Getkey=0:WhileEnd",
   "Stop",
   "IfEnd",
   "Next",
@@ -230,7 +258,7 @@ export const PERFIL_LINES = [
 // only bending), loaded by ONE point load and a uniform load q over the whole span. The beam is sized/verified for the
 // applied load alone (its own weight is not in its M, as the professor does) but its weight goes to the cable (half) and
 // to the pin (half). Cable: A = T/σ_adm, d = √(4A/π), elongation σ_adm·L/E with E = 2.1e6 kg/cm². The IPB 100…1000 of the
-// course's table (h, Sx, kg/m) are stored in the program (lists 1-3). Units: kg, m, kg/cm². `cableBeam` is the same
+// course's table (h, Sx, kg/m) are stored in the program (lists 1-3). It ends by drawing the diagram of moments. Units: kg, m, kg/cm². `cableBeam` is the same
 // arithmetic; casioPrograms.test.ts compares both with the app's own checks (checks.ts) on the two examples.
 export const VIGACAB_NAME = "VIGACAB";
 
@@ -368,5 +396,22 @@ export const VIGACAB_LINES = [
   '"ALARG CABLE CM"',
   "S×C×100÷2100000◢",
   '"V PIN KG"',
-  "P+Q×L+Z×L–T",
+  "P+Q×L+Z×L–T◢",
+  // the diagram of moments: positive M plotted downward (the tension side), 40 segments, the value of Mmax on top;
+  // it stays on screen until a key is pressed
+  "If M>0:Then",
+  "Cls",
+  "ViewWindow 0,L,L÷4,–1.25×M,0.35×M,M",
+  "Horizontal 0",
+  "0→X:0→Y",
+  "For 1→I To 40",
+  "I×L÷40→B",
+  "R×B–Q×B×B÷2→E",
+  "If B>D:Then E–P×(B–D)→E:IfEnd",
+  "F-Line X,–Y,B,–E",
+  "B→X:E→Y",
+  "Next",
+  "Text 1,1,M",
+  "While Getkey=0:WhileEnd",
+  "IfEnd",
 ];

@@ -1,5 +1,5 @@
 import { buildG1m, buildG1mFromBytes, programBytes, tokenizeLine } from "../casioG1m";
-import { PERFIL_LINES, REACC_LINES } from "../casioPrograms";
+import { PERFIL_LINES, REACC_LINES, VIGACAB_LINES } from "../casioPrograms";
 
 // Independent reader, written like Cahute's: inverts the header, walks group → file headers.
 function read(file: Uint8Array) {
@@ -24,8 +24,8 @@ function read(file: Uint8Array) {
 }
 
 // The same table the other way round, for the few tokens the programs use (display text of each code).
-const TWO = new Map([["f700", "If "], ["f701", "Then "], ["f702", "Else "], ["f703", "IfEnd"], ["f704", "For "], ["f705", " To "], ["f707", "Next"], ["f70e", "Stop"], ["7f51", "List "]]);
-const ONE = new Map([[0x0e, "→"], [0x0c, "◢"], [0x10, "≤"], [0x87, "–"], [0x89, "+"], [0x99, "–"], [0xa9, "×"], [0xb9, "÷"], [0x97, "Abs "], [0x86, "√"]]);
+const TWO = new Map([["f700", "If "], ["f701", "Then "], ["f702", "Else "], ["f703", "IfEnd"], ["f704", "For "], ["f705", " To "], ["f707", "Next"], ["f70e", "Stop"], ["7f51", "List "], ["f708", "While "], ["f709", "WhileEnd"], ["f7a4", "Horizontal "], ["f7a7", "F-Line "], ["f7a5", "Text "], ["f7a3", "Vertical "], ["f7a8", "PlotOn "], ["7f8f", "Getkey"]]);
+const ONE = new Map([[0x0e, "→"], [0x0c, "◢"], [0x10, "≤"], [0x87, "–"], [0x89, "+"], [0x99, "–"], [0xa9, "×"], [0xb9, "÷"], [0x97, "Abs "], [0x86, "√"], [0xd1, "Cls"], [0xeb, "ViewWindow "]]);
 function decode(bytes: number[]): string {
   let out = "";
   for (let i = 0; i < bytes.length; i++) {
@@ -76,6 +76,11 @@ describe("Casio .g1m builder", () => {
     expect(hex("Abs (M–W)")).toBe("97 28 4d 99 57 29");
     expect(hex("–F◢")).toBe("87 46 0c"); // (–) at the start of a line
     expect(hex("√(M×M)→L")).toBe("86 28 4d a9 4d 29 0e 4c");
+    expect(hex("While Getkey=0:WhileEnd")).toBe("f7 08 7f 8f 3d 30 3a f7 09");
+    expect(hex("ViewWindow 0,L,L÷4,–1.25×M,0.35×M,M")).toBe("eb 30 2c 4c 2c 4c b9 34 2c 87 31 2e 32 35 a9 4d 2c 30 2e 33 35 a9 4d 2c 4d");
+    expect(hex("F-Line X,–Y,B,–E")).toBe("f7 a7 58 2c 87 59 2c 42 2c 87 45");
+    expect(hex("Text 1,1,M")).toBe("f7 a5 31 2c 31 2c 4d");
+    expect(hex("Horizontal 0")).toBe("f7 a4 30");
     expect(hex("U×L→U")).toBe("55 a9 4c 0e 55");
     expect(hex("If U≤S:Then")).toBe("f7 00 55 10 53 3a f7 01");
     expect(hex('"N KG (TRAC POS)"?→N')).toBe(Array.from('"N KG (TRAC POS)"').map((c) => c.charCodeAt(0).toString(16)).join(" ") + " 3f 0e 4e");
@@ -89,7 +94,7 @@ describe("Casio .g1m builder", () => {
   });
 
   test("REACC and PERFIL: every line decodes back to the line typed, and the files are well formed", () => {
-    for (const [name, lines] of [["REACC", REACC_LINES], ["PERFIL", PERFIL_LINES]] as const) {
+    for (const [name, lines] of [["REACC", REACC_LINES], ["PERFIL", PERFIL_LINES], ["VIGACAB", VIGACAB_LINES]] as const) {
       const f = buildG1m(name, lines);
       const r = read(f);
       expect(r.name).toBe(name);
