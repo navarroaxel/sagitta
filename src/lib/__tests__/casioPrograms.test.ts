@@ -9,6 +9,8 @@ import {
   reactionsFromLoads,
   REACC_LINES,
   sigmaMaxOf,
+  faceFor,
+  neutralAxisOf,
   type ProgramLoad,
 } from "../casioPrograms";
 
@@ -99,21 +101,41 @@ describe("Casio program REACC", () => {
     expect(distributedLoad([-1, 0, 3], [2, 0, 3], [0, 0, -200])).toEqual({ x: 0.5, y: 0, z: 3, fx: 0, fy: 0, fz: -200, len: 3 });
   });
 
-  test("running PERFIL = chooseIPB, on both faces and when none passes", () => {
-    for (const [N, Mx, My, adm, face] of [[-600, -300, 900, 1400, 1], [-600, -300, 900, 1400, 2], [-5000, 400, -1200, 1600, 1], [-1e7, 0, 0, 1400, 1]] as const) {
-      const out = runBasic(PERFIL_LINES, [N, Mx, My, adm, face]);
+  test("running PERFIL = chooseIPB: the face comes from the moments (strong axis against the larger one), and none passing", () => {
+    for (const [N, Mx, My, adm, face] of [
+      [-600, -300, 900, 1400, 2], // |My| > |Mx|: the turned profile
+      [-600, 900, -300, 1400, 1], // |Mx| > |My|: x against the strong axis
+      [-5000, 400, -1200, 1600, 2],
+      [-5000, 1200, -400, 1600, 1],
+      [-3000, 500, 500, 1400, 1], // equal moments: face 1
+      [-1e7, 0, 0, 1400, 1],
+    ] as const) {
+      const out = runBasic(PERFIL_LINES, [N, Mx, My, adm]);
+      expect(faceFor(Mx, My)).toBe(face);
       const c = chooseIPB(N, Mx, My, adm, face);
       if (c) {
-        expect(out.slice(0, 4)).toEqual(["USAR IPB", +c.name.replace("IPB ", ""), "SIGMA MAX =", expect.closeTo(c.sigmaMax, 6)]);
+        expect(out.slice(0, 6)).toEqual(["USAR IPB", +c.name.replace("IPB ", ""), "SIGMA MAX =", expect.closeTo(c.sigmaMax, 6), "CARA =", face]);
+        // the neutral axis: where it crosses X (Y = 0) and Y (X = 0), cm; "NO CORTA" when that moment is 0
+        const en = neutralAxisOf(c.name, face, N, Mx, My);
+        const fix = (n: number | null, label: string, none: string) => (n === null ? [none] : [label, expect.closeTo(n === 0 ? 0 : n, 6)]);
+        expect(out.slice(6)).toEqual([...fix(en.x0, "X (Y=0) =", "E.N. NO CORTA X"), ...fix(en.y0, "Y (X=0) =", "E.N. NO CORTA Y")]);
       } else expect(out).toEqual(["NINGUN IPB HASTA 600"]);
     }
   });
 
+  test("running PERFIL: neutral axis intercepts of the base of preset #2, and when a moment is 0", () => {
+    const out = runBasic(PERFIL_LINES, [-600, -300, 900, 0]);
+    expect(out.slice(6, 8)).toEqual(["X (Y=0) =", expect.closeTo(0.16941, 4)]);
+    expect(out.slice(8)).toEqual(["Y (X=0) =", expect.closeTo(-0.18707, 4)]);
+    expect(runBasic(PERFIL_LINES, [-600, 0, 900, 1400]).slice(8)).toEqual(["E.N. NO CORTA Y"]); // Mx = 0: parallel to the x axis
+    expect(runBasic(PERFIL_LINES, [-600, 900, 0, 1400]).slice(6, 7)).toEqual(["E.N. NO CORTA X"]);
+  });
+
   test("running PERFIL: σ_adm typed as 0 means the default, 1400", () => {
-    const withDefault = runBasic(PERFIL_LINES, [-600, -300, 900, 0, 2]);
-    expect(withDefault).toEqual(runBasic(PERFIL_LINES, [-600, -300, 900, 1400, 2]));
-    expect(withDefault[1]).toBe(120); // face 2 passes already with IPB 120 at 1400 (1208.7)
-    expect(runBasic(PERFIL_LINES, [-600, -300, 900, 1000, 2])).not.toEqual(withDefault); // another σ_adm is respected
+    const withDefault = runBasic(PERFIL_LINES, [-600, -300, 900, 0]);
+    expect(withDefault).toEqual(runBasic(PERFIL_LINES, [-600, -300, 900, 1400]));
+    expect(withDefault[1]).toBe(120); // preset #2's base: the larger moment is My, so face 2: IPB 120 passes at 1400 (1208.7)
+    expect(runBasic(PERFIL_LINES, [-600, -300, 900, 1000])).not.toEqual(withDefault); // another σ_adm is respected
   });
 
   test("the program text asks for what the TypeScript uses and prints every result", () => {

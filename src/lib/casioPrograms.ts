@@ -131,9 +131,10 @@ export const REACC_LINES = [
 
 // ---- Program PERFIL: which IPB goes in the column for a given N, Mx, My --------------------------------------------
 // The IPB 100…600 of the course's table are stored in the program itself (lists 1-5), so nothing has to be typed
-// into the list editor. It tries them from the lightest and stops at the first with max |σ| ≤ σ_adm (typing 0 for σ_adm means 1400); face 1 / 2 as in
-// the guide (x against the strong axis / profile turned). Units: kg, kg·m, kg/cm². `chooseIPB` is the same arithmetic.
+// into the list editor. It tries them from the lightest and stops at the first with max |σ| ≤ σ_adm (typing 0 for σ_adm means 1400); the face is chosen from the moments as in
+// the guide: the strong axis against the larger moment (face 1 if |Mx| ≥ |My|, face 2 otherwise). Units: kg, kg·m, kg/cm². `chooseIPB` is the same arithmetic.
 import { IPB_PROFILES } from "./profiles";
+import { guideSection, neutralIntercepts, plane } from "./sectionGuide";
 
 export const PERFIL_NAME = "PERFIL";
 export const PERFIL_TABLE = IPB_PROFILES.filter((p) => p.h <= 600);
@@ -151,12 +152,27 @@ export function sigmaMaxOf(p: { A: number; Ix: number; Iy: number; h: number; bf
   return Math.max(Math.abs(c + w), Math.abs(c - w));
 }
 
-export function chooseIPB(N: number, MxKgm: number, MyKgm: number, sigmaAdm: number, face: 1 | 2): IPBChoice | null {
+// Strong axis against the larger moment: face 1 (x against the strong axis, Ix) when |Mx| ≥ |My|, face 2 (turned) otherwise.
+export const faceFor = (MxKgm: number, MyKgm: number): 1 | 2 => (Math.abs(MyKgm) > Math.abs(MxKgm) ? 2 : 1);
+
+export function chooseIPB(
+  N: number,
+  MxKgm: number,
+  MyKgm: number,
+  sigmaAdm: number,
+  face: 1 | 2 = faceFor(MxKgm, MyKgm),
+): IPBChoice | null {
   for (const p of PERFIL_TABLE) {
     const s = sigmaMaxOf(p, N, MxKgm, MyKgm, face);
     if (s <= sigmaAdm) return { name: p.name, sigmaMax: s };
   }
   return null;
+}
+
+// Where the neutral axis (σ = 0) crosses the section's x axis (y = 0) and y axis (x = 0), cm, on the given face; null when
+// it does not cross (that moment is 0). Same formulas as the guide: x₀ = −N·Iy/(A·My), y₀ = −N·Ix/(A·Mx).
+export function neutralAxisOf(name: string, face: 1 | 2, N: number, MxKgm: number, MyKgm: number) {
+  return neutralIntercepts(plane(N, MxKgm, MyKgm, guideSection(name, face === 2)));
 }
 
 const list = (n: number, f: (p: (typeof PERFIL_TABLE)[number]) => number) => `{${PERFIL_TABLE.map(f).join(",")}}→List ${n}`;
@@ -172,7 +188,8 @@ export const PERFIL_LINES = [
   '"MY (KG M)"?→Q',
   '"SIGMA ADM (0=1400)"?→S',
   "If S=0:Then 1400→S:IfEnd",
-  '"CARA (1 O 2)"?→T',
+  "1→T",
+  "If Abs (Q)>Abs (P):Then 2→T:IfEnd",
   `For 1→I To ${PERFIL_TABLE.length}`,
   "List 1[I]÷20→D:List 2[I]÷20→E",
   "List 4[I]→X:List 5[I]→Y",
@@ -186,6 +203,22 @@ export const PERFIL_LINES = [
   "List 1[I]◢",
   '"SIGMA MAX ="',
   "U◢",
+  '"CARA ="',
+  "T◢",
+  "If Abs (Q)>0:Then",
+  '"X (Y=0) ="',
+  "–M÷(Q×100÷Y)◢",
+  "IfEnd",
+  "If Q=0:Then",
+  '"E.N. NO CORTA X"',
+  "IfEnd",
+  "If Abs (P)>0:Then",
+  '"Y (X=0) ="',
+  "–M÷(P×100÷X)◢",
+  "IfEnd",
+  "If P=0:Then",
+  '"E.N. NO CORTA Y"',
+  "IfEnd",
   "Stop",
   "IfEnd",
   "Next",
