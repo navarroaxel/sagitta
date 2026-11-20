@@ -17,6 +17,10 @@ import {
   neutralAxisOf,
   cableBeam,
   VIGACAB_LINES,
+  tensionBar,
+  compressionBar,
+  PANDEO_LINES,
+  TRACCION_LINES,
   type ProgramLoad,
 } from "../casioPrograms";
 
@@ -422,5 +426,104 @@ describe("Casio program VIGACAB (beam + cable of the two truss-cable-beam exampl
     expect(none).not.toContain("IPB MIN");
     expect(cableBeam({ L: 12, Lc: 5, loads: [{ P: 4e6, a: 6 }], q: 0 }).min).toBeNull();
     expect(none).toContain("TENSION CABLE KG");
+  });
+});
+
+describe("Casio program TRACCION (IPB of a bar in tension)", () => {
+  test("the app's own sizing: every bar in tension, no bending, of the presets at 1600 kg/cm² gets the same IPB", () => {
+    let compared = 0;
+    for (const { name, model } of PRESETS) {
+      if (model.sigmaAdm !== 1600) continue;
+      const checks = runChecks(model, solveModel(model)) as SizeCheck[];
+      for (const c of checks) {
+        if (c.kind !== "size" || c.compressed || c.unloaded || Math.abs(c.demand.M) > 1e-6) continue;
+        const pick = c.results.find((r) => r.series === "IPB")?.pick;
+        if (!pick) continue;
+        const t = tensionBar(c.demand.N, 1600);
+        expect([name, c.member, t.name]).toEqual([name, c.member, pick.profile.name]);
+        expect(t.sigma).toBeCloseTo(pick.sigma, 6);
+        compared++;
+      }
+    }
+    expect(compared).toBeGreaterThan(0);
+  });
+
+  test("b5 of the first truss: N = D/√3 → A ≥ 11.4 cm², IPB 100", () => {
+    const r = tensionBar(31573.14 / Math.sqrt(3), 0);
+    expect(r.A).toBeCloseTo(11.39, 2);
+    expect(r.name).toBe("IPB 100");
+    expect(r.sigma).toBeCloseTo(18229.4 / 26, 0);
+  });
+
+  test("the profile is the first one whose area reaches N/σ_adm (and none when it is too much)", () => {
+    expect(tensionBar(26 * 1600).name).toBe("IPB 100"); // A = 26 cm² exactly: IPB 100 has 26
+    expect(tensionBar(26 * 1600 + 1).name).toBe("IPB 120");
+    expect(tensionBar(-26 * 1600 - 1).name).toBe("IPB 120"); // the sign does not matter
+    expect(tensionBar(500000, 2000).name).toBe(tensionBar(500000, 2000).name);
+    expect(tensionBar(1e7).name).toBeNull();
+  });
+
+  test("running the listing = tensionBar", () => {
+    for (const [N, S] of [[18229.4, 0], [60000, 1600], [60000, 2400], [-30000, 0]] as const) {
+      const r = tensionBar(N, S);
+      expect(runBasic(TRACCION_LINES, [N, S])).toEqual([
+        "A NECESARIA CM2", expect.closeTo(r.A, 6), "IPB", +r.name!.replace("IPB ", ""),
+        "A DEL IPB CM2", r.Aprofile, "SIGMA REAL KG CM2", expect.closeTo(r.sigma, 6), "PESO KG M", r.w,
+      ]);
+    }
+    expect(runBasic(TRACCION_LINES, [1e7, 0])).toEqual(["A NECESARIA CM2", expect.closeTo(1e7 / 1600, 6), "NINGUN IPB HASTA 1000"]);
+  });
+});
+
+describe("Casio program PANDEO (IPB of a bar in compression: Euler)", () => {
+  test("the app's own sizing: every bar in compression, no bending, of the presets at 1600 kg/cm² gets the same IPB and P_cr", () => {
+    let compared = 0;
+    for (const { name, model } of PRESETS) {
+      if (model.sigmaAdm !== 1600) continue;
+      const solved = solveModel(model);
+      for (const c of runChecks(model, solved) as SizeCheck[]) {
+        if (c.kind !== "size" || !c.compressed || c.unloaded || Math.abs(c.demand.M) > 1e-6) continue;
+        const pick = c.results.find((r) => r.series === "IPB")?.pick;
+        if (!pick) continue;
+        const L = solved.result.geo[solved.memberIndex.get(c.member)!].L;
+        const r = compressionBar(c.demand.N, L);
+        expect([name, c.member, r.name]).toEqual([name, c.member, pick.profile.name]);
+        expect(r.pcr).toBeCloseTo(pick.pcr!, 4);
+        expect(r.sigma).toBeCloseTo(pick.sigma, 6);
+        compared++;
+      }
+    }
+    expect(compared).toBeGreaterThan(0);
+  });
+
+  test("b4 of the first truss: P = D/sin 60° = 36 457 kg, L = 5 m → I min = 36 457 · 500² / (π² · 2.1e6) = 439.7 cm⁴ → IPB 140 (IPB 100 and 120 fall short)", () => {
+    const r = compressionBar(31573.14 / Math.sin(Math.PI / 3), 5);
+    expect(r.Imin).toBeCloseTo(439.7, 0);
+    expect(r.name).toBe("IPB 140");
+    expect(r.Iy).toBe(550);
+    expect(r.pcr).toBeGreaterThan(36457);
+    expect(compressionBar(36457, 5).name).toBe("IPB 140");
+  });
+
+  test("σ_adm can be what decides, β scales the buckling length, and no profile may fit", () => {
+    const stocky = compressionBar(80000, 0.5); // a short, heavily loaded bar: A ≥ 50 cm² governs, not Euler
+    expect(stocky.Amin).toBe(50);
+    expect(stocky.A).toBeGreaterThanOrEqual(50);
+    expect(stocky.Imin).toBeLessThan(stocky.Iy);
+    expect(compressionBar(30000, 5, 2).Imin).toBeCloseTo(4 * compressionBar(30000, 5).Imin, 9); // β = 2: Le doubles, I × 4
+    expect(compressionBar(30000, 5, 0).Imin).toBe(compressionBar(30000, 5, 1).Imin); // 0 = default 1
+    expect(compressionBar(1e7, 8).name).toBeNull();
+  });
+
+  test("running the listing = compressionBar", () => {
+    for (const [P, L, beta, S] of [[36457, 5, 0, 0], [-36457, 5, 1, 1600], [30000, 5, 2, 0], [80000, 0.5, 0, 2000]] as const) {
+      const r = compressionBar(P, L, beta, S);
+      expect(runBasic(PANDEO_LINES, [P, L, beta, S])).toEqual([
+        "I MIN CM4 EULER", expect.closeTo(r.Imin, 6), "A MIN CM2", expect.closeTo(r.Amin, 6),
+        "IPB", +r.name!.replace("IPB ", ""), "IY CM4", r.Iy, "A DEL IPB CM2", r.A,
+        "PCR KG", expect.closeTo(r.pcr, 3), "SIGMA KG CM2", expect.closeTo(r.sigma, 6), "PESO KG M", r.w,
+      ]);
+    }
+    expect(runBasic(PANDEO_LINES, [1e7, 8, 0, 0])).toEqual(["I MIN CM4 EULER", expect.any(Number), "A MIN CM2", expect.closeTo(1e7 / 1600, 6), "NINGUN IPB HASTA 1000"]);
   });
 });

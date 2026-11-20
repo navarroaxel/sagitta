@@ -487,3 +487,138 @@ export const VIGACAB_LINES = [
   "While Getkey=0:WhileEnd",
   "IfEnd",
 ];
+
+// ---- Program TRACCION: the IPB of a bar of a truss in tension ------------------------------------------------------
+// A two-force bar has no bending, so the check is σ = N/A ≤ σ_adm: A ≥ N/σ_adm and the lightest IPB 100…1000 whose area
+// reaches it (no Euler in tension — the app's `size` does the same: b5 of the first truss gets IPB 100). Units: kg and
+// kg/cm² (σ_adm typed as 0 means 1600). The table (h, A, kg/m) is stored in the program (lists 1-3).
+export const TRACCION_NAME = "TRACCION";
+
+export interface TensionBar {
+  A: number; // cm² needed
+  name: string | null; // lightest IPB that passes, null when none up to IPB 1000 does
+  Aprofile: number;
+  sigma: number; // kg/cm² with that profile
+  w: number; // kg/m
+}
+
+export function tensionBar(N: number, sigmaAdm = 0): TensionBar {
+  const S = sigmaAdm || 1600;
+  const A = Math.abs(N) / S;
+  const p = IPB_PROFILES.find((q) => A <= q.A) ?? null;
+  return p
+    ? { A, name: p.name, Aprofile: p.A, sigma: Math.abs(N) / p.A, w: p.w }
+    : { A, name: null, Aprofile: 0, sigma: 0, w: 0 };
+}
+
+export const TRACCION_LINES = [
+  listOf(1, (p) => p.h),
+  listOf(2, (p) => p.A),
+  listOf(3, (p) => p.w),
+  '"N TRACCION KG"?→N',
+  '"SIGMA ADM (0=1600)"?→S',
+  "If S=0:Then 1600→S:IfEnd",
+  "Abs (N)÷S→A",
+  "0→K",
+  `For 1→I To ${IPB_PROFILES.length}`,
+  "If K=0:Then",
+  "If A≤List 2[I]:Then I→K:IfEnd",
+  "IfEnd",
+  "Next",
+  '"A NECESARIA CM2"',
+  "A◢",
+  "If K=0:Then",
+  '"NINGUN IPB HASTA 1000"',
+  "IfEnd",
+  "If K>0:Then",
+  '"IPB"',
+  "List 1[K]◢",
+  '"A DEL IPB CM2"',
+  "List 2[K]◢",
+  '"SIGMA REAL KG CM2"',
+  "Abs (N)÷List 2[K]◢",
+  '"PESO KG M"',
+  "List 3[K]",
+  "IfEnd",
+];
+
+// ---- Program PANDEO: the IPB of a bar of a truss in compression (Euler) -------------------------------------------
+// P_cr = π²·E·I/(β·L)² must reach the load, so I_min = P·(β·L)²/(π²·E) (weak axis Iy; E = 2.1e6 kg/cm²; β = 1 for the pinned
+// ends of a truss bar, as the app does) and the area must still reach P/σ_adm. The lightest IPB 100…1000 that meets BOTH.
+// Units: kg, m, kg/cm² (σ_adm typed as 0 is 1600, β typed as 0 is 1). Table (h, A, Iy, kg/m) in lists 1-4.
+export const PANDEO_NAME = "PANDEO";
+
+export interface CompressionBar {
+  Imin: number; // cm⁴, from Euler
+  Amin: number; // cm², from σ_adm
+  name: string | null; // lightest IPB with Iy ≥ Imin and A ≥ Amin; null when none up to IPB 1000
+  Iy: number;
+  A: number;
+  pcr: number; // kg, of that profile
+  sigma: number; // kg/cm²
+  w: number; // kg/m
+}
+
+export function compressionBar(P: number, L: number, beta = 0, sigmaAdm = 0): CompressionBar {
+  const S = sigmaAdm || 1600;
+  const Le = (beta || 1) * L * 100; // cm
+  const E = 2100000;
+  const Imin = (Math.abs(P) * Le * Le) / (Math.PI ** 2 * E);
+  const Amin = Math.abs(P) / S;
+  const p = IPB_PROFILES.find((q) => Imin <= q.Iy && Amin <= q.A) ?? null;
+  return {
+    Imin,
+    Amin,
+    name: p?.name ?? null,
+    Iy: p?.Iy ?? 0,
+    A: p?.A ?? 0,
+    pcr: p ? (Math.PI ** 2 * E * p.Iy) / (Le * Le) : 0,
+    sigma: p ? Math.abs(P) / p.A : 0,
+    w: p?.w ?? 0,
+  };
+}
+
+export const PANDEO_LINES = [
+  listOf(1, (p) => p.h),
+  listOf(2, (p) => p.A),
+  listOf(3, (p) => p.Iy),
+  listOf(4, (p) => p.w),
+  '"P COMPRESION KG"?→P',
+  '"LARGO BARRA M"?→L',
+  '"BETA (0=1)"?→B',
+  "If B=0:Then 1→B:IfEnd",
+  '"SIGMA ADM (0=1600)"?→S',
+  "If S=0:Then 1600→S:IfEnd",
+  "B×L×100→E",
+  "Abs (P)×E×E÷(9.869604401×2100000)→M",
+  "Abs (P)÷S→A",
+  "0→K",
+  `For 1→I To ${IPB_PROFILES.length}`,
+  "If K=0:Then",
+  "If M≤List 3[I]:Then",
+  "If A≤List 2[I]:Then I→K:IfEnd",
+  "IfEnd",
+  "IfEnd",
+  "Next",
+  '"I MIN CM4 EULER"',
+  "M◢",
+  '"A MIN CM2"',
+  "A◢",
+  "If K=0:Then",
+  '"NINGUN IPB HASTA 1000"',
+  "IfEnd",
+  "If K>0:Then",
+  '"IPB"',
+  "List 1[K]◢",
+  '"IY CM4"',
+  "List 3[K]◢",
+  '"A DEL IPB CM2"',
+  "List 2[K]◢",
+  '"PCR KG"',
+  "9.869604401×2100000×List 3[K]÷(E×E)◢",
+  '"SIGMA KG CM2"',
+  "Abs (P)÷List 2[K]◢",
+  '"PESO KG M"',
+  "List 4[K]",
+  "IfEnd",
+];
