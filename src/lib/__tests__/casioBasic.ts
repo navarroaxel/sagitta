@@ -86,6 +86,9 @@ export function runBasic(lines: string[], inputs: number[], gfx: Gfx = newGfx(),
     } else if (s.startsWith("Locate ")) {
       const [c, r, e] = splitTop(s.slice(7), ",");
       const loc: [number, number, number | string] = [expr(c), expr(r), /^"/.test(e.trim()) ? e.trim().slice(1, -1) : expr(e)];
+      // the text screen is 21 columns by 7 lines: anything else is the calculator's "Argument ERROR"
+      if (!(loc[0] >= 1 && loc[0] <= 21 && loc[1] >= 1 && loc[1] <= 7)) throw new Error(`Argument ERROR: ${s}  (column ${loc[0]}, line ${loc[1]})`);
+      if (typeof loc[2] === "string" && loc[0] + loc[2].length - 1 > 21) throw new Error(`text runs off the screen: ${s}`);
       gfx.locates.push(loc);
       gfx.screens[gfx.screens.length - 1].push(loc);
       pc++;

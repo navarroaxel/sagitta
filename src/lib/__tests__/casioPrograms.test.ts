@@ -646,10 +646,10 @@ describe("Casio program RETIC (bar forces of a truss of up to 9 bars)", () => {
     runBasic(RETIC_LINES, inputsFor(m), gfx);
     const bars = m.members.map((b, e) => ({ k: e + 1, N: solved.stations[e][0].N }));
     expect(bars.length).toBeLessThanOrEqual(RETIC_MAX_BARS);
-    // the table (pages of 7 bars)
+    // the table (pages of 6 bars: the text screen has 7 lines)
     const rows = new Map<number, { N: number; tc: string; star: boolean }>();
     for (const sc of first(gfx, "BARRA  N KG    T/C"))
-      for (const r of [2, 3, 4, 5, 6, 7, 8]) {
+      for (const r of [2, 3, 4, 5, 6, 7]) {
         const k = at(sc, 1, r);
         if (typeof k === "number") rows.set(k, { N: at(sc, 4, r) as number, tc: at(sc, 17, r) as string, star: at(sc, 20, r) === "*" });
       }
@@ -755,7 +755,7 @@ describe("Casio program PERFILES (look up an IPN / IPB, or find the lightest tha
     expect([at(sc, 4, 2), at(sc, 16, 2)]).toEqual([p.A, p.w]);
     expect([at(sc, 4, 3), at(sc, 16, 3)]).toEqual([p.Sx, p.Sy]);
     expect([at(sc, 4, 4), at(sc, 16, 4)]).toEqual([p.Ix, p.Iy]);
-    expect([at(sc, 1, 7), at(sc, 1, 8)]).toEqual(["A CM2  PESO KG/M", "S CM3  I CM4"]);
+    expect([at(sc, 1, 5), at(sc, 1, 6)]).toEqual(["A CM2  PESO KG/M", "S CM3  I CM4"]);
   });
 
   test("DATOS of a profile that does not exist (or of the other series) says so; a series out of range is clamped", () => {
@@ -779,7 +779,7 @@ describe("Casio program PERFILES (look up an IPN / IPB, or find the lightest tha
     const r = lightestWith(series, q, v)!;
     const [sc] = dataScreens(run([2, series, q, v, 0]));
     expect([at(sc, 1, 1), at(sc, 5, 1)]).toEqual([series === 1 ? "IPN" : "IPB", r.profile.h]);
-    expect([at(sc, 1, 6), at(sc, 6, 6), at(sc, 12, 6), at(sc, 15, 6)]).toEqual(["PIDE", v, "DA", r.value]);
+    expect([at(sc, 1, 7), at(sc, 6, 7), at(sc, 12, 7), at(sc, 15, 7)]).toEqual(["PIDE", v, "DA", r.value]);
   });
 
   test("BUSCAR: the previous profile does not reach it; nothing may reach it", () => {
