@@ -1202,6 +1202,7 @@ const retPickNode = (msg: string[], afterPrompt = false) => [
   "List 1[S]→J:List 2[S]→K:List 9[11]×5→L",
   RET_BOX("J", "K", "L"),
   ...msg,
+  "Text 51,110,W", // the last key code read (before this screen it is whatever was left): shown so a wrong key can be reported
   "While Getkey>0:WhileEnd",
   "0→W",
   "While W=0",
