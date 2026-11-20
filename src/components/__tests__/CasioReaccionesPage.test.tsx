@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import CasioReaccionesPage from "@/app/casio-reacciones/page";
-import { PERFIL_LINES, REACC_LINES } from "@/lib/casioPrograms";
+import { PERFIL_LINES, REACC_LINES, VIGACAB_LINES } from "@/lib/casioPrograms";
 
 describe("/casio-reacciones", () => {
   test("shows both programs line by line, with the data of the IPB table", () => {
@@ -15,7 +15,10 @@ describe("/casio-reacciones", () => {
     const perfil = screen.getByTestId("casio-perfil").textContent!;
     PERFIL_LINES.forEach((l) => expect(perfil).toContain(l));
     expect(perfil).toContain("→List 1");
-    expect(document.body.textContent).toMatch(/Dos programas|Two programs/);
+    const vigacab = screen.getByTestId("casio-vigacab").textContent!;
+    VIGACAB_LINES.forEach((l) => expect(vigacab).toContain(l));
+    expect(document.body.textContent).toMatch(/Tres programas|Three programs/);
+    expect(document.body.textContent).toMatch(/VIGACAB/);
   });
 
   test("the copy button puts the plain program lines (no line numbers) on the clipboard", async () => {
@@ -49,9 +52,10 @@ describe("/casio-reacciones", () => {
     );
     fireEvent.click(screen.getByTestId("casio-perfil-download"));
     fireEvent.click(screen.getByTestId("casio-reacc-download"));
+    fireEvent.click(screen.getByTestId("casio-vigacab-download"));
     HTMLAnchorElement.prototype.click = click;
-    expect(clicks).toEqual(["PERFIL.g1m", "REACC.g1m"]);
-    expect(created).toHaveLength(2);
+    expect(clicks).toEqual(["PERFIL.g1m", "REACC.g1m", "VIGACAB.g1m"]);
+    expect(created).toHaveLength(3);
     const head = new Uint8Array(await created[1].arrayBuffer()).slice(0, 8);
     expect(String.fromCharCode(...Array.from(head).map((b) => ~b & 255))).toBe("USBPower");
     expect(document.body.textContent).toMatch(/@MainMem/);

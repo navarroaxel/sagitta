@@ -224,3 +224,149 @@ export const PERFIL_LINES = [
   "Next",
   '"NINGUN IPB HASTA 600"',
 ];
+
+// ---- Program VIGACAB: the beam and the cable of truss-cable-beam(-ipb260)-kg.svg ----------------------------------
+// A horizontal beam held at one end by a vertical cable and pinned at the other (so the beam has no axial force and
+// only bending), loaded by ONE point load and a uniform load q over the whole span. The beam is sized/verified for the
+// applied load alone (its own weight is not in its M, as the professor does) but its weight goes to the cable (half) and
+// to the pin (half). Cable: A = T/σ_adm, d = √(4A/π), elongation σ_adm·L/E with E = 2.1e6 kg/cm². The IPB 100…1000 of the
+// course's table (h, Sx, kg/m) are stored in the program (lists 1-3). Units: kg, m, kg/cm². `cableBeam` is the same
+// arithmetic; casioPrograms.test.ts compares both with the app's own checks (checks.ts) on the two examples.
+export const VIGACAB_NAME = "VIGACAB";
+
+export interface CableBeamInput {
+  L: number; // span of the beam, m
+  Lc: number; // length of the cable, m
+  P: number; // point load, kg (downward positive)
+  a: number; // its distance from the cable end, m
+  q: number; // uniform load over the whole span, kg/m
+  sigmaAdm?: number; // kg/cm², default 1600
+  given?: number; // IPB designation already chosen (260 for IPB 260), to verify it
+}
+
+export interface CableBeamResult {
+  Mmax: number; // kg·m, of the applied loads alone
+  sxReq: number; // cm³
+  min: { name: string; sigma: number; w: number } | null; // lightest IPB of 100…1000 that passes
+  given: { name: string; sigma: number; ok: boolean; w: number } | null;
+  T: number; // cable tension, kg (with half of the weight of the profile used: the given one, else the lightest)
+  A: number; // cm²
+  d: number; // cm
+  elongation: number; // cm
+  vPin: number; // vertical reaction of the pinned end, kg
+}
+
+export function cableBeam(i: CableBeamInput): CableBeamResult {
+  const S = i.sigmaAdm || 1600;
+  const R = (i.P * (i.L - i.a)) / i.L + (i.q * i.L) / 2; // reaction at the cable end from the applied loads
+  let M = R * i.a - (i.q * i.a * i.a) / 2; // under the point load
+  if (i.q > 0) {
+    const x0 = R / i.q; // zero shear before the point load
+    if (x0 > 0 && x0 < i.a) M = Math.max(M, (R * R) / (2 * i.q));
+    const x1 = (R - i.P) / i.q; // zero shear after it
+    if (x1 > i.a && x1 < i.L) M = Math.max(M, R * x1 - i.P * (x1 - i.a) - (i.q * x1 * x1) / 2);
+  }
+  const sx = (M * 100) / S;
+  const table = IPB_PROFILES;
+  const minP = table.find((p) => sx <= p.Sx) ?? null;
+  const givenP = i.given ? table.find((p) => p.h === i.given) ?? null : null;
+  const w = givenP?.w ?? minP?.w ?? 0;
+  const T = R + (w * i.L) / 2;
+  const A = T / S;
+  return {
+    Mmax: M,
+    sxReq: sx,
+    min: minP && { name: minP.name, sigma: (M * 100) / minP.Sx, w: minP.w },
+    given: givenP && { name: givenP.name, sigma: (M * 100) / givenP.Sx, ok: (M * 100) / givenP.Sx <= S, w: givenP.w },
+    T,
+    A,
+    d: Math.sqrt((4 * A) / Math.PI),
+    elongation: (S * i.Lc * 100) / 2100000,
+    vPin: i.P + i.q * i.L + w * i.L - T,
+  };
+}
+
+const listOf = (n: number, f: (p: (typeof IPB_PROFILES)[number]) => number) => `{${IPB_PROFILES.map(f).join(",")}}→List ${n}`;
+
+export const VIGACAB_LINES = [
+  listOf(1, (p) => p.h),
+  listOf(2, (p) => p.Sx),
+  listOf(3, (p) => p.w),
+  '"LUZ VIGA M"?→L',
+  '"LARGO CABLE M"?→C',
+  '"P PUNTUAL KG"?→P',
+  '"DIST DESDE CABLE M"?→D',
+  '"Q KG/M"?→Q',
+  '"SIGMA ADM (0=1600)"?→S',
+  "If S=0:Then 1600→S:IfEnd",
+  '"IPB DADO (0=NO)"?→G',
+  "P×(L–D)÷L+Q×L÷2→R",
+  "R×D–Q×D×D÷2→M",
+  "If Q>0:Then",
+  "R÷Q→X",
+  "If X>0:Then",
+  "If X<D:Then",
+  "R×R÷(2×Q)→Y",
+  "If Y>M:Then Y→M:IfEnd",
+  "IfEnd",
+  "IfEnd",
+  "(R–P)÷Q→X",
+  "If X>D:Then",
+  "If X<L:Then",
+  "R×X–P×(X–D)–Q×X×X÷2→Y",
+  "If Y>M:Then Y→M:IfEnd",
+  "IfEnd",
+  "IfEnd",
+  "IfEnd",
+  "M×100÷S→W",
+  "0→K:0→J",
+  `For 1→I To ${IPB_PROFILES.length}`,
+  "If K=0:Then",
+  "If W≤List 2[I]:Then I→K:IfEnd",
+  "IfEnd",
+  "If G>0:Then",
+  "If List 1[I]=G:Then I→J:IfEnd",
+  "IfEnd",
+  "Next",
+  '"M MAX KG M"',
+  "M◢",
+  '"SX NEC CM3"',
+  "W◢",
+  "0→Z",
+  "If K=0:Then",
+  '"NINGUN IPB HASTA 1000"',
+  "IfEnd",
+  "If K>0:Then",
+  "List 3[K]→Z",
+  '"IPB MIN"',
+  "List 1[K]◢",
+  '"SIGMA CON IPB MIN"',
+  "M×100÷List 2[K]◢",
+  "IfEnd",
+  "If G>0:Then",
+  "If J=0:Then",
+  '"IPB DADO NO ESTA"',
+  "IfEnd",
+  "If J>0:Then",
+  "List 3[J]→Z",
+  '"SIGMA IPB DADO"',
+  "M×100÷List 2[J]◢",
+  '"CUMPLE 1=SI 0=NO"',
+  "0→U",
+  "If M×100÷List 2[J]≤S:Then 1→U:IfEnd",
+  "U◢",
+  "IfEnd",
+  "IfEnd",
+  "R+Z×L÷2→T",
+  '"TENSION CABLE KG"',
+  "T◢",
+  "T÷S→A",
+  '"A CABLE CM2"',
+  "A◢",
+  '"D CABLE CM"',
+  "√(4×A÷3.14159265)◢",
+  '"ALARG CABLE CM"',
+  "S×C×100÷2100000◢",
+  '"V PIN KG"',
+  "P+Q×L+Z×L–T",
+];
