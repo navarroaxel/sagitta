@@ -75,7 +75,7 @@ export default function CorteDeSeccionPage() {
   const { t } = useLanguage();
   const full: TranslationKey[] = [
     "cut.full.1", "cut.full.2", "cut.full.3", "cut.full.4", "cut.full.5",
-    "cut.full.6", "cut.full.7", "cut.full.8", "cut.full.9", "cut.full.10",
+    "cut.full.6", "cut.full.7", "cut.full.8", "cut.full.9", "cut.full.10", "cut.full.11",
   ];
   return (
     <div className="flex min-h-screen flex-col bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100">
@@ -127,6 +127,14 @@ export default function CorteDeSeccionPage() {
           </section>
 
           <section className={SECTION}>
+            <Kicker>{t("cut.g.kicker")}</Kicker>
+            <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("cut.g.title")}</h3>
+            <p className={P}>{t("cut.g.p1")}</p>
+            <Bullets keys={["cut.g.n", "cut.g.mx", "cut.g.my"]} />
+            <p className={P}>{t("cut.g.p2")}</p>
+          </section>
+
+          <section className={SECTION}>
             <Kicker>{t("cut.s3.kicker")}</Kicker>
             <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("cut.s3.title")}</h3>
             <p className="mb-5 max-w-[66ch] leading-relaxed text-stone-700 dark:text-stone-300">{t("cut.s3.p1")}</p>
@@ -149,7 +157,7 @@ export default function CorteDeSeccionPage() {
             <Kicker>{t("cut.s5.kicker")}</Kicker>
             <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("cut.s5.title")}</h3>
             <p className={P}>{t("cut.s5.p1")}</p>
-            <Bullets keys={["cut.s5.b1", "cut.s5.b2", "cut.s5.b3", "cut.s5.b4"]} />
+            <Bullets keys={["cut.s5.b1", "cut.s5.b2", "cut.s5.b4"]} />
             <p className={P}>{t("cut.s5.p2")}</p>
           </section>
 
