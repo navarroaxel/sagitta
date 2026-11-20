@@ -20,6 +20,8 @@ import {
   tensionBar,
   compressionBar,
   PANDEO_LINES,
+  RETIC_LINES,
+  RETIC_MAX_BARS,
   TRACCION_LINES,
   type ProgramLoad,
 } from "../casioPrograms";
@@ -525,5 +527,121 @@ describe("Casio program PANDEO (IPB of a bar in compression: Euler)", () => {
       ]);
     }
     expect(runBasic(PANDEO_LINES, [1e7, 8, 0, 0])).toEqual(["I MIN CM4 EULER", expect.any(Number), "A MIN CM2", expect.closeTo(1e7 / 1600, 6), "NINGUN IPB HASTA 1000"]);
+  });
+});
+
+describe("Casio program RETIC (bar forces of a truss of up to 9 bars)", () => {
+  const trussPreset = (name: string) => PRESETS.find((p) => p.name === name)!.model;
+  const NAMES = ["Triangular Truss", "Tower Truss", "Wall Truss (2 panels)"]; // 3, 9 and 9 bars; pinned + roller
+  type M2 = ReturnType<typeof trussPreset>;
+
+  // typed as on the calculator: option 1 nodes, 2 bars, 3 supports, 4 loads, 6 solve, 0 exit
+  const inputsFor = (m: M2, opts: { bars?: number[][]; extra?: number[] } = {}) => {
+    const idx = (id: string) => m.nodes.findIndex((n) => n.id === id) + 1;
+    const pinned = m.nodes.find((n) => n.support === "pinned")!;
+    const roller = m.nodes.find((n) => n.support === "roller-v" || n.support === "roller-h")!;
+    const loads = m.loads.filter((l) => l.type === "nodal") as { node: string; fx: number; fy: number }[];
+    const bars = opts.bars ?? m.members.map((b) => [idx(b.n1), idx(b.n2)]);
+    return [
+      1, m.nodes.length, ...m.nodes.flatMap((n) => [n.x, n.y]), 0,
+      2, ...bars.flat(), 0,
+      3, idx(pinned.id), idx(roller.id), roller.support === "roller-h" ? 2 : 1,
+      4, loads.length, ...loads.flatMap((l) => [idx(l.node), l.fx, l.fy, 1]),
+      6, ...(opts.extra ?? []), 0,
+    ];
+  };
+  type Screen = [number, number, number | string][];
+  const first = (gfx: ReturnType<typeof newGfx>, title: string) => gfx.screens.filter((sc) => sc[0]?.[2] === title);
+  const at = (sc: Screen, col: number, row: number) => sc.find((l) => l[0] === col && l[1] === row)?.[2];
+
+  test.each(NAMES)("%s: every bar's N, its T / C, the critical bars and the reactions are the app's", (name) => {
+    const m = trussPreset(name);
+    const solved = solveModel(m);
+    const gfx = newGfx();
+    runBasic(RETIC_LINES, inputsFor(m), gfx);
+    const bars = m.members.map((b, e) => ({ k: e + 1, N: solved.stations[e][0].N }));
+    expect(bars.length).toBeLessThanOrEqual(RETIC_MAX_BARS);
+    // the table (pages of 7 bars)
+    const rows = new Map<number, { N: number; tc: string; star: boolean }>();
+    for (const sc of first(gfx, "BARRA  N KG    T/C"))
+      for (const r of [2, 3, 4, 5, 6, 7, 8]) {
+        const k = at(sc, 1, r);
+        if (typeof k === "number") rows.set(k, { N: at(sc, 4, r) as number, tc: at(sc, 17, r) as string, star: at(sc, 20, r) === "*" });
+      }
+    expect(rows.size).toBe(bars.length);
+    const tol = (v: number) => 1e-6 * Math.max(1, Math.abs(v));
+    for (const { k, N } of bars) {
+      const row = rows.get(k)!;
+      expect(Math.abs(row.N - (Math.abs(N) < 1e-3 ? 0 : N))).toBeLessThan(tol(N) + 1e-3);
+      expect(row.tc).toBe(Math.abs(N) < 1e-3 ? "0" : N > 0 ? "T" : "C");
+    }
+    // the critical bars: the largest tension and the largest compression, marked with *
+    const maxT = bars.reduce((a, b) => (b.N > a.N ? b : a));
+    const maxC = bars.reduce((a, b) => (b.N < a.N ? b : a));
+    const marked = [...rows].filter(([, r]) => r.star).map(([k]) => k).sort();
+    expect(marked).toEqual([...new Set([maxT.N > 0 ? maxT.k : 0, maxC.N < 0 ? maxC.k : 0])].filter(Boolean).sort());
+    const crit = first(gfx, "BARRAS CRITICAS (*)")[0];
+    if (maxT.N > 0) {
+      expect(at(crit, 20, 2)).toBe(maxT.k);
+      expect(at(crit, 5, 3) as number).toBeCloseTo(maxT.N, 2);
+    }
+    if (maxC.N < 0) {
+      expect(at(crit, 20, 5)).toBe(maxC.k);
+      expect(at(crit, 5, 6) as number).toBeCloseTo(maxC.N, 2);
+      expect(at(crit, 11, 7) as number).toBeCloseTo(solved.result.geo[maxC.k - 1].L, 6); // its length, for PANDEO
+    }
+    // the reactions
+    const pinned = m.nodes.find((n) => n.support === "pinned")!;
+    const roller = m.nodes.find((n) => n.support?.startsWith("roller"))!;
+    const rea = first(gfx, "REACCIONES KG")[0];
+    const rp = solved.result.reactions[solved.nodeIndex.get(pinned.id)!];
+    const rr = solved.result.reactions[solved.nodeIndex.get(roller.id)!];
+    expect(at(rea, 12, 2) as number).toBeCloseTo(rp.rx, 2);
+    expect(at(rea, 12, 3) as number).toBeCloseTo(rp.ry, 2);
+    expect(at(rea, 12, 4) as number).toBeCloseTo(roller.support === "roller-h" ? rr.rx : rr.ry, 2);
+  });
+
+  test("a mechanism (one bar twice) is detected instead of giving numbers", () => {
+    const m = trussPreset("Tower Truss");
+    const idx = (id: string) => m.nodes.findIndex((n) => n.id === id) + 1;
+    const bars = m.members.map((b) => [idx(b.n1), idx(b.n2)]);
+    bars[8] = bars[0].slice(); // the last bar is the first again: the matrix is singular
+    const gfx = newGfx();
+    runBasic(RETIC_LINES, inputsFor(m, { bars }), gfx);
+    expect(first(gfx, "ESTRUCTURA INESTABLE")).toHaveLength(1);
+    expect(first(gfx, "BARRA  N KG    T/C")).toHaveLength(0);
+  });
+
+  test("solving before entering the data says what is missing; nodes need to come first", () => {
+    const gfx = newGfx();
+    runBasic(RETIC_LINES, [2, 3, 4, 6, 0], gfx);
+    expect(first(gfx, "PRIMERO LOS NUDOS")).toHaveLength(3);
+    expect(first(gfx, "FALTAN DATOS")).toHaveLength(1);
+  });
+
+  test("corrections: a node, a bar and a load typed again leave the rest alone", () => {
+    const m = trussPreset("Triangular Truss");
+    const solved = solveModel(m);
+    const idx = (id: string) => m.nodes.findIndex((n) => n.id === id) + 1;
+    const pinned = m.nodes.find((n) => n.support === "pinned")!;
+    const roller = m.nodes.find((n) => n.support?.startsWith("roller"))!;
+    const loads = m.loads.filter((l) => l.type === "nodal") as { node: string; fx: number; fy: number }[];
+    const bars = m.members.map((b) => [idx(b.n1), idx(b.n2)]);
+    const gfx = newGfx();
+    const [n1, n2, n3] = m.nodes;
+    runBasic(
+      RETIC_LINES,
+      [
+        1, 3, 9, 9, n2.x, n2.y, n3.x, n3.y, 1, n1.x, n1.y, 0, // node 1 typed wrong → CORREGIR NUDO 1 → the right values → no more
+        2, 3, 3, ...bars[1], ...bars[2], 1, ...bars[0], 0, // bar 1 typed wrong (3 to 3) → CORREGIR BARRA 1
+        3, idx(pinned.id), idx(roller.id), roller.support === "roller-h" ? 2 : 1,
+        4, loads.length, 1, 7, 7, 0, // a wrong load → REPETIR: the slot is typed again, the count does not move
+        ...loads.flatMap((l) => [idx(l.node), l.fx, l.fy, 1]),
+        6, 0,
+      ],
+      gfx,
+    );
+    const sc = first(gfx, "BARRA  N KG    T/C")[0];
+    m.members.forEach((_, e) => expect(at(sc, 4, e + 2) as number).toBeCloseTo(Math.abs(solved.stations[e][0].N) < 1e-3 ? 0 : solved.stations[e][0].N, 2));
   });
 });

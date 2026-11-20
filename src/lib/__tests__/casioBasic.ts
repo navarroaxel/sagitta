@@ -70,7 +70,7 @@ export function runBasic(lines: string[], inputs: number[], gfx: Gfx = newGfx())
   let pc = 0;
   let steps = 0;
   while (pc < st.length) {
-    if (++steps > 100000) throw new Error("program does not stop");
+    if (++steps > 3000000) throw new Error("program does not stop");
     const s = st[pc];
     if (s === "Then" || s === "IfEnd") pc++;
     else if (s === "WhileEnd") pc = whileStack.length ? whileStack[whileStack.length - 1] : pc + 1; // back to the condition

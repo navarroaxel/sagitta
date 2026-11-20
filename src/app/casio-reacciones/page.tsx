@@ -6,7 +6,7 @@ import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 import NavMenu from "@/components/NavMenu";
 import { Footer } from "@/components/Footer";
 import { Sub } from "@/components/Sub";
-import { PERFIL_LINES, PERFIL_NAME, REACC_LINES, REACC_NAME, TRACCION_LINES, TRACCION_NAME, PANDEO_LINES, PANDEO_NAME, VIGACAB_LINES, VIGACAB_NAME } from "@/lib/casioPrograms";
+import { PERFIL_LINES, PERFIL_NAME, REACC_LINES, REACC_NAME, RETIC_LINES, RETIC_NAME, TRACCION_LINES, TRACCION_NAME, PANDEO_LINES, PANDEO_NAME, VIGACAB_LINES, VIGACAB_NAME } from "@/lib/casioPrograms";
 import { buildG1m } from "@/lib/casioG1m";
 
 const P = "max-w-[66ch] leading-relaxed text-stone-700 dark:text-stone-300";
@@ -162,6 +162,15 @@ export default function CasioReaccionesPage() {
             <Program name={PANDEO_NAME} lines={PANDEO_LINES} id="casio-pandeo" />
             <p className={P}>{t("casio.c.q")}</p>
             <p className={`${P} mt-3`}>{t("casio.c.ex")}</p>
+          </section>
+
+          <section className={SECTION}>
+            <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("casio.m.title")}</h3>
+            <p className={P}>{t("casio.m.p1")}</p>
+            <Program name={RETIC_NAME} lines={RETIC_LINES} id="casio-retic" />
+            <p className={P}>{t("casio.m.q")}</p>
+            <p className={`${P} mt-3`}>{t("casio.m.ex")}</p>
+            <p className={`${P} mt-3`}>{t("casio.m.limits")}</p>
           </section>
 
           <section className="mt-12 rounded-lg border border-[#B7791F] p-5">

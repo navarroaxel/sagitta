@@ -1,5 +1,5 @@
 import { buildG1m, buildG1mFromBytes, programBytes, tokenizeLine } from "../casioG1m";
-import { PANDEO_LINES, PERFIL_LINES, REACC_LINES, TRACCION_LINES, VIGACAB_LINES } from "../casioPrograms";
+import { PANDEO_LINES, PERFIL_LINES, REACC_LINES, RETIC_LINES, TRACCION_LINES, VIGACAB_LINES } from "../casioPrograms";
 
 // Independent reader, written like Cahute's: inverts the header, walks group → file headers.
 function read(file: Uint8Array) {
@@ -98,7 +98,7 @@ describe("Casio .g1m builder", () => {
   });
 
   test("REACC and PERFIL: every line decodes back to the line typed, and the files are well formed", () => {
-    for (const [name, lines] of [["REACC", REACC_LINES], ["PERFIL", PERFIL_LINES], ["VIGACAB", VIGACAB_LINES], ["TRACCION", TRACCION_LINES], ["PANDEO", PANDEO_LINES]] as const) {
+    for (const [name, lines] of [["REACC", REACC_LINES], ["PERFIL", PERFIL_LINES], ["VIGACAB", VIGACAB_LINES], ["TRACCION", TRACCION_LINES], ["PANDEO", PANDEO_LINES], ["RETIC", RETIC_LINES]] as const) {
       const f = buildG1m(name, lines);
       const r = read(f);
       expect(r.name).toBe(name);
@@ -107,7 +107,7 @@ describe("Casio .g1m builder", () => {
       expect(code).toEqual(programBytes(lines));
       // the Then token is displayed with a trailing space
       expect(decode(code).split("\r").slice(0, -1).map((l) => l.trimEnd())).toEqual(lines);
-      expect(f.length).toBeLessThan(2000); // fits the calculator's memory with room to spare
+      expect(f.length).toBeLessThan(8000); // fits the calculator's memory (tens of KB) with room to spare
     }
   });
 
