@@ -24,8 +24,8 @@ function read(file: Uint8Array) {
 }
 
 // The same table the other way round, for the few tokens the programs use (display text of each code).
-const TWO = new Map([["f700", "If "], ["f701", "Then "], ["f702", "Else "], ["f703", "IfEnd"], ["f704", "For "], ["f705", " To "], ["f707", "Next"], ["f70e", "Stop"], ["7f51", "List "], ["f708", "While "], ["f709", "WhileEnd"], ["f7a4", "Horizontal "], ["f7a7", "F-Line "], ["f7a5", "Text "], ["f7a3", "Vertical "], ["f7a8", "PlotOn "], ["7f8f", "Getkey"], ["f718", "ClrText"], ["f710", "Locate "], ...[..."⁰¹²³⁴⁵⁶⁷⁸⁹"].map((c, d) => [`e5c${d}`, c] as [string, string]), ["e761", "ₐ"], ["e76d", "ₘ"], ["e778", "ₓ"], ["e769", "ᵢ"], ["e76e", "ₙ"]]);
-const ONE = new Map([[0x0e, "→"], [0x0c, "◢"], [0x10, "≤"], [0x87, "–"], [0x89, "+"], [0x99, "–"], [0xa9, "×"], [0xb9, "÷"], [0x97, "Abs "], [0x86, "√"], [0xd1, "Cls"], [0xeb, "ViewWindow "]]);
+const TWO = new Map([["f700", "If "], ["f701", "Then "], ["f702", "Else "], ["f703", "IfEnd"], ["f704", "For "], ["f705", " To "], ["f707", "Next"], ["f70e", "Stop"], ["7f51", "List "], ["f708", "While "], ["f709", "WhileEnd"], ["f7a4", "Horizontal "], ["f7a7", "F-Line "], ["f7a5", "Text "], ["f7a3", "Vertical "], ["f7a8", "PlotOn "], ["f7a6", "Circle "], ["7f8f", "Getkey"], ["f718", "ClrText"], ["f710", "Locate "], ...[..."⁰¹²³⁴⁵⁶⁷⁸⁹"].map((c, d) => [`e5c${d}`, c] as [string, string]), ["e761", "ₐ"], ["e76d", "ₘ"], ["e778", "ₓ"], ["e769", "ᵢ"], ["e76e", "ₙ"]]);
+const ONE = new Map([[0x0e, "→"], [0x0c, "◢"], [0x10, "≤"], [0x87, "–"], [0x89, "+"], [0x99, "–"], [0xa9, "×"], [0xb9, "÷"], [0x97, "Abs "], [0xde, "Intg "], [0x86, "√"], [0xd1, "Cls"], [0xeb, "ViewWindow "]]);
 function decode(bytes: number[]): string {
   let out = "";
   for (let i = 0; i < bytes.length; i++) {
@@ -112,7 +112,7 @@ describe("Casio .g1m builder", () => {
       expect(code).toEqual(programBytes(lines));
       // the Then token is displayed with a trailing space
       expect(decode(code).split("\r").slice(0, -1).map((l) => l.trimEnd())).toEqual(lines);
-      expect(f.length).toBeLessThan(8000); // fits the calculator's memory (tens of KB) with room to spare
+      expect(f.length).toBeLessThan(name === "RETIC" ? 30000 : 8000); // fits the calculator's memory (tens of KB) with room to spare; RETIC is the big one (it draws the structure)
     }
   });
 

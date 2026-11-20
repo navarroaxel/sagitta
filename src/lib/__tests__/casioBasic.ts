@@ -12,9 +12,10 @@ export interface Page {
   horizontals: number[];
   verticals: number[];
   plots: [number, number][];
+  circles: [number, number, number][];
   texts: [number, number, number | string][];
 }
-const newPage = (): Page => ({ window: null, segments: [], horizontals: [], verticals: [], plots: [], texts: [] });
+const newPage = (): Page => ({ window: null, segments: [], horizontals: [], verticals: [], plots: [], circles: [], texts: [] });
 
 export interface Gfx {
   pages: Page[]; // one per Cls, in order (the first drawing before any Cls goes to page 0)
@@ -23,6 +24,7 @@ export interface Gfx {
   horizontals: number[];
   verticals: number[];
   plots: [number, number][];
+  circles: [number, number, number][];
   texts: [number, number, number | string][];
   locates: [number, number, number | string][]; // the text-screen summary of REACC (column, line, value)
   clearTexts: number;
@@ -36,7 +38,7 @@ export interface Mem {
   L: Record<number, number[]>;
 }
 export const newMem = (): Mem => ({ v: {}, L: {} });
-export const newGfx = (): Gfx => ({ pages: [newPage()], window: null, segments: [], horizontals: [], verticals: [], plots: [], texts: [], locates: [], clearTexts: 0, screens: [[]], waits: [], clears: 0 });
+export const newGfx = (): Gfx => ({ pages: [newPage()], window: null, segments: [], horizontals: [], verticals: [], plots: [], circles: [], texts: [], locates: [], clearTexts: 0, screens: [[]], waits: [], clears: 0 });
 
 const splitTop = (line: string, sep: string): string[] => {
   const parts: string[] = [];
@@ -79,6 +81,7 @@ export function runBasic(lines: string[], inputs: number[], gfx: Gfx = newGfx(),
       .replace(/List (\d+)\[/g, "LL[$1][")
       .replace(/Getkey/g, "1") // a key is "pressed" at once: the wait loops do not hang
       .replace(/Abs \(/g, "Math.abs(")
+      .replace(/Intg \(/g, "Math.floor(")
       .replace(/√\(/g, "Math.sqrt(")
       .replace(/×/g, "*")
       .replace(/÷/g, "/")
@@ -126,6 +129,11 @@ export function runBasic(lines: string[], inputs: number[], gfx: Gfx = newGfx(),
     } else if (s.startsWith("Vertical ")) {
       gfx.verticals.push(expr(s.slice(9)));
       gfx.pages[gfx.pages.length - 1].verticals.push(gfx.verticals[gfx.verticals.length - 1]);
+      pc++;
+    } else if (s.startsWith("Circle ")) {
+      const c = args(s.slice(7)) as [number, number, number];
+      gfx.circles.push(c);
+      gfx.pages[gfx.pages.length - 1].circles.push(c);
       pc++;
     } else if (s.startsWith("PlotOn ")) {
       gfx.plots.push(args(s.slice(7)) as [number, number]);

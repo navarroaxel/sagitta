@@ -32,6 +32,29 @@ import {
   type ProgramLoad,
 } from "../casioPrograms";
 
+// RETIC: the keys and numbers of a whole structure, as typed on the calculator. Nodes are typed (X, Y) and then checked (EXIT = no
+// correction); bars, supports and loads are CHOSEN on the drawing: ► moves the cursor to the next node, EXE chooses it.
+// menu: 1 NUDOS, 2 BARRAS, 3 APOYOS, 4 AGREGAR CARGAS, 5 VER ESTRUCTURA, 6 BORRAR CARGAS, 7 RESOLVER, 0 salir
+const K_RIGHT = 27, K_EXE = 31, K_EXIT = 47;
+const pickNode = (k: number) => [...Array(k - 1).fill(K_RIGHT), K_EXE]; // the cursor starts on node 1
+function reticInputs(o: {
+  nodes: [number, number][];
+  bars: number[][];
+  pinned: number;
+  roller: number;
+  dir: 1 | 2;
+  loads: { node: number; fx: number; fy: number }[];
+  tail?: number[]; // what follows the loads: the menu choices (default RESOLVER and leave)
+}) {
+  return [
+    1, o.nodes.length, ...o.nodes.flat(), K_EXIT,
+    2, ...o.bars.flatMap(([a, b]) => [...pickNode(a), ...pickNode(b)]), K_EXIT,
+    3, ...pickNode(o.pinned), ...pickNode(o.roller), o.dir,
+    4, o.loads.length, ...o.loads.flatMap((l) => [...pickNode(l.node), l.fx, l.fy, 1]),
+    ...(o.tail ?? [7, 0]),
+  ];
+}
+
 // SECCION: a pass is the four numbers (N, Mx, My, σ adm) and then a menu of views: 1 DATOS, 2 CARA Y EJE NEUTRO, 3 SIGMA DE MX,
 // 4 SIGMA DE MY, 5 CORTE RESULTANTE, 6 OTRA SECCION, 0 SALIR. `views` are the choices before leaving. Returns the screens and what DATOS shows.
 type Loc = [number, number, number | string][];
@@ -709,20 +732,20 @@ describe("Casio program RETIC (bar forces of a truss of up to 9 bars)", () => {
   const NAMES = ["Triangular Truss", "Tower Truss", "Wall Truss (2 panels)"]; // 3, 9 and 9 bars; pinned + roller
   type M2 = ReturnType<typeof trussPreset>;
 
-  // typed as on the calculator: option 1 nodes, 2 bars, 3 supports, 4 loads, 6 solve, 0 exit
-  const inputsFor = (m: M2, opts: { bars?: number[][]; extra?: number[] } = {}) => {
+  const inputsFor = (m: M2, opts: { bars?: number[][]; tail?: number[] } = {}) => {
     const idx = (id: string) => m.nodes.findIndex((n) => n.id === id) + 1;
     const pinned = m.nodes.find((n) => n.support === "pinned")!;
     const roller = m.nodes.find((n) => n.support === "roller-v" || n.support === "roller-h")!;
     const loads = m.loads.filter((l) => l.type === "nodal") as { node: string; fx: number; fy: number }[];
-    const bars = opts.bars ?? m.members.map((b) => [idx(b.n1), idx(b.n2)]);
-    return [
-      1, m.nodes.length, ...m.nodes.flatMap((n) => [n.x, n.y]), 0,
-      2, ...bars.flat(), 0,
-      3, idx(pinned.id), idx(roller.id), roller.support === "roller-h" ? 2 : 1,
-      4, loads.length, ...loads.flatMap((l) => [idx(l.node), l.fx, l.fy, 1]),
-      6, ...(opts.extra ?? []), 0,
-    ];
+    return reticInputs({
+      nodes: m.nodes.map((n) => [n.x, n.y] as [number, number]),
+      bars: opts.bars ?? m.members.map((b) => [idx(b.n1), idx(b.n2)]),
+      pinned: idx(pinned.id),
+      roller: idx(roller.id),
+      dir: roller.support === "roller-h" ? 2 : 1,
+      loads: loads.map((l) => ({ node: idx(l.node), fx: l.fx, fy: l.fy })),
+      tail: opts.tail,
+    });
   };
   type Screen = [number, number, number | string][];
   const first = (gfx: ReturnType<typeof newGfx>, title: string) => gfx.screens.filter((sc) => sc[0]?.[2] === title);
@@ -775,7 +798,7 @@ describe("Casio program RETIC (bar forces of a truss of up to 9 bars)", () => {
     expect(at(rea, 12, 4) as number).toBeCloseTo(roller.support === "roller-h" ? rr.rx : rr.ry, 2);
   });
 
-  test("the node and bar screens say what is asked: X horizontal, Y vertical, in metres from a fixed origin; a bar joins two nodes in any order", () => {
+  test("the node screen says what is asked: X horizontal, Y vertical, in metres from a fixed origin", () => {
     const m = trussPreset("Triangular Truss");
     const gfx = newGfx();
     runBasic(RETIC_LINES, inputsFor(m), gfx);
@@ -785,10 +808,113 @@ describe("Casio program RETIC (bar forces of a truss of up to 9 bars)", () => {
       expect([at(sc, 1, 1), at(sc, 6, 1), at(sc, 9, 1), at(sc, 12, 1)]).toEqual(["NUDO", k + 1, "DE", 3]);
       expect([at(sc, 1, 3), at(sc, 1, 4), at(sc, 1, 5)]).toEqual(["Y: VERTICAL (M)", "ORIGEN: UN PUNTO FIJO", "EJ: APOYO IZQ = 0,0"]);
     });
-    const barScreens = gfx.screens.filter((sc) => at(sc, 1, 2) === "UNE DOS NUDOS");
-    expect(barScreens).toHaveLength(3);
-    expect([at(barScreens[0], 1, 1), at(barScreens[0], 7, 1), at(barScreens[0], 10, 1), at(barScreens[0], 13, 1)]).toEqual(["BARRA", 1, "DE", 3]);
-    expect(at(barScreens[0], 1, 3)).toBe("EL ORDEN NO IMPORTA");
+  });
+
+  // the picture VER ESTRUCTURA draws, in pixels: the window is 126 x 62 with the structure in its top 49 rows
+  const drawing = (name: string) => {
+    const m = trussPreset(name);
+    const gfx = newGfx();
+    runBasic(RETIC_LINES, inputsFor(m, { tail: [5, 0] }), gfx); // VER ESTRUCTURA, leave
+    const pg = gfx.pages.filter((p) => p.window).at(-1)!;
+    const [xmin, xmax, , ymin, ymax] = pg.window!;
+    const E = (xmax - xmin) / 126;
+    const px = (x: number) => (x - xmin) / E + 1;
+    const py = (y: number) => (ymax - y) / E + 1;
+    return { m, pg, E, px, py, xmin, ymax, ymin };
+  };
+
+  test.each(NAMES)("%s: VER ESTRUCTURA draws the bars, the nodes with their numbers, the supports and the loads, in the right place", (name) => {
+    const { m, pg, E, px, py, ymin, ymax } = drawing(name);
+    expect((ymax - ymin) / E).toBeCloseTo(62, 6); // equal scale: 126 x 62 pixels
+    // every bar is a segment between its two nodes
+    const idx = (id: string) => m.nodes.findIndex((n) => n.id === id);
+    const seg = (a: number[], b: number[]) => pg.segments.some(([x1, y1, x2, y2]) => (near1(x1, a[0]) && near1(y1, a[1]) && near1(x2, b[0]) && near1(y2, b[1])) || (near1(x1, b[0]) && near1(y1, b[1]) && near1(x2, a[0]) && near1(y2, a[1])));
+    function near1(a: number, b: number) {
+      return Math.abs(a - b) < 1e-9;
+    }
+    m.members.forEach((b) => expect(seg([m.nodes[idx(b.n1)].x, m.nodes[idx(b.n1)].y], [m.nodes[idx(b.n2)].x, m.nodes[idx(b.n2)].y])).toBe(true));
+    // the nodes: a number at (row, column) near each, all inside the screen; the structure inside its 112 x 44 area
+    const labels = pg.texts.filter((t) => typeof t[2] === "number").map((t) => t[2]);
+    expect(labels).toEqual(m.nodes.map((_, k) => k + 1));
+    m.nodes.forEach((n, k) => {
+      expect(px(n.x)).toBeGreaterThanOrEqual(7);
+      expect(px(n.x)).toBeLessThanOrEqual(120);
+      expect(py(n.y)).toBeGreaterThanOrEqual(6);
+      expect(py(n.y)).toBeLessThanOrEqual(51 + 1e-9);
+      const t = pg.texts.find((q) => q[2] === k + 1)!;
+      expect(Math.abs((t[0] as number) - Math.max(1, Math.floor(py(n.y) - 1) - 8))).toBeLessThanOrEqual(1); // a few pixels above the node (±1: a floor of a float)
+      expect(Math.abs((t[1] as number) - (Math.floor(px(n.x) - 1) + 3))).toBeLessThanOrEqual(1);
+    });
+    // the supports: a circle (the roller) and a triangle (the pinned one)
+    expect(pg.circles).toHaveLength(1);
+    const roller = m.nodes.find((n) => n.support?.startsWith("roller"))!;
+    const [cx, cy, cr] = pg.circles[0];
+    expect(cr).toBeCloseTo(3 * E, 9);
+    if (roller.support === "roller-v") {
+      expect(cx).toBeCloseTo(roller.x, 9);
+      expect(cy).toBeCloseTo(roller.y - 3 * E, 9);
+    } else {
+      expect(cx).toBeCloseTo(roller.x - 3 * E, 9);
+      expect(cy).toBeCloseTo(roller.y, 9);
+    }
+    // each loaded node has an arrow that ends on it, 14 pixels long, along its load
+    const loaded = new Map<string, [number, number]>();
+    m.loads.forEach((l) => {
+      if (l.type !== "nodal") return;
+      const [fx, fy] = loaded.get(l.node) ?? [0, 0];
+      loaded.set(l.node, [fx + l.fx, fy + l.fy]);
+    });
+    loaded.forEach(([fx, fy], id) => {
+      const n = m.nodes[idx(id)];
+      const L = Math.hypot(fx, fy);
+      expect(seg([n.x - (fx / L) * 14 * E, n.y - (fy / L) * 14 * E], [n.x, n.y])).toBe(true);
+    });
+  });
+
+  test("choosing the nodes of a bar on the drawing: the cursor goes node by node, the first node stays marked, the same node cannot be chosen twice", () => {
+    const m = trussPreset("Triangular Truss"); // 3 nodes, 3 bars
+    const nodes = [1, 3, ...m.nodes.flatMap((n) => [n.x, n.y]), K_EXIT];
+    const gfx = newGfx();
+    // BARRAS: bar 1 = EXE (node 1), then EXE is refused (it is the first node), ► EXE (node 2); EXIT in bar 2 leaves, EXIT again leaves the review
+    runBasic(RETIC_LINES, [...nodes, 2, K_EXE, K_EXE, K_RIGHT, K_EXE, K_EXIT, K_EXIT, 0], gfx);
+    const pages = gfx.pages.filter((p) => p.window && p.texts.some((t) => t[2] === "BARRA"));
+    // the cursor box is the last four segments of each redraw: its centre is the node chosen at that moment
+    const cursorAt = (pg: (typeof pages)[number]) => {
+      const sq = pg.segments.slice(-4);
+      const xs = sq.flatMap(([a, , c]) => [a, c]), ys = sq.flatMap(([, b, , d]) => [b, d]);
+      return [(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...ys) + Math.max(...ys)) / 2];
+    };
+    const nodeOf = (c: number[]) => m.nodes.findIndex((n) => Math.abs(n.x - c[0]) < 1e-9 && Math.abs(n.y - c[1]) < 1e-9) + 1;
+    const first = pages.filter((p) => p.texts.some((t) => t[2] === "NUDO 1: FLECHAS Y EXE")).map((p) => nodeOf(cursorAt(p)));
+    expect(first).toEqual([1, 1]); // bar 1: EXE on node 1; bar 2: the cursor starts on node 1 again and EXIT leaves
+    const second = pages.filter((p) => p.texts.some((t) => t[2] === "NUDO 2: FLECHAS Y EXE")).map((p) => nodeOf(cursorAt(p)));
+    expect(second).toEqual([1, 1, 2]); // EXE on node 1 did nothing (the bar's first node), ► moved to node 2, EXE chose it
+    // while the second node is chosen the first one is marked with a bigger square (3 pixels of half side)
+    const E = (pages[0].window![1] - pages[0].window![0]) / 126;
+    const marked = pages.find((p) => p.texts.some((t) => t[2] === "NUDO 2: FLECHAS Y EXE"))!;
+    const big = marked.segments.filter(([x1, y1, x2, y2]) => Math.abs(Math.hypot(x2 - x1, y2 - y1) - 6 * E) < 1e-9);
+    expect(big.length).toBeGreaterThanOrEqual(4); // the marked node's square (the nodes' own 2-pixel squares are 2E long)
+    // and the bar is in the list: bar 1 joins nodes 1 and 2
+    const gfx2 = newGfx();
+    runBasic(RETIC_LINES, [...nodes, 2, K_EXE, K_RIGHT, K_EXE, K_EXIT, K_EXIT, 5, 0], gfx2);
+    const last = gfx2.pages.filter((p) => p.window).at(-1)!;
+    const n1 = m.nodes[0], n2 = m.nodes[1];
+    expect(last.segments.some(([x1, y1, x2, y2]) => x1 === n1.x && y1 === n1.y && x2 === n2.x && y2 === n2.y)).toBe(true);
+    expect(last.segments.filter(([x1, y1, x2, y2]) => Math.hypot(x2 - x1, y2 - y1) > 6 * E && !(x1 === n1.x && y1 === n1.y && x2 === n2.x && y2 === n2.y)).length).toBe(0); // no other bar yet
+  });
+
+  test("the cursor wraps: ◄ from the first node goes to the last, and EXIT leaves a choice without changing anything", () => {
+    const m = trussPreset("Tower Truss");
+    const gfx = newGfx();
+    runBasic(RETIC_LINES, [1, 6, ...m.nodes.slice(0, 6).flatMap((n) => [n.x, n.y]), K_EXIT, 3, 38, K_EXIT, K_EXIT, 0], gfx); // APOYOS: ◄ (wraps), EXIT, then the second choice: EXIT, then leave
+    const pages = gfx.pages.filter((p) => p.window && p.texts.some((t) => t[2] === "APOYO ARTICULADO"));
+    const cur = (pg: (typeof pages)[number]) => {
+      const sq = pg.segments.slice(-4);
+      const xs = sq.flatMap(([a, , c]) => [a, c]);
+      return (Math.min(...xs) + Math.max(...xs)) / 2;
+    };
+    expect(pages.map(cur)).toEqual([m.nodes[0].x, m.nodes[5].x]); // node 1, then node 6 (wrapped)
+    expect(gfx.screens.some((sc) => sc[0]?.[2] === "REACCION DEL RODILLO")).toBe(false); // no roller was chosen: no direction asked
   });
 
   test("a mechanism (one bar twice) is detected instead of giving numbers", () => {
@@ -804,12 +930,12 @@ describe("Casio program RETIC (bar forces of a truss of up to 9 bars)", () => {
 
   test("solving before entering the data says what is missing; nodes need to come first", () => {
     const gfx = newGfx();
-    runBasic(RETIC_LINES, [2, 3, 4, 6, 0], gfx);
+    runBasic(RETIC_LINES, [2, 3, 4, 7, 0], gfx); // BARRAS, APOYOS and AGREGAR CARGAS with no nodes, then RESOLVER, then leave
     expect(first(gfx, "PRIMERO LOS NUDOS")).toHaveLength(3);
     expect(first(gfx, "FALTAN DATOS")).toHaveLength(1);
   });
 
-  test("corrections: a node, a bar and a load typed again leave the rest alone", () => {
+  test("corrections: a node (chosen on the drawing), a bar (chosen) and a load (REPETIR) typed again leave the rest alone", () => {
     const m = trussPreset("Triangular Truss");
     const solved = solveModel(m);
     const idx = (id: string) => m.nodes.findIndex((n) => n.id === id) + 1;
@@ -822,12 +948,14 @@ describe("Casio program RETIC (bar forces of a truss of up to 9 bars)", () => {
     runBasic(
       RETIC_LINES,
       [
-        1, 3, 9, 9, n2.x, n2.y, n3.x, n3.y, 1, n1.x, n1.y, 0, // node 1 typed wrong → CORREGIR NUDO 1 → the right values → no more
-        2, 3, 3, ...bars[1], ...bars[2], 1, ...bars[0], 0, // bar 1 typed wrong (3 to 3) → CORREGIR BARRA 1
-        3, idx(pinned.id), idx(roller.id), roller.support === "roller-h" ? 2 : 1,
-        4, loads.length, 1, 7, 7, 0, // a wrong load → REPETIR: the slot is typed again, the count does not move
-        ...loads.flatMap((l) => [idx(l.node), l.fx, l.fy, 1]),
-        6, 0,
+        1, 3, 9, 9, n2.x, n2.y, n3.x, n3.y, // node 1 typed wrong...
+        K_EXE, n1.x, n1.y, K_EXIT, // ...chosen on the drawing (the cursor starts on node 1) and typed again; EXIT = done
+        2, ...pickNode(2), ...pickNode(3), ...bars.slice(1).flatMap(([a, b]) => [...pickNode(a), ...pickNode(b)]), // bar 1 chosen wrong (2-3)
+        K_EXE, ...pickNode(bars[0][0]), ...pickNode(bars[0][1]), K_EXIT, // chosen on the bar list (the cursor starts on bar 1) and redone
+        3, ...pickNode(idx(pinned.id)), ...pickNode(idx(roller.id)), roller.support === "roller-h" ? 2 : 1,
+        4, loads.length, ...pickNode(1), 7, 7, 2, // a wrong load → 2 = REPETIR: the same slot is asked again
+        ...loads.flatMap((l) => [...pickNode(idx(l.node)), l.fx, l.fy, 1]),
+        7, 0,
       ],
       gfx,
     );
@@ -964,12 +1092,12 @@ describe("Casio menus with the arrow keys (▲ 28, ▼ 37, EXE 31, EXIT 47, numb
     expect(titles(gfx, "REACC  CARGAS")).toBe(2);
   });
 
-  test("RETIC: six items on lines 2-7; ▼ EXE is BARRAS (it asks for the nodes first), ▲ from the first wraps to RESOLVER; EXIT or 0 leave", () => {
+  test("RETIC: seven items on the seven lines; ▼ EXE is BARRAS (it asks for the nodes first), ▲ from the first wraps to RESOLVER; EXIT or 0 leave", () => {
     const g1 = run(RETIC_LINES, [], [37, 31, 47]);
-    expect(rows(g1).slice(0, 2)).toEqual([2, 3]);
+    expect(rows(g1).slice(0, 2)).toEqual([1, 2]);
     expect(g1.screens.some((sc) => sc[0]?.[2] === "PRIMERO LOS NUDOS")).toBe(true);
     const g2 = run(RETIC_LINES, [], [28, 31, 71]);
-    expect(rows(g2).slice(0, 2)).toEqual([2, 7]);
+    expect(rows(g2).slice(0, 2)).toEqual([1, 7]);
     expect(g2.screens.some((sc) => sc[0]?.[2] === "FALTAN DATOS")).toBe(true);
   });
 
@@ -1031,13 +1159,22 @@ describe("the exam example truss-cable-beam-ipb260-kg, start to finish with the 
     const idx = (id: string) => ids.indexOf(id) + 1;
     const nodes = ids.map((id) => withMin.nodes.find((n) => n.id === id)!);
     const gfx = newGfx();
-    runBasic(RETIC_LINES, [
-      1, 5, ...nodes.flatMap((n) => [n.x, n.y]), 0,
-      2, ...bars.flatMap((b) => [idx(b.n1), idx(b.n2)]), 0,
-      3, idx("B"), idx("A"), 1, // pinned B, roller A with a vertical reaction
-      4, 3, idx("D"), 0, -40000, 1, idx("E"), 5000, 0, 1, idx("C"), 0, -beam.T, 1, // D 40 000 kg down, E 5 000 kg right, the cable's T at C
-      6, 0,
-    ], gfx);
+    runBasic(
+      RETIC_LINES,
+      reticInputs({
+        nodes: nodes.map((n) => [n.x, n.y] as [number, number]),
+        bars: bars.map((b) => [idx(b.n1), idx(b.n2)]),
+        pinned: idx("B"),
+        roller: idx("A"),
+        dir: 1, // the roller A has a vertical reaction
+        loads: [
+          { node: idx("D"), fx: 0, fy: -40000 }, // D 40 000 kg down
+          { node: idx("E"), fx: 5000, fy: 0 }, // E 5 000 kg to the right
+          { node: idx("C"), fx: 0, fy: -beam.T }, // the cable's T hangs from C
+        ],
+      }),
+      gfx,
+    );
     const rows = new Map<number, { N: number; tc: string }>();
     for (const sc of gfx.screens.filter((x) => x[0]?.[2] === "BARRA  N KG    T/C"))
       for (const r of [2, 3, 4, 5, 6, 7]) {
@@ -1268,7 +1405,6 @@ describe("the diagrams of the normal stresses σ(Mx) and σ(My) (SECCION and EXC
 
 describe("SECCION: the resultant (oblique) cut — E.N., parallels through the extreme corners, baseline ⟂ E.N., ordinates (the guide's step 8)", () => {
   type Seg = number[];
-  const edge = (p: number[], q: number[]) => [p, q].map((v) => v.map((x) => x.toFixed(5)).join(",")).sort().join("|");
   const resultantPage = (N: number, Mx: number, My: number) => {
     const { gfx, data } = seccionRun(N, Mx, My, 0, [1, 5]); // DATOS (for the profile) and CORTE RESULTANTE
     const sec = guideSection(`IPB ${data!.h}`, data!.face === 2);
