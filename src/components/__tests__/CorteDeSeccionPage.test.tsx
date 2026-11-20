@@ -14,5 +14,10 @@ describe("/corte-de-seccion", () => {
     expect(fig.querySelectorAll("text").length).toBeGreaterThan(5);
     expect(document.body.textContent).toMatch(/local triad|terna local/);
     expect(screen.getByTestId("cut-main")).toBeTruthy(); // the simulator is on the page
+    // step 3: both orientations of the profile, with their inertias
+    const faces = screen.getByTestId("cut-faces-figure");
+    expect(faces.querySelectorAll("svg")).toHaveLength(2);
+    expect(faces.textContent).toContain("Ix = 864");
+    expect(faces.textContent).toContain("Ix = 318");
   });
 });

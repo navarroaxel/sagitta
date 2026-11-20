@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 import NavMenu from "@/components/NavMenu";
 import { Footer } from "@/components/Footer";
-import { NeutralAxisExample, SectionCutSimulator } from "@/components/SectionCutGuide";
+import { FACES, NeutralAxisExample, SectionCutSimulator, shapeRects } from "@/components/SectionCutGuide";
 
 function Kicker({ children }: { children: React.ReactNode }) {
   return (
@@ -71,6 +71,50 @@ function CutPartsFigure() {
   );
 }
 
+function ProfileFacesFigure() {
+  const { t, language } = useLanguage();
+  const num = (n: number) => (language === "es" ? String(n).replace(".", ",") : String(n));
+  const S = 11,
+    cx = 130,
+    cy = 122;
+  return (
+    <figure className="my-5 max-w-2xl rounded-lg border border-stone-200 bg-white p-4 shadow-sm dark:border-stone-700 dark:bg-stone-900" data-testid="cut-faces-figure">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2" role="img" aria-label={t("cut.fig3.aria")}>
+        {([1, 2] as const).map((f) => {
+          const s = FACES[f];
+          const strongIx = s.Ix > s.Iy;
+          return (
+            <svg key={f} viewBox="0 0 260 250" className="h-auto w-full">
+              <text x="130" y="18" fontSize="13" fontWeight="600" textAnchor="middle" className="fill-stone-800 dark:fill-stone-100">
+                {t(f === 1 ? "cut.fig3.f1" : "cut.fig3.f2")}
+              </text>
+              <rect x={cx - s.hx * S} y={cy - s.hy * S} width={2 * s.hx * S} height={2 * s.hy * S} fill="none" className="stroke-stone-400" strokeDasharray="3 3" />
+              <g className="fill-stone-300 stroke-stone-700 dark:fill-stone-600 dark:stroke-stone-200" strokeWidth="1.5">{shapeRects(s, S, cx, cy)}</g>
+              <g className="stroke-stone-500" strokeWidth="1.5">
+                <line x1={cx - 7.5 * S} y1={cy} x2={cx + 7.5 * S} y2={cy} />
+                <line x1={cx} y1={cy + 7.5 * S} x2={cx} y2={cy - 7.5 * S} />
+              </g>
+              <polygon points={`${cx + 7.5 * S + 7},${cy} ${cx + 7.5 * S - 3},${cy - 4} ${cx + 7.5 * S - 3},${cy + 4}`} className="fill-stone-500" />
+              <polygon points={`${cx},${cy - 7.5 * S - 7} ${cx - 4},${cy - 7.5 * S + 3} ${cx + 4},${cy - 7.5 * S + 3}`} className="fill-stone-500" />
+              <text x={cx + 7.5 * S + 4} y={cy + 18} fontSize="13" fontWeight="600" className="fill-stone-700 font-mono dark:fill-stone-200">x</text>
+              <text x={cx + 8} y={cy - 7.5 * S - 2} fontSize="13" fontWeight="600" className="fill-stone-700 font-mono dark:fill-stone-200">y</text>
+              <text x="130" y="228" fontSize="12" textAnchor="middle" className="fill-stone-700 font-mono dark:fill-stone-200">
+                <tspan fill={strongIx ? "#0B8A8A" : "#C0392B"} fontWeight="600">Ix = {num(s.Ix)} cm⁴</tspan>
+                {" · "}
+                <tspan fill={strongIx ? "#C0392B" : "#0B8A8A"} fontWeight="600">Iy = {num(s.Iy)} cm⁴</tspan>
+              </text>
+              <text x="130" y="244" fontSize="11" textAnchor="middle" className="fill-stone-500 dark:fill-stone-400">
+                {t(strongIx ? "cut.fig3.strong" : "cut.fig3.weak")} / {t(strongIx ? "cut.fig3.weak" : "cut.fig3.strong")}
+              </text>
+            </svg>
+          );
+        })}
+      </div>
+      <figcaption className="mt-2 text-[13px] leading-snug text-stone-600 dark:text-stone-400">{t("cut.fig3.cap")}</figcaption>
+    </figure>
+  );
+}
+
 export default function CorteDeSeccionPage() {
   const { t } = useLanguage();
   const full: TranslationKey[] = [
@@ -122,6 +166,7 @@ export default function CorteDeSeccionPage() {
             <Kicker>{t("cut.f.kicker")}</Kicker>
             <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t("cut.f.title")}</h3>
             <p className={P}>{t("cut.f.p1")}</p>
+            <ProfileFacesFigure />
             <Bullets keys={["cut.f.b1", "cut.f.b2", "cut.f.b3"]} />
             <p className={P}>{t("cut.f.p2")}</p>
           </section>

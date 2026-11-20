@@ -19,7 +19,7 @@ const TENS = "#0B8A8A";
 const COMP = "#C0392B";
 const EN = "#B7791F";
 // The column of preset #2. Face 1: the x axis against the strong axis (flanges along x). Face 2: the profile turned.
-const FACES = { 1: guideSection("IPB 120", false), 2: guideSection("IPB 120", true) } as const;
+export const FACES = { 1: guideSection("IPB 120", false), 2: guideSection("IPB 120", true) } as const;
 type Face = 1 | 2;
 
 interface State {
@@ -44,7 +44,7 @@ function useFmt() {
 }
 
 // The I section as three rectangles: face 1 has horizontal flanges and a vertical web; face 2 (turned) the opposite.
-function shapeRects(s: GuideSection, S: number, cx: number, cy: number) {
+export function shapeRects(s: GuideSection, S: number, cx: number, cy: number) {
   const r: [number, number, number, number][] = s.rotated
     ? [
         [-s.hx, -s.hy, s.tf, 2 * s.hy],
