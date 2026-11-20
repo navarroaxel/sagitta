@@ -1194,7 +1194,7 @@ const RET_DIGIT_KEYS = [72, 62, 52, 73, 63, 53, 74, 64, 54];
 const retDigits = (count: string) => RET_DIGIT_KEYS.map((k, i) => `If W=${k}:Then If ${count}>${i}:Then ${i + 1}→S:31→W:IfEnd:IfEnd`);
 // Choose a node on the drawing: ◄ ▲ / ► ▼ move the cursor, EXE chooses (not the marked node), EXIT leaves with S = 0.
 const retPickNode = (msg: string[], afterPrompt = false) => [
-  "1→S:1→Y",
+  "1→S:1→Y:{0,0,0}→List 8",
   // after a `?` prompt the EXE that ended it can still be pending: the first EXE of the choice is ignored (use a number key or move first)
   ...(afterPrompt ? ["1→List 9[20]"] : []),
   "While Y=1",
@@ -1202,12 +1202,13 @@ const retPickNode = (msg: string[], afterPrompt = false) => [
   "List 1[S]→J:List 2[S]→K:List 9[11]×5→L",
   RET_BOX("J", "K", "L"),
   ...msg,
-  "Text 51,110,W", // the last key code read (before this screen it is whatever was left): shown so a wrong key can be reported
+  "Text 51,84,List 8[1]:Text 51,98,List 8[2]:Text 51,112,List 8[3]", // the last three key codes read (diagnosis of the arrows on the real calculator)
   "While Getkey>0:WhileEnd",
   "0→W",
   "While W=0",
   "Getkey→W",
   "WhileEnd",
+  "List 8[2]→List 8[1]:List 8[3]→List 8[2]:W→List 8[3]",
   ...(afterPrompt ? ["If List 9[20]=1:Then 0→List 9[20]:If W=31:Then 0→W:IfEnd:IfEnd"] : []),
   "If W=38:Then S–1→S:IfEnd",
   "If W=28:Then S–1→S:IfEnd",
@@ -1420,6 +1421,7 @@ export const RETIC_LINES = [
   "If U>0:Then",
   "ClrText",
   'Locate 1,1,"NUDO":Locate 6,1,U',
+  'Locate 1,7,"TECLAS":Locate 8,7,List 8[1]:Locate 12,7,List 8[2]:Locate 16,7,List 8[3]',
   '"FX KG (HACIA DER)"?→V',
   '"FY KG (HACIA ARRIBA)"?→X',
   "ClrText",
