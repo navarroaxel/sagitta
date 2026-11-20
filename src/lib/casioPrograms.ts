@@ -17,6 +17,24 @@ export interface ProgramLoad {
   mz?: number;
 }
 
+// What the program computes for a distributed load typed as its two end points and q per metre: the resultant acts at
+// the centre of the span and its length is the distance between the points.
+export function distributedLoad(
+  from: [number, number, number],
+  to: [number, number, number],
+  q: [number, number, number],
+): ProgramLoad {
+  return {
+    x: (from[0] + to[0]) / 2,
+    y: (from[1] + to[1]) / 2,
+    z: (from[2] + to[2]) / 2,
+    fx: q[0],
+    fy: q[1],
+    fz: q[2],
+    len: Math.hypot(to[0] - from[0], to[1] - from[1], to[2] - from[2]),
+  };
+}
+
 export interface Reactions {
   fx: number;
   fy: number;
@@ -62,10 +80,25 @@ export const REACC_LINES = [
   "0→F:0→G:0→H:0→I:0→J:0→K",
   '"N CARGAS"?→N',
   "For 1→C To N",
-  '"X"?→X:"Y"?→Y:"Z"?→Z',
+  "0→P:0→Q:0→R:0→U:0→V:0→W:0→X:0→Y:0→Z:1→L",
+  '"CARGA"',
+  "C◢",
+  '"1 PUNT 2 DIST 3 MOM"?→T',
+  "If T=1",
+  'Then "X"?→X:"Y"?→Y:"Z"?→Z',
   '"FX"?→U:"FY"?→V:"FZ"?→W',
-  '"L (1=PUNTUAL)"?→L',
-  '"MX"?→P:"MY"?→Q:"MZ"?→R',
+  "IfEnd",
+  "If T=2",
+  'Then "X INI"?→X:"Y INI"?→Y:"Z INI"?→Z',
+  '"X FIN"?→A:"Y FIN"?→B:"Z FIN"?→D',
+  '"QX KG/M"?→U:"QY KG/M"?→V:"QZ KG/M"?→W',
+  "A–X→M:B–Y→O:D–Z→S",
+  "√(M×M+O×O+S×S)→L",
+  "(X+A)÷2→X:(Y+B)÷2→Y:(Z+D)÷2→Z",
+  "IfEnd",
+  "If T=3",
+  'Then "MX"?→P:"MY"?→Q:"MZ"?→R',
+  "IfEnd",
   "U×L→U:V×L→V:W×L→W",
   "F+U→F:G+V→G:H+W→H",
   "I+Y×W–Z×V+P→I",

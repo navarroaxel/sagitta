@@ -1,7 +1,8 @@
 import { solveModel3D } from "../solve3d";
 import { PRESETS_3D } from "../presets3d";
+import { runBasic } from "./casioBasic";
 import {
-  baseForces,
+  baseForces, distributedLoad,
   chooseIPB,
   PERFIL_LINES,
   PERFIL_TABLE,
@@ -70,6 +71,42 @@ describe("Casio program REACC", () => {
       const b = baseForces(reactionsFromLoads(programLoads(key)));
       near(b.N, st.N); near(b.Qx, st.Qx); near(b.Qy, st.Qy); near(b.Mx, st.Mx); near(b.My, st.My);
     });
+  });
+
+  // The listing RUN by a small Casio Basic interpreter (casioBasic.ts), typed as on the calculator, vs the solver.
+  const numbers = (out: (string | number)[]) => out.filter((o): o is number => typeof o === "number").map((n) => (n === 0 ? 0 : n));
+
+  test("running REACC: t-frame-3d-fixed-kg typed as the page says (distributed = its two end points and q)", () => {
+    const out = runBasic(REACC_LINES, [
+      2,
+      2, -1, 0, 3, 2, 0, 3, 0, 0, -200, // load 1: distributed, from (−1,0,3) to (2,0,3), q = (0, 0, −200)
+      1, 0, 0, 3, 0, 300, 0, // load 2: point at B, F = (0, 300, 0)
+    ]);
+    const r = numbers(out);
+    // the marker "CARGA" and its number (1, 2) come before each load; then the 6 reactions and the 5 forces at the base
+    expect(out.filter((o) => o === "CARGA")).toHaveLength(2);
+    expect(r).toEqual([1, 2, 0, -300, 600, 900, -300, 0, -600, -300, 0, -300, 900]);
+  });
+
+  test("running REACC: column-3d-fixed-kg (q_y on the whole column + a point load at the top) = the solver's reactions", () => {
+    const r = numbers(runBasic(REACC_LINES, [2, 2, 0, 0, 0, 0, 0, 5, 0, 200, 0, 1, 0, 0, 5, 1500, 0, -20000]));
+    expect(r.slice(2)).toEqual([-1500, -1000, 20000, 2500, -7500, 0, -20000, -1000, -1500, -7500, 2500]);
+  });
+
+  test("running REACC: a moment alone has no arm (type 3), and loads can be mixed in any order", () => {
+    const r = numbers(runBasic(REACC_LINES, [1, 3, 10, -20, 30]));
+    expect(r.slice(1, 7)).toEqual([0, 0, 0, -10, 20, -30]); // the reactions are minus the applied moment
+    expect(distributedLoad([-1, 0, 3], [2, 0, 3], [0, 0, -200])).toEqual({ x: 0.5, y: 0, z: 3, fx: 0, fy: 0, fz: -200, len: 3 });
+  });
+
+  test("running PERFIL = chooseIPB, on both faces and when none passes", () => {
+    for (const [N, Mx, My, adm, face] of [[-600, -300, 900, 1400, 1], [-600, -300, 900, 1400, 2], [-5000, 400, -1200, 1600, 1], [-1e7, 0, 0, 1400, 1]] as const) {
+      const out = runBasic(PERFIL_LINES, [N, Mx, My, adm, face]);
+      const c = chooseIPB(N, Mx, My, adm, face);
+      if (c) {
+        expect(out.slice(0, 4)).toEqual(["USAR IPB", +c.name.replace("IPB ", ""), "SIGMA MAX =", expect.closeTo(c.sigmaMax, 6)]);
+      } else expect(out).toEqual(["NINGUN IPB HASTA 600"]);
+    }
   });
 
   test("the program text asks for what the TypeScript uses and prints every result", () => {

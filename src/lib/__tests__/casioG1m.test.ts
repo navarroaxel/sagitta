@@ -25,7 +25,7 @@ function read(file: Uint8Array) {
 
 // The same table the other way round, for the few tokens the programs use (display text of each code).
 const TWO = new Map([["f700", "If "], ["f701", "Then "], ["f702", "Else "], ["f703", "IfEnd"], ["f704", "For "], ["f705", " To "], ["f707", "Next"], ["f70e", "Stop"], ["7f51", "List "]]);
-const ONE = new Map([[0x0e, "→"], [0x0c, "◢"], [0x10, "≤"], [0x87, "–"], [0x89, "+"], [0x99, "–"], [0xa9, "×"], [0xb9, "÷"], [0x97, "Abs "]]);
+const ONE = new Map([[0x0e, "→"], [0x0c, "◢"], [0x10, "≤"], [0x87, "–"], [0x89, "+"], [0x99, "–"], [0xa9, "×"], [0xb9, "÷"], [0x97, "Abs "], [0x86, "√"]]);
 function decode(bytes: number[]): string {
   let out = "";
   for (let i = 0; i < bytes.length; i++) {
@@ -75,6 +75,7 @@ describe("Casio .g1m builder", () => {
     expect(hex("List 1[I]÷20→D")).toBe("7f 51 31 5b 49 5d b9 32 30 0e 44");
     expect(hex("Abs (M–W)")).toBe("97 28 4d 99 57 29");
     expect(hex("–F◢")).toBe("87 46 0c"); // (–) at the start of a line
+    expect(hex("√(M×M)→L")).toBe("86 28 4d a9 4d 29 0e 4c");
     expect(hex("U×L→U")).toBe("55 a9 4c 0e 55");
     expect(hex("If U≤S:Then")).toBe("f7 00 55 10 53 3a f7 01");
     expect(hex('"N KG (TRAC POS)"?→N')).toBe(Array.from('"N KG (TRAC POS)"').map((c) => c.charCodeAt(0).toString(16)).join(" ") + " 3f 0e 4e");
