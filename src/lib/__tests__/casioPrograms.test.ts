@@ -925,3 +925,53 @@ describe("Casio menus with the arrow keys (▲ 28, ▼ 37, EXE 31, EXIT 47, numb
     expect(() => run(REACC_LINES, [], [])).toThrow(/no key left/);
   });
 });
+
+describe("the exam example truss-cable-beam-ipb260-kg, start to finish with the programs", () => {
+  const base = PRESETS.find((p) => p.name === "Truss + Cable + Beam IPB 260")!.model;
+
+  test("VIGACAB → RETIC (the cable's T as a load on C) → TRACCION / PANDEO for each bar = what the app gives", () => {
+    // 1. the beam F-G and the cable (the program sizes the beam: IPB 550 is the lightest, and its weight is what the cable carries)
+    const beam = cableBeam({ L: 10, Lc: 15, loads: [{ P: 20000, a: 5 }], q: 2000 });
+    const withMin = {
+      ...base,
+      members: base.members.map((m) => (m.id === "FG" ? { ...m, section: { kind: "profile" as const, name: beam.min!.name } } : m)),
+    };
+    const solved = solveModel(withMin);
+    const checks = runChecks(withMin, solved);
+    // 2. RETIC: the 7 bars of the truss (nodes A B C D E), T hangs from C
+    const ids = ["A", "B", "C", "D", "E"];
+    const bars = ["b1", "b2", "b3", "b4", "b5", "b6", "b7"].map((id) => withMin.members.find((m) => m.id === id)!);
+    const idx = (id: string) => ids.indexOf(id) + 1;
+    const nodes = ids.map((id) => withMin.nodes.find((n) => n.id === id)!);
+    const gfx = newGfx();
+    runBasic(RETIC_LINES, [
+      1, 5, ...nodes.flatMap((n) => [n.x, n.y]), 0,
+      2, ...bars.flatMap((b) => [idx(b.n1), idx(b.n2)]), 0,
+      3, idx("B"), idx("A"), 1, // pinned B, roller A with a vertical reaction
+      4, 3, idx("D"), 0, -40000, 1, idx("E"), 5000, 0, 1, idx("C"), 0, -beam.T, 1, // D 40 000 kg down, E 5 000 kg right, the cable's T at C
+      6, 0,
+    ], gfx);
+    const rows = new Map<number, { N: number; tc: string }>();
+    for (const sc of gfx.screens.filter((x) => x[0]?.[2] === "BARRA  N KG    T/C"))
+      for (const r of [2, 3, 4, 5, 6, 7]) {
+        const k = sc.find((l) => l[0] === 1 && l[1] === r)?.[2];
+        if (typeof k === "number") rows.set(k, { N: sc.find((l) => l[0] === 4 && l[1] === r)![2] as number, tc: sc.find((l) => l[0] === 17 && l[1] === r)![2] as string });
+      }
+    expect(rows.size).toBe(7);
+    // 3. each bar: N like the app, then its IPB by TRACCION (tension) or PANDEO (compression, with the bar's length)
+    bars.forEach((b, i) => {
+      const e = solved.memberIndex.get(b.id)!;
+      const N = solved.stations[e][0].N;
+      expect(rows.get(i + 1)!.N).toBeCloseTo(Math.abs(N) < 1e-3 ? 0 : N, 1);
+      const pick = (checks as SizeCheck[]).find((c) => c.kind === "size" && c.member === b.id)!.results.find((r) => r.series === "IPB")!.pick!;
+      const L = solved.result.geo[e].L;
+      const mine = N >= 0 ? tensionBar(N, 1600).name : compressionBar(N, L).name;
+      expect([b.id, N >= 0 ? "T" : "C", mine]).toEqual([b.id, N >= 0 ? "T" : "C", pick.profile.name]);
+    });
+    // the cable
+    const c = (checks as { kind: string }[]).find((x) => x.kind === "cable") as CableCheck;
+    expect(beam.T).toBeCloseTo(c.N, 2);
+    expect(beam.d).toBeCloseTo(c.dReq, 6);
+    expect(beam.elongation).toBeCloseTo(c.elongation, 4);
+  });
+});
