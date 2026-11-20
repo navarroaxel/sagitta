@@ -387,8 +387,8 @@ export const REACC_LINES = [
 ];
 
 // The diagrams of the normal stresses of the section (the polygons of compression and tension of the app's section cut):
-// σ(N) (uniform), σ(Mx) and σ(My) (the "bow ties": zero on the neutral axis of that effect, tension on one side,
-// compression on the other). One graph screen each, after the face drawing. The compression is hatched, the tension is only
+// σ(Mx) and σ(My), the "bow ties": zero on the neutral axis of that effect, tension on one side, compression on the other
+// (σ(N) is uniform and not drawn: a rectangle says nothing). One graph screen each, after the face drawing. The compression is hatched, the tension is only
 // outlined (the screen has no colour); the values at the ends are written in the corners. The block reads its data from
 // List 10 — {c, b, a, hx, hy, face, bf/2, h/2, tf, tw/2} with σ = c + b·y + a·x (kg/cm² or kN/cm²), the half sides in the
 // axes of the face — and clobbers every letter, so it goes last in a program; it uses the lists 8 and 9 for the outline.
@@ -405,27 +405,10 @@ export const SIGMA_DIAGRAMS = [
   "List 10[6]→F:List 10[7]→R:List 10[8]→V:List 10[9]→O:List 10[10]→G",
   "{–R,R,R,G,G,R,R,–R,–R,–G,–G,–R}→List 8",
   "{–V,–V,O–V,O–V,V–O,V–O,V,V,V–O,V–O,O–V,O–V}→List 9",
-  // N and Mx: the section on the left, the diagram on the right (compression to the left of its baseline, tension to the right)
+  // Mx: the section on the left, the diagram on the right (compression to the left of its baseline, tension to the right)
   "0.9×E→L",
   "1.1×D+L→X",
   "1.3×E→V:(2.25×D+2×L+2)÷4.032→Z:If Z>V:Then Z→V:IfEnd",
-  // σ(N)
-  "Cls",
-  "ViewWindow –1.15×D,–1.15×D+4.032×V,1,–V,V,1",
-  ...OUTLINE_LINES,
-  "If Abs (A)>0:Then",
-  "If A<0:Then –L→Y:IfEnd",
-  "If A>0:Then L→Y:IfEnd",
-  "F-Line X,E,X,–E:F-Line X,E,X+Y,E:F-Line X,–E,X+Y,–E:F-Line X+Y,E,X+Y,–E",
-  "If A<0:Then",
-  "For –8→J To 8",
-  "F-Line X,E×J÷8,X+Y,E×J÷8",
-  "Next",
-  "IfEnd",
-  "IfEnd",
-  'Text 1,1,"S(N)"',
-  "Text 1,70,A",
-  ...SCREEN_PAUSE,
   // σ(Mx): σ = b·y
   "Cls",
   "ViewWindow –1.15×D,–1.15×D+4.032×V,1,–V,V,1",

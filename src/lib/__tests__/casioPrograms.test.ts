@@ -1080,7 +1080,7 @@ describe("Casio program EXCENTR (eccentric axial load on an IPN / IPB: ipn300-ec
   });
 });
 
-describe("the diagrams of the normal stresses σ(N), σ(Mx), σ(My) (PERFIL and EXCENTR) and the lists left to REACC", () => {
+describe("the diagrams of the normal stresses σ(Mx) and σ(My) (PERFIL and EXCENTR) and the lists left to REACC", () => {
   const near = (v: number[], w: number[]) => v.forEach((x, i) => expect(x).toBeCloseTo(w[i], 6));
   const inside = (pg: { window: number[] | null; segments: number[][] }) => {
     const [xmin, xmax, , ymin, ymax] = pg.window!;
@@ -1094,7 +1094,7 @@ describe("the diagrams of the normal stresses σ(N), σ(Mx), σ(My) (PERFIL and 
       }),
     );
   };
-  // pages: 0 before any Cls, 1 the face drawing, 2 σ(N), 3 σ(Mx), 4 σ(My)
+  // pages: 0 before any Cls, 1 the face drawing, 2 σ(Mx), 3 σ(My)
   const perfil = (N: number, Mx: number, My: number) => {
     const gfx = newGfx();
     const out = runBasic(PERFIL_LINES, [N, Mx, My, 0], gfx);
@@ -1104,18 +1104,13 @@ describe("the diagrams of the normal stresses σ(N), σ(Mx), σ(My) (PERFIL and 
     return { gfx, sec, k: plane(N, Mx, My, sec) };
   };
 
-  test("PERFIL, the base of preset #2 (IPB 120 turned): σ(Mx) and σ(My) are bow ties, σ(N) a rectangle, compression hatched", () => {
+  test("PERFIL, the base of preset #2 (IPB 120 turned): σ(Mx) and σ(My) are bow ties, compression hatched", () => {
     const { gfx, sec, k } = perfil(-600, -300, 900);
-    expect(gfx.pages).toHaveLength(5);
-    const [, , pN, pMx, pMy] = gfx.pages;
-    [pN, pMx, pMy].forEach((pg) => inside(pg));
-    // σ(N): uniform, compression (c < 0): the rectangle to the left of its baseline, hatched with the 17 lines
+    expect(gfx.pages).toHaveLength(4); // σ(N) is uniform and has no diagram
+    const [, , pMx, pMy] = gfx.pages;
+    [pMx, pMy].forEach((pg) => inside(pg));
     const L = 0.9 * sec.hy;
     const X = 1.1 * sec.hx + L;
-    expect(k.c).toBeLessThan(0);
-    expect(pN.segments.slice(12, 16)).toEqual([[X, sec.hy, X, -sec.hy], [X, sec.hy, X - L, sec.hy], [X, -sec.hy, X - L, -sec.hy], [X - L, sec.hy, X - L, -sec.hy]]);
-    expect(pN.segments).toHaveLength(12 + 4 + 17);
-    near([pN.texts[0][1] as number, pN.texts[1][1] as number, pN.texts[1][2] as number], [1, 70, k.c]);
     // σ(Mx) = b·y: ends ±b·hy, zero on the baseline's middle, the slope joins the two tips
     const K = L / Math.abs(k.b * sec.hy);
     const tip = k.b * sec.hy * K;
@@ -1155,41 +1150,31 @@ describe("the diagrams of the normal stresses σ(N), σ(Mx), σ(My) (PERFIL and 
     expect(pMy.texts.map((t) => t[2])).toEqual(["S(MY)", expect.closeTo(-k.a * sec.hx, 6), expect.closeTo(k.a * sec.hx, 6)]);
   });
 
-  test("a diagram of an effect that is zero is not drawn (only the section and its label)", () => {
+  test("a diagram of an effect that is zero is not drawn (only the section and its label); σ(N) never has a screen", () => {
     const noMx = perfil(-600, 0, 900).gfx.pages;
-    expect(noMx[3].segments).toHaveLength(12); // Mx = 0
-    expect(noMx[4].segments.length).toBeGreaterThan(12);
+    expect(noMx).toHaveLength(4);
+    expect(noMx[2].segments).toHaveLength(12); // Mx = 0
+    expect(noMx[3].segments.length).toBeGreaterThan(12);
     const noMy = perfil(-600, -300, 0).gfx.pages;
-    expect(noMy[4].segments).toHaveLength(12); // My = 0
-    const onlyM = perfil(0, -300, 900).gfx.pages;
-    expect(onlyM[2].segments).toHaveLength(12); // N = 0
-    expect(onlyM[2].texts.map((t) => t[2])).toEqual(["S(N)", 0]);
+    expect(noMy[3].segments).toHaveLength(12); // My = 0
+    const onlyN = perfil(-600, 0, 0).gfx.pages;
+    expect(onlyN[2].segments).toHaveLength(12);
+    expect(onlyN[3].segments).toHaveLength(12);
   });
 
-  test("tension on the other side: with N > 0 the rectangle goes to the right and has no hatch", () => {
-    const { gfx, sec } = perfil(2000, -300, 900);
-    const L = 0.9 * sec.hy;
-    const X = 1.1 * sec.hx + L;
-    const pN = gfx.pages[2];
-    expect(pN.segments[13]).toEqual([X, sec.hy, X + L, sec.hy]); // the top goes to the right of the baseline
-    expect(pN.segments).toHaveLength(12 + 4); // tension is only outlined
-  });
-
-  test("EXCENTR: the same diagrams from the eccentric load (σ(N) = P/A, σ(Mx) at the top, σ(My) at the right)", () => {
+  test("EXCENTR: the same diagrams from the eccentric load (σ(Mx) at the top, σ(My) at the right)", () => {
     const prof = SEARCH_TABLE.find((p) => p.series === "IPN" && p.h === 300)!;
     const r = eccentricLoad({ profile: prof, rotated: false, P: 76, ex: 10, ey: 20, sigmaAdm: 14 });
     const gfx = newGfx();
     runBasic(EXCENTR_LINES, [1, 31, 1, 1, 76, 10, 20, 0, 0], gfx);
-    expect(gfx.pages).toHaveLength(5);
-    const [, , pN, pMx, pMy] = gfx.pages;
-    [pN, pMx, pMy].forEach((pg) => inside(pg));
+    expect(gfx.pages).toHaveLength(4);
+    const [, , pMx, pMy] = gfx.pages;
+    [pMx, pMy].forEach((pg) => inside(pg));
     const top = r.corners[0]; // (+x, +y)
-    expect(pN.texts[1][2] as number).toBeCloseTo(top.sN, 9);
     expect(pMx.texts.map((t) => t[2])).toEqual(["S(MX)", expect.closeTo(top.sMx, 9), expect.closeTo(-top.sMx, 9)]);
     expect(pMy.texts.map((t) => t[2])).toEqual(["S(MY)", expect.closeTo(-top.sMy, 9), expect.closeTo(top.sMy, 9)]);
-    // tension everywhere on N and on the +y side of Mx: the hatch is on the other side
-    expect(top.sN).toBeGreaterThan(0);
-    expect(pN.segments).toHaveLength(12 + 4);
+    // Mx = P·ey > 0 tensions the +y side: the compression (hatched) is below, where σ(Mx) < 0
+    expect(pMx.segments.slice(16).every(([, y1]) => y1 < 0)).toBe(true);
   });
 
   test("only REACC uses the lists above 10 (it keeps its loads in 11-21): no other program touches them", () => {
