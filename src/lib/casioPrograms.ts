@@ -400,11 +400,13 @@ const OUTLINE_LINES = [
   "If F=2:Then F-Line List 9[N],List 8[N],List 9[Z],List 8[Z]:IfEnd",
   "Next",
 ];
-export const SIGMA_DIAGRAMS = [
+const SIGMA_LOAD = [
   "List 10[1]→A:List 10[2]→B:List 10[3]→C:List 10[4]→D:List 10[5]→E",
   "List 10[6]→F:List 10[7]→R:List 10[8]→V:List 10[9]→O:List 10[10]→G",
   "{–R,R,R,G,G,R,R,–R,–R,–G,–G,–R}→List 8",
   "{–V,–V,O–V,O–V,V–O,V–O,V,V,V–O,V–O,O–V,O–V}→List 9",
+];
+const SIGMA_MX = [
   // Mx: the section on the left, the diagram on the right (compression to the left of its baseline, tension to the right)
   "0.9×E→L",
   "1.1×D+L→X",
@@ -429,6 +431,8 @@ export const SIGMA_DIAGRAMS = [
   "Text 1,70,B×E",
   "Text 57,70,–B×E",
   ...SCREEN_PAUSE,
+];
+const SIGMA_MY = [
   // σ(My): σ = a·x, the diagram below the section (compression above its baseline, tension below)
   "Cls",
   "0.6×E→L",
@@ -456,6 +460,53 @@ export const SIGMA_DIAGRAMS = [
   "Text 57,70,C×D",
   ...SCREEN_PAUSE,
 ];
+export const SIGMA_DIAGRAMS = [...SIGMA_LOAD, ...SIGMA_MX, ...SIGMA_MY];
+// each diagram on its own (SECCION's menu shows them one at a time, any number of times): the data come from List 10 again
+const SIGMA_MX_VIEW = [...SIGMA_LOAD, ...SIGMA_MX];
+const SIGMA_MY_VIEW = [...SIGMA_LOAD, ...SIGMA_MY];
+// The face drawn in XY from List 10: outline, axes, neutral axis, a dot and a square on the critical corner and σ at the four
+// corners, written at the corners of the screen (top-left is −x +y). σ = c + b·y + a·x with A = c, B = b, C = a, D = hx, E = hy.
+const FACE_VIEW = [
+  ...SIGMA_LOAD,
+  "D→Z:If E÷2>Z:Then E÷2→Z:IfEnd",
+  "1.25×Z→V:2×V→W",
+  "Cls",
+  "ViewWindow –W,W,1,–V,V,1",
+  ...OUTLINE_LINES,
+  "Horizontal 0:Vertical 0",
+  "If Abs (B)>0:Then F-Line –W,–(A–C×W)÷B,W,–(A+C×W)÷B:IfEnd",
+  "If B=0:Then",
+  "If Abs (C)>0:Then Vertical –A÷C:IfEnd",
+  "IfEnd",
+  "1→K:If C<0:Then –1→K:IfEnd",
+  "1→L:If B<0:Then –1→L:IfEnd",
+  "Abs (B×E)+Abs (C×D)→M",
+  "1→J:If Abs (A–M)>Abs (A+M):Then –1→J:IfEnd",
+  "J×K×D→X:J×L×E→Y:V÷10→R",
+  "PlotOn X,Y",
+  "F-Line X–R,Y–R,X+R,Y–R:F-Line X+R,Y–R,X+R,Y+R:F-Line X+R,Y+R,X–R,Y+R:F-Line X–R,Y+R,X–R,Y–R",
+  "Text 1,1,A–C×D+B×E",
+  "Text 1,70,A+C×D+B×E",
+  "Text 57,1,A–C×D–B×E",
+  "Text 57,70,A+C×D–B×E",
+  ...SCREEN_PAUSE,
+];
+// What was found, as numbers: the profile, σ max against σ adm, the face and the "roots" of the neutral axis (where it crosses the
+// axes). List 10[11] is the profile's place in the table, [12] σ max and [13] σ adm.
+const DATA_VIEW = [
+  "List 10[1]→A:List 10[2]→B:List 10[3]→C:List 10[6]→F:List 10[11]→K:List 10[12]→U:List 10[13]→S",
+  "ClrText",
+  'Locate 1,1,"IPB":Locate 5,1,List 1[K]:Locate 11,1,"CARA":Locate 16,1,F',
+  'Locate 1,2,"SIGMAₘₐₓ":Locate 10,2,U',
+  'Locate 1,3,"ADM":Locate 5,3,S:Locate 10,3,"RAZON":Locate 16,3,U÷S',
+  'Locate 1,4,"RAICES DEL E.N. (CM)"',
+  'If Abs (C)>0:Then Locate 1,5,"X (Y=0)":Locate 9,5,–A÷C:IfEnd',
+  'If C=0:Then Locate 1,5,"NO CORTA EL EJE X":IfEnd',
+  'If Abs (B)>0:Then Locate 1,6,"Y (X=0)":Locate 9,6,–A÷B:IfEnd',
+  'If B=0:Then Locate 1,6,"NO CORTA EL EJE Y":IfEnd',
+  ...SCREEN_PAUSE,
+];
+
 
 // ---- Program SECCION: which IPB a section needs for a given N, Mx, My (the forces of a cut) --------------------------------------------
 // The IPB 100…600 of the course's table are stored in the program itself (lists 1-5), so nothing has to be typed
@@ -513,6 +564,8 @@ export const SECCION_LINES = [
   list(5, (p) => p.Iy),
   list(6, (p) => p.tf),
   list(7, (p) => p.tw),
+  // one pass per section; the results stay in List 10 (the drawings clobber every letter) and a menu shows them again
+  "While 1=1",
   '"N KG (TRAC POS)"?→N',
   '"MX (KG M)"?→P',
   '"MY (KG M)"?→Q',
@@ -520,7 +573,9 @@ export const SECCION_LINES = [
   "If S=0:Then 1400→S:IfEnd",
   "1→T",
   "If Abs (Q)>Abs (P):Then 2→T:IfEnd",
+  "0→K",
   `For 1→I To ${SECCION_TABLE.length}`,
+  "If K=0:Then",
   "List 1[I]÷20→D:List 2[I]÷20→E",
   "List 4[I]→X:List 5[I]→Y",
   "If T=2:Then X→Z:Y→X:Z→Y:D→Z:E→D:Z→E:IfEnd",
@@ -528,67 +583,67 @@ export const SECCION_LINES = [
   "Abs (P×100÷X)×D+Abs (Q×100÷Y)×E→W",
   "Abs (M+W)→U:Abs (M–W)→V",
   "If V>U:Then V→U:IfEnd",
-  "If U≤S:Then",
-  '"USAR IPB"',
-  "List 1[I]◢",
-  '"SIGMAₘₐₓ ="',
-  "U◢",
-  '"CARA ="',
-  "T◢",
-  "If Abs (Q)>0:Then",
-  '"X (Y=0) ="',
-  "–M÷(Q×100÷Y)◢",
+  "If U≤S:Then I→K:IfEnd",
   "IfEnd",
-  "If Q=0:Then",
-  '"E.N. NO CORTA X"',
-  "IfEnd",
-  "If Abs (P)>0:Then",
-  '"Y (X=0) ="',
-  "–M÷(P×100÷X)◢",
-  "IfEnd",
-  "If P=0:Then",
-  '"E.N. NO CORTA Y"',
-  "IfEnd",
-  // the face drawn in XY: outline of the section (12 edges), the axes, the neutral axis and the critical corner
-  "List 2[I]÷20→A:List 1[I]÷20→C",
-  "List 6[I]÷10→F:List 7[I]÷20→H",
-  "{–A,A,A,H,H,A,A,–A,–A,–H,–H,–A}→List 8",
-  "{–C,–C,F–C,F–C,C–F,C–F,C,C,C–F,C–F,F–C,F–C}→List 9",
-  "D→Z:If E÷2>Z:Then E÷2→Z:IfEnd",
-  "1.25×Z→V:2×V→O",
-  "Cls",
-  "ViewWindow –O,O,1,–V,V,1",
-  "For 1→J To 12",
-  "J+1→K:If K=13:Then 1→K:IfEnd",
-  "If T=1:Then F-Line List 8[J],List 9[J],List 8[K],List 9[K]:IfEnd",
-  "If T=2:Then F-Line List 9[J],List 8[J],List 9[K],List 8[K]:IfEnd",
   "Next",
-  "Horizontal 0:Vertical 0",
+  "If K=0:Then",
+  "ClrText",
+  'Locate 1,1,"NINGUN IPB HASTA 600"',
+  ...SCREEN_PAUSE,
+  ...menuLines({
+    count: 2,
+    exit: "item",
+    choice: "Z",
+    flag: "Y",
+    sel: "R",
+    draw: ['Locate 1,1,"OTRA SECCION?"', 'Locate 3,2,"OTRA SECCION"', 'Locate 3,3,"SALIR"'],
+  }),
+  "If Z=0:Then Stop:IfEnd",
+  "IfEnd",
+  "If K>0:Then",
+  // the data the views need: σ = c + b·y + a·x with the half sides of the face (D = hy, E = hx here) and the outline
   "Q×100÷Y→B:P×100÷X→G",
-  "If Abs (G)>0:Then F-Line –O,–(M–B×O)÷G,O,–(M+B×O)÷G:IfEnd",
-  "If G=0:Then",
-  "If Abs (B)>0:Then Vertical –M÷B:IfEnd",
+  "List 2[K]÷20→A:List 1[K]÷20→C",
+  "List 6[K]÷10→F:List 7[K]÷20→H",
+  "{M,G,B,E,D,T,A,C,F,H,K,U,S,0,0,0,0,0,0,0}→List 10",
+  "While List 10[20]=0",
+  "List 10[11]→K",
+  ...menuLines({
+    count: 6,
+    exit: "item",
+    choice: "C",
+    flag: "Y",
+    sel: "R",
+    draw: [
+      'Locate 1,1,"SECCION IPB":Locate 13,1,List 1[K]',
+      'Locate 3,2,"DATOS"',
+      'Locate 3,3,"CARA Y EJE NEUTRO"',
+      'Locate 3,4,"SIGMA DE MX"',
+      'Locate 3,5,"SIGMA DE MY"',
+      'Locate 3,6,"OTRA SECCION"',
+      'Locate 3,7,"SALIR"',
+    ],
+  }),
+  "C→List 10[19]",
+  "If List 10[19]=0:Then Stop:IfEnd",
+  "If List 10[19]=5:Then 1→List 10[20]:IfEnd",
+  "If List 10[19]=1:Then",
+  ...DATA_VIEW,
   "IfEnd",
-  "1→K:If B<0:Then –1→K:IfEnd",
-  "1→L:If G<0:Then –1→L:IfEnd",
-  "1→J:If Abs (M–W)>Abs (M+W):Then –1→J:IfEnd",
-  "J×K×E→X:J×L×D→Y:V÷10→R",
-  "PlotOn X,Y",
-  "F-Line X–R,Y–R,X+R,Y–R:F-Line X+R,Y–R,X+R,Y+R:F-Line X+R,Y+R,X–R,Y+R:F-Line X–R,Y+R,X–R,Y–R",
-  // σ at the four corners of the face, written at the corners of the screen as in the app's figure
-  "Text 1,1,M–B×E+G×D",
-  "Text 1,70,M+B×E+G×D",
-  "Text 57,1,M–B×E–G×D",
-  "Text 57,70,M+B×E–G×D",
-  "{M,G,B,E,D,T,A,C,F,H}→List 10",
-  "While Getkey>0:WhileEnd",
-  "While Getkey=0:WhileEnd",
-  ...SIGMA_DIAGRAMS,
-  "Stop",
+  "If List 10[19]=2:Then",
+  ...FACE_VIEW,
   "IfEnd",
-  "Next",
-  '"NINGUN IPB HASTA 600"',
+  "If List 10[19]=3:Then",
+  ...SIGMA_MX_VIEW,
+  "IfEnd",
+  "If List 10[19]=4:Then",
+  ...SIGMA_MY_VIEW,
+  "IfEnd",
+  "WhileEnd",
+  "IfEnd",
+  "WhileEnd",
 ];
+
 
 // ---- Program VIGACAB: the beam and the cable of truss-cable-beam(-ipb260)-kg.svg ----------------------------------
 // A horizontal beam held at one end by a vertical cable and pinned at the other (so the beam has no axial force and

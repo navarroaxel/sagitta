@@ -32,6 +32,28 @@ import {
   type ProgramLoad,
 } from "../casioPrograms";
 
+// SECCION: a pass is the four numbers (N, Mx, My, σ adm) and then a menu of views: 1 DATOS, 2 CARA Y EJE NEUTRO, 3 SIGMA DE MX,
+// 4 SIGMA DE MY, 5 OTRA SECCION, 0 SALIR. `views` are the choices before leaving. Returns the screens and what DATOS shows.
+type Loc = [number, number, number | string][];
+const locAt = (sc: Loc | undefined, col: number, row: number) => sc?.find((l) => l[0] === col && l[1] === row)?.[2];
+function seccionRun(N: number, Mx: number, My: number, S: number, views: number[] = [1]) {
+  const gfx = newGfx();
+  runBasic(SECCION_LINES, [N, Mx, My, S, ...views, 0], gfx);
+  const sc = gfx.screens.find((x) => x[0]?.[2] === "IPB" && x[0]?.[0] === 1 && locAt(x, 11, 1) === "CARA");
+  const data = sc && {
+    h: locAt(sc, 5, 1) as number,
+    face: locAt(sc, 16, 1) as 1 | 2,
+    sigmaMax: locAt(sc, 10, 2) as number,
+    adm: locAt(sc, 5, 3) as number,
+    ratio: locAt(sc, 16, 3) as number,
+    x0: typeof locAt(sc, 9, 5) === "number" ? (locAt(sc, 9, 5) as number) : null,
+    y0: typeof locAt(sc, 9, 6) === "number" ? (locAt(sc, 9, 6) as number) : null,
+    noX: locAt(sc, 1, 5) === "NO CORTA EL EJE X",
+    noY: locAt(sc, 1, 6) === "NO CORTA EL EJE Y",
+  };
+  return { gfx, sc, data };
+}
+
 const near = (a: number, b: number) => expect(Math.abs(a - b)).toBeLessThan(1e-6 * Math.max(1, Math.abs(b)));
 
 // The loads of a preset typed as the program asks for them (nodal: at its node; distributed: resultant at the span's centre).
@@ -229,7 +251,7 @@ describe("Casio program REACC", () => {
     const first = reacc([1, 2, ...pointLoad(0, 0, 3, 0, 300, 0), 2, -1, 2, 0, 0, 3, 3, 0, 0, -200, 1, 3, 4, 0], 0, mem);
     expect(first.rea).toEqual([0, -300, 600, 900, -300, 0]);
     // other programs use the letters and the lists 1-9: SECCION and TRACCION run in between
-    runBasic(SECCION_LINES, [-600, -300, 900, 0], newGfx(), mem);
+    runBasic(SECCION_LINES, [-600, -300, 900, 0, 0], newGfx(), mem); // numbers, then SALIR
     runBasic(TRACCION_LINES, [18229, 0], newGfx(), mem);
     // back in REACC: SEGUIR keeps the two loads, the count in the title and the sums
     const again = reacc([3, 4, 0], 1, mem);
@@ -268,32 +290,40 @@ describe("Casio program REACC", () => {
       [-3000, 500, 500, 1400, 1], // equal moments: face 1
       [-1e7, 0, 0, 1400, 1],
     ] as const) {
-      const out = runBasic(SECCION_LINES, [N, Mx, My, adm]);
-      expect(faceFor(Mx, My)).toBe(face);
       const c = chooseIPB(N, Mx, My, adm, face);
+      const { gfx, data } = seccionRun(N, Mx, My, adm, c ? [1] : []); // with no IPB the menu is OTRA SECCION / SALIR: just leave
+      expect(faceFor(Mx, My)).toBe(face);
       if (c) {
-        expect(out.slice(0, 6)).toEqual(["USAR IPB", +c.name.replace("IPB ", ""), "SIGMAₘₐₓ =", expect.closeTo(c.sigmaMax, 6), "CARA =", face]);
-        // the neutral axis: where it crosses X (Y = 0) and Y (X = 0), cm; "NO CORTA" when that moment is 0
+        expect(data!.h).toBe(+c.name.replace("IPB ", ""));
+        expect(data!.sigmaMax).toBeCloseTo(c.sigmaMax, 6);
+        expect(data!.face).toBe(face);
+        expect(data!.adm).toBe(adm);
+        expect(data!.ratio).toBeCloseTo(c.sigmaMax / adm, 6);
+        // the neutral axis: the roots, where it crosses X (Y = 0) and Y (X = 0), cm; "NO CORTA" when that moment is 0
         const en = neutralAxisOf(c.name, face, N, Mx, My);
-        const fix = (n: number | null, label: string, none: string) => (n === null ? [none] : [label, expect.closeTo(n === 0 ? 0 : n, 6)]);
-        expect(out.slice(6)).toEqual([...fix(en.x0, "X (Y=0) =", "E.N. NO CORTA X"), ...fix(en.y0, "Y (X=0) =", "E.N. NO CORTA Y")]);
-      } else expect(out).toEqual(["NINGUN IPB HASTA 600"]);
+        if (en.x0 === null) expect(data!.noX).toBe(true);
+        else expect(data!.x0).toBeCloseTo(en.x0, 6);
+        if (en.y0 === null) expect(data!.noY).toBe(true);
+        else expect(data!.y0).toBeCloseTo(en.y0, 6);
+      } else {
+        expect(data).toBeUndefined();
+        expect(gfx.screens.some((sc) => sc[0]?.[2] === "NINGUN IPB HASTA 600")).toBe(true);
+      }
     }
   });
 
-  test("running SECCION: neutral axis intercepts of the base of preset #2, and when a moment is 0", () => {
-    const out = runBasic(SECCION_LINES, [-600, -300, 900, 0]);
-    expect(out.slice(6, 8)).toEqual(["X (Y=0) =", expect.closeTo(0.16941, 4)]);
-    expect(out.slice(8)).toEqual(["Y (X=0) =", expect.closeTo(-0.18707, 4)]);
-    expect(runBasic(SECCION_LINES, [-600, 0, 900, 1400]).slice(8)).toEqual(["E.N. NO CORTA Y"]); // Mx = 0: parallel to the x axis
-    expect(runBasic(SECCION_LINES, [-600, 900, 0, 1400]).slice(6, 7)).toEqual(["E.N. NO CORTA X"]);
+  test("running SECCION: the roots of the neutral axis for the base of preset #2, and when a moment is 0", () => {
+    const { data } = seccionRun(-600, -300, 900, 0);
+    expect(data!.x0).toBeCloseTo(0.16941, 4);
+    expect(data!.y0).toBeCloseTo(-0.18707, 4);
+    expect(seccionRun(-600, 0, 900, 1400).data!.noY).toBe(true); // Mx = 0: parallel to the x axis
+    expect(seccionRun(-600, 900, 0, 1400).data!.noX).toBe(true);
   });
 
   test("running SECCION draws the face in XY: outline, axes, neutral axis and critical corner", () => {
     const run = (N: number, Mx: number, My: number) => {
-      const gfx = newGfx();
-      const out = runBasic(SECCION_LINES, [N, Mx, My, 0], gfx);
-      return { gfx, pg: gfx.pages[1], name: `IPB ${out[1]}`, face: out[5] as 1 | 2 };
+      const { gfx, data } = seccionRun(N, Mx, My, 0, [1, 2]); // DATOS and then CARA Y EJE NEUTRO
+      return { gfx, pg: gfx.pages[1], name: `IPB ${data!.h}`, face: data!.face };
     };
     // base of preset #2: face 2, IPB 120. The 12 edges are the closed outline of guideOutline (the guide's figure)
     const { pg, name, face } = run(-600, -300, 900);
@@ -356,10 +386,39 @@ describe("Casio program REACC", () => {
   });
 
   test("running SECCION: σ_adm typed as 0 means the default, 1400", () => {
-    const withDefault = runBasic(SECCION_LINES, [-600, -300, 900, 0]);
-    expect(withDefault).toEqual(runBasic(SECCION_LINES, [-600, -300, 900, 1400]));
-    expect(withDefault[1]).toBe(120); // preset #2's base: the larger moment is My, so face 2: IPB 120 passes at 1400 (1208.7)
-    expect(runBasic(SECCION_LINES, [-600, -300, 900, 1000])).not.toEqual(withDefault); // another σ_adm is respected
+    const withDefault = seccionRun(-600, -300, 900, 0).data!;
+    expect(withDefault).toEqual(seccionRun(-600, -300, 900, 1400).data);
+    expect(withDefault.h).toBe(120); // preset #2's base: the larger moment is My, so face 2: IPB 120 passes at 1400 (1208.7)
+    expect(withDefault.adm).toBe(1400);
+    expect(seccionRun(-600, -300, 900, 1000).data).not.toEqual(withDefault); // another σ_adm is respected
+  });
+
+  test("the SECCION menu shows each view as many times as asked: DATOS, the face, σ(Mx), σ(My), again and again", () => {
+    const { gfx } = seccionRun(-600, -300, 900, 0, [2, 3, 4, 2, 3, 4, 1, 1]);
+    expect(gfx.pages).toHaveLength(1 + 6); // the face, σ(Mx) and σ(My) twice each (a page per drawing)
+    expect(gfx.screens.filter((sc) => locAt(sc, 11, 1) === "CARA")).toHaveLength(2); // DATOS twice
+    // the menu comes back after every view, with the IPB in its title
+    const menus = gfx.screens.filter((sc) => sc[0]?.[2] === "SECCION IPB");
+    expect(menus).toHaveLength(9); // 8 views and the one where SALIR is chosen
+    menus.forEach((m) => expect(locAt(m, 13, 1)).toBe(120));
+    // every drawing is the same as the first of its kind (the data are read again from the list)
+    const [f1, mx1, my1, f2, mx2, my2] = gfx.pages.slice(1);
+    expect(f2.segments).toEqual(f1.segments);
+    expect(mx2.segments).toEqual(mx1.segments);
+    expect(my2.segments).toEqual(my1.segments);
+  });
+
+  test("the SECCION menu: OTRA SECCION asks the four numbers again; with no IPB it offers OTRA SECCION or SALIR", () => {
+    const gfx = newGfx();
+    runBasic(SECCION_LINES, [-600, -300, 900, 0, 1, 5, 2000, 100, 100, 0, 1, 0], gfx); // DATOS, OTRA SECCION, new numbers, DATOS, SALIR
+    const datos = gfx.screens.filter((sc) => locAt(sc, 11, 1) === "CARA");
+    expect(datos.map((sc) => locAt(sc, 5, 1))).toEqual([120, seccionRun(2000, 100, 100, 0).data!.h]);
+    // no IPB passes: the message and a menu (1 = OTRA SECCION), then a normal pass
+    const g2 = newGfx();
+    runBasic(SECCION_LINES, [-1e7, 0, 0, 0, 1, -600, -300, 900, 0, 1, 0], g2);
+    expect(g2.screens.some((sc) => sc[0]?.[2] === "NINGUN IPB HASTA 600")).toBe(true);
+    expect(g2.screens.some((sc) => sc[0]?.[2] === "OTRA SECCION?")).toBe(true);
+    expect(g2.screens.filter((sc) => locAt(sc, 11, 1) === "CARA")).toHaveLength(1);
   });
 
   test("the program text asks for what the TypeScript uses and prints every result", () => {
@@ -404,7 +463,9 @@ describe("Casio program SECCION", () => {
 
   test("the program text matches: every variable it reads is assigned first", () => {
     expect(SECCION_LINES.join("\n")).toContain("If T=2:Then X→Z:Y→X:Z→Y:D→Z:E→D:Z→E:IfEnd");
-    expect(SECCION_LINES.filter((l) => l.includes("→List")).length).toBe(12); // 7 table lists, the vertices of the outline (its own drawing and the diagrams) and the data of the diagrams
+    const lists = SECCION_LINES.filter((l) => l.includes("→List"));
+    expect(lists.slice(0, 7).map((l) => l.replace(/^\{.*\}/, ""))).toEqual([1, 2, 3, 4, 5, 6, 7].map((n) => `→List ${n}`)); // the 7 table lists
+    expect(lists.some((l) => l.endsWith("}→List 10") && l.includes("K,U,S"))).toBe(true); // the data every view reads again
   });
 });
 
@@ -1115,11 +1176,9 @@ describe("the diagrams of the normal stresses σ(Mx) and σ(My) (SECCION and EXC
   };
   // pages: 0 before any Cls, 1 the face drawing, 2 σ(Mx), 3 σ(My)
   const perfil = (N: number, Mx: number, My: number) => {
-    const gfx = newGfx();
-    const out = runBasic(SECCION_LINES, [N, Mx, My, 0], gfx);
-    const name = `IPB ${out[1]}`;
-    const face = out[5] as 1 | 2;
-    const sec = guideSection(name, face === 2);
+    const { gfx, data } = seccionRun(N, Mx, My, 0, [1, 2, 3, 4]); // DATOS (for the profile), the face, σ(Mx) and σ(My)
+    const name = `IPB ${data!.h}`;
+    const sec = guideSection(name, data!.face === 2);
     return { gfx, sec, k: plane(N, Mx, My, sec) };
   };
 
