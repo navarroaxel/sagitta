@@ -134,7 +134,7 @@ export const PERFIL_LINES = [
   list(3, (p) => p.A),
   list(4, (p) => p.Ix),
   list(5, (p) => p.Iy),
-  '"N (KG, TRACC +)"?→N',
+  '"N KG (TRAC POS)"?→N',
   '"MX (KG M)"?→P',
   '"MY (KG M)"?→Q',
   '"SIGMA ADM"?→S',

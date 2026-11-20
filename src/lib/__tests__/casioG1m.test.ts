@@ -1,0 +1,110 @@
+import { buildG1m, buildG1mFromBytes, programBytes, tokenizeLine } from "../casioG1m";
+import { PERFIL_LINES, REACC_LINES } from "../casioPrograms";
+
+// Independent reader, written like Cahute's: inverts the header, walks group → file headers.
+function read(file: Uint8Array) {
+  const h = Array.from(file.slice(0, 32)).map((b) => ~b & 255);
+  const u32 = (a: number[] | Uint8Array, o: number) => ((a[o] << 24) | (a[o + 1] << 16) | (a[o + 2] << 8) | a[o + 3]) >>> 0;
+  const str = (a: Uint8Array, o: number, n: number) => String.fromCharCode(...Array.from(a.slice(o, o + n)).filter((c) => c));
+  return {
+    id: String.fromCharCode(...h.slice(0, 8)),
+    type: h[8],
+    c1: h[14],
+    size: u32(h, 16),
+    c2: h[20],
+    objects: (h[30] << 8) | h[31],
+    group: str(file, 32, 16),
+    groupCount: u32(file, 48),
+    dir: str(file, 52, 8),
+    name: str(file, 60, 8),
+    ft: file[68],
+    length: u32(file, 69),
+    content: file.slice(76, 76 + u32(file, 69)),
+  };
+}
+
+// The same table the other way round, for the few tokens the programs use (display text of each code).
+const TWO = new Map([["f700", "If "], ["f701", "Then "], ["f702", "Else "], ["f703", "IfEnd"], ["f704", "For "], ["f705", " To "], ["f707", "Next"], ["f70e", "Stop"], ["7f51", "List "]]);
+const ONE = new Map([[0x0e, "→"], [0x0c, "◢"], [0x10, "≤"], [0x87, "–"], [0x89, "+"], [0x99, "–"], [0xa9, "×"], [0xb9, "÷"], [0x97, "Abs "]]);
+function decode(bytes: number[]): string {
+  let out = "";
+  for (let i = 0; i < bytes.length; i++) {
+    const two = bytes.length > i + 1 ? TWO.get(((bytes[i] << 8) | bytes[i + 1]).toString(16).padStart(4, "0")) : undefined;
+    if (two !== undefined) {
+      out += two;
+      i++;
+    } else out += ONE.get(bytes[i]) ?? String.fromCharCode(bytes[i]);
+  }
+  return out;
+}
+
+describe("Casio .g1m builder", () => {
+  test("container: inverted standard header, group and file headers, checksums, padding", () => {
+    const f = buildG1m("REACC", ["1→A"]);
+    const r = read(f);
+    expect(r.id).toBe("USBPower");
+    expect(r.type).toBe(0x31);
+    expect(r.size).toBe(f.length);
+    expect(r.c1).toBe((f.length + 0x41) & 255);
+    expect(r.c2).toBe((f.length + 0xb8) & 255);
+    expect(r.objects).toBe(1);
+    expect([r.group, r.groupCount, r.dir, r.name, r.ft]).toEqual(["PROGRAM", 1, "system", "REACC", 1]);
+    expect(r.length % 4).toBe(0);
+    expect(f.length).toBe(32 + 20 + 24 + r.length);
+    expect(Array.from(r.content.slice(0, 10))).toEqual(new Array(10).fill(0)); // no password
+    expect(decode(Array.from(r.content.slice(10))).replace(/\0+$/, "")).toBe("1→A\r");
+  });
+
+  test("padding: 1 to 4 zeros, so the content is a multiple of 4 (4 when it already is)", () => {
+    for (let n = 0; n < 8; n++) {
+      const code = new Array(n).fill(0x41); // n program bytes
+      const r = read(buildG1mFromBytes("T", code));
+      const zeros = r.length - 10 - n;
+      expect(zeros).toBeGreaterThanOrEqual(1);
+      expect(zeros).toBeLessThanOrEqual(4);
+      expect(r.length % 4).toBe(0);
+    }
+  });
+
+  test("tokens: two-byte commands, one-byte symbols, unary versus binary minus", () => {
+    const hex = (l: string) => tokenizeLine(l).map((b) => b.toString(16).padStart(2, "0")).join(" ");
+    expect(hex("If T=2:Then X→Z:IfEnd")).toBe("f7 00 54 3d 32 3a f7 01 58 0e 5a 3a f7 03");
+    expect(hex("For 1→C To N")).toBe("f7 04 31 0e 43 f7 05 4e");
+    expect(hex("Next")).toBe("f7 07");
+    expect(hex("Stop")).toBe("f7 0e");
+    expect(hex("List 1[I]÷20→D")).toBe("7f 51 31 5b 49 5d b9 32 30 0e 44");
+    expect(hex("Abs (M–W)")).toBe("97 28 4d 99 57 29");
+    expect(hex("–F◢")).toBe("87 46 0c"); // (–) at the start of a line
+    expect(hex("U×L→U")).toBe("55 a9 4c 0e 55");
+    expect(hex("If U≤S:Then")).toBe("f7 00 55 10 53 3a f7 01");
+    expect(hex('"N KG (TRAC POS)"?→N')).toBe(Array.from('"N KG (TRAC POS)"').map((c) => c.charCodeAt(0).toString(16)).join(" ") + " 3f 0e 4e");
+  });
+
+  test("a string keeps its text as ASCII, even if it contains command words; + and – are refused inside it", () => {
+    expect(tokenizeLine('"IfEnd Next"').every((b) => b < 0x80)).toBe(true);
+    expect(() => tokenizeLine('"A+B"')).toThrow();
+    expect(() => tokenizeLine('"A–B"')).toThrow();
+    expect(() => tokenizeLine("ñ")).toThrow();
+  });
+
+  test("REACC and PERFIL: every line decodes back to the line typed, and the files are well formed", () => {
+    for (const [name, lines] of [["REACC", REACC_LINES], ["PERFIL", PERFIL_LINES]] as const) {
+      const f = buildG1m(name, lines);
+      const r = read(f);
+      expect(r.name).toBe(name);
+      const code = Array.from(r.content.slice(10));
+      while (code[code.length - 1] === 0) code.pop();
+      expect(code).toEqual(programBytes(lines));
+      // the Then token is displayed with a trailing space
+      expect(decode(code).split("\r").slice(0, -1).map((l) => l.trimEnd())).toEqual(lines);
+      expect(f.length).toBeLessThan(2000); // fits the calculator's memory with room to spare
+    }
+  });
+
+  test("program name: 1 to 8 letters, digits or spaces", () => {
+    expect(() => buildG1m("", ["A"])).toThrow();
+    expect(() => buildG1m("TOOLONGNAME", ["A"])).toThrow();
+    expect(() => buildG1m("A-B", ["A"])).toThrow();
+    expect(() => buildG1m("PERFIL", ["A"])).not.toThrow();
+  });
+});

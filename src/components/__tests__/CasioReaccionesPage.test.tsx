@@ -32,4 +32,28 @@ describe("/casio-reacciones", () => {
     await waitFor(() => expect(writeText).toHaveBeenLastCalledWith(REACC_LINES.join("\n")));
     await waitFor(() => expect(screen.getAllByRole("status").some((e) => /Copied|Copiado/.test(e.textContent!))).toBe(true));
   });
+
+  test("the download button hands over a .g1m with the program's name", async () => {
+    const created: Blob[] = [];
+    URL.createObjectURL = vi.fn((b: Blob) => (created.push(b), "blob:test"));
+    URL.revokeObjectURL = vi.fn();
+    const clicks: string[] = [];
+    const click = HTMLAnchorElement.prototype.click;
+    HTMLAnchorElement.prototype.click = function (this: HTMLAnchorElement) {
+      clicks.push(this.download);
+    };
+    render(
+      <LanguageProvider>
+        <CasioReaccionesPage />
+      </LanguageProvider>,
+    );
+    fireEvent.click(screen.getByTestId("casio-perfil-download"));
+    fireEvent.click(screen.getByTestId("casio-reacc-download"));
+    HTMLAnchorElement.prototype.click = click;
+    expect(clicks).toEqual(["PERFIL.g1m", "REACC.g1m"]);
+    expect(created).toHaveLength(2);
+    const head = new Uint8Array(await created[1].arrayBuffer()).slice(0, 8);
+    expect(String.fromCharCode(...Array.from(head).map((b) => ~b & 255))).toBe("USBPower");
+    expect(document.body.textContent).toMatch(/@MainMem/);
+  });
 });

@@ -7,6 +7,7 @@ import NavMenu from "@/components/NavMenu";
 import { Footer } from "@/components/Footer";
 import { Sub } from "@/components/Sub";
 import { PERFIL_LINES, PERFIL_NAME, REACC_LINES, REACC_NAME } from "@/lib/casioPrograms";
+import { buildG1m } from "@/lib/casioG1m";
 
 const P = "max-w-[66ch] leading-relaxed text-stone-700 dark:text-stone-300";
 const SECTION = "mt-12 border-t border-stone-200 pt-8 dark:border-stone-800";
@@ -33,12 +34,37 @@ function Program({ name, lines, id }: { name: string; lines: string[]; id: strin
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
+  // the program as a main-memory file the calculator can load (built in the browser, always in sync with the listing)
+  const download = () => {
+    const url = URL.createObjectURL(new Blob([buildG1m(name, lines).slice().buffer], { type: "application/octet-stream" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${name}.g1m`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
   return (
     <figure className="my-4 max-w-3xl overflow-hidden rounded-lg border border-stone-200 bg-white shadow-sm dark:border-stone-700 dark:bg-stone-900">
       <figcaption className="flex items-center justify-between border-b border-stone-200 px-3 py-1.5 font-mono text-xs uppercase tracking-wider text-teal-700 dark:border-stone-700 dark:text-teal-400">
         <span>
           PRGM › {name} · {lines.length}
         </span>
+        <span className="flex items-center gap-1">
+        <button
+          type="button"
+          onClick={download}
+          data-testid={`${id}-download`}
+          aria-label={t("casio.download")}
+          title={t("casio.download")}
+          className="flex items-center gap-1 rounded px-1.5 py-0.5 normal-case tracking-normal text-stone-600 transition-colors hover:bg-stone-100 hover:text-stone-900 dark:text-stone-300 dark:hover:bg-stone-800 dark:hover:text-stone-50"
+        >
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M12 4v11m0 0l-4-4m4 4l4-4M5 20h14" />
+          </svg>
+          <span>{t("casio.download")}</span>
+        </button>
         <button
           type="button"
           onClick={copy}
@@ -59,6 +85,7 @@ function Program({ name, lines, id }: { name: string; lines: string[]; id: strin
           )}
           <span role="status">{copied ? t("casio.copied") : t("casio.copy")}</span>
         </button>
+        </span>
       </figcaption>
       <pre data-testid={id} className="overflow-x-auto px-3 py-2 font-mono text-[13px] leading-relaxed text-stone-800 dark:text-stone-100">
         {lines.map((l, i) => `${String(i + 1).padStart(2, " ")}  ${l}`).join("\n")}
@@ -95,6 +122,7 @@ export default function CasioReaccionesPage() {
               {"M_x = y·F_z − z·F_y + M_x    M_y = z·F_x − x·F_z + M_y    M_z = x·F_y − y·F_x + M_z"}
             </div>
             <Program name={REACC_NAME} lines={REACC_LINES} id="casio-reacc" />
+            <p className={`${P} text-sm`}>{t("casio.install")}</p>
             <p className={P}>{t("casio.r.q")}</p>
             <p className={`${P} mt-3`}>{t("casio.r.ex")}</p>
             <p className={`${P} mt-3`}>{t("casio.r.base")}</p>
