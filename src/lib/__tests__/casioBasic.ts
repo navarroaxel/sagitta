@@ -52,7 +52,7 @@ export function runBasic(lines: string[], inputs: number[], gfx: Gfx = newGfx())
   const args = (a: string) => splitTop(a, ",").map((x) => expr(x.trim()));
   const expr = (e: string): number => {
     const js = e
-      .replace(/List (\d)\[/g, "LL[$1][")
+      .replace(/List (\d+)\[/g, "LL[$1][")
       .replace(/Getkey/g, "1") // a key is "pressed" at once: the wait loops do not hang
       .replace(/Abs \(/g, "Math.abs(")
       .replace(/√\(/g, "Math.sqrt(")
@@ -153,13 +153,13 @@ export function runBasic(lines: string[], inputs: number[], gfx: Gfx = newGfx())
       out.push(s.slice(1, -1));
       pc++;
     } else {
-      const el = /^(.*)→List (\d)\[(.+)\]$/.exec(s); // value→List n[index]
+      const el = /^(.*)→List (\d+)\[(.+)\]$/.exec(s); // value→List n[index]
       if (el) {
         (L[+el[2]] ??= [0])[expr(el[3])] = expr(el[1]);
         pc++;
         continue;
       }
-      const m = /^(.*)→(List (\d)|[A-Z])$/.exec(s);
+      const m = /^(.*)→(List (\d+)|[A-Z])$/.exec(s);
       if (!m) {
         out.push(expr(s)); // a bare expression at the end of the program is displayed
         pc++;

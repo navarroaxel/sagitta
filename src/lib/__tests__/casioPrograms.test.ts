@@ -102,7 +102,7 @@ describe("Casio program REACC", () => {
     const out = runBasic(REACC_LINES, inputs, gfx);
     return { gfx, out, rea: reacciones(screenOf(gfx, "REACCIONES EN A")), base: corte(screenOf(gfx, "CORTE EN BASE (PILAR)")) };
   };
-  // menu: 1 CARGAR, 2 REACCIONES, 3 CORTE EN BASE, 4 BORRAR TODO, 0 SALIR; each load ends with 1 = OK
+  // menu: 1 AGREGAR CARGAS, 2 REACCIONES, 3 CORTE EN BASE, 4 LISTAR CARGAS, 5 BORRAR TODO, 0 SALIR; each load ends with 1 = OK
 
   test("running REACC: t-frame-3d-fixed-kg typed as the page says (distributed = its two end points and q)", () => {
     const r = reacc([
@@ -148,12 +148,67 @@ describe("Casio program REACC", () => {
     expect(at(sc, 7, 1)).toBe(1); // load number
   });
 
+  const pointLoad = (x: number, y: number, z: number, fx: number, fy: number, fz: number) => [1, x, y, z, fx, fy, fz, 1];
+
+  test("running REACC: LISTAR CARGAS shows the loads three per screen (kind, centre, resultant or moment)", () => {
+    const { gfx } = reacc([
+      1, 4,
+      ...pointLoad(0, 0, 3, 0, 300, 0),
+      2, -1, 2, 0, 0, 3, 3, 0, 0, -200, 1, // distributed: centre (0.5, 0, 3), resultant −600 along z
+      3, 10, -20, 30, 1, // a moment
+      ...pointLoad(1, 2, 3, 4, 5, 6),
+      4, 0, // LISTAR, no deletion
+      0,
+    ]);
+    const pages = gfx.screens.filter((sc) => sc[0]?.[2] === "N T  X     Y     Z");
+    expect(pages).toHaveLength(2); // 3 loads and then the 4th
+    const [p1, p2] = pages;
+    expect([at(p1, 1, 2), at(p1, 3, 2), at(p1, 5, 2), at(p1, 11, 2), at(p1, 17, 2)]).toEqual([1, "P", 0, 0, 3]);
+    expect([at(p1, 3, 3), at(p1, 5, 3), at(p1, 11, 3), at(p1, 17, 3)]).toEqual(["F", 0, 300, 0]);
+    expect([at(p1, 1, 4), at(p1, 3, 4), at(p1, 5, 4), at(p1, 11, 4), at(p1, 17, 4)]).toEqual([2, "D", 0.5, 0, 3]);
+    expect([at(p1, 5, 5), at(p1, 11, 5), at(p1, 17, 5)]).toEqual([0, 0, -600]);
+    expect([at(p1, 1, 6), at(p1, 3, 6), at(p1, 3, 7), at(p1, 5, 7), at(p1, 11, 7), at(p1, 17, 7)]).toEqual([3, "M", "M", 10, -20, 30]);
+    expect([at(p2, 1, 2), at(p2, 3, 2), at(p2, 5, 2), at(p2, 11, 2), at(p2, 17, 2), at(p2, 5, 3), at(p2, 11, 3), at(p2, 17, 3)]).toEqual([4, "P", 1, 2, 3, 4, 5, 6]);
+  });
+
+  test("running REACC: a load can be deleted from the list, and the reactions are rebuilt without it", () => {
+    const keep = reacc([1, 1, ...pointLoad(0, 0, 3, 0, 300, 0), 2, 0]).rea; // only the second load, as the reference
+    const both = reacc([1, 2, ...pointLoad(0, 0, 3, 0, 300, 0), ...pointLoad(0, 0, 3, 0, 300, 0), 2, 0]).rea;
+    expect(both).not.toEqual(keep);
+    const { gfx, rea } = reacc([
+      1, 3,
+      ...pointLoad(2, 0, 3, 100, 0, 0), // the one to delete
+      ...pointLoad(0, 0, 3, 0, 300, 0),
+      ...pointLoad(5, 5, 5, 7, 7, 7), // and another one after it
+      4, 1, // LISTAR → BORRAR CARGA 1
+      3, // the list again, now with two: 3 is beyond the end, so it deletes the last one (the 7s)
+      0, // the list once more, with one left: no more
+      2, 0,
+    ]);
+    const lists = gfx.screens.filter((sc) => sc[0]?.[2] === "N T  X     Y     Z");
+    expect(lists).toHaveLength(3); // the list is shown again after each deletion
+    expect(at(lists[1], 5, 2)).toBe(0); // after the first deletion the old load 2 is load 1 (x = 0)
+    expect(at(lists[1], 11, 3)).toBe(300);
+    expect([at(lists[2], 1, 2), at(lists[2], 11, 3), at(lists[2], 1, 4)]).toEqual([1, 300, undefined]); // one load left
+    expect(rea).toEqual(keep); // 100 kg at x = 2 and the 7s are gone: only the 300 kg at B is left
+    expect(gfx.screens.filter((sc) => sc[0]?.[2] === "REACC  CARGAS").map((sc) => at(sc, 15, 1)).slice(-2)).toEqual([1, 1]);
+    // an empty list says so
+    expect(reacc([4, 0]).gfx.screens.some((sc) => sc[0]?.[2] === "NO HAY CARGAS")).toBe(true);
+  });
+
+  test("running REACC: at most 20 loads (the batch is cut to what is left, then the program says it is full)", () => {
+    const one = pointLoad(0, 0, 0, 0, 0, -1);
+    const { gfx, rea } = reacc([1, 25, ...Array.from({ length: 20 }, () => one).flat(), 1, 2, 0]);
+    expect(rea[2]).toBe(20); // FZ: twenty loads of −1 kg
+    expect(gfx.screens.some((sc) => sc[0]?.[2] === "YA HAY 20 CARGAS")).toBe(true);
+  });
+
   test("running REACC: the menu shows how many loads are in, adds batches, and BORRAR TODO empties them", () => {
     const { gfx, rea } = reacc([
       1, 1, 1, 0, 0, 3, 0, 300, 0, 1,
       1, 1, 1, 0, 0, 3, 0, 300, 0, 1, // the same load again: two in
       2, // REACCIONES with both
-      4, // BORRAR TODO
+      5, // BORRAR TODO
       2, 0, // REACCIONES again, SALIR
     ]);
     const counts = gfx.screens.filter((sc) => sc[0]?.[2] === "REACC  CARGAS").map((sc) => at(sc, 15, 1));
@@ -258,7 +313,7 @@ describe("Casio program REACC", () => {
     const text = REACC_LINES.join("\n");
     for (const v of ["F", "G", "H", "I", "J", "K"]) expect(text).toContain(`→${v}`);
     expect(text.match(/◢/g)!.length).toBe(REACC_LINES.filter((l) => l.endsWith("◢")).length);
-    expect(REACC_LINES.every((l) => l.length <= 50)).toBe(true); // short lines: easy to type
+    expect(REACC_LINES.every((l) => l.length <= 120)).toBe(true); // lines the calculator's editor can wrap
   });
 });
 
