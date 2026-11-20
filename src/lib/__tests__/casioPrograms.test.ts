@@ -107,7 +107,7 @@ describe("Casio program REACC", () => {
   test("running REACC: t-frame-3d-fixed-kg typed as the page says (distributed = its two end points and q)", () => {
     const r = reacc([
       1, 2, // CARGAR, 2 loads
-      2, -1, 0, 3, 2, 0, 3, 0, 0, -200, 1, // load 1: distributed, from (−1,0,3) to (2,0,3), q = (0, 0, −200), OK
+      2, -1, 2, 0, 0, 3, 3, 0, 0, -200, 1, // load 1: distributed, X from −1 to 2, Y 0 to 0, Z 3 to 3, q = (0, 0, −200), OK
       1, 0, 0, 3, 0, 300, 0, 1, // load 2: point at B, F = (0, 300, 0), OK
       2, 3, 0, // REACCIONES, CORTE EN BASE, SALIR
     ]);
@@ -140,7 +140,7 @@ describe("Casio program REACC", () => {
   });
 
   test("running REACC: the summary screen shows what the program understood (centre and length of a distributed load)", () => {
-    const { gfx } = reacc([1, 1, 2, -1, 0, 3, 2, 0, 3, 0, 0, -200, 1, 0]);
+    const { gfx } = reacc([1, 1, 2, -1, 2, 0, 0, 3, 3, 0, 0, -200, 1, 0]);
     const sc = [...gfx.screens].find((x) => x[0]?.[2] === "CARGA")!;
     expect([at(sc, 3, 2), at(sc, 3, 3), at(sc, 3, 4)]).toEqual([0.5, 0, 3]); // X, Y, Z of the centre
     expect([at(sc, 14, 2), at(sc, 14, 3), at(sc, 14, 4)]).toEqual([0, 0, -600]); // the resultant: q × L
