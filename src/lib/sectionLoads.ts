@@ -15,6 +15,7 @@ export interface SectionLoad {
   moment?: Vec3; // moment components (R: the reaction moment, P: the applied moment)
   zSpan?: [number, number]; // q only: the loaded span along the section's z, m (z = 0 at the front end)
   z?: number; // P only: where it acts along the section's z, m: the member's end (it does not move with the cut)
+  joint?: boolean; // P only: not an applied load but what the rest of the structure hands to the member at a joint (id = node)
 }
 
 const EPS = 1e-9;
@@ -53,7 +54,21 @@ export function sectionLoads(
   // members, which this view does not follow.
   [m.n1, m.n2].forEach((id) => {
     if (zOf(id === m.n1 ? 0 : g.L) > st.z + EPS) return; // past the cut
-    if (model.members.some((o) => o !== m && (o.n1 === id || o.n2 === id))) return; // a joint
+    if (model.members.some((o) => o !== m && (o.n1 === id || o.n2 === id))) {
+      // A joint at the z = 0 end: the applied load is shared with the other members, but what the member
+      // receives there is exactly what its first station balances (nothing lies before it), so it is
+      // listed as the resultant of the end section. Mapping (checked against the free-end loads in the
+      // tests): force = (Qx, −Qy, −N); moment = (Mx, −My, −T). A supported joint lists its reaction instead.
+      const node = model.nodes.find((n) => n.id === id);
+      if (zOf(id === m.n1 ? 0 : g.L) > EPS || !node || node.support !== "free") return;
+      const end = solved.stations[e].reduce((a, b) => (b.z < a.z ? b : a));
+      const force = clean([end.Qx, -end.Qy, -end.N]);
+      const moment = clean([end.Mx, -end.My, -end.T]);
+      const hasMoment = moment.some((c) => c !== 0);
+      if (force.every((c) => c === 0) && !hasMoment) return;
+      out.push({ kind: "P", id, force, moment: hasMoment ? moment : undefined, z: 0, joint: true });
+      return;
+    }
     model.loads.forEach((l) => {
       if (l.type !== "nodal" || l.node !== id) return;
       const force = comps([l.fx, l.fy, l.fz]);
