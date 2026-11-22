@@ -1193,6 +1193,155 @@ const EN = {
     "Double-T: τ is small in the flanges, jumps at the junction and is almost constant in the web.",
   "shr.footer":
     "Transcribed from the handwritten course notes “Tensiones de corte en la flexión”; the formulas are checked in the test suite (the stresses add up to Q).",
+
+  "pln.link":
+    "Plane areas",
+  "pln.title":
+    "Moments of plane areas",
+  "pln.lead":
+    "Static moments and centroids, moments of inertia, the Steiner (parallel axes) theorem, rotated axes and principal axes. From the course notes “Momentos de superficies planas”.",
+  "pln.s1.kicker":
+    "01 — First order",
+  "pln.s1.title":
+    "Static moments",
+  "pln.s1.p1":
+    "The static moment (first-order moment) of a plane area about an axis in its plane is the product of the area by the distance from its centroid to that axis. For a differential dA at coordinates x, y:",
+  "pln.s1.e1":
+    "S_x = ∫ y dA        S_y = ∫ x dA",
+  "pln.s1.p2":
+    "Units: cm³ for areas (distance × area), kg·cm for masses.",
+  "pln.s1.p3":
+    "Example, a rectangle b × h resting on the X axis: dA = b·dy, so S_x = b·∫₀^h y dy = b·h²/2. About a horizontal axis through its centroid the integral runs from −h/2 to +h/2 and gives zero: for every element above the axis there is another at the same distance below it. Hence:",
+  "pln.s1.p4":
+    "The static moment of an area about a centroidal axis is zero.",
+  "pln.s2.kicker":
+    "02 — Centroids",
+  "pln.s2.title":
+    "The centroid",
+  "pln.s2.p1":
+    "The centroid of an area is the point whose coordinates are the static moments divided by the area. It coincides with the centre of gravity (the point of application of the resultant of the weights) only when the body is homogeneous and of constant thickness, that is, with a uniform mass per unit area. For a system of masses the same formulas are used with the masses in place of the areas (as in the example with three weights):",
+  "pln.s2.e1":
+    "x_g = Σ A_i·x_i / Σ A_i = S_y / A",
+  "pln.s2.e2":
+    "y_g = Σ A_i·y_i / Σ A_i = S_x / A",
+  "pln.s2.p2":
+    "For a continuous area the sums become integrals, x_g = ∫x dA / ∫dA and y_g = ∫y dA / ∫dA.",
+  "pln.s2.ex.title":
+    "Worked examples from the notes",
+  "pln.s2.ex1.t":
+    "Rectangle 4 × 16 with its corners at (6, 4) and (10, 20)",
+  "pln.s2.ex1.r":
+    "A = 64; S_x = 4·(20² − 4²)/2 = 768; S_y = 16·(10² − 6²)/2 = 512; y_g = 768/64 = 12; x_g = 512/64 = 8.",
+  "pln.s2.ex2.t":
+    "Three masses: 300 kg at (30, 70), 800 kg at (80, 100), 1 000 kg at (60, 40)",
+  "pln.s2.ex2.r":
+    "M = 2 100 kg; S_y = 133 000 kg·cm; S_x = 141 000 kg·cm; x_g = 63.33 cm; y_g = 67.14 cm.",
+  "pln.s2.ex3.t":
+    "Irregular plate split into three rectangles (26, 50 and 75 cm²)",
+  "pln.s2.ex3.r":
+    "A = 151 cm²; S_y = 26·6.5 + 50·5 + 75·7.5 = 981.5; S_x = 26·11 + 50·7.5 + 75·2.5 = 848.5; x_g = 6.50 cm; y_g = 5.62 cm.",
+  "pln.s3.kicker":
+    "03 — Composite areas",
+  "pln.s3.title":
+    "Adding and subtracting areas",
+  "pln.s3.p1":
+    "An irregular figure is split into parts whose area and centroid are known. A part that is empty counts with a negative area. The notes’ door with a rectangular opening gives the same centroid both ways:",
+  "pln.s3.add":
+    "By adding the four solid pieces: A = 19 687.5 cm², S_x = 1 775 390.63, S_y = 2 589 843.75 cm³ → y_g = 90.18 cm, x_g = 131.55 cm.",
+  "pln.s3.sub":
+    "By subtracting the hole from the full door: (30 000·100 − 10 312.5·118.75) / 19 687.5 = 90.18 cm and (30 000·125 − 10 312.5·112.5) / 19 687.5 = 131.55 cm.",
+  "pln.s4.kicker":
+    "04 — Second order",
+  "pln.s4.title":
+    "Moments of inertia",
+  "pln.s4.p1":
+    "The product of inertia (centrifugal moment) multiplies dA by both distances; it can be positive, negative or zero. The moment of inertia multiplies dA by the square of the distance to an axis, so it is always positive. The polar moment uses the distance to a point. All are in length⁴ (cm⁴):",
+  "pln.s4.e1":
+    "J_xy = ∫ x·y dA",
+  "pln.s4.e2":
+    "J_x = ∫ y² dA        J_y = ∫ x² dA",
+  "pln.s4.e3":
+    "J_p = ∫ ρ² dA = J_x + J_y",
+  "pln.s4.p2":
+    "The radius of gyration is the distance i at which the whole area would have to be concentrated to give the same moment:",
+  "pln.s4.e4":
+    "J = A·i²        i = √(J/A)        i_p² = i_x² + i_y²",
+  "pln.s4.p3":
+    "For a rectangle b × h about its horizontal centroidal axis, integrating y²·b·dy from −h/2 to +h/2:",
+  "pln.s4.p4":
+    "Position matters. A rectangle of 8 × 16 cm (128 cm²) with the long side parallel to Y has J_x = 8·16³/12 = 2 730.67 cm⁴; turned 90° (16 wide, 8 high) it has J_x = 16·8³/12 = 682.67 cm⁴: four times less with the same material. This is why the long side goes in the direction of the bending.",
+  "pln.s4.p5":
+    "The moments are additive: if A is split into parts, J = J_1 + J_2 + …; and a hollow part is subtracted, J = J_total − J′ − J″.",
+  "pln.s5.kicker":
+    "05 — Steiner",
+  "pln.s5.title":
+    "Steiner’s theorem (parallel axes)",
+  "pln.s5.p1":
+    "Statement: the moment of inertia of an area about any axis of its plane equals its moment of inertia about the parallel centroidal axis, plus the product of the area by the square of the distance between both axes.",
+  "pln.s5.p2":
+    "Take axes X, Y displaced a and b from the centroidal ones, so x = a + x_g and y = b + y_g. In J_xy = ∫xy dA the product expands into four integrals; two of them are static moments about centroidal axes, hence zero:",
+  "pln.s5.e1":
+    "J_xy = J_xgyg + A·a·b",
+  "pln.s5.p3":
+    "and for each axis:",
+  "pln.s5.fig":
+    "Axes X, Y displaced from the centroidal axes X_g, Y_g by b and a.",
+  "pln.s5.use.title":
+    "What is it for? (exam question)",
+  "pln.s5.use.p1":
+    "Tables and manuals give the moments of regular figures about their centroidal axes. Steiner’s theorem moves them to any other parallel axis, without integrating again. It is how the inertia of a composite section is obtained (each part about the common axis of the whole) and how the inertia of a built-up profile or a section whose parts do not share a centroid is computed.",
+  "pln.s5.use.p2":
+    "Since A·d² is never negative, the moment of inertia about a centroidal axis is the smallest among all the parallel axes.",
+  "pln.s5.calc.title":
+    "Steiner calculator: rectangle",
+  "pln.s5.calc.b":
+    "b (cm)",
+  "pln.s5.calc.h":
+    "h (cm)",
+  "pln.s5.calc.d":
+    "d (cm)",
+  "pln.s5.calc.hint":
+    "d is the distance from the centroidal axis to the parallel axis. With d = h/2 the axis is the base of the rectangle and J_x = b·h³/3.",
+  "pln.s5.calc.jg":
+    "J_xg",
+  "pln.s5.calc.area":
+    "A",
+  "pln.s5.calc.ad2":
+    "A·d²",
+  "pln.s5.calc.j":
+    "J_x",
+  "pln.s6.kicker":
+    "06 — Rotated axes",
+  "pln.s6.title":
+    "Axes rotated an angle α",
+  "pln.s6.p1":
+    "With axes X′, Y′ rotated α about the same origin, x′ = x·cosα + y·sinα and y′ = y·cosα − x·sinα. Expanding J_x′ = ∫y′² dA and J_y′ = ∫x′² dA, and using 2·sinα·cosα = sin 2α:",
+  "pln.s6.e1":
+    "J_x′ = J_x·cos²α + J_y·sin²α − J_xy·sin 2α",
+  "pln.s6.e2":
+    "J_y′ = J_x·sin²α + J_y·cos²α + J_xy·sin 2α",
+  "pln.s6.e3":
+    "J_x′y′ = J_xy·cos 2α + (J_x − J_y)/2·sin 2α",
+  "pln.s6.p2":
+    "Adding the first two shows that J_x + J_y does not depend on α (it is the polar moment).",
+  "pln.s7.kicker":
+    "07 — Principal axes",
+  "pln.s7.title":
+    "Principal axes and moments",
+  "pln.s7.p1":
+    "Everything above depends on α. The moments of inertia reach a maximum and a minimum about two perpendicular axes, the principal axes of inertia, and the product of inertia about them is zero; the corresponding moments are the principal moments of inertia. The product of inertia, instead, can be zero or negative.",
+  "pln.s7.p2":
+    "Setting dJ_y′/dα = 0 gives (J_y − J_x)·sin 2α_1 − 2·J_xy·cos 2α_1 = 0, hence:",
+  "pln.s7.e1":
+    "tg 2α_1 = 2·J_xy / (J_y − J_x)",
+  "pln.s7.p3":
+    "This holds for two values of 2α_1 that differ by 180°, so there are two values of α_1 that differ by 90°: the two principal axes.",
+  "pln.s7.p4":
+    "If the two principal moments are different that pair is unique; if they are equal (a circle, a square) every orthogonal pair through the centroid is principal. The notes call every maximum/minimum pair “conjugate” first and then the orthogonal one “principal”; the definition above is the one to keep.",
+  "pln.s7.p5":
+    "Not in the notes, but a direct consequence: J_1,2 = (J_x + J_y)/2 ± √(((J_x − J_y)/2)² + J_xy²).",
+  "pln.footer":
+    "Transcribed from the course notes “Momentos de superficies planas”. The examples are checked in the test suite.",
 } as const;
 
 export type TranslationKey = keyof typeof EN;
@@ -2380,6 +2529,155 @@ const ES: Record<TranslationKey, string> = {
     "Doble T: τ es chica en las alas, salta en la unión y es casi constante en el alma.",
   "shr.footer":
     "Transcripto del apunte manuscrito “Tensiones de corte en la flexión” de la cátedra; las fórmulas se verifican en los tests (las tensiones suman Q).",
+
+  "pln.link":
+    "Superficies planas",
+  "pln.title":
+    "Momentos de superficies planas",
+  "pln.lead":
+    "Momentos estáticos y baricentros, momentos de inercia, el teorema de Steiner (ejes paralelos), ejes rotados y ejes principales. Según el apunte “Momentos de superficies planas” de la cátedra.",
+  "pln.s1.kicker":
+    "01 — Primer orden",
+  "pln.s1.title":
+    "Momentos estáticos",
+  "pln.s1.p1":
+    "El momento estático (o de primer orden) de una superficie plana respecto de un eje de su plano es el producto del valor de la superficie por la distancia desde su centro de gravedad al eje. Para un diferencial dA de coordenadas x, y:",
+  "pln.s1.e1":
+    "S_x = ∫ y dA        S_y = ∫ x dA",
+  "pln.s1.p2":
+    "Unidades: cm³ para superficies (distancia × superficie), kg·cm para masas.",
+  "pln.s1.p3":
+    "Ejemplo, un rectángulo b × h apoyado sobre el eje X: dA = b·dy, entonces S_x = b·∫₀^h y dy = b·h²/2. Respecto de un eje horizontal baricéntrico la integral va de −h/2 a +h/2 y da cero: por cada elemento por encima del eje hay otro a igual distancia por debajo. Por lo tanto:",
+  "pln.s1.p4":
+    "El momento estático de una superficie respecto de un eje baricéntrico es nulo.",
+  "pln.s2.kicker":
+    "02 — Baricentros",
+  "pln.s2.title":
+    "El baricentro",
+  "pln.s2.p1":
+    "El baricentro de una superficie es el punto cuyas coordenadas son los momentos estáticos divididos por el área. Coincide con el centro de gravedad (el punto de aplicación de la resultante de los pesos) solo cuando el cuerpo es homogéneo y de espesor constante, es decir, con masa por unidad de área uniforme. Para un sistema de masas se usan las mismas fórmulas con las masas en lugar de las áreas (como en el ejemplo de los tres pesos):",
+  "pln.s2.e1":
+    "x_g = Σ A_i·x_i / Σ A_i = S_y / A",
+  "pln.s2.e2":
+    "y_g = Σ A_i·y_i / Σ A_i = S_x / A",
+  "pln.s2.p2":
+    "Para una superficie continua las sumas pasan a integrales, x_g = ∫x dA / ∫dA e y_g = ∫y dA / ∫dA.",
+  "pln.s2.ex.title":
+    "Ejemplos resueltos del apunte",
+  "pln.s2.ex1.t":
+    "Rectángulo de 4 × 16 con esquinas en (6, 4) y (10, 20)",
+  "pln.s2.ex1.r":
+    "A = 64; S_x = 4·(20² − 4²)/2 = 768; S_y = 16·(10² − 6²)/2 = 512; y_g = 768/64 = 12; x_g = 512/64 = 8.",
+  "pln.s2.ex2.t":
+    "Tres masas: 300 kg en (30, 70), 800 kg en (80, 100), 1 000 kg en (60, 40)",
+  "pln.s2.ex2.r":
+    "M = 2 100 kg; S_y = 133 000 kg·cm; S_x = 141 000 kg·cm; x_g = 63,33 cm; y_g = 67,14 cm.",
+  "pln.s2.ex3.t":
+    "Chapa irregular dividida en tres rectángulos (26, 50 y 75 cm²)",
+  "pln.s2.ex3.r":
+    "A = 151 cm²; S_y = 26·6,5 + 50·5 + 75·7,5 = 981,5; S_x = 26·11 + 50·7,5 + 75·2,5 = 848,5; x_g = 6,50 cm; y_g = 5,62 cm.",
+  "pln.s3.kicker":
+    "03 — Superficies compuestas",
+  "pln.s3.title":
+    "Sumar y restar superficies",
+  "pln.s3.p1":
+    "Una figura irregular se divide en partes de área y baricentro conocidos. Una parte vacía cuenta con área negativa. La puerta con vacío rectangular del apunte da el mismo baricentro de las dos maneras:",
+  "pln.s3.add":
+    "Sumando las cuatro piezas llenas: A = 19 687,5 cm², S_x = 1 775 390,63, S_y = 2 589 843,75 cm³ → y_g = 90,18 cm, x_g = 131,55 cm.",
+  "pln.s3.sub":
+    "Restando el hueco a la puerta completa: (30 000·100 − 10 312,5·118,75) / 19 687,5 = 90,18 cm y (30 000·125 − 10 312,5·112,5) / 19 687,5 = 131,55 cm.",
+  "pln.s4.kicker":
+    "04 — Segundo orden",
+  "pln.s4.title":
+    "Momentos de inercia",
+  "pln.s4.p1":
+    "El momento centrífugo multiplica dA por las dos distancias; puede ser positivo, negativo o nulo. El momento de inercia multiplica dA por el cuadrado de la distancia a un eje, así que es siempre positivo. El polar usa la distancia a un punto. Todos están en longitud⁴ (cm⁴):",
+  "pln.s4.e1":
+    "J_xy = ∫ x·y dA",
+  "pln.s4.e2":
+    "J_x = ∫ y² dA        J_y = ∫ x² dA",
+  "pln.s4.e3":
+    "J_p = ∫ ρ² dA = J_x + J_y",
+  "pln.s4.p2":
+    "El radio de giro es la distancia i a la que habría que concentrar toda el área para obtener el mismo momento:",
+  "pln.s4.e4":
+    "J = A·i²        i = √(J/A)        i_p² = i_x² + i_y²",
+  "pln.s4.p3":
+    "Para un rectángulo b × h respecto de su eje horizontal baricéntrico, integrando y²·b·dy de −h/2 a +h/2:",
+  "pln.s4.p4":
+    "La posición importa. Un rectángulo de 8 × 16 cm (128 cm²) con el lado mayor paralelo a Y tiene J_x = 8·16³/12 = 2 730,67 cm⁴; girado 90° (16 de base, 8 de altura) tiene J_x = 16·8³/12 = 682,67 cm⁴: cuatro veces menos con el mismo material. Por eso el lado mayor va en la dirección de la flexión.",
+  "pln.s4.p5":
+    "Los momentos son aditivos: si A se divide en partes, J = J_1 + J_2 + …; y una parte hueca se resta, J = J_total − J′ − J″.",
+  "pln.s5.kicker":
+    "05 — Steiner",
+  "pln.s5.title":
+    "Teorema de Steiner (ejes paralelos)",
+  "pln.s5.p1":
+    "Enunciado: el momento de inercia de una superficie respecto a un eje cualquiera de su plano es igual al momento de inercia de la misma respecto a un eje baricéntrico paralelo al anterior, más el producto del área de la superficie por el cuadrado de la distancia que separa ambos ejes.",
+  "pln.s5.p2":
+    "Sean los ejes X, Y desplazados a y b de los baricéntricos, de modo que x = a + x_g e y = b + y_g. En J_xy = ∫xy dA el producto se expande en cuatro integrales; dos son momentos estáticos respecto de ejes baricéntricos, o sea nulos:",
+  "pln.s5.e1":
+    "J_xy = J_xgyg + A·a·b",
+  "pln.s5.p3":
+    "y para cada uno de los ejes:",
+  "pln.s5.fig":
+    "Ejes X, Y desplazados de los baricéntricos X_g, Y_g en b y a.",
+  "pln.s5.use.title":
+    "¿Para qué se usa? (pregunta de parcial)",
+  "pln.s5.use.p1":
+    "Las tablas y manuales dan los momentos de las figuras regulares respecto de sus ejes baricéntricos. El teorema de Steiner los traslada a cualquier otro eje paralelo, sin volver a integrar. Así se obtiene la inercia de una sección compuesta (cada parte respecto del eje común del conjunto) y la de un perfil armado o una sección cuyas partes no comparten baricentro.",
+  "pln.s5.use.p2":
+    "Como A·d² nunca es negativo, el momento de inercia respecto de un eje baricéntrico es el menor entre todos los ejes paralelos.",
+  "pln.s5.calc.title":
+    "Calculadora de Steiner: rectángulo",
+  "pln.s5.calc.b":
+    "b (cm)",
+  "pln.s5.calc.h":
+    "h (cm)",
+  "pln.s5.calc.d":
+    "d (cm)",
+  "pln.s5.calc.hint":
+    "d es la distancia del eje baricéntrico al eje paralelo. Con d = h/2 el eje es la base del rectángulo y J_x = b·h³/3.",
+  "pln.s5.calc.jg":
+    "J_xg",
+  "pln.s5.calc.area":
+    "A",
+  "pln.s5.calc.ad2":
+    "A·d²",
+  "pln.s5.calc.j":
+    "J_x",
+  "pln.s6.kicker":
+    "06 — Ejes rotados",
+  "pln.s6.title":
+    "Ejes girados un ángulo α",
+  "pln.s6.p1":
+    "Con ejes X′, Y′ girados α alrededor del mismo origen, x′ = x·cosα + y·senα e y′ = y·cosα − x·senα. Desarrollando J_x′ = ∫y′² dA y J_y′ = ∫x′² dA, y usando 2·senα·cosα = sen 2α:",
+  "pln.s6.e1":
+    "J_x′ = J_x·cos²α + J_y·sen²α − J_xy·sen 2α",
+  "pln.s6.e2":
+    "J_y′ = J_x·sen²α + J_y·cos²α + J_xy·sen 2α",
+  "pln.s6.e3":
+    "J_x′y′ = J_xy·cos 2α + (J_x − J_y)/2·sen 2α",
+  "pln.s6.p2":
+    "Sumando las dos primeras se ve que J_x + J_y no depende de α (es el momento polar).",
+  "pln.s7.kicker":
+    "07 — Ejes principales",
+  "pln.s7.title":
+    "Ejes y momentos principales",
+  "pln.s7.p1":
+    "Todo lo anterior depende de α. Los momentos de inercia alcanzan un máximo y un mínimo respecto de dos ejes perpendiculares entre sí, los ejes principales de inercia, y el momento centrífugo respecto de ellos es nulo; los momentos correspondientes son los momentos principales de inercia. El momento centrífugo, en cambio, puede anularse o ser negativo.",
+  "pln.s7.p2":
+    "Imponiendo dJ_y′/dα = 0 queda (J_y − J_x)·sen 2α_1 − 2·J_xy·cos 2α_1 = 0, de donde:",
+  "pln.s7.e1":
+    "tg 2α_1 = 2·J_xy / (J_y − J_x)",
+  "pln.s7.p3":
+    "Esta ecuación se cumple para dos valores de 2α_1 que difieren 180°, así que hay dos valores de α_1 que difieren 90°: los dos ejes principales.",
+  "pln.s7.p4":
+    "Si los dos momentos principales son distintos ese par es único; si son iguales (un círculo, un cuadrado) todo par ortogonal que pase por el baricentro es principal. El apunte llama primero “conjugados” a todos los pares de máximo y mínimo y luego “principales” al ortogonal; la definición de arriba es la que conviene retener.",
+  "pln.s7.p5":
+    "No está en el apunte, pero es consecuencia directa: J_1,2 = (J_x + J_y)/2 ± √(((J_x − J_y)/2)² + J_xy²).",
+  "pln.footer":
+    "Transcripto del apunte “Momentos de superficies planas” de la cátedra. Los ejemplos se verifican en los tests.",
 };
 
 const translations: Record<Language, Record<TranslationKey, string>> = {
