@@ -1,5 +1,6 @@
 "use client";
 
+import NavMenu from "@/components/NavMenu";
 import { useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -33,6 +34,7 @@ export default function PerfilesPage() {
         <h1 className="text-base font-semibold tracking-tight text-stone-800 dark:text-stone-100">
           {t("prof.title")}
         </h1>
+        <NavMenu />
       </header>
       <nav
         role="tablist"

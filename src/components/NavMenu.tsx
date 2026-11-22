@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 
@@ -17,12 +18,15 @@ const LINKS: { href: string; labelKey: TranslationKey }[] = [
   { href: "/flexion", labelKey: "flx.link" },
   { href: "/torsion", labelKey: "tor.link" },
   { href: "/axil", labelKey: "axl.link" },
+  { href: "/flecha", labelKey: "fla.link" },
+  { href: "/corte-en-flexion", labelKey: "shr.link" },
 ];
 
 export default function NavMenu() {
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!open) return;
@@ -67,8 +71,13 @@ export default function NavMenu() {
               key={href}
               href={href}
               role="menuitem"
+              aria-current={pathname === href ? "page" : undefined}
               onClick={() => setOpen(false)}
-              className="block px-4 py-2 text-sm text-stone-700 transition-colors hover:bg-stone-100 dark:text-stone-200 dark:hover:bg-stone-700"
+              className={`block px-4 py-2 text-sm transition-colors hover:bg-stone-100 dark:hover:bg-stone-700 ${
+                pathname === href
+                  ? "bg-stone-100 font-semibold text-teal-700 dark:bg-stone-700 dark:text-teal-300"
+                  : "text-stone-700 dark:text-stone-200"
+              }`}
             >
               {t(labelKey)}
             </Link>

@@ -1,5 +1,6 @@
 "use client";
 
+import NavMenu from "@/components/NavMenu";
 import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { QuizView } from "@/components/quiz/QuizView";
@@ -20,6 +21,7 @@ export default function QuizPage() {
         <h1 className="text-base font-semibold tracking-tight text-stone-800 dark:text-stone-100">
           {t("quiz.title")}
         </h1>
+        <NavMenu />
       </header>
 
       <main className="flex-1 overflow-auto">

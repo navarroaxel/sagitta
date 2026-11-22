@@ -1029,6 +1029,170 @@ const EN = {
     "F = Δl·A·E / l = 5·3.57·2 100 000 / 2 500 ≈ 15 000 kg; σ = F/A ≈ 4 202 kg/cm² > σ_adm = 1 400: it does NOT verify.",
   "axl.footer":
     "Transcribed from the handwritten course notes “Axil AMS”; numbers in the exercises were recomputed and agree with the notes.",
+  "fla.link":
+    "Deflection",
+  "fla.title":
+    "Deflection of beams",
+  "fla.lead":
+    "From the curvature 1/ρ = M/(E·J) to the elastic line and the deflection f = ∫M·x dx/(E·J), plus the seven usual cases and a calculator. From the course notes “Flecha AMS 2020”.",
+  "fla.s1.kicker":
+    "01 — Curvature",
+  "fla.s1.title":
+    "Deformation in normal pure bending",
+  "fla.s1.p1":
+    "A section of the beam rotates about its neutral axis. By similar triangles, a fibre at distance y from the neutral axis has strain ε = y/ρ, where ρ is the radius of curvature of the beam’s axis (C is the centre of curvature):",
+  "fla.s1.e1":
+    "1/ρ = ε / y",
+  "fla.s1.p2":
+    "With Hooke’s law ε = σ/E and the bending stress σ = M·y/J_x:",
+  "fla.s1.e2":
+    "ε = σ/E = M·y / (J_x·E)",
+  "fla.s1.p3":
+    "Substituting gives the curvature, and the radius, whose units check out: (kg/cm²)·cm⁴ / (kg·cm) = cm.",
+  "fla.s1.fig":
+    "An element ds of the beam’s axis: ρ is the radius of curvature, dθ the angle between the two sections.",
+  "fla.s2.kicker":
+    "02 — Elastic line",
+  "fla.s2.title":
+    "The differential equation",
+  "fla.s2.p1":
+    "For an element of the axis, ds = ρ·dθ, so 1/ρ = dθ/ds, and for small slopes ds ≈ dz. Also tan θ = dy/dz ≈ θ. Therefore:",
+  "fla.s2.e1":
+    "1/ρ = dθ/dz = d²y/dz²",
+  "fla.s2.p2":
+    "With the axes the notes adopt (z grows while θ decreases) the sign is negative, 1/ρ = −d²y/dz², and equating with the curvature gives the differential equation of the elastic line:",
+  "fla.s2.p3":
+    "Integrating it once gives the slope θ(z), and twice, the deflection y(z), with the integration constants fixed by the supports.",
+  "fla.s3.kicker":
+    "03 — Deflection at a point",
+  "fla.s3.title":
+    "The deflection as an integral",
+  "fla.s3.p1":
+    "Take an element CD of length dx at distance x from the end where we want the deflection. The two sections rotate a relative angle dα, with dx = ρ·dα, so dα = dx/ρ. The tangent at D deviates from that at C, at the end, by:",
+  "fla.s3.p2":
+    "and adding over the whole length:",
+  "fla.s3.p3":
+    "That is the moment of the M/(E·J) diagram about the end where the deflection is measured: the first moment-area theorem. For a cantilever, with x from the free end, it gives f directly.",
+  "fla.s4.kicker":
+    "04 — Usual cases",
+  "fla.s4.title":
+    "The seven cases",
+  "fla.s4.p1":
+    "Maximum deflection of the most common beams. In every case l is the span, E the elastic modulus and J_x the moment of inertia; q, P and p are the load (p is the maximum ordinate of a triangular load).",
+  "fla.case.ss-udl":
+    "Simply supported, uniform load",
+  "fla.case.ss-point":
+    "Simply supported, point load at mid-span",
+  "fla.case.cant-udl":
+    "Cantilever, uniform load",
+  "fla.case.cant-point":
+    "Cantilever, point load at the free end",
+  "fla.case.cant-tri-down":
+    "Cantilever, decreasing triangular load (max at the fixed end)",
+  "fla.case.cant-tri-up":
+    "Cantilever, increasing triangular load (max at the free end)",
+  "fla.case.ss-tri":
+    "Simply supported, triangular load",
+  "fla.case.ss-tri.z":
+    "The maximum is at z = 0.519·l from the end where the load is zero.",
+  "fla.s4.note":
+    "Each coefficient is checked in the app’s test suite against a numerical double integration of M/(E·J).",
+  "fla.calc.title":
+    "Calculator",
+  "fla.calc.case":
+    "Case",
+  "fla.calc.load.point":
+    "P (kg)",
+  "fla.calc.load.dist":
+    "load (kg/cm)",
+  "fla.calc.l":
+    "l (cm)",
+  "fla.calc.E":
+    "E (kg/cm²)",
+  "fla.calc.J":
+    "J_x (cm⁴)",
+  "fla.calc.result":
+    "f_max",
+  "fla.calc.ratio":
+    "= l / ",
+  "fla.footer":
+    "Transcribed from the handwritten course notes “Flecha AMS 2020”.",
+  "shr.link":
+    "Shear in bending",
+  "shr.title":
+    "Shear stresses in bending",
+  "shr.lead":
+    "From pure shear and Cauchy’s theorem to the Jourawski–Colignon formula τ = Q·S/(J·s), the parabolic distribution in a rectangle and the profile of a double-T. From the course notes “Tensiones de corte en la flexión”.",
+  "shr.s1.kicker":
+    "01 — Pure shear",
+  "shr.s1.title":
+    "Pure shear",
+  "shr.s1.p1":
+    "Pure shear occurs, exactly or approximately, in shearing and in rivets or bolts joining plates under tensile forces: the stress is taken as uniform over the area A that resists,",
+  "shr.s1.e1":
+    "τ = Q / A",
+  "shr.s1.p2":
+    "(The notes write the tangential stress with the same letter as the normal one; here τ is always tangential.)",
+  "shr.s2.kicker":
+    "02 — Cauchy",
+  "shr.s2.title":
+    "Cauchy’s theorem and sliding stresses",
+  "shr.s2.p1":
+    "On two normal planes whose intersection defines an edge, the components of the tangential stresses perpendicular to that edge are equal in magnitude and both go towards, or both away from, the edge:",
+  "shr.s2.e1":
+    "τ_xy = τ_yx        τ_xz = τ_zx        τ_yz = τ_zy",
+  "shr.s2.p2":
+    "In a beam under shear and moment, the horizontal stresses needed to keep equilibrium would produce sliding on horizontal planes: shear on vertical planes necessarily implies shear on horizontal planes, and vice versa. These are the sliding stresses τ_L, present in all fibres (stacked planks that slide against each other are the picture).",
+  "shr.s2.p3":
+    "The shear Q at a section is the resultant of all the forces on its left; by equilibrium, the resultant of those on the right is equal and opposite, acting on an infinitely close section.",
+  "shr.s3.kicker":
+    "03 — Jourawski",
+  "shr.s3.title":
+    "The Jourawski–Colignon formula",
+  "shr.s3.p1":
+    "The existence of shear produces tangential stresses in the plane of the section. Take a beam of constant section and a slice of length dx between sections 1 and 2. Because of bending, at a distance y from the neutral axis the stress is σ = M·y/J_x on section 1 and σ + dσ = (M + dM)·y/J_x on section 2.",
+  "shr.s3.p2":
+    "Now cut off part of the slice by a cylindrical surface of width s. On the hatched part (area Ω) the normal stresses give a force N on section 1 and N + dN on section 2; both are coaxial and their resultant is",
+  "shr.s3.e1":
+    "dN = ∫Ω (dM/J_x)·y dΩ",
+  "shr.s3.p3":
+    "That force tends to slide the part above the surface against the rest. Tangential stresses τ on the separating surface oppose it; they are parallel to the axis and vary continuously. With s the length of the curve where the surface meets the section, dT = dx·∫τ ds, and equilibrium requires dT = dN:",
+  "shr.s3.e2":
+    "(dM/J_x)·∫Ω y dΩ = dx·∫s τ ds",
+  "shr.s3.p4":
+    "The integral on the left is the static moment S_x of the area Ω about the neutral axis, and the one on the right is τ_m·s, with τ_m the mean value of τ along s. As dM/dx = Q:",
+  "shr.s3.p5":
+    "By Cauchy’s theorem these longitudinal sliding stresses give, in the plane of the section, tangential stresses normal to the curve s at every point; τ_m is their mean value. S_x is the static moment of the part of the section on one side of the cut, and s is the width of the cut.",
+  "shr.s4.kicker":
+    "04 — Rectangle",
+  "shr.s4.title":
+    "Distribution in a rectangular section",
+  "shr.s4.p1":
+    "For b × h, with the cut at a height y above the neutral axis, s = b, J_x = b·h³/12 and the static moment of the part above is S_x = b·(h/2 − y)·[(h/2 − y)/2 + y] = ½·b·(h²/4 − y²). Replacing:",
+  "shr.s4.p2":
+    "The distribution is a parabola, zero at the top and bottom fibres and largest at the neutral axis (y = 0):",
+  "shr.s4.p3":
+    "that is 50 % more than the mean shear Q/area.",
+  "shr.s4.ex":
+    "Example: b = 10 cm, h = 20 cm, Q = 1 000 kg → mean Q/A = 5 kg/cm², τ_max = 1.5·1 000 / 200 = 7.5 kg/cm².",
+  "shr.s4.fig":
+    "Rectangle: τ is parabolic, with its maximum at the neutral axis.",
+  "shr.s5.kicker":
+    "05 — Double-T",
+  "shr.s5.title":
+    "Double-T profile",
+  "shr.s5.p1":
+    "With flange width b, overall depth h, clear depth h_0 between flanges (the web is δ_1 thick, each flange δ thick) and J_x of the whole profile, the same formula gives, for a cut through the flange and through the web:",
+  "shr.s5.flange":
+    "In the flange",
+  "shr.s5.web":
+    "In the web",
+  "shr.s5.p2":
+    "At the junction of the web and the flange the width of the cut goes from b to δ_1, so τ jumps by the factor b/δ_1: the web carries almost all the shear, and in the flanges the stresses are small. This is why, in practice, the shear of an I-beam is checked as Q divided by the area of the web.",
+  "shr.s5.fig":
+    "Double-T: τ is small in the flanges, jumps at the junction and is almost constant in the web.",
+  "shr.footer":
+    "Transcribed from the handwritten course notes “Tensiones de corte en la flexión”; the formulas are checked in the test suite (the stresses add up to Q).",
 } as const;
 
 export type TranslationKey = keyof typeof EN;
@@ -2052,6 +2216,170 @@ const ES: Record<TranslationKey, string> = {
     "F = Δl·A·E / l = 5·3,57·2 100 000 / 2 500 ≈ 15 000 kg; σ = F/A ≈ 4 202 kg/cm² > σ_adm = 1 400: NO verifica.",
   "axl.footer":
     "Transcripto del apunte manuscrito “Axil AMS” de la cátedra; los números de los ejercicios se recalcularon y coinciden con el apunte.",
+  "fla.link":
+    "Flecha",
+  "fla.title":
+    "Flecha de vigas",
+  "fla.lead":
+    "De la curvatura 1/ρ = M/(E·J) a la elástica y a la flecha f = ∫M·x dx/(E·J), más los siete casos habituales y una calculadora. Según el apunte “Flecha AMS 2020” de la cátedra.",
+  "fla.s1.kicker":
+    "01 — Curvatura",
+  "fla.s1.title":
+    "Deformaciones en la flexión pura normal",
+  "fla.s1.p1":
+    "Una sección de la viga gira alrededor de su eje neutro. Por semejanza de triángulos, una fibra a distancia y del eje neutro tiene una deformación específica ε = y/ρ, donde ρ es el radio de curvatura del eje de la viga (C es el centro de curvatura):",
+  "fla.s1.e1":
+    "1/ρ = ε / y",
+  "fla.s1.p2":
+    "Con la ley de Hooke ε = σ/E y la tensión de flexión σ = M·y/J_x:",
+  "fla.s1.e2":
+    "ε = σ/E = M·y / (J_x·E)",
+  "fla.s1.p3":
+    "Reemplazando resulta la curvatura, y el radio, cuyas unidades cierran: (kg/cm²)·cm⁴ / (kg·cm) = cm.",
+  "fla.s1.fig":
+    "Un elemento ds del eje de la viga: ρ es el radio de curvatura, dθ el ángulo entre las dos secciones.",
+  "fla.s2.kicker":
+    "02 — Elástica",
+  "fla.s2.title":
+    "La ecuación diferencial",
+  "fla.s2.p1":
+    "Para un elemento del eje, ds = ρ·dθ, o sea 1/ρ = dθ/ds, y para pendientes chicas ds ≈ dz. Además tg θ = dy/dz ≈ θ. Entonces:",
+  "fla.s2.e1":
+    "1/ρ = dθ/dz = d²y/dz²",
+  "fla.s2.p2":
+    "Con los ejes que adopta el apunte (z crece mientras θ decrece) el signo es negativo, 1/ρ = −d²y/dz², e igualando con la curvatura queda la ecuación diferencial de la línea elástica:",
+  "fla.s2.p3":
+    "Integrándola una vez se obtiene la pendiente θ(z), y dos veces, la flecha y(z), con las constantes de integración fijadas por los vínculos.",
+  "fla.s3.kicker":
+    "03 — Flecha en un punto",
+  "fla.s3.title":
+    "La flecha como integral",
+  "fla.s3.p1":
+    "Sea un elemento CD de longitud dx a distancia x del extremo donde se quiere la flecha. Las dos secciones giran un ángulo relativo dα, con dx = ρ·dα, o sea dα = dx/ρ. La tangente en D se aparta de la de C, en el extremo, en:",
+  "fla.s3.p2":
+    "y sumando en toda la longitud:",
+  "fla.s3.p3":
+    "Es el momento del diagrama M/(E·J) respecto del extremo donde se mide la flecha: el primer teorema del área de momentos. En una ménsula, con x desde el extremo libre, da f directamente.",
+  "fla.s4.kicker":
+    "04 — Casos habituales",
+  "fla.s4.title":
+    "Los siete casos",
+  "fla.s4.p1":
+    "Flecha máxima de las vigas más comunes. En todos l es la luz, E el módulo de elasticidad y J_x el momento de inercia; q, P y p son la carga (p es la ordenada máxima de una carga triangular).",
+  "fla.case.ss-udl":
+    "Simplemente apoyada con carga repartida",
+  "fla.case.ss-point":
+    "Simplemente apoyada con carga concentrada al centro",
+  "fla.case.cant-udl":
+    "Empotrada con carga distribuida",
+  "fla.case.cant-point":
+    "Empotrada con carga concentrada en el extremo libre",
+  "fla.case.cant-tri-down":
+    "Empotrada con carga triangular decreciente (máx. en el empotramiento)",
+  "fla.case.cant-tri-up":
+    "Empotrada con carga triangular creciente (máx. en el extremo libre)",
+  "fla.case.ss-tri":
+    "Simplemente apoyada con diagrama triangular",
+  "fla.case.ss-tri.z":
+    "El máximo está a z = 0,519·l del extremo donde la carga es nula.",
+  "fla.s4.note":
+    "Cada coeficiente se verifica en los tests de la app contra una doble integración numérica de M/(E·J).",
+  "fla.calc.title":
+    "Calculadora",
+  "fla.calc.case":
+    "Caso",
+  "fla.calc.load.point":
+    "P (kg)",
+  "fla.calc.load.dist":
+    "carga (kg/cm)",
+  "fla.calc.l":
+    "l (cm)",
+  "fla.calc.E":
+    "E (kg/cm²)",
+  "fla.calc.J":
+    "J_x (cm⁴)",
+  "fla.calc.result":
+    "f_max",
+  "fla.calc.ratio":
+    "= l / ",
+  "fla.footer":
+    "Transcripto del apunte manuscrito “Flecha AMS 2020” de la cátedra.",
+  "shr.link":
+    "Corte en flexión",
+  "shr.title":
+    "Tensiones de corte en la flexión",
+  "shr.lead":
+    "Del corte puro y el teorema de Cauchy a la fórmula de Jourawski–Colignon τ = Q·S/(J·s), la distribución parabólica en un rectángulo y el perfil doble T. Según el apunte “Tensiones de corte en la flexión” de la cátedra.",
+  "shr.s1.kicker":
+    "01 — Corte puro",
+  "shr.s1.title":
+    "Corte puro",
+  "shr.s1.p1":
+    "El corte puro se produce, exacta o aproximadamente, en la cizalladura y en remaches o tornillos que unen chapas sometidas a fuerzas de tracción: la tensión se toma uniforme en el área A que resiste,",
+  "shr.s1.e1":
+    "τ = Q / A",
+  "shr.s1.p2":
+    "(El apunte escribe la tensión tangencial con la misma letra que la normal; acá τ es siempre tangencial.)",
+  "shr.s2.kicker":
+    "02 — Cauchy",
+  "shr.s2.title":
+    "Teorema de Cauchy y tensiones de resbalamiento",
+  "shr.s2.p1":
+    "En dos planos normales cuya intersección define una arista, las componentes normales a ésta de las tensiones tangenciales que actúan en dichos planos son de igual intensidad y concurren o se alejan de la arista:",
+  "shr.s2.e1":
+    "τ_xy = τ_yx        τ_xz = τ_zx        τ_yz = τ_zy",
+  "shr.s2.p2":
+    "En una viga sometida a corte y momento, las tensiones horizontales necesarias para mantener el equilibrio producirían un deslizamiento en planos horizontales: el corte en planos verticales implica necesariamente corte en planos horizontales, y viceversa. Son las tensiones de resbalamiento τ_L, presentes en todas las fibras (la imagen es la de tablones apilados que resbalan unos contra otros).",
+  "shr.s2.p3":
+    "El corte Q en una sección es la resultante de todas las fuerzas que actúan a la izquierda de la sección considerada; por razones de equilibrio, la resultante de todas las de la derecha es igual y opuesta, y actúa sobre una sección infinitamente próxima.",
+  "shr.s3.kicker":
+    "03 — Jourawski",
+  "shr.s3.title":
+    "La fórmula de Jourawski–Colignon",
+  "shr.s3.p1":
+    "La existencia del corte origina tensiones tangenciales en el plano de la sección. Sea una viga de sección constante y una rebanada de largo dx entre las secciones 1 y 2. Por la flexión, a una distancia y del eje neutro la tensión es σ = M·y/J_x en la sección 1 y σ + dσ = (M + dM)·y/J_x en la 2.",
+  "shr.s3.p2":
+    "Ahora separamos una parte de la rebanada por una superficie cilíndrica de ancho s. En la parte rayada (área Ω) las tensiones normales generan una fuerza N en la sección 1 y N + dN en la 2; ambas son coaxiales y su resultante es",
+  "shr.s3.e1":
+    "dN = ∫Ω (dM/J_x)·y dΩ",
+  "shr.s3.p3":
+    "Esa fuerza tiende a deslizar la parte superior respecto del resto. A esa acción se oponen tensiones tangenciales τ que actúan en la superficie de separación; son paralelas al eje de la pieza y varían en forma continua. Siendo s la longitud de la curva de intersección de la superficie con el plano de la sección, dT = dx·∫τ ds, y por equilibrio dT = dN:",
+  "shr.s3.e2":
+    "(dM/J_x)·∫Ω y dΩ = dx·∫s τ ds",
+  "shr.s3.p4":
+    "La integral de la izquierda es el momento estático S_x del área Ω respecto del eje neutro, y la de la derecha es τ_m·s, con τ_m el valor medio de τ a lo largo de s. Como dM/dx = Q:",
+  "shr.s3.p5":
+    "Por el teorema de Cauchy, estas tensiones de resbalamiento longitudinal dan origen, en el plano de la sección, a tensiones tangenciales normales a la curva s en cada punto; τ_m es su valor medio. S_x es el momento estático de la parte de la sección a un lado del corte, y s es el ancho del corte.",
+  "shr.s4.kicker":
+    "04 — Rectángulo",
+  "shr.s4.title":
+    "Distribución en una sección rectangular",
+  "shr.s4.p1":
+    "Para b × h, con el corte a una altura y sobre el eje neutro, s = b, J_x = b·h³/12 y el momento estático de la parte superior es S_x = b·(h/2 − y)·[(h/2 − y)/2 + y] = ½·b·(h²/4 − y²). Reemplazando:",
+  "shr.s4.p2":
+    "La distribución es una parábola, nula en las fibras extremas y máxima en el eje neutro (y = 0):",
+  "shr.s4.p3":
+    "o sea un 50 % más que el corte medio Q/superficie.",
+  "shr.s4.ex":
+    "Ejemplo: b = 10 cm, h = 20 cm, Q = 1 000 kg → medio Q/A = 5 kg/cm², τ_max = 1,5·1 000 / 200 = 7,5 kg/cm².",
+  "shr.s4.fig":
+    "Rectángulo: τ es parabólica, con máximo en el eje neutro.",
+  "shr.s5.kicker":
+    "05 — Doble T",
+  "shr.s5.title":
+    "Perfil doble T",
+  "shr.s5.p1":
+    "Con ancho de ala b, altura total h, altura libre h_0 entre alas (el alma tiene espesor δ_1 y cada ala δ) y J_x de todo el perfil, la misma fórmula da, para un corte por el ala y por el alma:",
+  "shr.s5.flange":
+    "En el ala",
+  "shr.s5.web":
+    "En el alma",
+  "shr.s5.p2":
+    "En la unión del alma con el ala el ancho del corte pasa de b a δ_1, así que τ salta en el factor b/δ_1: el alma absorbe casi todo el corte, y en las alas las tensiones son chicas. Por eso, en la práctica, el corte de una viga doble T se verifica como Q dividido el área del alma.",
+  "shr.s5.fig":
+    "Doble T: τ es chica en las alas, salta en la unión y es casi constante en el alma.",
+  "shr.footer":
+    "Transcripto del apunte manuscrito “Tensiones de corte en la flexión” de la cátedra; las fórmulas se verifican en los tests (las tensiones suman Q).",
 };
 
 const translations: Record<Language, Record<TranslationKey, string>> = {
