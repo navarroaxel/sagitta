@@ -1,5 +1,6 @@
 "use client";
 
+import NavMenu from "@/components/NavMenu";
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import FrameCanvas, { ViewOptions } from "@/components/FrameCanvas";
@@ -415,6 +416,7 @@ export default function LearnPage() {
         <h1 className="text-base font-semibold tracking-tight text-stone-800 dark:text-stone-100">
           {t("learn.title")}
         </h1>
+        <NavMenu />
         <div className="flex-1" />
         {/* Preset selector */}
         <div className="flex gap-1">

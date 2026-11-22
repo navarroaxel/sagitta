@@ -1,5 +1,6 @@
 "use client";
 
+import NavMenu from "@/components/NavMenu";
 import React from "react";
 import Link from "next/link";
 import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
@@ -98,6 +99,7 @@ export function GuidePage({
         </Link>
         <span className="text-stone-300 dark:text-stone-600">|</span>
         <h1 className="text-base font-semibold tracking-tight text-stone-800 dark:text-stone-100">{t(title)}</h1>
+        <NavMenu />
         <div className="flex-1" />
         <SettingsPanel />
       </header>

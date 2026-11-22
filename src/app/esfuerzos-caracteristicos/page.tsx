@@ -1,5 +1,6 @@
 "use client";
 
+import NavMenu from "@/components/NavMenu";
 import React from "react";
 import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -85,6 +86,7 @@ export default function EsfuerzosCaracteristicosPage() {
         <h1 className="text-base font-semibold tracking-tight text-stone-800 dark:text-stone-100">
           {t("esf.title")}
         </h1>
+        <NavMenu />
         <div className="flex-1" />
         <SettingsPanel />
       </header>
