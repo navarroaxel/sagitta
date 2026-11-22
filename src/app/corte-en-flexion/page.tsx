@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Sub } from "@/components/Sub";
+import { SvgSub } from "@/components/Sub";
 import { Eq, Figure, GuidePage, Para, Section } from "@/components/guide/GuideBits";
 import { tauIFlange, tauIWeb, tauRect, tauRectMax, type ISection } from "@/lib/shear";
 
@@ -28,7 +28,7 @@ function RectSVG() {
       <line x1="30" y1={top + H / 2} x2="215" y2={top + H / 2} stroke={INK} strokeWidth="1.2" strokeDasharray="3 3" />
       <polygon points={`130,${top} ${pts.join(" ")} 130,${top + H}`} fill={SHEAR} opacity="0.3" stroke={SHEAR} strokeWidth="1.8" />
       <line x1="130" y1={top - 6} x2="130" y2={top + H + 6} stroke={INK} strokeWidth="1" />
-      <text x="202" y={top + H / 2 - 6} fontSize="12" fill={INK}><Sub>τ_max</Sub></text>
+      <text x="202" y={top + H / 2 - 6} fontSize="12" fill={INK}><SvgSub>τ_max</SvgSub></text>
       <text x="26" y={top + H / 2 - 6} fontSize="12" fill={INK} textAnchor="end" fontStyle="italic">G</text>
       <text x="76" y="172" fontSize="12" textAnchor="middle" fill={INK} fontStyle="italic">b</text>
     </svg>
@@ -43,14 +43,22 @@ function IProfileSVG() {
   const cy = 90;
   const cx = 70;
   const tmax = tauIWeb(1, s, 0);
-  const side = (y: number) => {
-    const v = Math.abs(y) <= s.h0 / 2 ? tauIWeb(1, s, y) : tauIFlange(1, s, y);
-    return 150 + (v / tmax) * 60;
-  };
-  const ys: number[] = [];
-  for (let i = 0; i <= 60; i++) ys.push(s.h / 2 - (i / 60) * s.h);
-  ys.splice(0, 0, s.h / 2);
-  const poly = ys.map((y) => `${side(y).toFixed(1)},${(cy - y * k).toFixed(1)}`).join(" ");
+  const x = (v: number) => 150 + (v / tmax) * 60;
+  // Sample each piece with its own formula and include BOTH sides of the web–flange boundaries, so the
+  // discontinuity (a jump by b/tw) is drawn as a vertical step instead of a ramp.
+  const seg = (y0: number, y1: number, f: (y: number) => number, n: number) =>
+    Array.from({ length: n + 1 }, (_, i) => {
+      const y = y0 + ((y1 - y0) * i) / n;
+      return [y, f(y)] as const;
+    });
+  const flange = (y: number) => tauIFlange(1, s, y);
+  const web = (y: number) => tauIWeb(1, s, y);
+  const samples = [
+    ...seg(s.h / 2, s.h0 / 2, flange, 8),
+    ...seg(s.h0 / 2, -s.h0 / 2, web, 40),
+    ...seg(-s.h0 / 2, -s.h / 2, flange, 8),
+  ];
+  const poly = samples.map(([y, v]) => `${x(v).toFixed(1)},${(cy - y * k).toFixed(1)}`).join(" ");
   const fl = ((s.h - s.h0) / 2) * k;
   return (
     <svg viewBox="0 0 240 180" className="h-auto w-full" role="img" aria-label={t("shr.s5.fig")}>
@@ -60,7 +68,7 @@ function IProfileSVG() {
       <line x1="20" y1={cy} x2="225" y2={cy} stroke={INK} strokeWidth="1.2" strokeDasharray="3 3" />
       <polygon points={`150,${cy - (s.h * k) / 2} ${poly} 150,${cy + (s.h * k) / 2}`} fill={SHEAR} opacity="0.3" stroke={SHEAR} strokeWidth="1.8" />
       <line x1="150" y1={cy - (s.h * k) / 2 - 4} x2="150" y2={cy + (s.h * k) / 2 + 4} stroke={INK} strokeWidth="1" />
-      <text x="212" y={cy - 6} fontSize="12" fill={INK}><Sub>τ_max</Sub></text>
+      <text x="212" y={cy - 6} fontSize="12" fill={INK}><SvgSub>τ_max</SvgSub></text>
     </svg>
   );
 }

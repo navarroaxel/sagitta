@@ -16,13 +16,14 @@ export default function DeflectionCalculator() {
   const [J, setJ] = useState("8000");
   const c = DEFLECTION_CASES.find((d) => d.id === id)!;
   const f = maxDeflection(id, num(w), num(l), num(E), num(J));
-  const ok = Number.isFinite(f) && num(E) > 0 && num(J) > 0;
+  const ok =
+    [num(w), num(l), num(E), num(J), f].every(Number.isFinite) && num(l) > 0 && num(E) > 0 && num(J) > 0;
 
-  const field = (label: string, value: string, set: (v: string) => void, name: string) => (
+  const field = (label: string, value: string, set: (v: string) => void) => (
     <label className="flex flex-col gap-1 text-sm text-stone-600 dark:text-stone-400">
       <Sub>{label}</Sub>
       <input
-        aria-label={name}
+        aria-label={label.replace(/_/g, "")}
         inputMode="decimal"
         value={value}
         onChange={(e) => set(e.target.value)}
@@ -37,7 +38,7 @@ export default function DeflectionCalculator() {
       <label className="mb-3 flex flex-col gap-1 text-sm text-stone-600 dark:text-stone-400">
         {t("fla.calc.case")}
         <select
-          aria-label="case"
+          aria-label={t("fla.calc.case")}
           value={id}
           onChange={(e) => setId(e.target.value as DeflectionCaseId)}
           className="rounded border border-stone-300 bg-white px-2 py-1 text-stone-900 dark:border-stone-600 dark:bg-stone-900 dark:text-stone-100"
@@ -50,10 +51,10 @@ export default function DeflectionCalculator() {
         </select>
       </label>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {field(c.load === "point" ? t("fla.calc.load.point") : t("fla.calc.load.dist"), w, setW, "load")}
-        {field(t("fla.calc.l"), l, setL, "l")}
-        {field(t("fla.calc.E"), E, setE, "E")}
-        {field(t("fla.calc.J"), J, setJ, "J")}
+        {field(c.load === "point" ? t("fla.calc.load.point") : t("fla.calc.load.dist"), w, setW)}
+        {field(t("fla.calc.l"), l, setL)}
+        {field(t("fla.calc.E"), E, setE)}
+        {field(t("fla.calc.J"), J, setJ)}
       </div>
       <p className="mt-3 font-mono text-lg" data-testid="deflection-result">
         <Sub>{t("fla.calc.result")}</Sub> = {ok ? `${f.toFixed(3)} cm` : "—"}

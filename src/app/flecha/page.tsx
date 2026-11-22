@@ -12,21 +12,33 @@ const FAINT = "#C9D2D8";
 const LOAD = "#C0392B";
 const MOMENT = "#7A2A9A";
 
-// Element ds of the axis with centre of curvature C.
+// Element ds of the axis: circular arcs centred on C, radii meeting the ends of ds.
 function CurvatureSVG() {
   const { t } = useLanguage();
+  const cx = 130;
+  const cy = 20;
+  const rho = 140;
+  const pt = (r: number, phi: number) => [cx + r * Math.sin(phi), cy + r * Math.cos(phi)] as const;
+  const arc = (r: number, phi: number) => {
+    const [x1, y1] = pt(r, -phi);
+    const [x2, y2] = pt(r, phi);
+    return `M ${x1.toFixed(1)} ${y1.toFixed(1)} A ${r} ${r} 0 0 0 ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+  };
+  const dphi = 0.18;
+  const [ax, ay] = pt(rho, -dphi);
+  const [bx, by] = pt(rho, dphi);
   return (
     <svg viewBox="0 0 260 190" className="h-auto w-full" role="img" aria-label={t("fla.s1.fig")}>
-      <line x1="130" y1="20" x2="90" y2="140" stroke={FAINT} strokeWidth="1.5" strokeDasharray="4 3" />
-      <line x1="130" y1="20" x2="170" y2="140" stroke={FAINT} strokeWidth="1.5" strokeDasharray="4 3" />
-      <path d="M 40 150 Q 130 120 220 150" fill="none" stroke={INK} strokeWidth="2.5" />
-      <path d="M 108 133 Q 130 127 152 133" fill="none" stroke={MOMENT} strokeWidth="4" />
-      <path d="M 118 52 A 36 36 0 0 0 142 52" fill="none" stroke={INK} strokeWidth="1.5" />
-      <circle cx="130" cy="20" r="3.5" fill={INK} />
+      <line x1={cx} y1={cy} x2={ax} y2={ay} stroke={FAINT} strokeWidth="1.5" strokeDasharray="4 3" />
+      <line x1={cx} y1={cy} x2={bx} y2={by} stroke={FAINT} strokeWidth="1.5" strokeDasharray="4 3" />
+      <path d={arc(rho, 0.5)} fill="none" stroke={INK} strokeWidth="2.5" />
+      <path d={arc(rho, dphi)} fill="none" stroke={MOMENT} strokeWidth="4" />
+      <path d={arc(40, dphi)} fill="none" stroke={INK} strokeWidth="1.5" />
+      <circle cx={cx} cy={cy} r="3.5" fill={INK} />
       <text x="138" y="18" fontSize="13" fontWeight="600" fill={INK}>C</text>
       <text x="130" y="72" fontSize="12" fontStyle="italic" textAnchor="middle" fill={INK}>dθ</text>
-      <text x="96" y="86" fontSize="13" fontStyle="italic" fill={INK}>ρ</text>
-      <text x="130" y="165" fontSize="12" fontStyle="italic" textAnchor="middle" fill={MOMENT}>ds</text>
+      <text x="108" y="96" fontSize="13" fontStyle="italic" fill={INK}>ρ</text>
+      <text x="130" y="180" fontSize="12" fontStyle="italic" textAnchor="middle" fill={MOMENT}>ds</text>
     </svg>
   );
 }
