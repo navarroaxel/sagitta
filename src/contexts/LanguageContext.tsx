@@ -1748,6 +1748,130 @@ const EN = {
     "Two details of the notes. The torque is written with a plus sign, (τ_xy·z + τ_xz·y); with y and z the coordinates of dF, the moment of the shear forces about x is a difference. And M_y and M_z are written with τ, but they are the moments of the normal stresses σ (the signs depend on the axis convention).",
   "mat.footer":
     "Transcribed and ordered from the course notes “Propiedades de los materiales”; the diagrams were redrawn.",
+  "rs.link":
+    "Course summary",
+  "rs.title":
+    "Course summary",
+  "rs.lead":
+    "One page to study from: every formula of the guides with its units and use, the five theory questions with a model answer, and a checklist for the exam. Print it with the button.",
+  "rs.footer":
+    "Summary of the guides of this site; the formulas are the ones of the course notes (kg and cm).",
+  "rs.print":
+    "Print",
+  "rs.s1.kicker":
+    "Formulas",
+  "rs.s1.title":
+    "Everything in one table",
+  "rs.s1.units":
+    "Units: kg and cm. J in cm⁴, W in cm³, σ and τ in kg/cm². J is ∫y²dA, so it is length⁴.",
+  "rs.th.topic":
+    "Topic",
+  "rs.th.formula":
+    "Formula",
+  "rs.th.use":
+    "Used for",
+  "rs.t.axil":
+    "Axial load",
+  "rs.u.axil":
+    "Stress and elongation of a bar",
+  "rs.t.hooke":
+    "Hooke",
+  "rs.u.hooke":
+    "Elastic zone of the tensile test; E = tg β",
+  "rs.t.safety":
+    "Safety factor",
+  "rs.u.safety":
+    "Admissible stress, ν ≈ 2–4",
+  "rs.t.torsion":
+    "Torsion (circular)",
+  "rs.u.torsion":
+    "Shafts: stress, twist angle, sizing",
+  "rs.t.flexion":
+    "Bending",
+  "rs.u.flexion":
+    "Check and size beams; W = J/y_max",
+  "rs.t.shear":
+    "Shear in bending",
+  "rs.u.shear":
+    "Shear stress at each fibre; S = static moment of the area on one side",
+  "rs.t.flecha":
+    "Deflection",
+  "rs.u.flecha":
+    "Curvature of the elastic line; 5/384 simply supported + UDL, 1/48 central load, 1/3 cantilever + end load, 1/8 cantilever + UDL",
+  "rs.t.pandeo":
+    "Buckling",
+  "rs.u.pandeo":
+    "Compressed slender bars; c = 2, 1, 0.7, 0.5; λ = l_0/i, i = √(J/A), σ_k = π²E/λ²",
+  "rs.t.steiner":
+    "Steiner",
+  "rs.u.steiner":
+    "Inertia about an axis parallel to the centroidal one",
+  "rs.t.stress":
+    "Stress state",
+  "rs.u.stress":
+    "Stress on any plane; principal stresses are the roots of σ³ − I_1σ² + I_2σ − I_3 = 0",
+  "rs.s2.kicker":
+    "Theory",
+  "rs.s2.title":
+    "The five exam questions",
+  "rs.q1.t":
+    "Hypotheses of torsion (circular shaft)",
+  "rs.q1.a1":
+    "Plane sections stay plane and circular.",
+  "rs.q1.a2":
+    "Radii stay straight when they turn.",
+  "rs.q1.a3":
+    "The distance between sections does not change (no longitudinal strain).",
+  "rs.q1.a4":
+    "Elastic linear material (Hooke) and small deformations.",
+  "rs.q1.a5":
+    "Consequence: τ grows linearly with ρ, from 0 at the centre to the maximum at the edge.",
+  "rs.q2.t":
+    "Collignon–Jourawski",
+  "rs.q2.a1":
+    "It gives the shear stress that the shear force Q produces in bending: τ = Q·S/(J·s).",
+  "rs.q2.a2":
+    "S is the static moment, about the neutral axis, of the area on one side of the fibre studied; s is the width of the section at that fibre.",
+  "rs.q2.a3":
+    "Rectangle: τ is parabolic, 0 at the edges and maximum at the neutral axis, τ_max = 3Q/(2A).",
+  "rs.q2.a4":
+    "Double T: almost all the shear is carried by the web.",
+  "rs.q3.t":
+    "Stable, unstable and indifferent equilibrium",
+  "rs.q3.a1":
+    "Stable, F < F_k: after a small push the bar goes back to its position.",
+  "rs.q3.a2":
+    "Indifferent, F = F_k: it stays in any nearby position.",
+  "rs.q3.a3":
+    "Unstable, F > F_k: it moves away from the position and buckles.",
+  "rs.q4.t":
+    "Hooke's law",
+  "rs.q4.a1":
+    "σ = E·ε: stress and strain are proportional up to the proportionality limit σ_P.",
+  "rs.q4.a2":
+    "E is the slope of the straight line (E = tg β) and measures the stiffness of the material.",
+  "rs.q4.a3":
+    "It holds only in the elastic zone.",
+  "rs.q5.t":
+    "Steiner's theorem",
+  "rs.q5.a1":
+    "J = J_g + A·d²: the inertia about an axis parallel to the centroidal one is the centroidal inertia plus the area times the distance squared.",
+  "rs.q5.a2":
+    "It is used for composite sections, where every part has its centroid away from the common axis.",
+  "rs.q5.a3":
+    "It follows that J_g is the smallest of all the parallel axes.",
+  "rs.s3.kicker":
+    "Method",
+  "rs.s3.title":
+    "Before handing in",
+  "rs.s3.c1":
+    "Look at the unit of the result: it must be the one the exercise asks for.",
+  "rs.s3.c2":
+    "Check the order of magnitude against a known case.",
+  "rs.s3.c3":
+    "Write down the assumptions you used.",
+  "rs.s3.note":
+    "Two slips of the notes to keep in mind: the torque written with a plus sign is a difference, and in the buckling exercise the profile with J_y = 14 435 cm⁴ is an IPB 700, not an IPB 60.",
 } as const;
 
 export type TranslationKey = keyof typeof EN;
@@ -3490,6 +3614,130 @@ const ES: Record<TranslationKey, string> = {
     "Dos detalles del apunte. El torsor está escrito con signo más, (τ_xy·z + τ_xz·y); con y y z las coordenadas de dF, el momento de las fuerzas de corte respecto de x es una diferencia. Y M_y y M_z están escritos con τ, pero son los momentos de las tensiones normales σ (los signos dependen de la convención de ejes).",
   "mat.footer":
     "Transcripto y ordenado del apunte “Propiedades de los materiales” de la cátedra; los diagramas se redibujaron.",
+  "rs.link":
+    "Resumen del curso",
+  "rs.title":
+    "Resumen del curso",
+  "rs.lead":
+    "Una hoja para estudiar: todas las fórmulas de las guías con sus unidades y para qué se usan, las cinco preguntas de teoría con una respuesta modelo y una lista de chequeo para el parcial. Se imprime con el botón.",
+  "rs.footer":
+    "Resumen de las guías de este sitio; las fórmulas son las de los apuntes del curso (kg y cm).",
+  "rs.print":
+    "Imprimir",
+  "rs.s1.kicker":
+    "Fórmulas",
+  "rs.s1.title":
+    "Todo en una tabla",
+  "rs.s1.units":
+    "Unidades: kg y cm. J en cm⁴, W en cm³, σ y τ en kg/cm². J es ∫y²dA, por eso es longitud⁴.",
+  "rs.th.topic":
+    "Tema",
+  "rs.th.formula":
+    "Fórmula",
+  "rs.th.use":
+    "Se usa para",
+  "rs.t.axil":
+    "Axil",
+  "rs.u.axil":
+    "Tensión y alargamiento de una barra",
+  "rs.t.hooke":
+    "Hooke",
+  "rs.u.hooke":
+    "Zona elástica del ensayo; E = tg β",
+  "rs.t.safety":
+    "Coeficiente de seguridad",
+  "rs.u.safety":
+    "Tensión admisible, ν ≈ 2–4",
+  "rs.t.torsion":
+    "Torsión (circular)",
+  "rs.u.torsion":
+    "Ejes: tensión, ángulo de giro, dimensionado",
+  "rs.t.flexion":
+    "Flexión",
+  "rs.u.flexion":
+    "Verificar y dimensionar vigas; W = J/y_max",
+  "rs.t.shear":
+    "Corte en flexión",
+  "rs.u.shear":
+    "Tensión de corte en cada fibra; S = momento estático del área de un lado",
+  "rs.t.flecha":
+    "Flecha",
+  "rs.u.flecha":
+    "Curvatura de la elástica; 5/384 apoyada + uniforme, 1/48 carga central, 1/3 ménsula + carga en el extremo, 1/8 ménsula + uniforme",
+  "rs.t.pandeo":
+    "Pandeo",
+  "rs.u.pandeo":
+    "Barras comprimidas esbeltas; c = 2, 1, 0,7, 0,5; λ = l_0/i, i = √(J/A), σ_k = π²E/λ²",
+  "rs.t.steiner":
+    "Steiner",
+  "rs.u.steiner":
+    "Inercia respecto de un eje paralelo al baricéntrico",
+  "rs.t.stress":
+    "Estado de tensión",
+  "rs.u.stress":
+    "Tensión sobre un plano cualquiera; las principales son las raíces de σ³ − I_1σ² + I_2σ − I_3 = 0",
+  "rs.s2.kicker":
+    "Teoría",
+  "rs.s2.title":
+    "Las cinco preguntas del parcial",
+  "rs.q1.t":
+    "Hipótesis de la torsión (eje circular)",
+  "rs.q1.a1":
+    "Las secciones planas siguen planas y circulares.",
+  "rs.q1.a2":
+    "Los radios siguen rectos al girar.",
+  "rs.q1.a3":
+    "La distancia entre secciones no cambia (no hay deformación longitudinal).",
+  "rs.q1.a4":
+    "Material elástico lineal (Hooke) y deformaciones pequeñas.",
+  "rs.q1.a5":
+    "Consecuencia: τ crece linealmente con ρ, de 0 en el centro al máximo en el borde.",
+  "rs.q2.t":
+    "Collignon–Jourawski",
+  "rs.q2.a1":
+    "Da la tensión de corte que produce el esfuerzo de corte Q en flexión: τ = Q·S/(J·s).",
+  "rs.q2.a2":
+    "S es el momento estático, respecto del eje neutro, del área de un lado de la fibra estudiada; s es el ancho de la sección en esa fibra.",
+  "rs.q2.a3":
+    "Rectángulo: τ es parabólica, 0 en los bordes y máxima en el eje neutro, τ_max = 3Q/(2A).",
+  "rs.q2.a4":
+    "Doble T: casi todo el corte lo toma el alma.",
+  "rs.q3.t":
+    "Equilibrio estable, inestable e indiferente",
+  "rs.q3.a1":
+    "Estable, F < F_k: tras un pequeño empujón la barra vuelve a su posición.",
+  "rs.q3.a2":
+    "Indiferente, F = F_k: queda en cualquier posición cercana.",
+  "rs.q3.a3":
+    "Inestable, F > F_k: se aleja de la posición y pandea.",
+  "rs.q4.t":
+    "Ley de Hooke",
+  "rs.q4.a1":
+    "σ = E·ε: tensión y deformación son proporcionales hasta el límite de proporcionalidad σ_P.",
+  "rs.q4.a2":
+    "E es la pendiente de la recta (E = tg β) y mide la rigidez del material.",
+  "rs.q4.a3":
+    "Vale solo en la zona elástica.",
+  "rs.q5.t":
+    "Teorema de Steiner",
+  "rs.q5.a1":
+    "J = J_g + A·d²: la inercia respecto de un eje paralelo al baricéntrico es la baricéntrica más el área por la distancia al cuadrado.",
+  "rs.q5.a2":
+    "Sirve para secciones compuestas, donde cada parte tiene su baricentro lejos del eje común.",
+  "rs.q5.a3":
+    "De la fórmula sale que J_g es la mínima entre todos los ejes paralelos.",
+  "rs.s3.kicker":
+    "Método",
+  "rs.s3.title":
+    "Antes de entregar",
+  "rs.s3.c1":
+    "Mirá la unidad del resultado: tiene que ser la que pide el ejercicio.",
+  "rs.s3.c2":
+    "Chequeá el orden de magnitud contra un caso conocido.",
+  "rs.s3.c3":
+    "Anotá los supuestos que usaste.",
+  "rs.s3.note":
+    "Dos errores de los apuntes para tener presentes: el torsor escrito con signo más es una diferencia, y en el ejercicio de pandeo el perfil con J_y = 14 435 cm⁴ es un IPB 700, no un IPB 60.",
 };
 
 const translations: Record<Language, Record<TranslationKey, string>> = {

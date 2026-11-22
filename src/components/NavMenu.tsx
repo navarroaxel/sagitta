@@ -24,6 +24,7 @@ const LINKS: { href: string; labelKey: TranslationKey }[] = [
   { href: "/pandeo", labelKey: "pnd.link" },
   { href: "/flecha", labelKey: "fla.link" },
   { href: "/corte-en-flexion", labelKey: "shr.link" },
+  { href: "/resumen", labelKey: "rs.link" },
 ];
 
 export default function NavMenu() {
