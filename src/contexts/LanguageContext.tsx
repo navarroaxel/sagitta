@@ -925,6 +925,110 @@ const EN = {
     "A note on the source: the book prints τ_max = 549 kg/cm² for the first exercise, but its own formula gives 472 kg/cm²; the value above is recomputed.",
   "tor.footer":
     "Summarised and recomputed from Raffo, C. M., Estática y Resistencia de Materiales (ch. XXIII, Torsión); equation numbers are not kept.",
+  "axl.link":
+    "Axial load",
+  "axl.title":
+    "Axial load (tension and compression)",
+  "axl.lead":
+    "Simple tension and compression: the hypotheses that make σ = N/A uniform, the sizing and verification formulas, the elongation Δl = N·l/(A·E), self-weight, and three worked exercises. From the course notes “Axil AMS”.",
+  "axl.s1.kicker":
+    "01 — Definition",
+  "axl.s1.title":
+    "Simple axial load",
+  "axl.s1.p1":
+    "A bar is in simple tension or compression when the load P is applied at the centroid and equals N over the whole section, with Q = M_f = M_t = 0. (The notes call the area F; here it is A, to avoid confusion with a force.)",
+  "axl.s1.p2":
+    "Equilibrium of the section gives six conditions. Only the first one is not zero:",
+  "axl.s1.e1":
+    "N = ∫ σ dA",
+  "axl.s1.e2":
+    "0 = ∫ τ_xy dA        0 = ∫ τ_xz dA",
+  "axl.s1.e3":
+    "0 = ∫ (τ_xz·y − τ_xy·z) dA",
+  "axl.s1.e4":
+    "0 = ∫ σ·z dA        0 = ∫ σ·y dA",
+  "axl.s2.kicker":
+    "02 — Hypotheses",
+  "axl.s2.title":
+    "Why σ is uniform",
+  "axl.s2.h1":
+    "Hooke’s law: σ = E·ε, with E = tan α the slope of the σ–ε line.",
+  "axl.s2.h2":
+    "Saint-Venant: the cross-section stays plane and parallel to itself after the deformation, if it is far from the ends; so there is no stress concentration.",
+  "axl.s2.p1":
+    "The shear strains must then be zero or constant. If γ = 0 then τ = 0. If γ were a nonzero constant, τ would be constant and ∫τ dA = 0 could not hold. So τ_xy = τ_xz = 0 and conditions 2, 3 and 4 are identically satisfied.",
+  "axl.s2.p2":
+    "Since the sections just translate parallel to themselves, ε = Δl/l is constant, hence σ = E·ε is constant. Then ∫σ·z dA = σ·∫z dA and ∫σ·y dA = σ·∫y dA are the static moments of the area about the centroidal axes y and z: zero, so conditions 5 and 6 hold. The first one gives σ·A = N.",
+  "axl.fig":
+    "A bar under N: every cross-section carries the same σ = N/A.",
+  "axl.s3.kicker":
+    "03 — Formulas",
+  "axl.s3.title":
+    "Sizing, verification and elongation",
+  "axl.s3.sizing":
+    "Sizing",
+  "axl.s3.ver":
+    "Verification",
+  "axl.s3.p1":
+    "The elongation comes from σ = E·ε with ε = Δl/l, so N/A = E·Δl/l:",
+  "axl.s3.sign":
+    "Sign: in compression N is negative, so sizing and verification use |N| and |σ|; the signed N is kept for the elongation (a shortening).",
+  "axl.s3.p2":
+    "Validity limits of these formulas:",
+  "axl.s3.l1":
+    "Only in the elastic range of the material.",
+  "axl.s3.l2":
+    "Only for a centred load, with uniformly distributed stress.",
+  "axl.s3.l3":
+    "In compression, only for short bars (longer ones buckle).",
+  "axl.s3.l4":
+    "The self-weight of the bar does not take part (see below).",
+  "axl.s3.l5":
+    "Holes concentrate stresses and weaken the bar.",
+  "axl.s4.kicker":
+    "04 — Steel data",
+  "axl.s4.title":
+    "Values used in the course",
+  "axl.s4.th.mat":
+    "Steel",
+  "axl.s4.th.yield":
+    "Tensile strength",
+  "axl.s4.th.adm":
+    "σ_adm",
+  "axl.s4.p1":
+    "E = 2 100 000 kg/cm² and γ = 7 800 kg/m³ for every steel. The safety factor is ν = 3: σ_adm is about the tensile strength divided by 3 (3 700 / 3 ≈ 1 233 → 1 200). The number in the name, St 37, is that strength in kg/mm².",
+  "axl.s5.kicker":
+    "05 — Self-weight",
+  "axl.s5.title":
+    "When the weight of the bar counts",
+  "axl.s5.p1":
+    "If the bar’s own weight takes part, the weight per unit area at the top is γ·l (l the length of the hanging bar), and it adds to the stress:",
+  "axl.s5.p2":
+    "Units: with γ in kg/m³ and l in m, γ·l comes out in kg/m². Divide by 10 000 to get kg/cm² before combining it with σ_adm.",
+  "axl.s6.kicker":
+    "06 — Worked exercises",
+  "axl.s6.title":
+    "Three exercises",
+  "axl.s6.e1.title":
+    "Size a cable and its elongation",
+  "axl.s6.e1.p":
+    "A steel cable passes over pulleys along 7 m + 10 m + 6 m + 2 m and holds 5 000 kg. σ_adm = 1 400 kg/cm², E = 2 100 000 kg/cm². Find the radius and the elongation. Then find the radius needed to keep the elongation to 10 % of that value.",
+  "axl.s6.e1.r":
+    "A_nec = 5 000 / 1 400 = 3.57 cm² = π·r² → r = 1.066 cm. Total length 700 + 1 000 + 600 + 200 = 2 500 cm. Δl = 5 000·2 500 / (3.57·2 100 000) = 1.67 cm. For Δl′ = 0.167 cm: A = 5 000·2 500 / (0.167·2 100 000) = 35.7 cm² → r = 3.37 cm.",
+  "axl.s6.e2.title":
+    "Admissible load of a wire",
+  "axl.s6.e2.p":
+    "A hanging wire, 6 m long, radius 0.50 cm, σ_adm = 1 600 kg/cm². Find the admissible load.",
+  "axl.s6.e2.r":
+    "A = π·0.5² = 0.7854 cm²; F_adm = σ_adm·A = 1 600·0.7854 = 1 256.6 kg.",
+  "axl.s6.e3.title":
+    "Imposed elongation",
+  "axl.s6.e3.p":
+    "The same cable (A = 3.57 cm², l = 25 m) is forced to elongate 5 cm. What load does that imply, and is it admissible?",
+  "axl.s6.e3.r":
+    "F = Δl·A·E / l = 5·3.57·2 100 000 / 2 500 ≈ 15 000 kg; σ = F/A ≈ 4 202 kg/cm² > σ_adm = 1 400: it does NOT verify.",
+  "axl.footer":
+    "Transcribed from the handwritten course notes “Axil AMS”; numbers in the exercises were recomputed and agree with the notes.",
 } as const;
 
 export type TranslationKey = keyof typeof EN;
@@ -1844,6 +1948,110 @@ const ES: Record<TranslationKey, string> = {
     "Una aclaración sobre la fuente: el libro imprime τ_max = 549 kg/cm² en el primer ejercicio, pero con su propia fórmula da 472 kg/cm²; el valor de arriba está recalculado.",
   "tor.footer":
     "Resumido y recalculado a partir de Raffo, C. M., Estática y Resistencia de Materiales (cap. XXIII, Torsión); no se conserva la numeración de las ecuaciones.",
+  "axl.link":
+    "Esfuerzo axil",
+  "axl.title":
+    "Esfuerzo axil (tracción y compresión)",
+  "axl.lead":
+    "Tracción y compresión simple: las hipótesis que hacen uniforme a σ = N/A, las fórmulas de dimensionado y verificación, el alargamiento Δl = N·l/(A·E), el peso propio y tres ejercicios resueltos. Según el apunte “Axil AMS” de la cátedra.",
+  "axl.s1.kicker":
+    "01 — Definición",
+  "axl.s1.title":
+    "Solicitación axil simple",
+  "axl.s1.p1":
+    "Una barra trabaja a tracción o compresión simple cuando la carga P se aplica en el baricentro y vale N en toda la sección, con Q = M_f = M_t = 0. (El apunte llama F al área; acá es A, para no confundirla con una fuerza.)",
+  "axl.s1.p2":
+    "El equilibrio de la sección da seis condiciones. Solo la primera no es nula:",
+  "axl.s1.e1":
+    "N = ∫ σ dA",
+  "axl.s1.e2":
+    "0 = ∫ τ_xy dA        0 = ∫ τ_xz dA",
+  "axl.s1.e3":
+    "0 = ∫ (τ_xz·y − τ_xy·z) dA",
+  "axl.s1.e4":
+    "0 = ∫ σ·z dA        0 = ∫ σ·y dA",
+  "axl.s2.kicker":
+    "02 — Hipótesis",
+  "axl.s2.title":
+    "Por qué σ es uniforme",
+  "axl.s2.h1":
+    "Ley de Hooke: σ = E·ε, con E = tan α la pendiente de la recta σ–ε.",
+  "axl.s2.h2":
+    "Saint-Venant: la sección normal al eje se mantiene plana y paralela a sí misma luego de la deformación, si está alejada de los extremos; por lo tanto no hay concentración de tensiones.",
+  "axl.s2.p1":
+    "Las distorsiones deben ser entonces nulas o constantes. Si γ = 0 entonces τ = 0. Si γ fuera una constante no nula, τ sería constante y no podría cumplirse ∫τ dA = 0. Luego τ_xy = τ_xz = 0 y las condiciones 2, 3 y 4 se verifican idénticamente.",
+  "axl.s2.p2":
+    "Como las secciones se desplazan paralelamente, ε = Δl/l es constante y por lo tanto σ = E·ε también. Entonces ∫σ·z dA = σ·∫z dA y ∫σ·y dA = σ·∫y dA son los momentos estáticos del área respecto de los ejes baricéntricos y y z: nulos, así que se verifican la 5 y la 6. La primera da σ·A = N.",
+  "axl.fig":
+    "Una barra bajo N: toda sección recta soporta la misma σ = N/A.",
+  "axl.s3.kicker":
+    "03 — Fórmulas",
+  "axl.s3.title":
+    "Dimensionado, verificación y alargamiento",
+  "axl.s3.sizing":
+    "Dimensionado",
+  "axl.s3.ver":
+    "Verificación",
+  "axl.s3.p1":
+    "El alargamiento sale de σ = E·ε con ε = Δl/l, o sea N/A = E·Δl/l:",
+  "axl.s3.sign":
+    "Signo: en compresión N es negativo, así que el dimensionado y la verificación usan |N| y |σ|; el N con signo se conserva para el alargamiento (un acortamiento).",
+  "axl.s3.p2":
+    "Límites de validez de estas fórmulas:",
+  "axl.s3.l1":
+    "Solo para la zona elástica del material.",
+  "axl.s3.l2":
+    "Solo para la carga centrada, con reparto uniforme de tensiones.",
+  "axl.s3.l3":
+    "En compresión, solo para barras cortas (las largas pandean).",
+  "axl.s3.l4":
+    "No interviene el peso propio de la barra (ver más abajo).",
+  "axl.s3.l5":
+    "Los orificios concentran tensiones y debilitan la barra.",
+  "axl.s4.kicker":
+    "04 — Datos del acero",
+  "axl.s4.title":
+    "Valores que usa la cátedra",
+  "axl.s4.th.mat":
+    "Acero",
+  "axl.s4.th.yield":
+    "Tensión de rotura",
+  "axl.s4.th.adm":
+    "σ_adm",
+  "axl.s4.p1":
+    "E = 2 100 000 kg/cm² y γ = 7 800 kg/m³ para todos los aceros. El coeficiente de seguridad es ν = 3: σ_adm es aproximadamente la tensión de rotura dividida por 3 (3 700 / 3 ≈ 1 233 → 1 200). El número del nombre, St 37, es esa resistencia en kg/mm².",
+  "axl.s5.kicker":
+    "05 — Peso propio",
+  "axl.s5.title":
+    "Cuando el peso de la barra cuenta",
+  "axl.s5.p1":
+    "Si interviene el peso propio, el peso por unidad de área en el extremo superior es γ·l (l, la longitud de la barra colgada), y se suma a la tensión:",
+  "axl.s5.p2":
+    "Unidades: con γ en kg/m³ y l en m, γ·l sale en kg/m². Dividí por 10 000 para tener kg/cm² antes de combinarlo con σ_adm.",
+  "axl.s6.kicker":
+    "06 — Ejercicios resueltos",
+  "axl.s6.title":
+    "Tres ejercicios",
+  "axl.s6.e1.title":
+    "Dimensionar un cable y su alargamiento",
+  "axl.s6.e1.p":
+    "Un cable de acero pasa por poleas a lo largo de 7 m + 10 m + 6 m + 2 m y sostiene 5 000 kg. σ_adm = 1 400 kg/cm², E = 2 100 000 kg/cm². Hallar el radio y el alargamiento. Luego, el radio necesario para que el alargamiento sea el 10 % de ese valor.",
+  "axl.s6.e1.r":
+    "A_nec = 5 000 / 1 400 = 3,57 cm² = π·r² → r = 1,066 cm. Longitud total 700 + 1 000 + 600 + 200 = 2 500 cm. Δl = 5 000·2 500 / (3,57·2 100 000) = 1,67 cm. Para Δl′ = 0,167 cm: A = 5 000·2 500 / (0,167·2 100 000) = 35,7 cm² → r = 3,37 cm.",
+  "axl.s6.e2.title":
+    "Carga admisible de un alambre",
+  "axl.s6.e2.p":
+    "Un alambre colgado de 6 m, radio 0,50 cm, σ_adm = 1 600 kg/cm². Hallar la carga admisible.",
+  "axl.s6.e2.r":
+    "A = π·0,5² = 0,7854 cm²; F_adm = σ_adm·A = 1 600·0,7854 = 1 256,6 kg.",
+  "axl.s6.e3.title":
+    "Alargamiento impuesto",
+  "axl.s6.e3.p":
+    "El mismo cable (A = 3,57 cm², l = 25 m) se fuerza a alargarse 5 cm. ¿Qué carga implica y es admisible?",
+  "axl.s6.e3.r":
+    "F = Δl·A·E / l = 5·3,57·2 100 000 / 2 500 ≈ 15 000 kg; σ = F/A ≈ 4 202 kg/cm² > σ_adm = 1 400: NO verifica.",
+  "axl.footer":
+    "Transcripto del apunte manuscrito “Axil AMS” de la cátedra; los números de los ejercicios se recalcularon y coinciden con el apunte.",
 };
 
 const translations: Record<Language, Record<TranslationKey, string>> = {
