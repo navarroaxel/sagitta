@@ -14,6 +14,7 @@ const LINKS: { href: string; labelKey: TranslationKey }[] = [
   { href: "/perfiles", labelKey: "prof.link" },
   { href: "/flexion-compuesta", labelKey: "ecc.link" },
   { href: "/corte-de-seccion", labelKey: "cut.link" },
+  { href: "/axil", labelKey: "axl.link" },
 ];
 
 export default function NavMenu() {
