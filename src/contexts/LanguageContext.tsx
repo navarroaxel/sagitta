@@ -763,7 +763,7 @@ const EN = {
   "axl.s1.e2":
     "0 = ∫ τ_xy dA        0 = ∫ τ_xz dA",
   "axl.s1.e3":
-    "0 = ∫ (τ_xy·z + τ_xz·y) dA",
+    "0 = ∫ (τ_xz·y − τ_xy·z) dA",
   "axl.s1.e4":
     "0 = ∫ σ·z dA        0 = ∫ σ·y dA",
   "axl.s2.kicker":
@@ -790,6 +790,8 @@ const EN = {
     "Verification",
   "axl.s3.p1":
     "The elongation comes from σ = E·ε with ε = Δl/l, so N/A = E·Δl/l:",
+  "axl.s3.sign":
+    "Sign: in compression N is negative, so sizing and verification use |N| and |σ|; the signed N is kept for the elongation (a shortening).",
   "axl.s3.p2":
     "Validity limits of these formulas:",
   "axl.s3.l1":
@@ -809,11 +811,11 @@ const EN = {
   "axl.s4.th.mat":
     "Steel",
   "axl.s4.th.yield":
-    "Yield stress",
+    "Tensile strength",
   "axl.s4.th.adm":
     "σ_adm",
   "axl.s4.p1":
-    "E = 2 100 000 kg/cm² and γ = 7 800 kg/m³ for every steel. The safety factor is ν = 3: σ_adm is about the yield stress divided by 3.",
+    "E = 2 100 000 kg/cm² and γ = 7 800 kg/m³ for every steel. The safety factor is ν = 3: σ_adm is about the tensile strength divided by 3 (3 700 / 3 ≈ 1 233 → 1 200). The number in the name, St 37, is that strength in kg/mm².",
   "axl.s5.kicker":
     "05 — Self-weight",
   "axl.s5.title":
@@ -1603,7 +1605,7 @@ const ES: Record<TranslationKey, string> = {
   "axl.s1.e2":
     "0 = ∫ τ_xy dA        0 = ∫ τ_xz dA",
   "axl.s1.e3":
-    "0 = ∫ (τ_xy·z + τ_xz·y) dA",
+    "0 = ∫ (τ_xz·y − τ_xy·z) dA",
   "axl.s1.e4":
     "0 = ∫ σ·z dA        0 = ∫ σ·y dA",
   "axl.s2.kicker":
@@ -1630,6 +1632,8 @@ const ES: Record<TranslationKey, string> = {
     "Verificación",
   "axl.s3.p1":
     "El alargamiento sale de σ = E·ε con ε = Δl/l, o sea N/A = E·Δl/l:",
+  "axl.s3.sign":
+    "Signo: en compresión N es negativo, así que el dimensionado y la verificación usan |N| y |σ|; el N con signo se conserva para el alargamiento (un acortamiento).",
   "axl.s3.p2":
     "Límites de validez de estas fórmulas:",
   "axl.s3.l1":
@@ -1649,11 +1653,11 @@ const ES: Record<TranslationKey, string> = {
   "axl.s4.th.mat":
     "Acero",
   "axl.s4.th.yield":
-    "Tensión de fluencia",
+    "Tensión de rotura",
   "axl.s4.th.adm":
     "σ_adm",
   "axl.s4.p1":
-    "E = 2 100 000 kg/cm² y γ = 7 800 kg/m³ para todos los aceros. El coeficiente de seguridad es ν = 3: σ_adm es aproximadamente la tensión de fluencia dividida por 3.",
+    "E = 2 100 000 kg/cm² y γ = 7 800 kg/m³ para todos los aceros. El coeficiente de seguridad es ν = 3: σ_adm es aproximadamente la tensión de rotura dividida por 3 (3 700 / 3 ≈ 1 233 → 1 200). El número del nombre, St 37, es esa resistencia en kg/mm².",
   "axl.s5.kicker":
     "05 — Peso propio",
   "axl.s5.title":

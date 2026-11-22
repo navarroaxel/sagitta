@@ -147,13 +147,14 @@ export default function AxilPage() {
             <div className="mb-4 grid gap-3 sm:grid-cols-2">
               <div className="rounded-lg border border-stone-200 bg-white p-4 dark:border-stone-700 dark:bg-stone-900">
                 <p className="mb-1 font-semibold">{t("axl.s3.sizing")}</p>
-                <p className="font-mono text-[15px]"><Sub>A_nec ≥ N / σ_adm</Sub></p>
+                <p className="font-mono text-[15px]"><Sub>A_nec ≥ |N| / σ_adm</Sub></p>
               </div>
               <div className="rounded-lg border border-stone-200 bg-white p-4 dark:border-stone-700 dark:bg-stone-900">
                 <p className="mb-1 font-semibold">{t("axl.s3.ver")}</p>
-                <p className="font-mono text-[15px]"><Sub>σ = N / A ≤ σ_adm</Sub></p>
+                <p className="font-mono text-[15px]"><Sub>|σ| = |N| / A ≤ σ_adm</Sub></p>
               </div>
             </div>
+            <Para k="axl.s3.sign" />
             <Para k="axl.s3.p1" />
             <Eq boxed>Δl = N·l / (A·E)</Eq>
             <Para k="axl.s3.p2" />
