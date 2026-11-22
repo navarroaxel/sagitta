@@ -1219,7 +1219,7 @@ const EN = {
   "pln.s2.title":
     "The centroid",
   "pln.s2.p1":
-    "The centroid is the point of application of the resultant of the weights of all the particles of the body. For a system of masses (or parts of area) its coordinates are the static moments divided by the total:",
+    "The centroid of an area is the point whose coordinates are the static moments divided by the area. It coincides with the centre of gravity (the point of application of the resultant of the weights) only when the body is homogeneous and of constant thickness, that is, with a uniform mass per unit area. For a system of masses the same formulas are used with the masses in place of the areas (as in the example with three weights):",
   "pln.s2.e1":
     "x_g = Σ A_i·x_i / Σ A_i = S_y / A",
   "pln.s2.e2":
@@ -2555,7 +2555,7 @@ const ES: Record<TranslationKey, string> = {
   "pln.s2.title":
     "El baricentro",
   "pln.s2.p1":
-    "El baricentro es el punto de aplicación de la resultante de los pesos de todas las partículas del cuerpo. Para un sistema de masas (o de partes de superficie) sus coordenadas son los momentos estáticos divididos por el total:",
+    "El baricentro de una superficie es el punto cuyas coordenadas son los momentos estáticos divididos por el área. Coincide con el centro de gravedad (el punto de aplicación de la resultante de los pesos) solo cuando el cuerpo es homogéneo y de espesor constante, es decir, con masa por unidad de área uniforme. Para un sistema de masas se usan las mismas fórmulas con las masas en lugar de las áreas (como en el ejemplo de los tres pesos):",
   "pln.s2.e1":
     "x_g = Σ A_i·x_i / Σ A_i = S_y / A",
   "pln.s2.e2":

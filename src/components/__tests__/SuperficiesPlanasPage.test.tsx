@@ -21,8 +21,14 @@ describe("/superficies-planas", () => {
     expect(screen.getByTestId("pln-sub").textContent).toMatch(/131\.55/);
     expect(container.querySelectorAll("figure svg")).toHaveLength(1);
     expect(document.body.textContent).not.toMatch(/[A-Za-z]_[A-Za-z0-9]/);
+    // the whole index x′y′ of the rotated product of inertia is one subscript, not "x" plus a baseline "y′"
+    const subs = Array.from(document.querySelectorAll("sub")).map((e) => e.textContent);
+    expect(subs).toContain("x′"); // J_x′ and J_y′ keep the prime inside their subscript
+    const stray = Array.from(document.querySelectorAll("sub")).filter((e) => (e.nextSibling?.textContent ?? "").startsWith("′y"));
+    expect(stray).toHaveLength(0);
+    expect(document.body.textContent).toMatch(/Jx′y′/);
     expect(Array.from(document.querySelectorAll("sub")).map((e) => e.textContent)).toEqual(
-      expect.arrayContaining(["x", "g", "xg", "xy", "1"]),
+      expect.arrayContaining(["x", "g", "xg", "xy", "1", "x′y′"]),
     );
   });
 
@@ -35,5 +41,13 @@ describe("/superficies-planas", () => {
     expect(screen.getByTestId("steiner-result").textContent).toMatch(/2 730\.67 cm⁴.*128\.00 cm².*0\.00 cm⁴.*2 730\.67 cm⁴/);
     fireEvent.change(screen.getByLabelText("b (cm)"), { target: { value: "-1" } });
     expect(screen.getByTestId("steiner-result").textContent).toMatch(/—/);
+  });
+});
+
+describe("centroid vs centre of gravity", () => {
+  test("states the uniform mass-per-area condition", () => {
+    renderPage();
+    expect(document.body.textContent).toMatch(/homogeneous and of constant thickness/);
+    expect(document.body.textContent).not.toMatch(/is the point of application of the resultant of the weights of all the particles/);
   });
 });
