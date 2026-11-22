@@ -1,6 +1,6 @@
 import React from "react";
 
-const SUB = /_([A-Za-zÁÉÍÓÚáéíóúñ]+(?:,[A-Za-zÁÉÍÓÚáéíóúñ]+)?)/;
+const SUB = /_([A-Za-zÁÉÍÓÚáéíóúñ0-9]+(?:,[A-Za-zÁÉÍÓÚáéíóúñ0-9]+)?)/;
 
 // Renders "P_z", "e_x", "P_z,max" in a translated string with real subscripts.
 export function Sub({ children }: { children: string }) {

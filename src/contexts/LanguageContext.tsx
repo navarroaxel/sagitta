@@ -744,6 +744,187 @@ const EN = {
   "esf.footer":
     "Definitions and procedure follow the UTN FRBA course notes; the simulator’s diagrams use the Argentina convention.",
 
+  "flx.link":
+    "Bending",
+  "flx.title":
+    "Bending (flexión)",
+  "flx.lead":
+    "Simple bending, straight and oblique: where the formula σ = M·y / J_x comes from, what the neutral axis is, and how to use it to verify and size a section. Based on the course notes (AMS 2020).",
+  "flx.s1.kicker":
+    "01 — Definition",
+  "flx.s1.title":
+    "Simple bending",
+  "flx.s1.p1":
+    "Simple bending is the loading for which the reduction to the centroid of the section, of the forces acting on both sides of it, is limited to two couples normal to the plane of the section, with or without shear. With no shear it is called pure bending; otherwise, bending and shear.",
+  "flx.s1.p2":
+    "The bending plane is the plane in which the bending couples act, and the line of forces is its trace on the plane of the section.",
+  "flx.s1.normal":
+    "The line of forces coincides with one of the principal axes of inertia of the section: simple normal (straight) bending.",
+  "flx.s1.oblique":
+    "The line of forces makes an angle α with that axis: simple oblique bending.",
+  "flx.s2.kicker":
+    "02 — Review",
+  "flx.s2.title":
+    "Principal axes of inertia",
+  "flx.s2.p1":
+    "Among all the pairs of axes through a point, the moments of inertia of a section reach their maximum and minimum about two perpendicular axes: the principal axes of inertia. The product of inertia about them is zero, and the corresponding moments are the principal moments of inertia.",
+  "flx.s2.p2":
+    "When the two principal moments are different, that orthogonal pair is unique. When they are equal (a circle, a square) every orthogonal pair through the centroid is principal.",
+  "flx.s3.kicker":
+    "03 — Straight bending",
+  "flx.s3.title":
+    "When a bar works in straight bending",
+  "flx.s3.intro":
+    "A bar assumed horizontal works in straight bending when:",
+  "flx.s3.a":
+    "The axis of the bar is straight or has a small curvature.",
+  "flx.s3.b":
+    "The bar has a vertical plane of symmetry α.",
+  "flx.s3.c":
+    "The loads P_i act perpendicular to the axis of the bar and lie in the plane α.",
+  "flx.s3.note":
+    "Plane α is the plane of forces (of bending) and the axis y–y is the axis of symmetry of the piece, hence a principal axis of inertia: it can be the one with J_max or the one with J_min.",
+  "flx.s4.kicker":
+    "04 — Deformation",
+  "flx.s4.title":
+    "The neutral axis",
+  "flx.s4.p1":
+    "The longitudinal axis of the piece bends under the system of forces P_i. The sections CD and EF, originally a rectangle, form a trapezoid once loaded: the distance CE gets shorter and DF gets longer. The upper part has been compressed and the lower part has been put in tension.",
+  "flx.s4.p2":
+    "So between the two extreme fibres there is a middle fibre that has not been deformed and therefore carries no stress: the neutral axis (N.A.) of the piece.",
+  "flx.s4.fig":
+    "Before and after bending: the top fibre shortens (compression), the bottom fibre lengthens (tension), and the neutral axis keeps its length.",
+  "flx.s4.fig.tension":
+    "tension",
+  "flx.s4.fig.compression":
+    "compression",
+  "flx.s4.fig.na":
+    "N.A.",
+  "flx.s5.kicker":
+    "05 — The formula",
+  "flx.s5.title":
+    "From equilibrium to σ = M·y / J_x",
+  "flx.s5.p1":
+    "An element of area dA at a distance y from the neutral axis is loaded by an internal force σ·dA, where σ is the stress at that element: tension or compression depending on whether it is below or above the N.A. For the section to be in equilibrium, the sum of all internal forces must be zero and the sum of their moments about the N.A. must equal the moment M of the external forces at that section:",
+  "flx.s5.p2":
+    "A fibre at a distance y from the N.A. changes length in proportion to its distance. If σ_1 is the stress on the unit of area at distance 1 from the N.A. and σ the one at distance y:",
+  "flx.s5.p3":
+    "Substituting σ = σ_1·y into (1) and (2):",
+  "flx.s5.p4":
+    "Since σ_1 ≠ 0, (4) gives ∫y dA = 0 (6): the first moment of the area is zero, so the neutral axis is a centroidal axis. The axis X–X lies in the cross-section and crosses the longitudinal axis of the bar at the centroid.",
+  "flx.s5.p5":
+    "In (5) the integral ∫y² dA = J_x is the moment of inertia of the section about the neutral axis X–X, so M = σ_1·J_x and, from (3):",
+  "flx.s5.p6":
+    "This gives the stress σ at a generic point at distance y of a section loaded by a moment M. For safety, M_max is taken together with the farthest fibre from the neutral axis, v:",
+  "flx.s5.p7":
+    "J_x / v is called the section modulus W_x (cm³), and the formula becomes:",
+  "flx.s6.kicker":
+    "06 — Use",
+  "flx.s6.title":
+    "Verification and sizing",
+  "flx.s6.ver":
+    "Verification",
+  "flx.s6.siz":
+    "Sizing",
+  "flx.s6.p1":
+    "If the centroid of the section is not at mid-height there are two section moduli, W_1 = J_x / v_1 and W_2 = J_x / v_2, and for safety the smaller one is used.",
+  "flx.s6.p2":
+    "This is exactly the check the app’s results tab performs for a member with a section (σ = |N|/A + |M|·100/S_x ≤ σ_adm).",
+  "flx.footer":
+    "Transcribed and ordered from the course notes “Flexión AMS 2020”; the equation numbers are the notes’.",
+
+  "tor.link":
+    "Torsion",
+  "tor.title":
+    "Torsion of circular shafts",
+  "tor.lead":
+    "Straight circular bars under a torque M_t: the shear strain γ, the stress τ = M_t·ρ / J_0, the angle of twist φ and how to verify or size a solid or hollow shaft. Based on Raffo, Estática y Resistencia de Materiales, ch. XXIII.",
+  "tor.s1.kicker":
+    "01 — Definition",
+  "tor.s1.title":
+    "Simple torsion",
+  "tor.s1.p1":
+    "A solid is in simple torsion when the forces on one side of a section reduce to a single couple lying in the plane of that section. Its moment M_t is the torque. The usual case is a straight piece loaded at its ends by couples of equal magnitude and opposite sense, each in the plane of an end section; or a piece clamped at one end and twisted by a couple at the other, the clamp providing the opposite reaction couple. Transmission shafts of machines are the typical example.",
+  "tor.s1.p2":
+    "Here we study straight circular torsion: a prism of constant circular cross-section, solid or hollow.",
+  "tor.s2.kicker":
+    "02 — What the bar does",
+  "tor.s2.title":
+    "Hypotheses and deformation",
+  "tor.s2.p1":
+    "Take a bar clamped at one end and twisted by M_t at the other. Experiments show that:",
+  "tor.s2.h1":
+    "The geometric axis stays straight.",
+  "tor.s2.h2":
+    "The other longitudinal fibres become helices.",
+  "tor.s2.h3":
+    "Each cross-section stays plane and perpendicular to the axis: the whole section just rotates about its centre O.",
+  "tor.s2.p2":
+    "So a point B of a section at distance l from the clamp moves to B′ along an arc, and the straight fibre BB_0 tilts by the shear strain γ. The section has turned an angle φ (radians) relative to the clamped one.",
+  "tor.s2.fig":
+    "Section before and after twisting: the point at radius ρ moves along an arc of angle φ, and the fibre of length l tilts by γ.",
+  "tor.s2.p3":
+    "From the geometry, the arc BB′ is ρ·φ and also γ·l, hence:",
+  "tor.s3.kicker":
+    "03 — Stress",
+  "tor.s3.title":
+    "From the strain to τ = M_t·ρ / J_0",
+  "tor.s3.p1":
+    "Shear strain and shear stress are linked by Hooke’s law for shear, with the shear modulus G (kg/cm²), related to E by G = 0.385·E (about 0.4·E for steel, the value used in the examples):",
+  "tor.s3.p2":
+    "Substituting γ = ρ·φ/l shows that τ is proportional to the distance ρ from the centre: zero at the centre, maximum on the outer fibres.",
+  "tor.s3.p3":
+    "To balance the torque, the elementary force τ·dA at distance ρ must have a moment about O equal to M_t when added over the whole section. Since G and φ/l are constants:",
+  "tor.s3.p4":
+    "where J_0 = ∫ρ² dA is the polar moment of inertia. So the unit twist is φ/l = M_t / (G·J_0). The product G·J_0 is the torsional rigidity of the bar. Eliminating φ/l gives the resistance equation, the analogue of σ = M·y / J_x in bending (valid for circular sections only):",
+  "tor.s3.fig":
+    "τ grows linearly with ρ: zero at the centre, τ_max at the surface.",
+  "tor.s4.kicker":
+    "04 — Solid section",
+  "tor.s4.title":
+    "The formulas you use",
+  "tor.s4.p1":
+    "For a solid circle J_0 = π·D⁴/32. With ρ = D/2 at the surface:",
+  "tor.s4.p2":
+    "And the total angle of twist of a bar of length l, in radians (multiply by 180/π for degrees):",
+  "tor.s4.p3":
+    "Units: M_t in kg·cm, l and D in cm, G in kg/cm², J_0 in cm⁴, φ in radians. Careful with kg·m: 1 kg·m = 100 kg·cm.",
+  "tor.s5.kicker":
+    "05 — Hollow section",
+  "tor.s5.title":
+    "Hollow circular shafts",
+  "tor.s5.p1":
+    "The same procedure holds. With outer diameter D_e, inner D_i and n = D_i / D_e:",
+  "tor.s5.p2":
+    "The material near the centre carries almost no stress, so a hollow shaft weighs less for the same τ_max. Equal torque and equal τ_max give D = D_e·∛(1 − n⁴). For D_e = 40 cm and D_i = 20 cm (n = 1/2) that is D ≈ 39 cm for the solid shaft, and the hollow one weighs about 79 % of it (areas 40² − 20² against 39²): roughly 20 % cheaper.",
+  "tor.s6.kicker":
+    "06 — Transmission shafts",
+  "tor.s6.title":
+    "Sizing a shaft from the power",
+  "tor.s6.p1":
+    "The torque comes from the power N (in CV) and the revolutions per minute n. With P = 7500·N kg·cm/s and ω = π·n/30:",
+  "tor.s6.p2":
+    "and, replacing in the sizing formula, the minimum diameter of the shaft (ignoring bending from pulleys and self-weight):",
+  "tor.s7.kicker":
+    "07 — Worked examples",
+  "tor.s7.title":
+    "Two exercises",
+  "tor.s7.e1.title":
+    "Verify a bar",
+  "tor.s7.e1.p":
+    "Steel round bar, D = 6 cm, l = 3 m, M_t = 200 kg·m. Find τ_max and φ. G = 0.4·2 100 000 = 840 000 kg/cm².",
+  "tor.s7.e1.r":
+    "M_t = 20 000 kg·cm; J_0 = π·6⁴/32 = 127 cm⁴; τ_max = 16·20 000 / (π·6³) ≈ 472 kg/cm²; φ = 20 000·300 / (840 000·127) = 0.056 rad ≈ 3°12′.",
+  "tor.s7.e2.title":
+    "Size a bar",
+  "tor.s7.e2.p":
+    "Steel bar, l = 2 m, loaded by a 500 kg force with a 120 cm arm at the free end. τ_adm = 600 kg/cm², G = 800 000 kg/cm². Find D and φ.",
+  "tor.s7.e2.r":
+    "M_t = 500·120 = 60 000 kg·cm; R = ∛(2·60 000 / (π·600)) ≈ 4 cm, so D = 8 cm; J_0 = π·8⁴/32 ≈ 402 cm⁴; φ = 60 000·200 / (800 000·402) ≈ 0.037 rad ≈ 2°7′.",
+  "tor.note":
+    "A note on the source: the book prints τ_max = 549 kg/cm² for the first exercise, but its own formula gives 472 kg/cm²; the value above is recomputed.",
+  "tor.footer":
+    "Summarised and recomputed from Raffo, C. M., Estática y Resistencia de Materiales (ch. XXIII, Torsión); equation numbers are not kept.",
   "axl.link":
     "Axial load",
   "axl.title":
@@ -1586,6 +1767,187 @@ const ES: Record<TranslationKey, string> = {
   "esf.footer":
     "Definiciones y procedimiento según el apunte de la cátedra (UTN FRBA); los diagramas del simulador siguen la convención Argentina.",
 
+  "flx.link":
+    "Flexión",
+  "flx.title":
+    "Flexión",
+  "flx.lead":
+    "Flexión simple, recta y oblicua: de dónde sale la fórmula σ = M·y / J_x, qué es el eje neutro y cómo se usa para verificar y dimensionar una sección. Según el apunte de la cátedra (AMS 2020).",
+  "flx.s1.kicker":
+    "01 — Definición",
+  "flx.s1.title":
+    "Flexión simple",
+  "flx.s1.p1":
+    "Se denomina flexión simple a la forma de solicitación para la cual la reducción al baricentro de la sección considerada, de las fuerzas que actúan a ambos lados de la misma, se limita a dos pares normales al plano de ella, con o sin esfuerzo de corte. De no haber corte se la denomina flexión pura; de lo contrario, flexión y corte.",
+  "flx.s1.p2":
+    "Se denomina plano de flexión a aquel en el cual actúan los pares flexores, y línea de fuerzas a la traza de dicho plano con el plano de la sección.",
+  "flx.s1.normal":
+    "La línea de fuerzas coincide con uno de los ejes principales de inercia de la sección: flexión simple normal (recta).",
+  "flx.s1.oblique":
+    "La línea de fuerzas forma un ángulo α con ese eje: flexión simple oblicua.",
+  "flx.s2.kicker":
+    "02 — Repaso",
+  "flx.s2.title":
+    "Ejes principales de inercia",
+  "flx.s2.p1":
+    "Entre todos los pares de ejes que pasan por un punto, los momentos de inercia de una sección alcanzan su máximo y su mínimo respecto de dos ejes perpendiculares entre sí: los ejes principales de inercia. El momento centrífugo respecto de ellos es nulo, y los momentos correspondientes son los momentos principales de inercia.",
+  "flx.s2.p2":
+    "Cuando los dos momentos principales son distintos, ese par ortogonal es único. Cuando son iguales (un círculo, un cuadrado) todo par ortogonal que pase por el baricentro es principal.",
+  "flx.s3.kicker":
+    "03 — Flexión recta",
+  "flx.s3.title":
+    "Cuándo una barra trabaja a flexión recta",
+  "flx.s3.intro":
+    "Una barra supuesta horizontal trabaja a flexión recta cuando se cumple lo siguiente:",
+  "flx.s3.a":
+    "El eje de la barra es recto o de pequeña curvatura.",
+  "flx.s3.b":
+    "La barra tiene un plano α de simetría vertical.",
+  "flx.s3.c":
+    "Las cargas P_i actúan perpendicularmente al eje de la barra y se hallan en el plano α.",
+  "flx.s3.note":
+    "El plano α es el plano de fuerzas (de flexión) y el eje y–y es eje de simetría de la pieza, siendo eje principal de inercia: puede ser el que tiene el J_max o el J_min.",
+  "flx.s4.kicker":
+    "04 — Deformación",
+  "flx.s4.title":
+    "El eje neutro",
+  "flx.s4.p1":
+    "El eje longitudinal de la pieza se curva bajo la acción del sistema de fuerzas P_i. Las secciones CD y EF, que originalmente formaban un rectángulo, luego de cargada la viga forman un trapecio: la distancia CE es menor que la original y la distancia DF ha aumentado. La parte superior se ha comprimido y la inferior se ha traccionado.",
+  "flx.s4.p2":
+    "Entre ambas fibras extremas hay entonces una fibra media que no ha sufrido deformación y por lo tanto no tiene tensión: el eje neutro (E.N.) de la pieza.",
+  "flx.s4.fig":
+    "Antes y después de flexar: la fibra superior se acorta (compresión), la inferior se alarga (tracción) y el eje neutro conserva su longitud.",
+  "flx.s4.fig.tension":
+    "tracción",
+  "flx.s4.fig.compression":
+    "compresión",
+  "flx.s4.fig.na":
+    "E.N.",
+  "flx.s5.kicker":
+    "05 — La fórmula",
+  "flx.s5.title":
+    "Del equilibrio a σ = M·y / J_x",
+  "flx.s5.p1":
+    "Un elemento de área dA situado a una distancia y del eje neutro está solicitado por un esfuerzo interior σ·dA, siendo σ la tensión en ese elemento: de tracción o de compresión según se halle abajo o arriba del E.N. Para que la sección esté en equilibrio, la suma de todos los esfuerzos interiores debe ser nula y la suma de sus momentos respecto al E.N. debe ser igual al momento M de las fuerzas exteriores en la sección:",
+  "flx.s5.p2":
+    "Una fibra a una distancia y del E.N. varía su longitud en proporción a esa distancia. Si σ_1 es la tensión sobre la unidad de área distante 1 del E.N. y σ la de la distante y:",
+  "flx.s5.p3":
+    "Reemplazando σ = σ_1·y en (1) y (2):",
+  "flx.s5.p4":
+    "Como σ_1 ≠ 0, de (4) resulta ∫y dA = 0 (6): el momento estático del área es nulo, por lo tanto el eje neutro es un eje baricéntrico. El eje X–X está en la sección transversal y cruza el eje longitudinal de la barra en el baricentro.",
+  "flx.s5.p5":
+    "En (5) la integral ∫y² dA = J_x es el momento de inercia de la sección respecto al eje neutro X–X, de modo que M = σ_1·J_x y, de (3):",
+  "flx.s5.p6":
+    "Esta fórmula da la tensión σ en un punto genérico a distancia y de una sección solicitada por un momento M. Por seguridad se toma M_max junto con la fibra más alejada del eje neutro, v:",
+  "flx.s5.p7":
+    "J_x / v se denomina momento resistente de la sección W_x (cm³), y la fórmula queda:",
+  "flx.s6.kicker":
+    "06 — Uso",
+  "flx.s6.title":
+    "Verificación y dimensionado",
+  "flx.s6.ver":
+    "Verificación",
+  "flx.s6.siz":
+    "Dimensionado",
+  "flx.s6.p1":
+    "Si el centro de gravedad de la sección no está a mitad de la altura del perfil habrá dos módulos resistentes, W_1 = J_x / v_1 y W_2 = J_x / v_2, y por seguridad se usa el menor.",
+  "flx.s6.p2":
+    "Es exactamente la verificación que hace la pestaña de resultados de la app para una barra con sección (σ = |N|/A + |M|·100/S_x ≤ σ_adm).",
+  "flx.footer":
+    "Transcripto y ordenado del apunte “Flexión AMS 2020” de la cátedra; la numeración de las ecuaciones es la del apunte.",
+
+  "tor.link":
+    "Torsión",
+  "tor.title":
+    "Torsión de ejes circulares",
+  "tor.lead":
+    "Barras rectas de sección circular bajo un momento torsor M_t: la distorsión γ, la tensión τ = M_t·ρ / J_0, el ángulo de torsión φ y cómo verificar o dimensionar un eje macizo o hueco. Según Raffo, Estática y Resistencia de Materiales, cap. XXIII.",
+  "tor.s1.kicker":
+    "01 — Definición",
+  "tor.s1.title":
+    "Torsión simple",
+  "tor.s1.p1":
+    "Un sólido trabaja a torsión simple si las fuerzas de un lado de la sección se reducen a una única cupla situada en el plano de esa sección. Su momento M_t es el momento torsor. El caso más común es una pieza recta solicitada en sus extremos por cuplas de igual intensidad y sentido opuesto, cada una en el plano de una sección extrema; o una pieza empotrada en un extremo y torsionada por una cupla en el otro, donde el empotramiento aporta la cupla de reacción opuesta. Los árboles de transmisión de las máquinas son el ejemplo típico.",
+  "tor.s1.p2":
+    "Aquí se estudia la torsión circular recta: un prisma de sección circular constante, maciza o hueca.",
+  "tor.s2.kicker":
+    "02 — Qué hace la barra",
+  "tor.s2.title":
+    "Hipótesis y deformación",
+  "tor.s2.p1":
+    "Sea una barra empotrada en un extremo y torsionada por M_t en el otro. La experiencia muestra que:",
+  "tor.s2.h1":
+    "El eje geométrico sigue siendo recto.",
+  "tor.s2.h2":
+    "Las demás fibras longitudinales se transforman en hélices.",
+  "tor.s2.h3":
+    "Cada sección recta permanece plana y perpendicular al eje: toda la sección simplemente gira en torno a su centro O.",
+  "tor.s2.p2":
+    "Así, un punto B de una sección a distancia l del empotramiento pasa a B′ siguiendo un arco, y la fibra recta BB_0 se inclina la distorsión γ. La sección ha girado un ángulo φ (radianes) respecto de la empotrada.",
+  "tor.s2.fig":
+    "Sección antes y después de torsionar: el punto a radio ρ se mueve sobre un arco de ángulo φ, y la fibra de longitud l se inclina γ.",
+  "tor.s2.p3":
+    "Por geometría, el arco BB′ es ρ·φ y también γ·l, de donde:",
+  "tor.s3.kicker":
+    "03 — Tensión",
+  "tor.s3.title":
+    "De la distorsión a τ = M_t·ρ / J_0",
+  "tor.s3.p1":
+    "Distorsión y tensión tangencial se vinculan por la ley de Hooke al corte, con el módulo de elasticidad transversal G (kg/cm²), relacionado con E por G = 0,385·E (cerca de 0,4·E para el acero, valor que usan los ejemplos):",
+  "tor.s3.p2":
+    "Al reemplazar γ = ρ·φ/l se ve que τ es proporcional a la distancia ρ al centro: nula en el centro, máxima en las fibras exteriores.",
+  "tor.s3.p3":
+    "Para equilibrar el momento torsor, el momento de la fuerza elemental τ·dA a distancia ρ respecto de O, sumado en toda la sección, debe valer M_t. Como G y φ/l son constantes:",
+  "tor.s3.p4":
+    "donde J_0 = ∫ρ² dA es el momento de inercia polar. Resulta φ/l = M_t / (G·J_0), el ángulo unitario de torsión; el producto G·J_0 es el módulo de rigidez a la torsión. Eliminando φ/l queda la ecuación de resistencia, análoga a σ = M·y / J_x de la flexión (vale solo para secciones circulares):",
+  "tor.s3.fig":
+    "τ crece linealmente con ρ: nula en el centro, τ_max en la superficie.",
+  "tor.s4.kicker":
+    "04 — Sección maciza",
+  "tor.s4.title":
+    "Las fórmulas de uso",
+  "tor.s4.p1":
+    "Para un círculo macizo J_0 = π·D⁴/32. Con ρ = D/2 en la superficie:",
+  "tor.s4.p2":
+    "Y el ángulo total de torsión de una barra de longitud l, en radianes (multiplicar por 180/π para grados):",
+  "tor.s4.p3":
+    "Unidades: M_t en kg·cm, l y D en cm, G en kg/cm², J_0 en cm⁴, φ en radianes. Ojo con los kg·m: 1 kg·m = 100 kg·cm.",
+  "tor.s5.kicker":
+    "05 — Sección hueca",
+  "tor.s5.title":
+    "Ejes circulares huecos",
+  "tor.s5.p1":
+    "Vale el mismo procedimiento. Con diámetro exterior D_e, interior D_i y n = D_i / D_e:",
+  "tor.s5.p2":
+    "El material cercano al centro casi no trabaja, así que un eje hueco pesa menos para la misma τ_max. A igual momento torsor e igual τ_max resulta D = D_e·∛(1 − n⁴). Para D_e = 40 cm y D_i = 20 cm (n = 1/2) el eje macizo es D ≈ 39 cm, y el hueco pesa alrededor del 79 % (áreas 40² − 20² contra 39²): unos 20 % más económico.",
+  "tor.s6.kicker":
+    "06 — Árboles de transmisión",
+  "tor.s6.title":
+    "Dimensionar un eje a partir de la potencia",
+  "tor.s6.p1":
+    "El momento torsor sale de la potencia N (en CV) y las revoluciones por minuto n. Con P = 7500·N kg·cm/s y ω = π·n/30:",
+  "tor.s6.p2":
+    "y, reemplazando en la fórmula de dimensionado, el diámetro mínimo del árbol (sin considerar la flexión de las poleas ni el peso propio):",
+  "tor.s7.kicker":
+    "07 — Ejemplos resueltos",
+  "tor.s7.title":
+    "Dos ejercicios",
+  "tor.s7.e1.title":
+    "Verificar una barra",
+  "tor.s7.e1.p":
+    "Barra redonda de acero, D = 6 cm, l = 3 m, M_t = 200 kg·m. Hallar τ_max y φ. G = 0,4·2 100 000 = 840 000 kg/cm².",
+  "tor.s7.e1.r":
+    "M_t = 20 000 kg·cm; J_0 = π·6⁴/32 = 127 cm⁴; τ_max = 16·20 000 / (π·6³) ≈ 472 kg/cm²; φ = 20 000·300 / (840 000·127) = 0,056 rad ≈ 3°12′.",
+  "tor.s7.e2.title":
+    "Dimensionar una barra",
+  "tor.s7.e2.p":
+    "Barra de acero, l = 2 m, cargada por una fuerza de 500 kg con brazo de 120 cm en el extremo libre. τ_adm = 600 kg/cm², G = 800 000 kg/cm². Hallar D y φ.",
+  "tor.s7.e2.r":
+    "M_t = 500·120 = 60 000 kg·cm; R = ∛(2·60 000 / (π·600)) ≈ 4 cm, o sea D = 8 cm; J_0 = π·8⁴/32 ≈ 402 cm⁴; φ = 60 000·200 / (800 000·402) ≈ 0,037 rad ≈ 2°7′.",
+  "tor.note":
+    "Una aclaración sobre la fuente: el libro imprime τ_max = 549 kg/cm² en el primer ejercicio, pero con su propia fórmula da 472 kg/cm²; el valor de arriba está recalculado.",
+  "tor.footer":
+    "Resumido y recalculado a partir de Raffo, C. M., Estática y Resistencia de Materiales (cap. XXIII, Torsión); no se conserva la numeración de las ecuaciones.",
   "axl.link":
     "Esfuerzo axil",
   "axl.title":
