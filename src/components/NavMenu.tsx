@@ -17,6 +17,7 @@ const LINKS: { href: string; labelKey: TranslationKey }[] = [
   { href: "/corte-de-seccion", labelKey: "cut.link" },
   { href: "/flexion", labelKey: "flx.link" },
   { href: "/torsion", labelKey: "tor.link" },
+  { href: "/axil", labelKey: "axl.link" },
   { href: "/flecha", labelKey: "fla.link" },
   { href: "/corte-en-flexion", labelKey: "shr.link" },
 ];
