@@ -1342,6 +1342,412 @@ const EN = {
     "Not in the notes, but a direct consequence: J_1,2 = (J_x + J_y)/2 ± √(((J_x − J_y)/2)² + J_xy²).",
   "pln.footer":
     "Transcribed from the course notes “Momentos de superficies planas”. The examples are checked in the test suite.",
+
+  "pnd.link":
+    "Buckling",
+  "pnd.title":
+    "Buckling (instability of equilibrium)",
+  "pnd.lead":
+    "When a compressed bar stops being safe because of its stress and starts being unsafe because of its shape: stable, indifferent and unstable equilibrium, Euler’s critical load, slenderness and the effect of the end conditions. From the course notes “Pandeo AMS”.",
+  "pnd.s1.kicker":
+    "01 — Equilibrium",
+  "pnd.s1.title":
+    "Stable, indifferent and unstable equilibrium",
+  "pnd.s1.p1":
+    "A straight bar under compression can be checked with σ = F/A ≤ σ_adm as long as it is short: the notes give the condition l < 30·b, with b the smallest width of the section. If l > 30·b the situation is one of unstable equilibrium: the smallest lateral force deviates the bar from its axis and breaks it as it deforms, before the stress reaches σ_adm.",
+  "pnd.s1.p2":
+    "For a piece of given section A and length l there is a load F = F_k, the critical buckling load, that corresponds to a state of indifferent equilibrium. Load the bar with F and apply a transverse load H; three cases appear:",
+  "pnd.s1.c1.t":
+    "F < F_k: stable",
+  "pnd.s1.c1.d":
+    "When H is removed the bar returns to its straight position.",
+  "pnd.s1.c2.t":
+    "F = F_k: indifferent",
+  "pnd.s1.c2.d":
+    "When H is removed the bar stays in the deviated position.",
+  "pnd.s1.c3.t":
+    "F > F_k: unstable",
+  "pnd.s1.c3.d":
+    "Even when H stops the bar keeps deforming until it breaks.",
+  "pnd.s1.p3":
+    "The same classification (stable, indifferent, unstable) applies to any equilibrium: after a small disturbance the body goes back, stays or moves away.",
+  "pnd.s2.kicker":
+    "02 — Hypotheses",
+  "pnd.s2.title":
+    "Conditions of the bar",
+  "pnd.s2.h1":
+    "Both ends are hinged, with no friction, one of them guided along the axis of the bar.",
+  "pnd.s2.h2":
+    "The compressive force acts exactly on the axis of the bar.",
+  "pnd.s2.h3":
+    "The material is elastic and homogeneous (E constant).",
+  "pnd.s2.h4":
+    "No lateral forces act on the bar.",
+  "pnd.s3.kicker":
+    "03 — Euler",
+  "pnd.s3.title":
+    "Critical load and slenderness",
+  "pnd.s3.p1":
+    "The force at which buckling starts is the critical load or buckling limit. With the bending moment M = F·s at a section where the bar has deflected s, Euler’s expression is, valid only for σ ≤ σ_EL (the elastic limit):",
+  "pnd.s3.p2":
+    "J_min is the smallest moment of inertia of the section (the bar buckles about the weak axis), c the end-condition coefficient and l the length. With J_min = i_min²·A, where i = √(J/A) is the radius of gyration, and the slenderness λ = l/i_min:",
+  "pnd.s3.p3":
+    "Dividing by the area gives the critical stress. Its graph against λ is a hyperbola, Euler’s hyperbola: the more slender the bar, the lower the stress it can carry.",
+  "pnd.s3.p4":
+    "Using the equivalent length l_0 = c·l (the distance between two consecutive inflection points of the deformed bar), the same thing reads λ = l_0 / i_min and σ_k = π²·E / λ².",
+  "pnd.s3.fig":
+    "Euler’s hyperbola σ_k(λ) for steel, E = 2 100 000 kg/cm²; only the branch with σ_k below the elastic limit is valid.",
+  "pnd.s3.fig.axis.x":
+    "λ",
+  "pnd.s3.fig.axis.y":
+    "σ_k",
+  "pnd.s4.kicker":
+    "04 — End conditions",
+  "pnd.s4.title":
+    "The coefficient c",
+  "pnd.s4.p1":
+    "c = l_0 / l compares the buckling length with the real length. The fixed-free cantilever buckles over twice its length; the fixed-fixed bar over half of it:",
+  "pnd.s4.fixedfree":
+    "fixed–free",
+  "pnd.s4.pinned":
+    "pinned–pinned",
+  "pnd.s4.fixedpinned":
+    "fixed–pinned",
+  "pnd.s4.fixedfixed":
+    "fixed–fixed",
+  "pnd.s4.p2":
+    "Since F_k is proportional to 1/c², fixing both ends multiplies the critical load by 4 with respect to the pinned bar, and the cantilever divides it by 4.",
+  "pnd.s5.kicker":
+    "05 — Worked exercises",
+  "pnd.s5.title":
+    "Exercises from the notes",
+  "pnd.s5.e1.t":
+    "IPN 10, h = 7 m (J_y = 12.20 cm⁴)",
+  "pnd.s5.e1.r":
+    "Pinned (c = 1): F_k = π²·2 100 000·12.20 / 700² = 516 kg. Fixed–fixed (c = 0.5): F_k = 2 064 kg.",
+  "pnd.s5.e2.t":
+    "IPN 23, h = 7 m (J_y = 189 cm⁴)",
+  "pnd.s5.e2.r":
+    "Pinned: F_k = π²·2 100 000·189 / 700² = 7 994 kg. Fixed–fixed (c = 0.5): F_k = 31 978 kg.",
+  "pnd.s5.e3.t":
+    "Bar 15 × 24 cm, 8 m long, pinned, with 350 t (σ_adm = 1 200 kg/cm²)",
+  "pnd.s5.e3.r":
+    "A = 360 cm², σ = 350 000/360 = 972.2 kg/cm² < 1 200: it passes the stress check. J_min = 24·15³/12 = 6 750 cm⁴ and F_k = π²·2 100 000·6 750 / 800² = 218 596 kg < 350 000 kg: it buckles. The load “admissible by stress”, 1 200·360 = 432 t, is not the real limit. The longest bar that carries 350 t is l = √(π²·E·J/F) = 632 cm.",
+  "pnd.s5.e4.t":
+    "Cantilever (c = 2) carrying 135 000 kg, with J_y = 14 435 cm⁴",
+  "pnd.s5.e4.r":
+    "l_max = √(π²·2 100 000·14 435 / (4·135 000)) = 744.34 cm = 7.44 m.",
+  "pnd.s5.note":
+    "Two details of the handwritten notes: the profile of the last exercise is written “IPB 60”, but J_y = 14 435 cm⁴ is that of an IPB 700 (the table has 14 440); and the result is written “7.44 cm” where it means 7.44 m.",
+  "pnd.calc.title":
+    "Euler calculator",
+  "pnd.calc.E":
+    "E (kg/cm²)",
+  "pnd.calc.J":
+    "J_min (cm⁴)",
+  "pnd.calc.A":
+    "A (cm²)",
+  "pnd.calc.l":
+    "l (cm)",
+  "pnd.calc.c":
+    "c",
+  "pnd.calc.F":
+    "F (kg)",
+  "pnd.calc.Fk":
+    "F_k",
+  "pnd.calc.lambda":
+    "λ",
+  "pnd.calc.sk":
+    "σ_k",
+  "pnd.calc.state":
+    "Equilibrium under F",
+  "pnd.calc.stable":
+    "stable",
+  "pnd.calc.indifferent":
+    "indifferent",
+  "pnd.calc.unstable":
+    "unstable: it buckles",
+  "pnd.calc.hint":
+    "Euler holds only while σ_k is below the stress at the elastic limit; for stockier bars the formula overestimates F_k.",
+  "pnd.footer":
+    "Transcribed from the handwritten course notes “Pandeo AMS”; the numbers in the exercises were recomputed and agree with the notes.",
+  "tns.link":
+    "Stress state",
+  "tns.title":
+    "State of stress at a point",
+  "tns.lead":
+    "The stress tensor, its invariants and classification, the stress vector on any plane, and the principal stresses, directions and planes. The worked exercise is the professor’s (“Estado de tensión EJ1”); the explanations around it are ours.",
+  "tns.s1.kicker":
+    "01 — The tensor",
+  "tns.s1.title":
+    "Writing the stress tensor",
+  "tns.s1.p1":
+    "The state of stress at a point B is the set of stresses on three perpendicular planes through it. Each plane gives one normal stress (σ_x, σ_y, σ_z) and two shear stresses; because of the reciprocity of shear stresses τ_xy = τ_yx, τ_yz = τ_zy and τ_xz = τ_zx, so the tensor is symmetric and has six independent components:",
+  "tns.s1.p2":
+    "In the exercise (MPa): σ_x = −20, σ_y = 30, σ_z = 0, τ_xy = 10, τ_yz = 0 and τ_xz = 5. Tension is positive, compression negative.",
+  "tns.s2.kicker":
+    "02 — Invariants",
+  "tns.s2.title":
+    "Invariants and classification",
+  "tns.s2.p1":
+    "The three invariants do not change when the axes are rotated; they are also the symmetric functions of the principal stresses:",
+  "tns.s2.e1":
+    "I_1 = σ_x + σ_y + σ_z = σ_1 + σ_2 + σ_3",
+  "tns.s2.e2":
+    "I_2 = (σ_x·σ_y − τ_xy²) + (σ_y·σ_z − τ_yz²) + (σ_x·σ_z − τ_xz²) = σ_1·σ_2 + σ_2·σ_3 + σ_1·σ_3",
+  "tns.s2.e3":
+    "I_3 = det T = σ_x·σ_y·σ_z + 2·τ_xy·τ_yz·τ_xz − (σ_x·τ_yz² + σ_y·τ_xz² + σ_z·τ_xy²) = σ_1·σ_2·σ_3",
+  "tns.s2.p2":
+    "Classification: if I_3 ≠ 0 the state is triple or spatial (three nonzero principal stresses); if I_3 = 0 and I_2 ≠ 0 it is double or plane; if only I_1 ≠ 0 it is simple or uniaxial.",
+  "tns.s2.p3":
+    "In the exercise: I_1 = −20 + 30 + 0 = 10 MPa; I_2 = (−600 − 100) + (0 − 0) + (0 − 25) = −725 MPa²; I_3 = 0 + 0 − (0 + 30·25 + 0) = −750 MPa³. Since I_3 ≠ 0 the state at B is triple (spatial).",
+  "tns.s3.kicker":
+    "03 — Stress vector",
+  "tns.s3.title":
+    "Stress on a plane of normal n",
+  "tns.s3.p1":
+    "For a plane through B with unit normal n = (l, m, n), the stress vector ρ is the tensor applied to the normal. Its component along n is the normal stress σ, and what is left is the tangential stress τ:",
+  "tns.s3.e1":
+    "ρ = T · n",
+  "tns.s3.e2":
+    "σ = (ρ · n) n",
+  "tns.s3.e3":
+    "τ = ρ − σ        |ρ|² = |σ|² + |τ|²",
+  "tns.s3.p2":
+    "In the exercise, with n = (0.5; 0.5; 0.7071): ρ = (−1.4645; 20; 2.5) MPa, |ρ| = 20.21 MPa; σ = (5.5178; 5.5178; 7.8032) MPa, |σ| = 11.04 MPa; τ = (−6.9823; 14.4822; −5.3032) MPa, |τ| = 16.93 MPa.",
+  "tns.s4.kicker":
+    "04 — Principal stresses",
+  "tns.s4.title":
+    "Principal stresses, directions and planes",
+  "tns.s4.p1":
+    "There are three perpendicular planes on which the shear stress is zero: the principal planes. The normal stress on them is a principal stress. They are the roots of the characteristic equation:",
+  "tns.s4.e1":
+    "σ³ − I_1·σ² + I_2·σ − I_3 = 0",
+  "tns.s4.p2":
+    "The roots are real because the tensor is symmetric; ordered, σ_1 ≥ σ_2 ≥ σ_3. For each root the principal direction n = (l, m, n) solves",
+  "tns.s4.e2":
+    "(σ_x − σ)·l + τ_yx·m + τ_zx·n = 0\nτ_xy·l + (σ_y − σ)·m + τ_zy·n = 0\nτ_xz·l + τ_yz·m + (σ_z − σ)·n = 0",
+  "tns.s4.p3":
+    "The three equations are dependent, so one unknown is fixed (a = 1) and the other two solved; then the vector is normalised dividing by (a² + b² + c²)^½. The sign of the direction is arbitrary. The plane perpendicular to each direction is the corresponding principal plane.",
+  "tns.s4.p4":
+    "In the exercise: σ_1 = 31.9542 MPa, σ_2 = 1.02156 MPa, σ_3 = −22.97576 MPa. Their sum is I_1 = 10 and their product is I_3 = −750, as it has to be.",
+  "tns.s5.kicker":
+    "05 — The directions",
+  "tns.s5.title":
+    "Principal directions of the exercise",
+  "tns.s5.th.s":
+    "Principal stress",
+  "tns.s5.th.sys":
+    "System solved (a = 1)",
+  "tns.s5.th.n":
+    "Direction n",
+  "tns.s5.r1":
+    "σ_1 = 31.9542: −51.9542·a + 10·b + 5·c = 0, 10·a − 1.9542·b = 0 → b = 5.1172, c = 0.1565",
+  "tns.s5.r2":
+    "σ_2 = 1.02156: −21.02156·a + 10·b + 5·c = 0, 10·a + 28.97844·b = 0 → b = −0.3451, c = 4.8945",
+  "tns.s5.r3":
+    "σ_3 = −22.97576: 2.97576·a + 10·b + 5·c = 0, 10·a + 52.97576·b = 0 → b = −0.1888, c = −0.2176",
+  "tns.s5.n1":
+    "(0.1917 ; 0.981 ; 0.03)",
+  "tns.s5.n2":
+    "(0.1997 ; −0.0689 ; 0.97743)",
+  "tns.s5.n3":
+    "(0.961 ; −0.18139 ; −0.20912)",
+  "tns.s5.p1":
+    "The tests of the app recompute every number of the exercise from the tensor.",
+  "tns.calc.title":
+    "Calculator",
+  "tns.calc.n":
+    "normal n (it is normalised)",
+  "tns.calc.inv":
+    "Invariants",
+  "tns.calc.kind":
+    "State",
+  "tns.calc.triple":
+    "triple (spatial)",
+  "tns.calc.double":
+    "double (plane)",
+  "tns.calc.simple":
+    "simple (uniaxial)",
+  "tns.calc.null":
+    "no stress",
+  "tns.calc.plane":
+    "Stress on the plane",
+  "tns.calc.rho":
+    "ρ",
+  "tns.calc.sigma":
+    "σ (normal)",
+  "tns.calc.tau":
+    "τ (tangential)",
+  "tns.calc.princ":
+    "Principal stresses and directions",
+  "tns.calc.any":
+    "any direction (repeated stress)",
+  "tns.footer":
+    "The worked exercise is the professor’s (“Estado de tensión EJ1”); the theory text around it was written for this page.",
+
+  "mat.link":
+    "Material properties",
+  "mat.title":
+    "Properties of materials",
+  "mat.lead":
+    "Forces and stresses, the states of stress, the tensile test and the σ–ε diagram, the limits and properties of a material, the types of material and the equations of equivalence. From the course notes “Propiedades de los materiales”.",
+  "mat.s1.kicker":
+    "01 — Forces",
+  "mat.s1.title":
+    "Forces on a solid",
+  "mat.s1.p1":
+    "A solid can be loaded by two kinds of force. Volume (or mass) forces act on every particle of the body: with the mean density γ = dm/dv, the force on an element is P·dm = P·γ·dv, where P is the unit force. They can be gravitational, of inertia or electromagnetic.",
+  "mat.s1.p2":
+    "Surface forces act on the surface of the body, as contact forces or pressure: p·ds = F, where p is the force per unit of surface (the pressure).",
+  "mat.s2.kicker":
+    "02 — Stress",
+  "mat.s2.title":
+    "Stress and state of stress",
+  "mat.s2.p1":
+    "Stresses are the mutual actions between the particles of a body, caused by the external forces. A stress is a unit effort: a force per unit of surface, in T/m², kg/cm² or kN/cm².",
+  "mat.s2.p2":
+    "The actions applied to one part of a structure are transmitted as stresses from point to point over the whole section. There are infinitely many states of stress, one for each point. If the body is cut by a plane, a stress appears — a vector — that depends on the position and on the orientation of the cutting plane:",
+  "mat.s2.e1":
+    "ρ = lim ΔP / ΔF   (ΔF → 0)",
+  "mat.s2.p3":
+    "ΔP is the part of the internal reaction of the left side that acts on the differential of surface ΔF. The vector ρ is not free: it is associated with a plane, and through a point pass infinitely many planes, so there are infinitely many ρ. The set of all of them is the state of stress at that point. Each material has a maximum state of stress.",
+  "mat.s2.p4":
+    "The stress ρ makes an angle with the plane, so it splits into a normal component σ and a tangential component τ:",
+  "mat.s2.e2":
+    "σ = dN/dS        τ = dQ/dS        ρ = √(σ² + τ²)",
+  "mat.s2.p5":
+    "Types of state of stress, according to how ρ behaves as the plane changes:",
+  "mat.s2.t1":
+    "Triple or spatial: intensity, direction and sense vary, and ρ can have any orientation in space.",
+  "mat.s2.t2":
+    "Double or plane: they vary, but ρ stays parallel to a given plane.",
+  "mat.s2.t3":
+    "Simple or linear: ρ stays parallel to a given direction.",
+  "mat.s2.p6":
+    "The stress tensor, its invariants and the principal stresses are worked in the page on the state of stress at a point.",
+  "mat.s3.kicker":
+    "03 — Tensile test",
+  "mat.s3.title":
+    "The tensile test",
+  "mat.s3.p1":
+    "To know the properties of a material it has to be tested. The testing machine (electric or hydraulic) has a base, a head and two or four columns much stiffer than the specimens, so that the machine does not deform instead of them, and a central piston that applies the load, in tension or in compression. Ductile materials are tested in tension; those that do not resist tension, like concrete, in compression.",
+  "mat.s3.p2":
+    "For metals, the simple tensile test loads a cylindrical specimen of standard dimensions with an axial force, which generates a simple state of stress. The load is applied quasi-statically, that is, very slowly, while the elongation is measured. With the pairs of values σ–ε the stress–strain diagram is drawn, from the start of the test to the rupture:",
+  "mat.s3.e1":
+    "σ = F / A_o        ε = Δl / l_o",
+  "mat.s3.p3":
+    "σ is the force divided by the original section A_o, and ε is the unit elongation, the ratio between the elongation Δl and the initial length l_o. They are plotted on the Y and X axes respectively.",
+  "mat.s4.kicker":
+    "04 — Deformation and limits",
+  "mat.s4.title":
+    "Elastic and plastic deformation; limits",
+  "mat.s4.d1":
+    "Elastic deformation: the body returns to its original shape when the effort ceases.",
+  "mat.s4.d2":
+    "Plastic deformation: it does not return; the body stays deformed.",
+  "mat.s4.l1":
+    "Proportionality limit σ_P: the stress up to which the diagram is a straight line. Above it the strains grow faster than the stress.",
+  "mat.s4.l2":
+    "Elasticity limit σ_E: the stress above which the deformations become permanent.",
+  "mat.s4.l3":
+    "Yield limit σ_Fl: where the material deforms with no appreciable increase of the load (the notes distinguish an upper and a lower yield stress).",
+  "mat.s4.l4":
+    "Rupture limit σ_Rot: the maximum stress the material can resist.",
+  "mat.s4.p1":
+    "Safety factor: the elasticity stress divided by a number ν gives the working or admissible stress:",
+  "mat.s4.e1":
+    "σ_adm = σ_E / ν        ν = 2 – 4",
+  "mat.s5.kicker":
+    "05 — The diagram",
+  "mat.s5.title":
+    "The σ–ε diagram of a ductile metal",
+  "mat.s5.fig":
+    "Stress–strain diagram of a ductile steel (schematic): elastic period up to σ_E (straight up to σ_P), yield, and the anelastic period up to σ_Rot and the rupture.",
+  "mat.s5.fig.sigma":
+    "σ = F/A_o",
+  "mat.s5.fig.eps":
+    "ε = Δl/l_o",
+  "mat.s5.fig.p1":
+    "elastic",
+  "mat.s5.fig.p2":
+    "yield",
+  "mat.s5.fig.p3":
+    "anelastic",
+  "mat.s5.s1.t":
+    "1 — Elastic phase (0 to σ_E)",
+  "mat.s5.s1.d":
+    "A straight line up to σ_P and a curve up to σ_E. In the straight part the strains are proportional to the stresses: Hooke’s law. At any point of the elastic phase, if the force is removed the piece returns to its original length. The stiffer the material, the steeper the line.",
+  "mat.s5.s2.t":
+    "2 — Plastic phase (σ_E to σ_Fl)",
+  "mat.s5.s2.d":
+    "The strains continue but they are permanent: once the force is removed the specimen stays deformed.",
+  "mat.s5.s3.t":
+    "3 — Rupture phase",
+  "mat.s5.s3.d":
+    "From σ_Fl the molecules move with no appreciable increase of the load: the yield period, a rearrangement, followed by the phase of maximum load and rupture. The strains become visible to the naked eye, as elongation and as necking (a reduction of the diameter). Beyond yield comes the anelastic period of large deformations, in which the stress rises up to the maximum σ_Rot, the stress of rupture, after which it falls until the specimen breaks at the strain ε_R. Necking reduces the section, so the true stress F/A_real is higher than the apparent one.",
+  "mat.s5.hooke":
+    "In the first phase Hooke’s law holds: stress is proportional to strain, with E = tan β the Young’s modulus (the slope of the straight line):",
+  "mat.s6.kicker":
+    "06 — Other properties",
+  "mat.s6.title":
+    "Stiffness, ductility, resilience, toughness, hardness",
+  "mat.s6.p1":
+    "Stiffness (rigidez): the property of opposing deformation; it grows with Young’s modulus E.",
+  "mat.s6.p2":
+    "Ductility: deformability in the plastic or anelastic period.",
+  "mat.s6.p3":
+    "Resilience: the capacity to give back the energy stored by deformation in the elastic period. It is the area under the curve in that period; up to σ_e it is the triangle:",
+  "mat.s6.e1":
+    "U = ½ · σ_e² / E",
+  "mat.s6.p4":
+    "Toughness (tenacidad): the capacity to absorb energy in the anelastic period of large deformations; it is the area under the curve up to rupture.",
+  "mat.s6.p5":
+    "Hardness: the capacity to resist mechanical actions such as punching, abrasion and cutting.",
+  "mat.s6.fig":
+    "Resilience: the area under the elastic part of the curve.",
+  "mat.s7.kicker":
+    "07 — Types of material",
+  "mat.s7.title":
+    "Ductile, brittle and plastic materials",
+  "mat.s7.m1.t":
+    "Ductile",
+  "mat.s7.m1.d":
+    "They follow the diagram above and go through important deformations before breaking, which lets the ruin of the structure be foreseen. Steels, aluminium.",
+  "mat.s7.m2.t":
+    "Brittle",
+  "mat.s7.m2.d":
+    "They suffer small deformations before breaking: the proportionality stress is very close to the rupture stress. Glass, plain concrete, marble.",
+  "mat.s7.m3.t":
+    "Plastic",
+  "mat.s7.m3.d":
+    "They suffer large deformations for very small increases of load, with little elasticity and large permanent deformations. Some asphalts, clay, sealing wax, and plastics at certain temperatures.",
+  "mat.s8.kicker":
+    "08 — Equivalence",
+  "mat.s8.title":
+    "Equations of equivalence",
+  "mat.s8.p1":
+    "Reducing to the centroid G of a section the forces on one side of it gives four characteristic efforts: the normal force N, the shear Q, the bending moment M_F and the torque M_T. If only one of them exists the loading is simple; if several, combined. In every case the material is elastic, the stresses are in the elastic range and Hooke’s law σ = E·ε holds.",
+  "mat.s8.p2":
+    "The axes: x leaves the section, and y and z are the principal directions of inertia. M_T lies along x, and so does the normal force N (N_x). The shear Q lies in the plane of the section and splits into Q_y and Q_z; the bending moment generally acts in a plane that contains neither y nor z, so it splits into M_Fy and M_Fz.",
+  "mat.s8.p3":
+    "The stresses are what produce them: σ is normal to the section and τ lies in its plane. For each element dF there are three elementary forces:",
+  "mat.s8.e1":
+    "along x: dN = σ·dF        along y: dQ_y = τ_xy·dF        along z: dQ_z = τ_xz·dF",
+  "mat.s8.p4":
+    "Integrating over the whole area F gives the equations of equivalence (z and y are the coordinates of the element of area):",
+  "mat.s8.q1":
+    "N = ∫ σ dF",
+  "mat.s8.q2":
+    "Q_y = ∫ τ_xy dF        Q_z = ∫ τ_xz dF",
+  "mat.s8.q3":
+    "M_T = ∫ (τ_xz·y − τ_xy·z) dF",
+  "mat.s8.q4":
+    "M_y = ∫ σ·z dF        M_z = ∫ σ·y dF",
+  "mat.s8.note":
+    "Two details of the notes. The torque is written with a plus sign, (τ_xy·z + τ_xz·y); with y and z the coordinates of dF, the moment of the shear forces about x is a difference. And M_y and M_z are written with τ, but they are the moments of the normal stresses σ (the signs depend on the axis convention).",
+  "mat.footer":
+    "Transcribed and ordered from the course notes “Propiedades de los materiales”; the diagrams were redrawn.",
 } as const;
 
 export type TranslationKey = keyof typeof EN;
@@ -2678,6 +3084,412 @@ const ES: Record<TranslationKey, string> = {
     "No está en el apunte, pero es consecuencia directa: J_1,2 = (J_x + J_y)/2 ± √(((J_x − J_y)/2)² + J_xy²).",
   "pln.footer":
     "Transcripto del apunte “Momentos de superficies planas” de la cátedra. Los ejemplos se verifican en los tests.",
+
+  "pnd.link":
+    "Pandeo",
+  "pnd.title":
+    "Pandeo (inestabilidad del equilibrio)",
+  "pnd.lead":
+    "Cuando una barra comprimida deja de ser segura por su tensión y pasa a serlo por su forma: equilibrio estable, indiferente e inestable, carga crítica de Euler, esbeltez y efecto de los vínculos. Según el apunte “Pandeo AMS” de la cátedra.",
+  "pnd.s1.kicker":
+    "01 — Equilibrio",
+  "pnd.s1.title":
+    "Equilibrio estable, indiferente e inestable",
+  "pnd.s1.p1":
+    "Una barra de eje recto sometida a compresión puede calcularse con σ = F/A ≤ σ_adm mientras sea corta: el apunte da la condición l < 30·b, con b el ancho mínimo de la sección. Si l > 30·b se produce una situación de equilibrio inestable: la menor fuerza lateral causará la desviación respecto del eje y la rotura de la pieza al deformarse, antes de llegar a la tensión σ_adm.",
+  "pnd.s1.p2":
+    "Para una pieza de sección A y longitud l dadas existe un valor de carga F = F_k, denominada carga crítica de pandeo, que corresponde a un estado de equilibrio indiferente. Cargada la pieza con F y aplicada una carga transversal H, pueden presentarse tres casos:",
+  "pnd.s1.c1.t":
+    "F < F_k: estable",
+  "pnd.s1.c1.d":
+    "Al cesar H, la barra vuelve a su posición recta.",
+  "pnd.s1.c2.t":
+    "F = F_k: indiferente",
+  "pnd.s1.c2.d":
+    "Al cesar H, la barra queda en la posición desviada.",
+  "pnd.s1.c3.t":
+    "F > F_k: inestable",
+  "pnd.s1.c3.d":
+    "Aunque cese H, la barra continúa deformándose hasta la rotura.",
+  "pnd.s1.p3":
+    "La misma clasificación (estable, indiferente, inestable) vale para cualquier equilibrio: tras una perturbación chica el cuerpo vuelve, se queda o se aleja.",
+  "pnd.s2.kicker":
+    "02 — Hipótesis",
+  "pnd.s2.title":
+    "Condiciones de la barra",
+  "pnd.s2.h1":
+    "Ambos extremos articulados, sin rozamiento, uno de ellos guiado según la dirección del eje de la barra.",
+  "pnd.s2.h2":
+    "La fuerza de compresión actúa exactamente en el eje de la barra.",
+  "pnd.s2.h3":
+    "El material de la barra es elástico y homogéneo (E constante).",
+  "pnd.s2.h4":
+    "Sobre la barra no actúan fuerzas laterales.",
+  "pnd.s3.kicker":
+    "03 — Euler",
+  "pnd.s3.title":
+    "Carga crítica y esbeltez",
+  "pnd.s3.p1":
+    "El valor de la fuerza con la cual se inicia el pandeo se denomina carga crítica o límite de pandeo. Con el momento M = F·s en una sección donde la barra se desvió s, la expresión de Euler es, válida solo para σ ≤ σ_EL (límite elástico):",
+  "pnd.s3.p2":
+    "J_min es el menor momento de inercia de la sección (la barra pandea alrededor del eje débil), c el coeficiente de empotramiento y l la longitud. Con J_min = i_min²·A, donde i = √(J/A) es el radio de giro, y la esbeltez λ = l/i_min:",
+  "pnd.s3.p3":
+    "Dividiendo por el área se obtiene la tensión crítica. Su gráfico contra λ es una hipérbola, la hipérbola de Euler: cuanto más esbelta la barra, menor la tensión que puede soportar.",
+  "pnd.s3.p4":
+    "Con la longitud equivalente l_0 = c·l (la distancia entre dos puntos de inflexión consecutivos de la barra deformada), lo mismo se escribe λ = l_0 / i_min y σ_k = π²·E / λ².",
+  "pnd.s3.fig":
+    "Hipérbola de Euler σ_k(λ) para acero, E = 2 100 000 kg/cm²; solo vale la rama con σ_k por debajo del límite elástico.",
+  "pnd.s3.fig.axis.x":
+    "λ",
+  "pnd.s3.fig.axis.y":
+    "σ_k",
+  "pnd.s4.kicker":
+    "04 — Vínculos",
+  "pnd.s4.title":
+    "El coeficiente c",
+  "pnd.s4.p1":
+    "c = l_0 / l compara la longitud de pandeo con la longitud real. La ménsula empotrada-libre pandea sobre el doble de su longitud; la empotrada-empotrada, sobre la mitad:",
+  "pnd.s4.fixedfree":
+    "empotrada–libre",
+  "pnd.s4.pinned":
+    "articulada–articulada",
+  "pnd.s4.fixedpinned":
+    "empotrada–articulada",
+  "pnd.s4.fixedfixed":
+    "empotrada–empotrada",
+  "pnd.s4.p2":
+    "Como F_k es proporcional a 1/c², empotrar ambos extremos multiplica por 4 la carga crítica respecto de la barra articulada, y la ménsula la divide por 4.",
+  "pnd.s5.kicker":
+    "05 — Ejercicios resueltos",
+  "pnd.s5.title":
+    "Ejercicios del apunte",
+  "pnd.s5.e1.t":
+    "IPN 10, h = 7 m (J_y = 12,20 cm⁴)",
+  "pnd.s5.e1.r":
+    "Articulada (c = 1): F_k = π²·2 100 000·12,20 / 700² = 516 kg. Empotrada–empotrada (c = 0,5): F_k = 2 064 kg.",
+  "pnd.s5.e2.t":
+    "IPN 23, h = 7 m (J_y = 189 cm⁴)",
+  "pnd.s5.e2.r":
+    "Articulada: F_k = π²·2 100 000·189 / 700² = 7 994 kg. Empotrada–empotrada (c = 0,5): F_k = 31 978 kg.",
+  "pnd.s5.e3.t":
+    "Barra de 15 × 24 cm, 8 m de largo, articulada, con 350 t (σ_adm = 1 200 kg/cm²)",
+  "pnd.s5.e3.r":
+    "A = 360 cm², σ = 350 000/360 = 972,2 kg/cm² < 1 200: verifica por tensión. J_min = 24·15³/12 = 6 750 cm⁴ y F_k = π²·2 100 000·6 750 / 800² = 218 596 kg < 350 000 kg: pandea. La carga “admisible por tensión”, 1 200·360 = 432 t, no es el límite real. La barra más larga que soporta 350 t es l = √(π²·E·J/F) = 632 cm.",
+  "pnd.s5.e4.t":
+    "Ménsula (c = 2) con 135 000 kg, con J_y = 14 435 cm⁴",
+  "pnd.s5.e4.r":
+    "l_max = √(π²·2 100 000·14 435 / (4·135 000)) = 744,34 cm = 7,44 m.",
+  "pnd.s5.note":
+    "Dos detalles del apunte manuscrito: el perfil del último ejercicio está escrito “IPB 60”, pero J_y = 14 435 cm⁴ es el de un IPB 700 (la tabla trae 14 440); y el resultado está escrito “7,44 cm” cuando es 7,44 m.",
+  "pnd.calc.title":
+    "Calculadora de Euler",
+  "pnd.calc.E":
+    "E (kg/cm²)",
+  "pnd.calc.J":
+    "J_min (cm⁴)",
+  "pnd.calc.A":
+    "A (cm²)",
+  "pnd.calc.l":
+    "l (cm)",
+  "pnd.calc.c":
+    "c",
+  "pnd.calc.F":
+    "F (kg)",
+  "pnd.calc.Fk":
+    "F_k",
+  "pnd.calc.lambda":
+    "λ",
+  "pnd.calc.sk":
+    "σ_k",
+  "pnd.calc.state":
+    "Equilibrio bajo F",
+  "pnd.calc.stable":
+    "estable",
+  "pnd.calc.indifferent":
+    "indiferente",
+  "pnd.calc.unstable":
+    "inestable: pandea",
+  "pnd.calc.hint":
+    "Euler vale solo mientras σ_k esté por debajo de la tensión del límite elástico; para barras más robustas la fórmula sobreestima F_k.",
+  "pnd.footer":
+    "Transcripto del apunte manuscrito “Pandeo AMS” de la cátedra; los números de los ejercicios se recalcularon y coinciden con el apunte.",
+  "tns.link":
+    "Estado de tensión",
+  "tns.title":
+    "Estado de tensión en un punto",
+  "tns.lead":
+    "El tensor de tensiones, sus invariantes y clasificación, el vector tensión sobre cualquier plano, y las tensiones, direcciones y planos principales. El ejercicio resuelto es del profesor (“Estado de tensión EJ1”); las explicaciones que lo rodean son nuestras.",
+  "tns.s1.kicker":
+    "01 — El tensor",
+  "tns.s1.title":
+    "Escribir el tensor de tensiones",
+  "tns.s1.p1":
+    "El estado de tensión en un punto B es el conjunto de tensiones sobre tres planos perpendiculares que pasan por él. Cada plano aporta una tensión normal (σ_x, σ_y, σ_z) y dos tangenciales; por la reciprocidad de las tangenciales τ_xy = τ_yx, τ_yz = τ_zy y τ_xz = τ_zx, así que el tensor es simétrico y tiene seis componentes independientes:",
+  "tns.s1.p2":
+    "En el ejercicio (MPa): σ_x = −20, σ_y = 30, σ_z = 0, τ_xy = 10, τ_yz = 0 y τ_xz = 5. La tracción es positiva y la compresión negativa.",
+  "tns.s2.kicker":
+    "02 — Invariantes",
+  "tns.s2.title":
+    "Invariantes y clasificación",
+  "tns.s2.p1":
+    "Los tres invariantes no cambian al rotar los ejes; además son las funciones simétricas de las tensiones principales:",
+  "tns.s2.e1":
+    "I_1 = σ_x + σ_y + σ_z = σ_1 + σ_2 + σ_3",
+  "tns.s2.e2":
+    "I_2 = (σ_x·σ_y − τ_xy²) + (σ_y·σ_z − τ_yz²) + (σ_x·σ_z − τ_xz²) = σ_1·σ_2 + σ_2·σ_3 + σ_1·σ_3",
+  "tns.s2.e3":
+    "I_3 = det T = σ_x·σ_y·σ_z + 2·τ_xy·τ_yz·τ_xz − (σ_x·τ_yz² + σ_y·τ_xz² + σ_z·τ_xy²) = σ_1·σ_2·σ_3",
+  "tns.s2.p2":
+    "Clasificación: si I_3 ≠ 0 el estado es triple o espacial (tres tensiones principales no nulas); si I_3 = 0 e I_2 ≠ 0 es doble o plano; si solo I_1 ≠ 0 es simple o uniaxial.",
+  "tns.s2.p3":
+    "En el ejercicio: I_1 = −20 + 30 + 0 = 10 MPa; I_2 = (−600 − 100) + (0 − 0) + (0 − 25) = −725 MPa²; I_3 = 0 + 0 − (0 + 30·25 + 0) = −750 MPa³. Como I_3 ≠ 0 el estado en B es triple (espacial).",
+  "tns.s3.kicker":
+    "03 — Vector tensión",
+  "tns.s3.title":
+    "Tensión sobre un plano de normal n",
+  "tns.s3.p1":
+    "Para un plano por B de normal unitaria n = (l, m, n), el vector tensión ρ es el tensor aplicado a la normal. Su componente según n es la tensión normal σ, y lo que queda es la tangencial τ:",
+  "tns.s3.e1":
+    "ρ = T · n",
+  "tns.s3.e2":
+    "σ = (ρ · n) n",
+  "tns.s3.e3":
+    "τ = ρ − σ        |ρ|² = |σ|² + |τ|²",
+  "tns.s3.p2":
+    "En el ejercicio, con n = (0,5; 0,5; 0,7071): ρ = (−1,4645; 20; 2,5) MPa, |ρ| = 20,21 MPa; σ = (5,5178; 5,5178; 7,8032) MPa, |σ| = 11,04 MPa; τ = (−6,9823; 14,4822; −5,3032) MPa, |τ| = 16,93 MPa.",
+  "tns.s4.kicker":
+    "04 — Tensiones principales",
+  "tns.s4.title":
+    "Tensiones, direcciones y planos principales",
+  "tns.s4.p1":
+    "Hay tres planos perpendiculares entre sí sobre los que la tensión tangencial es nula: los planos principales. La tensión normal sobre ellos es una tensión principal. Son las raíces de la ecuación característica:",
+  "tns.s4.e1":
+    "σ³ − I_1·σ² + I_2·σ − I_3 = 0",
+  "tns.s4.p2":
+    "Las raíces son reales porque el tensor es simétrico; ordenadas, σ_1 ≥ σ_2 ≥ σ_3. Para cada raíz la dirección principal n = (l, m, n) resuelve",
+  "tns.s4.e2":
+    "(σ_x − σ)·l + τ_yx·m + τ_zx·n = 0\nτ_xy·l + (σ_y − σ)·m + τ_zy·n = 0\nτ_xz·l + τ_yz·m + (σ_z − σ)·n = 0",
+  "tns.s4.p3":
+    "Las tres ecuaciones son dependientes, así que se fija una incógnita (a = 1) y se resuelven las otras dos; luego se normaliza el vector dividiendo por (a² + b² + c²)^½. El sentido de la dirección es arbitrario. El plano perpendicular a cada dirección es el plano principal correspondiente.",
+  "tns.s4.p4":
+    "En el ejercicio: σ_1 = 31,9542 MPa, σ_2 = 1,02156 MPa, σ_3 = −22,97576 MPa. Su suma es I_1 = 10 y su producto es I_3 = −750, como debe ser.",
+  "tns.s5.kicker":
+    "05 — Las direcciones",
+  "tns.s5.title":
+    "Direcciones principales del ejercicio",
+  "tns.s5.th.s":
+    "Tensión principal",
+  "tns.s5.th.sys":
+    "Sistema resuelto (a = 1)",
+  "tns.s5.th.n":
+    "Dirección n",
+  "tns.s5.r1":
+    "σ_1 = 31,9542: −51,9542·a + 10·b + 5·c = 0, 10·a − 1,9542·b = 0 → b = 5,1172, c = 0,1565",
+  "tns.s5.r2":
+    "σ_2 = 1,02156: −21,02156·a + 10·b + 5·c = 0, 10·a + 28,97844·b = 0 → b = −0,3451, c = 4,8945",
+  "tns.s5.r3":
+    "σ_3 = −22,97576: 2,97576·a + 10·b + 5·c = 0, 10·a + 52,97576·b = 0 → b = −0,1888, c = −0,2176",
+  "tns.s5.n1":
+    "(0,1917 ; 0,981 ; 0,03)",
+  "tns.s5.n2":
+    "(0,1997 ; −0,0689 ; 0,97743)",
+  "tns.s5.n3":
+    "(0,961 ; −0,18139 ; −0,20912)",
+  "tns.s5.p1":
+    "Los tests de la app recalculan cada número del ejercicio a partir del tensor.",
+  "tns.calc.title":
+    "Calculadora",
+  "tns.calc.n":
+    "normal n (se normaliza)",
+  "tns.calc.inv":
+    "Invariantes",
+  "tns.calc.kind":
+    "Estado",
+  "tns.calc.triple":
+    "triple (espacial)",
+  "tns.calc.double":
+    "doble (plano)",
+  "tns.calc.simple":
+    "simple (uniaxial)",
+  "tns.calc.null":
+    "sin tensión",
+  "tns.calc.plane":
+    "Tensión sobre el plano",
+  "tns.calc.rho":
+    "ρ",
+  "tns.calc.sigma":
+    "σ (normal)",
+  "tns.calc.tau":
+    "τ (tangencial)",
+  "tns.calc.princ":
+    "Tensiones y direcciones principales",
+  "tns.calc.any":
+    "cualquier dirección (tensión repetida)",
+  "tns.footer":
+    "El ejercicio resuelto es del profesor (“Estado de tensión EJ1”); el texto teórico que lo rodea se escribió para esta página.",
+
+  "mat.link":
+    "Propiedades de los materiales",
+  "mat.title":
+    "Propiedades de los materiales",
+  "mat.lead":
+    "Fuerzas y tensiones, los estados de tensión, el ensayo de tracción y el diagrama σ–ε, los límites y propiedades de un material, los tipos de material y las ecuaciones de equivalencia. Según el apunte “Propiedades de los materiales” de la cátedra.",
+  "mat.s1.kicker":
+    "01 — Fuerzas",
+  "mat.s1.title":
+    "Fuerzas sobre un sólido",
+  "mat.s1.p1":
+    "Un sólido puede estar sometido a dos tipos de fuerzas. Las fuerzas de masa o de volumen actúan sobre cada partícula del cuerpo: con la densidad media γ = dm/dv, la fuerza sobre un elemento es P·dm = P·γ·dv, donde P es la fuerza unitaria. Pueden ser gravitacionales, de inercia o electromagnéticas.",
+  "mat.s1.p2":
+    "Las fuerzas de superficie actúan sobre la superficie del cuerpo, como fuerzas de contacto o de presión: p·ds = F, donde p es la fuerza por unidad de superficie (la presión).",
+  "mat.s2.kicker":
+    "02 — Tensión",
+  "mat.s2.title":
+    "Tensión y estado de tensión",
+  "mat.s2.p1":
+    "Las tensiones son las acciones mutuas entre las partículas de un cuerpo, causadas por las fuerzas exteriores. Una tensión es un esfuerzo unitario: una fuerza por unidad de superficie, en T/m², kg/cm² o kN/cm².",
+  "mat.s2.p2":
+    "Las acciones aplicadas sobre una parte de la estructura se transmiten como tensiones de punto a punto sobre toda la sección. Existen infinitos estados de tensión, uno por cada punto. Si se corta el cuerpo con un plano aparece una tensión —un vector— que depende de la ubicación y de la orientación del plano de corte:",
+  "mat.s2.e1":
+    "ρ = lím ΔP / ΔF   (ΔF → 0)",
+  "mat.s2.p3":
+    "ΔP es la parte de la reacción interna izquierda que actúa sobre el diferencial de superficie ΔF. El vector ρ no es libre: está asociado a un plano, y por un punto pasan infinitos planos, así que hay infinitos ρ. El conjunto de todos ellos es el estado de tensión en ese punto. Cada material tiene un estado de tensión máximo.",
+  "mat.s2.p4":
+    "La tensión ρ forma un ángulo con el plano, así que se descompone en una componente normal σ y una tangencial τ:",
+  "mat.s2.e2":
+    "σ = dN/dS        τ = dQ/dS        ρ = √(σ² + τ²)",
+  "mat.s2.p5":
+    "Tipos de estado de tensión, según cómo se comporta ρ al variar el plano:",
+  "mat.s2.t1":
+    "Triple o espacial: varían la intensidad, la dirección y el sentido, y ρ puede tener cualquier orientación en el espacio.",
+  "mat.s2.t2":
+    "Doble o plano: varían, pero ρ se mantiene paralela a un plano determinado.",
+  "mat.s2.t3":
+    "Simple o lineal: ρ se mantiene paralela a una dirección determinada.",
+  "mat.s2.p6":
+    "El tensor de tensiones, sus invariantes y las tensiones principales se resuelven en la página de estado de tensión en un punto.",
+  "mat.s3.kicker":
+    "03 — Ensayo de tracción",
+  "mat.s3.title":
+    "El ensayo de tracción",
+  "mat.s3.p1":
+    "Para conocer las características de un material hay que ensayarlo. La máquina de ensayo (eléctrica o hidráulica) tiene una base, un cabezal y dos o cuatro columnas mucho más rígidas que las probetas, para que se deforme la probeta y no la máquina, y un pistón central que aplica la carga, a tracción o a compresión. Los materiales dúctiles se ensayan a tracción; los que no soportan tracción, como el hormigón, a compresión.",
+  "mat.s3.p2":
+    "Para los metales se usa el ensayo de tracción simple: una probeta cilíndrica de dimensiones normalizadas se somete a un esfuerzo axil, lo que genera un estado de tensión simple. La carga se aplica en forma cuasi estática, o sea muy lentamente, mientras se mide el alargamiento. Con los pares de valores σ–ε se traza el diagrama tensión–deformación, desde el comienzo del ensayo hasta la rotura:",
+  "mat.s3.e1":
+    "σ = F / A_o        ε = Δl / l_o",
+  "mat.s3.p3":
+    "σ es la fuerza dividida por la sección original A_o, y ε es el alargamiento unitario, la relación entre el alargamiento Δl y la longitud inicial l_o. Se grafican sobre los ejes Y y X respectivamente.",
+  "mat.s4.kicker":
+    "04 — Deformación y límites",
+  "mat.s4.title":
+    "Deformaciones elásticas y plásticas; límites",
+  "mat.s4.d1":
+    "Deformación elástica: el cuerpo retorna a su forma original al cesar el esfuerzo.",
+  "mat.s4.d2":
+    "Deformación plástica: no retorna; el cuerpo queda deformado.",
+  "mat.s4.l1":
+    "Límite de proporcionalidad σ_P: la tensión hasta la cual el diagrama es una recta. Por encima, las deformaciones crecen más que la tensión.",
+  "mat.s4.l2":
+    "Límite de elasticidad σ_E: la tensión por encima de la cual las deformaciones pasan a ser permanentes.",
+  "mat.s4.l3":
+    "Límite de fluencia σ_Fl: donde el material se deforma sin aumento apreciable de la carga (el apunte distingue una tensión de fluencia superior y una inferior).",
+  "mat.s4.l4":
+    "Límite de rotura σ_Rot: la máxima tensión que puede resistir el material.",
+  "mat.s4.p1":
+    "Coeficiente de seguridad: la tensión de elasticidad dividida por un número ν da la tensión de trabajo o admisible:",
+  "mat.s4.e1":
+    "σ_adm = σ_E / ν        ν = 2 – 4",
+  "mat.s5.kicker":
+    "05 — El diagrama",
+  "mat.s5.title":
+    "El diagrama σ–ε de un metal dúctil",
+  "mat.s5.fig":
+    "Diagrama tensión–deformación de un acero dúctil (esquemático): período elástico hasta σ_E (recta hasta σ_P), fluencia, y período anelástico hasta σ_Rot y la rotura.",
+  "mat.s5.fig.sigma":
+    "σ = F/A_o",
+  "mat.s5.fig.eps":
+    "ε = Δl/l_o",
+  "mat.s5.fig.p1":
+    "elástico",
+  "mat.s5.fig.p2":
+    "fluencia",
+  "mat.s5.fig.p3":
+    "anelástico",
+  "mat.s5.s1.t":
+    "1 — Fase elástica (0 a σ_E)",
+  "mat.s5.s1.d":
+    "Una recta hasta σ_P y una curva hasta σ_E. En el tramo recto los alargamientos son proporcionales a las tensiones: ley de Hooke. En cualquier punto de la fase elástica, si se suprime la fuerza la pieza vuelve a su longitud original. Cuanto más rígido el material, más empinada la recta.",
+  "mat.s5.s2.t":
+    "2 — Fase plástica (σ_E a σ_Fl)",
+  "mat.s5.s2.d":
+    "Las deformaciones continúan pero son permanentes: suprimida la fuerza, la probeta queda deformada.",
+  "mat.s5.s3.t":
+    "3 — Fase de rotura",
+  "mat.s5.s3.d":
+    "A partir de σ_Fl las moléculas se movilizan sin aumento apreciable de la carga: el período de fluencia, un reacomodamiento, al que siguen la fase de carga máxima y la rotura. Las deformaciones se hacen visibles a simple vista, como alargamiento y como estricción (disminución del diámetro). Pasada la fluencia viene el período anelástico o de grandes deformaciones, en el que la tensión aumenta hasta el máximo σ_Rot, la tensión de rotura, a partir del cual disminuye hasta que la probeta se rompe con la deformación ε_R. La estricción reduce la sección, así que la tensión real F/A_real es mayor que la aparente.",
+  "mat.s5.hooke":
+    "En la primera fase se cumple la ley de Hooke: la tensión es proporcional a la deformación, con E = tg β el módulo de Young (la pendiente de la recta):",
+  "mat.s6.kicker":
+    "06 — Otras propiedades",
+  "mat.s6.title":
+    "Rigidez, ductilidad, resiliencia, tenacidad, dureza",
+  "mat.s6.p1":
+    "Rigidez: propiedad de oponerse a la deformación; aumenta al aumentar el módulo de Young E.",
+  "mat.s6.p2":
+    "Ductilidad: deformabilidad en el período plástico o anelástico.",
+  "mat.s6.p3":
+    "Resiliencia: capacidad de restituir la energía almacenada por deformación en el período elástico. Es el área bajo la curva en ese período; hasta σ_e es el triángulo:",
+  "mat.s6.e1":
+    "U = ½ · σ_e² / E",
+  "mat.s6.p4":
+    "Tenacidad: capacidad de absorber energía en el período anelástico o de grandes deformaciones; es el área bajo la curva hasta la rotura.",
+  "mat.s6.p5":
+    "Dureza: capacidad de resistir acciones mecánicas del tipo de punzonado, abrasión y corte.",
+  "mat.s6.fig":
+    "Resiliencia: el área bajo la parte elástica de la curva.",
+  "mat.s7.kicker":
+    "07 — Tipos de materiales",
+  "mat.s7.title":
+    "Materiales dúctiles, frágiles y plásticos",
+  "mat.s7.m1.t":
+    "Dúctiles",
+  "mat.s7.m1.d":
+    "Responden al diagrama de arriba y pasan por deformaciones importantes antes de la rotura, lo que permite prever la ruina de la estructura. Aceros, aluminio.",
+  "mat.s7.m2.t":
+    "Frágiles",
+  "mat.s7.m2.d":
+    "Sufren deformaciones menores antes de romperse: la tensión de proporcionalidad está muy cerca de la de rotura. Vidrio, hormigón simple, mármol.",
+  "mat.s7.m3.t":
+    "Plásticos",
+  "mat.s7.m3.d":
+    "Sufren grandes deformaciones para muy pequeños incrementos de carga, con poca elasticidad y grandes deformaciones permanentes. Algunos asfaltos, arcilla, lacre, y plásticos a determinadas temperaturas.",
+  "mat.s8.kicker":
+    "08 — Equivalencia",
+  "mat.s8.title":
+    "Ecuaciones de equivalencia",
+  "mat.s8.p1":
+    "Al reducir al baricentro G de una sección las fuerzas que actúan a un lado de ella se generan cuatro esfuerzos característicos: el normal N, el corte Q, el momento flexor M_F y el momento torsor M_T. Si existe uno solo la solicitación es simple; si hay varios, compuesta. En todos los casos el material es elástico, las tensiones están en el rango elástico y se cumple la ley de Hooke σ = E·ε.",
+  "mat.s8.p2":
+    "Los ejes: x es saliente de la sección, e y y z son las direcciones principales de inercia. M_T va según x, igual que la fuerza normal N (N_x). El corte Q está en el plano de la sección y se descompone en Q_y y Q_z; el momento flector actúa en general en un plano que no contiene a y ni a z, así que se descompone en M_Fy y M_Fz.",
+  "mat.s8.p3":
+    "Las tensiones son las que los producen: σ es normal a la sección y τ está contenida en su plano. Para cada elemento dF hay tres fuerzas elementales:",
+  "mat.s8.e1":
+    "sobre x: dN = σ·dF        sobre y: dQ_y = τ_xy·dF        sobre z: dQ_z = τ_xz·dF",
+  "mat.s8.p4":
+    "Integrando en toda la superficie F quedan las ecuaciones de equivalencia (z e y son las coordenadas del elemento de superficie):",
+  "mat.s8.q1":
+    "N = ∫ σ dF",
+  "mat.s8.q2":
+    "Q_y = ∫ τ_xy dF        Q_z = ∫ τ_xz dF",
+  "mat.s8.q3":
+    "M_T = ∫ (τ_xz·y − τ_xy·z) dF",
+  "mat.s8.q4":
+    "M_y = ∫ σ·z dF        M_z = ∫ σ·y dF",
+  "mat.s8.note":
+    "Dos detalles del apunte. El torsor está escrito con signo más, (τ_xy·z + τ_xz·y); con y y z las coordenadas de dF, el momento de las fuerzas de corte respecto de x es una diferencia. Y M_y y M_z están escritos con τ, pero son los momentos de las tensiones normales σ (los signos dependen de la convención de ejes).",
+  "mat.footer":
+    "Transcripto y ordenado del apunte “Propiedades de los materiales” de la cátedra; los diagramas se redibujaron.",
 };
 
 const translations: Record<Language, Record<TranslationKey, string>> = {

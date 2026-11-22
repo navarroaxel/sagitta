@@ -19,6 +19,9 @@ const LINKS: { href: string; labelKey: TranslationKey }[] = [
   { href: "/torsion", labelKey: "tor.link" },
   { href: "/axil", labelKey: "axl.link" },
   { href: "/superficies-planas", labelKey: "pln.link" },
+  { href: "/propiedades-materiales", labelKey: "mat.link" },
+  { href: "/estado-de-tension", labelKey: "tns.link" },
+  { href: "/pandeo", labelKey: "pnd.link" },
   { href: "/flecha", labelKey: "fla.link" },
   { href: "/corte-en-flexion", labelKey: "shr.link" },
 ];
