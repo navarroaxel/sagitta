@@ -63,44 +63,67 @@ function Section({ kicker, title, children }: { kicker: TranslationKey; title: T
   );
 }
 
-// Beam segment before (dashed) and after bending: top fibre shorter, bottom longer, N.A. unchanged.
+// Beam segment before (dashed) and after bending, drawn on concentric arcs about the centre of curvature C:
+// the neutral fibre keeps its 280 units, the top (inner) fibre is shorter, the bottom (outer) one longer, and the end
+// sections stay plane and radial.
 function BendingSVG() {
   const { t } = useLanguage();
+  const L = 280;
+  const R = 400; // neutral radius
+  const half = 30; // half depth
+  const alpha = L / R / 2; // neutral arc length stays L
+  const cx = 180;
+  const cy = 76 - R;
+  const pt = (r: number, phi: number) => [cx + r * Math.sin(phi), cy + r * Math.cos(phi)] as const;
+  const arc = (r: number) => {
+    const [x1, y1] = pt(r, -alpha);
+    const [x2, y2] = pt(r, alpha);
+    return `M ${x1.toFixed(1)} ${y1.toFixed(1)} A ${r} ${r} 0 0 0 ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+  };
+  const [tlx, tly] = pt(R - half, -alpha);
+  const [trx, try_] = pt(R - half, alpha);
+  const [blx, bly] = pt(R + half, -alpha);
+  const [brx, bry] = pt(R + half, alpha);
+  const [nrx, nry] = pt(R, alpha);
   return (
     <svg viewBox="0 0 360 170" className="h-auto w-full" role="img" aria-label={t("flx.s4.fig")}>
-      {/* before */}
-      <rect x="40" y="40" width="280" height="60" fill="none" stroke={FAINT} strokeWidth="1.5" strokeDasharray="5 4" />
-      {/* after: trapezoid-ish curved piece */}
-      <path d="M 40 40 Q 180 58 320 40 L 320 100 Q 180 126 40 100 Z" fill="#E7EEF2" stroke={INK} strokeWidth="2" />
-      <path d="M 40 70 Q 180 92 320 70" fill="none" stroke={INK} strokeWidth="1.5" strokeDasharray="2 3" />
-      <text x="330" y="74" fontSize="12" fontWeight="600" fill={INK}>{t("flx.s4.fig.na")}</text>
-      <text x="180" y="30" fontSize="12" fontWeight="600" fill={COMPRESSION} textAnchor="middle">
+      <rect x="40" y="46" width={L} height={2 * half} fill="none" stroke={FAINT} strokeWidth="1.5" strokeDasharray="5 4" />
+      <path
+        d={`${arc(R - half)} L ${brx.toFixed(1)} ${bry.toFixed(1)} A ${R + half} ${R + half} 0 0 1 ${blx.toFixed(1)} ${bly.toFixed(1)} Z`}
+        fill="#E7EEF2"
+        stroke={INK}
+        strokeWidth="2"
+      />
+      <path d={arc(R)} fill="none" stroke={INK} strokeWidth="1.5" strokeDasharray="2 3" />
+      <text x={nrx + 8} y={nry + 4} fontSize="12" fontWeight="600" fill={INK}>{t("flx.s4.fig.na")}</text>
+      <text x="180" y="34" fontSize="12" fontWeight="600" fill={COMPRESSION} textAnchor="middle">
         {t("flx.s4.fig.compression")}
       </text>
-      <text x="180" y="150" fontSize="12" fontWeight="600" fill={TENSION} textAnchor="middle">
+      <text x="180" y="152" fontSize="12" fontWeight="600" fill={TENSION} textAnchor="middle">
         {t("flx.s4.fig.tension")}
       </text>
-      <text x="26" y="36" fontSize="12" fontWeight="600" fill={INK} textAnchor="end">C</text>
-      <text x="26" y="104" fontSize="12" fontWeight="600" fill={INK} textAnchor="end">D</text>
-      <text x="334" y="36" fontSize="12" fontWeight="600" fill={INK}>E</text>
-      <text x="334" y="108" fontSize="12" fontWeight="600" fill={INK}>F</text>
+      <text x={tlx - 6} y={tly - 2} fontSize="12" fontWeight="600" fill={INK} textAnchor="end">C</text>
+      <text x={blx - 6} y={bly + 12} fontSize="12" fontWeight="600" fill={INK} textAnchor="end">D</text>
+      <text x={trx + 6} y={try_ - 2} fontSize="12" fontWeight="600" fill={INK}>E</text>
+      <text x={brx + 6} y={bry + 12} fontSize="12" fontWeight="600" fill={INK}>F</text>
     </svg>
   );
 }
 
-// Linear stress diagram across the depth: σ = σ₁·y, zero at the N.A.
+// Linear stress diagram across the depth: σ = σ₁·y — zero at the N.A., largest at the outer fibres.
 function StressSVG() {
+  const { t } = useLanguage();
   return (
     <svg viewBox="0 0 220 180" className="h-auto w-full" role="img" aria-label="σ = σ1·y">
       <rect x="30" y="20" width="40" height="140" fill="#E7EEF2" stroke={INK} strokeWidth="2" />
       <line x1="14" y1="90" x2="206" y2="90" stroke={INK} strokeWidth="1.5" strokeDasharray="2 3" />
-      <polygon points="120,20 120,90 190,90" fill={COMPRESSION} opacity="0.35" stroke={COMPRESSION} strokeWidth="1.5" />
-      <polygon points="120,90 120,160 50,90" fill={TENSION} opacity="0.35" stroke={TENSION} strokeWidth="1.5" />
+      <polygon points="120,90 120,20 190,20" fill={COMPRESSION} opacity="0.35" stroke={COMPRESSION} strokeWidth="1.5" />
+      <polygon points="120,90 120,160 50,160" fill={TENSION} opacity="0.35" stroke={TENSION} strokeWidth="1.5" />
       <line x1="120" y1="14" x2="120" y2="166" stroke={INK} strokeWidth="1" />
-      <text x="196" y="86" fontSize="12" fontStyle="italic" fill={INK}>σ</text>
-      <text x="8" y="86" fontSize="12" fill={INK}>N.A.</text>
+      <text x="196" y="26" fontSize="12" fontStyle="italic" fill={INK}>σ</text>
+      <text x="8" y="86" fontSize="12" fill={INK}>{t("flx.s4.fig.na")}</text>
       <text x="78" y="60" fontSize="12" fontStyle="italic" fill={INK}>y</text>
-      <text x="124" y="30" fontSize="11" fill={INK}><SvgSub>σ_max</SvgSub></text>
+      <text x="124" y="40" fontSize="11" fill={INK}><SvgSub>σ_max</SvgSub></text>
     </svg>
   );
 }

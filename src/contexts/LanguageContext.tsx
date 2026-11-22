@@ -767,9 +767,9 @@ const EN = {
   "flx.s2.title":
     "Principal axes of inertia",
   "flx.s2.p1":
-    "The pairs of axes for which the moments of inertia of the section are maximum or minimum are called conjugate axes of inertia, and the corresponding moments, principal moments of inertia. Both axes (the maximum and the minimum) are normal to each other and the product of inertia is zero. There are infinitely many conjugate pairs with the same origin, and exactly one of them is orthogonal.",
+    "Among all the pairs of axes through a point, the moments of inertia of a section reach their maximum and minimum about two perpendicular axes: the principal axes of inertia. The product of inertia about them is zero, and the corresponding moments are the principal moments of inertia.",
   "flx.s2.p2":
-    "The principal axes of inertia are that orthogonal pair: the one for which the moments of inertia reach their maximum and minimum values.",
+    "When the two principal moments are different, that orthogonal pair is unique. When they are equal (a circle, a square) every orthogonal pair through the centroid is principal.",
   "flx.s3.kicker":
     "03 — Straight bending",
   "flx.s3.title":
@@ -811,7 +811,7 @@ const EN = {
   "flx.s5.p3":
     "Substituting σ = σ_1·y into (1) and (2):",
   "flx.s5.p4":
-    "Since σ_1 ≠ 0, (4) gives ∫y dA = 0 (6): the first moment of the area is zero, so the neutral axis is a centroidal axis. As it passes through the intersection of the axes X–X and Y–Y, it coincides with the longitudinal axis.",
+    "Since σ_1 ≠ 0, (4) gives ∫y dA = 0 (6): the first moment of the area is zero, so the neutral axis is a centroidal axis. The axis X–X lies in the cross-section and crosses the longitudinal axis of the bar at the centroid.",
   "flx.s5.p5":
     "In (5) the integral ∫y² dA = J_x is the moment of inertia of the section about the neutral axis X–X, so M = σ_1·J_x and, from (3):",
   "flx.s5.p6":
@@ -1686,9 +1686,9 @@ const ES: Record<TranslationKey, string> = {
   "flx.s2.title":
     "Ejes principales de inercia",
   "flx.s2.p1":
-    "Los pares de ejes con respecto a los cuales los momentos de inercia del sistema son máximos o mínimos se denominan ejes conjugados de inercia, y los momentos correspondientes, momentos principales de inercia. Ambos ejes (máximo y mínimo) son normales entre sí y el momento centrífugo es nulo. Existen infinitos pares de ejes conjugados del mismo origen, de los cuales uno solo es ortogonal.",
+    "Entre todos los pares de ejes que pasan por un punto, los momentos de inercia de una sección alcanzan su máximo y su mínimo respecto de dos ejes perpendiculares entre sí: los ejes principales de inercia. El momento centrífugo respecto de ellos es nulo, y los momentos correspondientes son los momentos principales de inercia.",
   "flx.s2.p2":
-    "Los ejes principales de inercia son ese par ortogonal: aquel para el cual los momentos de inercia llegan a sus valores máximo y mínimo.",
+    "Cuando los dos momentos principales son distintos, ese par ortogonal es único. Cuando son iguales (un círculo, un cuadrado) todo par ortogonal que pase por el baricentro es principal.",
   "flx.s3.kicker":
     "03 — Flexión recta",
   "flx.s3.title":
@@ -1730,7 +1730,7 @@ const ES: Record<TranslationKey, string> = {
   "flx.s5.p3":
     "Reemplazando σ = σ_1·y en (1) y (2):",
   "flx.s5.p4":
-    "Como σ_1 ≠ 0, de (4) resulta ∫y dA = 0 (6): el momento estático del área es nulo, por lo tanto el eje neutro es un eje baricéntrico. Como pasa por la intersección de los ejes X–X e Y–Y, coincide con el eje longitudinal.",
+    "Como σ_1 ≠ 0, de (4) resulta ∫y dA = 0 (6): el momento estático del área es nulo, por lo tanto el eje neutro es un eje baricéntrico. El eje X–X está en la sección transversal y cruza el eje longitudinal de la barra en el baricentro.",
   "flx.s5.p5":
     "En (5) la integral ∫y² dA = J_x es el momento de inercia de la sección respecto al eje neutro X–X, de modo que M = σ_1·J_x y, de (3):",
   "flx.s5.p6":

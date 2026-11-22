@@ -17,3 +17,31 @@ describe("/flexion", () => {
     expect(document.body.textContent).not.toMatch(/[A-Za-z]_[a-z]/);
   });
 });
+
+describe("/flexion figures", () => {
+  test("the stress diagram is zero at the neutral axis and largest at the outer fibres", () => {
+    const { container } = render(
+      <LanguageProvider>
+        <FlexionPage />
+      </LanguageProvider>,
+    );
+    const polys = Array.from(container.querySelectorAll("polygon")).filter((p) => p.getAttribute("points")?.startsWith("120,90"));
+    expect(polys).toHaveLength(2);
+    // vertices: neutral axis (120,90) first, then the outer fibre level (y = 20 / 160) at x = 120 and the wide tip
+    for (const p of polys) {
+      const pts = p.getAttribute("points")!.split(" ").map((v) => v.split(",").map(Number));
+      expect(pts[0]).toEqual([120, 90]);
+      expect([20, 160]).toContain(pts[1][1]);
+      expect(pts[2][1]).toBe(pts[1][1]);
+    }
+  });
+
+  test("the bending figure labels the neutral axis through the translation", () => {
+    const { container } = render(
+      <LanguageProvider>
+        <FlexionPage />
+      </LanguageProvider>,
+    );
+    expect(container.textContent).toMatch(/N\.A\./);
+  });
+});
