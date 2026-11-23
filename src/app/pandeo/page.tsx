@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
-import { Sub, plain } from "@/components/Sub";
+import { Sub } from "@/components/Sub";
 import { Eq, Figure, GuidePage, Para, Section } from "@/components/guide/GuideBits";
 import PandeoCalculator from "@/components/PandeoCalculator";
 import { END_CONDITIONS } from "@/lib/buckling";
