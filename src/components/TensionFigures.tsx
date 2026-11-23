@@ -33,10 +33,10 @@ function Marker({ id, color }: { id: string; color: string }) {
 
 // Oblique element of side a at point B: x right, y up, z toward the viewer (down-left). The three visible faces are the
 // positive ones (+z front, +y top, +x right); a positive stress points along the +axis on a positive face.
-export function ElementFigure({ principal = false }: { principal?: boolean }) {
+export function ElementFigure({ principal = false, label: given }: { principal?: boolean; label?: string }) {
   const { t } = useLanguage();
   const id = principal ? "tns-el-p" : "tns-el-g";
-  const label = plain(t(principal ? "tns.f3" : "tns.f1"));
+  const label = given ?? plain(t(principal ? "tns.f3" : "tns.f1"));
   return (
     <svg viewBox="0 0 260 185" className="h-auto w-full" role="img" aria-label={label}>
       <defs>
@@ -91,11 +91,11 @@ export function ElementFigure({ principal = false }: { principal?: boolean }) {
 }
 
 // Stress vector on a plane (seen edge-on) through B with normal n: ρ = σ·n + τ along the plane.
-export function PlaneVectorFigure() {
+export function PlaneVectorFigure({ label }: { label?: string }) {
   const { t } = useLanguage();
   const id = "tns-pv";
   return (
-    <svg viewBox="0 0 250 170" className="h-auto w-full" role="img" aria-label={plain(t("tns.f2"))}>
+    <svg viewBox="0 0 250 170" className="h-auto w-full" role="img" aria-label={label ?? plain(t("tns.f2"))}>
       <defs>
         <Marker id={`${id}-r`} color={LOAD} />
         <Marker id={`${id}-s`} color={TENSION} />

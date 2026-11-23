@@ -2166,6 +2166,28 @@ const EN = {
     "not joined: they slide",
   "def.fig.bonded":
     "joined: τ_L holds them",
+  "def.f.tensor":
+    "The tensor: on each of the three faces of an element at the point there is one normal stress (red) and two shear stresses (teal). By reciprocity τ_xy = τ_yx, τ_yz = τ_zy and τ_xz = τ_zx, so there are six independent components.",
+  "def.f.vector":
+    "The stress vector ρ on a plane of normal n: it splits into the normal stress σ (along n) and the shear stress τ (in the plane), |ρ|² = σ² + τ².",
+  "def.f.invariantes":
+    "The invariants do not change when the axes are turned. On Mohr’s circle of a plane state this is seen for I_1: when the diameter turns from the axes x, y to x′, y′ its centre (σ_x + σ_y)/2 does not move, so σ_x + σ_y = σ_x′ + σ_y′ (nor does the radius).",
+  "def.f.tppales":
+    "On the principal planes there is no shear stress: only σ_1, σ_2 and σ_3 remain, along the principal directions.",
+  "def.f.clasif":
+    "By the number of nonzero principal stresses: triple (three, I_3 ≠ 0), double (two, I_3 = 0 and I_2 ≠ 0, a plane state) and simple (one, only I_1 ≠ 0, uniaxial).",
+  "def.fig.axes":
+    "axes x, y",
+  "def.fig.axesTurned":
+    "axes turned x′, y′",
+  "def.fig.triple":
+    "Triple (spatial)",
+  "def.fig.double":
+    "Double (plane)",
+  "def.fig.simple":
+    "Simple (uniaxial)",
+  "def.fig.onlyI1":
+    "only I_1 ≠ 0",
   "def.d.fsimple":
     "Simple bending: the forces on both sides of the section reduce, at its centroid, to two couples normal to the plane of the section, with or without shear. Without shear it is pure bending; with shear, bending and shear.",
   "def.t.plano":
@@ -4416,6 +4438,28 @@ const ES: Record<TranslationKey, string> = {
     "sin unión: resbalan",
   "def.fig.bonded":
     "unidos: τ_L los mantiene",
+  "def.f.tensor":
+    "El tensor: sobre cada una de las tres caras de un elemento en el punto hay una tensión normal (roja) y dos de corte (verde). Por la reciprocidad τ_xy = τ_yx, τ_yz = τ_zy y τ_xz = τ_zx, así que quedan seis componentes independientes.",
+  "def.f.vector":
+    "El vector tensión ρ sobre un plano de normal n: se descompone en la tensión normal σ (según n) y la tangencial τ (en el plano), |ρ|² = σ² + τ².",
+  "def.f.invariantes":
+    "Los invariantes no cambian al girar los ejes. En el círculo de Mohr de un estado plano se ve con I_1: al girar el diámetro de los ejes x, y a los x′, y′ su centro (σ_x + σ_y)/2 no se mueve, así que σ_x + σ_y = σ_x′ + σ_y′ (el radio tampoco).",
+  "def.f.tppales":
+    "Sobre los planos principales no hay tensión tangencial: quedan solo σ_1, σ_2 y σ_3, según las direcciones principales.",
+  "def.f.clasif":
+    "Según la cantidad de tensiones principales no nulas: triple (tres, I_3 ≠ 0), doble (dos, I_3 = 0 e I_2 ≠ 0, estado plano) y simple (una, solo I_1 ≠ 0, uniaxial).",
+  "def.fig.axes":
+    "ejes x, y",
+  "def.fig.axesTurned":
+    "ejes girados x′, y′",
+  "def.fig.triple":
+    "Triple (espacial)",
+  "def.fig.double":
+    "Doble (plano)",
+  "def.fig.simple":
+    "Simple (uniaxial)",
+  "def.fig.onlyI1":
+    "solo I_1 ≠ 0",
   "def.d.fsimple":
     "Flexión simple: las fuerzas a ambos lados de la sección se reducen, en su baricentro, a dos pares normales al plano de la sección, con o sin esfuerzo de corte. Sin corte se llama flexión pura; con corte, flexión y corte.",
   "def.t.plano":

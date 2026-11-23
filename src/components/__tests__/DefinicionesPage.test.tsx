@@ -72,7 +72,7 @@ describe("/definiciones", () => {
     expect(svg.querySelectorAll("path[marker-end]")).toHaveLength(4); // a couple at each face, twice
     expect(svg.querySelectorAll("line[marker-end]")).toHaveLength(2); // Q only in the second segment
     expect(item.querySelectorAll("figure svg")).toHaveLength(1);
-    expect(container.querySelectorAll("figure svg")).toHaveLength(36); // 4 bending + 12 stress–strain + 5 buckling + 9 plane areas + 6 shear (all) + 1 torsion hypotheses
+    expect(container.querySelectorAll("figure svg")).toHaveLength(41); // 4 bending + 12 stress–strain + 5 buckling + 9 plane areas + 6 shear + 5 state of stress
   });
 
   test("the bending plane and the oblique bending have their diagrams", () => {
@@ -237,6 +237,33 @@ describe("/definiciones", () => {
     } finally {
       window.location.hash = "";
     }
+  });
+
+  test("every state-of-stress definition has a diagram: tensor, stress vector, invariants, principal stresses, classification", () => {
+    renderPage();
+    openAll();
+    const svg = (id: string) => screen.getByTestId(`def-tns.${id}`).querySelector("figure svg")!;
+    for (const id of ["tensor", "vector", "invariantes", "tppales", "clasif"]) expect(svg(id), id).toBeTruthy();
+    // the tensor: the six components on the three visible faces; the principal element: only σ1, σ2, σ3, no τ
+    for (const c of ["σx", "σy", "σz", "τxy", "τyx", "τyz", "τzy", "τxz", "τzx"]) expect(svg("tensor").textContent, c).toContain(c);
+    expect(svg("tppales").textContent).toMatch(/σ1/);
+    expect(svg("tppales").textContent).not.toMatch(/τ/);
+    expect(svg("vector").textContent).toMatch(/ρ/);
+    // the invariants figure: Mohr's circle with two diameters sharing the same centre (I1 does not change) and the same radius
+    const inv = svg("invariantes");
+    expect(inv.textContent).toMatch(/I1 = σx \+ σy.*= σx′ \+ σy′/);
+    const diam = Array.from(inv.querySelectorAll("line[stroke-width='3']")).map((l) => ["x1", "y1", "x2", "y2"].map((a) => Number(l.getAttribute(a))));
+    expect(diam).toHaveLength(2);
+    const mid = (d: number[]) => [(d[0] + d[2]) / 2, (d[1] + d[3]) / 2];
+    const len = (d: number[]) => Math.hypot(d[2] - d[0], d[3] - d[1]);
+    expect(mid(diam[0])[0]).toBeCloseTo(mid(diam[1])[0], 6);
+    expect(mid(diam[0])[1]).toBeCloseTo(mid(diam[1])[1], 6);
+    expect(len(diam[0])).toBeCloseTo(len(diam[1]), 6);
+    expect(Math.atan2(diam[0][3] - diam[0][1], diam[0][2] - diam[0][0])).not.toBeCloseTo(Math.atan2(diam[1][3] - diam[1][1], diam[1][2] - diam[1][0]), 2); // really turned
+    // the classification: three arrows (a cube), four (a square) and two (a bar)
+    const cl = screen.getByTestId("def-tns.clasif").querySelector("figure svg")!;
+    expect(cl.textContent).toMatch(/Triple.*I3 ≠ 0.*Double.*I3 = 0, I2 ≠ 0.*Simple.*only I1 ≠ 0/);
+    expect(cl.querySelectorAll("line[marker-end]")).toHaveLength(3 + 4 + 2);
   });
 
   test("a malformed fragment (#%, #%E0%A4) is ignored instead of crashing the page", () => {
