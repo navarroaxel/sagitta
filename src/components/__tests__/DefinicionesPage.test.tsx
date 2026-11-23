@@ -140,6 +140,11 @@ describe("/definiciones", () => {
     expect(se.textContent).toMatch(/σP.*σE|σE.*σP/);
     expect(se.querySelectorAll('line[stroke="#0B8A8A"][stroke-width="4.5"]')).toHaveLength(1);
     expect(screen.getByTestId("def-mat.se").textContent).toMatch(/proportionality is lost/);
+    // β is the angle between the ε axis and the elastic line: its arc ends on that line (slope 70/40 in the drawing)
+    const arc = screen.getByTestId("def-mat.hooke").querySelector('figure svg path[d^="M 80 170 A"]')!.getAttribute("d")!;
+    const [ex, ey] = arc.split(" ").slice(-2).map(Number);
+    expect((170 - ey) / (ex - 40)).toBeCloseTo(70 / 40, 1);
+    expect(Math.hypot(ex - 40, 170 - ey)).toBeCloseTo(40, 0);
     // σFl highlights the yield stretch of the curve itself (a path with the same wiggles), not a straight line over it
     const fl = screen.getByTestId("def-mat.sfl").querySelector("figure svg")!;
     const hi = fl.querySelector('path[stroke="#0B8A8A"]')!;

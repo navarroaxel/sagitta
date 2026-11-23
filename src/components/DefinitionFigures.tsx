@@ -92,6 +92,9 @@ const CURVE =
 const YIELD_STRETCH = "M 112 72 l 8,-4 l 8,5 l 8,-5 l 8,4 l 8,-3 L 168 72";
 const ELASTIC_AREA = "M 40 170 L 80 100 Q 88 90 96 82 L 96 170 Z";
 const PLASTIC_AREA = "M 96 82 L 112 72 l 8,-4 l 8,5 l 8,-5 l 8,4 l 8,-3 L 168 72 C 195 70 215 30 250 28 C 285 24 310 34 318 62 L 318 170 L 96 170 Z";
+// β: the angle of the elastic line with the ε axis; its arc (radius 40 about O) ends exactly on the line.
+const BETA = Math.atan2(O[1] - P[1], P[0] - O[0]);
+const BETA_ARC = `M ${O[0] + 40} ${O[1]} A 40 40 0 0 0 ${(O[0] + 40 * Math.cos(BETA)).toFixed(1)} ${(O[1] - 40 * Math.sin(BETA)).toFixed(1)}`;
 const SLOPE = (P[1] - O[1]) / (P[0] - O[0]); // screen slope of the elastic line
 const U = [206, 50]; // a point of the plastic period
 const UNLOAD_X = U[0] - (O[1] - U[1]) / -SLOPE; // where the parallel unloading line meets the ε axis
@@ -147,8 +150,8 @@ export function StressStrainFigure({ focus, label }: { focus: StressStrainFocus;
       {focus === "stiffness" && (
         <g>
           <line x1={O[0]} y1={O[1]} x2={P[0]} y2={P[1]} stroke={TENSION} strokeWidth="4.5" />
-          <path d="M 80 170 A 40 40 0 0 0 72.4 146.5" fill="none" stroke={INK} strokeWidth="1" />
-          <text x="86" y="162" fontSize="12" fontStyle="italic" fill={TENSION}>β</text>
+          <path d={BETA_ARC} fill="none" stroke={INK} strokeWidth="1" />
+          <text x={O[0] + 48 * Math.cos(BETA / 2)} y={O[1] - 48 * Math.sin(BETA / 2) + 4} fontSize="12" fontStyle="italic" fill={TENSION}>β</text>
           <text x="100" y="128" fontSize="12" fill={TENSION}>E = tg β</text>
         </g>
       )}
