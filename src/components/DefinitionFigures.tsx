@@ -513,3 +513,68 @@ export function PlaneAreaFigure({ focus, label }: { focus: PlaneFocus; label: st
     </svg>
   );
 }
+
+// ---- Figures that also answer the theory questions of /resumen ----
+
+// 1. Torsion: τ grows linearly with ρ along a diameter of the circular section.
+export function TorsionFigure({ label }: { label: string }) {
+  return (
+    <svg viewBox="0 0 300 150" className="h-auto w-full" role="img" aria-label={label}>
+      <circle cx="80" cy="75" r="55" fill="none" stroke={INK} strokeWidth="1.5" />
+      <line x1="25" y1="75" x2="135" y2="75" stroke={INK} strokeWidth="1" strokeDasharray="4 3" />
+      {/* τ on the right radius (up) and the left one (down) */}
+      <polygon points="80,75 135,75 135,35" fill={LOAD} fillOpacity="0.15" stroke={LOAD} strokeWidth="2" />
+      <polygon points="80,75 25,75 25,115" fill={LOAD} fillOpacity="0.15" stroke={LOAD} strokeWidth="2" />
+      <line x1="107" y1="75" x2="107" y2="55" stroke={LOAD} strokeWidth="1.5" />
+      <line x1="53" y1="75" x2="53" y2="95" stroke={LOAD} strokeWidth="1.5" />
+      <circle cx="80" cy="75" r="2.5" fill={INK} />
+      <Txt x="138" y="33">τ_max</Txt>
+      <Txt x="86" y="108">τ = 0</Txt>
+      <Txt x="107" y="90" textAnchor="middle" fill={TENSION}>ρ</Txt>
+      <Txt x="135" y="90" textAnchor="middle">R</Txt>
+    </svg>
+  );
+}
+
+// 2. Collignon–Jourawski: parabolic τ over a rectangle; S is the area above the fibre, s its width.
+export function ShearFigure({ label }: { label: string }) {
+  return (
+    <svg viewBox="0 0 300 170" className="h-auto w-full" role="img" aria-label={label}>
+      <rect x="40" y="20" width="70" height="130" fill="none" stroke={INK} strokeWidth="1.5" />
+      <rect x="40" y="20" width="70" height="35" fill={TENSION} fillOpacity="0.25" />
+      <line x1="30" y1="85" x2="120" y2="85" stroke={INK} strokeWidth="1" strokeDasharray="4 3" />
+      <line x1="40" y1="55" x2="110" y2="55" stroke={INK} strokeWidth="1" strokeDasharray="2 2" />
+      <Txt x="26" y="88" textAnchor="end">E.N.</Txt>
+      <Txt x="75" y="41" textAnchor="middle">S</Txt>
+      <Txt x="75" y="68" textAnchor="middle">s</Txt>
+      <line x1="130" y1="20" x2="130" y2="150" stroke={INK} strokeWidth="1" />
+      <path d="M 130 20 Q 270 85 130 150" fill={LOAD} fillOpacity="0.15" stroke={LOAD} strokeWidth="2" />
+      <line x1="130" y1="85" x2="200" y2="85" stroke={LOAD} strokeWidth="1.5" />
+      <line x1="110" y1="85" x2="130" y2="85" stroke={FAINT} strokeWidth="1" />
+      <Txt x="206" y="80">τ_max</Txt>
+      <Txt x="136" y="16">τ = 0</Txt>
+      <Txt x="136" y="164">τ = 0</Txt>
+    </svg>
+  );
+}
+
+// 5. Steiner: the axis x is at distance d from the centroidal axis xg.
+export function SteinerFigure({ label }: { label: string }) {
+  return (
+    <svg viewBox="0 0 300 175" className="h-auto w-full" role="img" aria-label={label}>
+      <rect x="90" y="30" width="120" height="60" fill={TENSION} fillOpacity="0.2" stroke={INK} strokeWidth="1.5" />
+      <line x1="70" y1="60" x2="230" y2="60" stroke={INK} strokeWidth="1" strokeDasharray="5 3" />
+      <line x1="70" y1="130" x2="230" y2="130" stroke={INK} strokeWidth="1.5" />
+      <circle cx="150" cy="60" r="3" fill={INK} />
+      <line x1="150" y1="60" x2="150" y2="130" stroke={LOAD} strokeWidth="1" strokeDasharray="2 2" />
+      <line x1="248" y1="60" x2="248" y2="130" stroke={LOAD} strokeWidth="1.5" />
+      <line x1="243" y1="60" x2="253" y2="60" stroke={LOAD} strokeWidth="1.5" />
+      <line x1="243" y1="130" x2="253" y2="130" stroke={LOAD} strokeWidth="1.5" />
+      <Txt x="258" y="99" fill={LOAD}>d</Txt>
+      <Txt x="156" y="54">G</Txt>
+      <Txt x="64" y="64" textAnchor="end">x_g</Txt>
+      <Txt x="64" y="134" textAnchor="end">x</Txt>
+      <Txt x="150" y="164" textAnchor="middle">J_x = J_g + A·d²</Txt>
+    </svg>
+  );
+}

@@ -24,6 +24,10 @@ const LINKS: { href: string; labelKey: TranslationKey }[] = [
   { href: "/pandeo", labelKey: "pnd.link" },
   { href: "/flecha", labelKey: "fla.link" },
   { href: "/corte-en-flexion", labelKey: "shr.link" },
+];
+
+// Study material, shown under its own heading at the end of the menu.
+const STUDY: { href: string; labelKey: TranslationKey }[] = [
   { href: "/resumen", labelKey: "rs.link" },
   { href: "/definiciones", labelKey: "def.link" },
 ];
@@ -37,11 +41,29 @@ export default function NavMenu() {
   useEffect(() => {
     if (!open) return;
     function handleOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node))
+        setOpen(false);
     }
     document.addEventListener("mousedown", handleOutside);
     return () => document.removeEventListener("mousedown", handleOutside);
   }, [open]);
+
+  const item = (href: string, labelKey: TranslationKey) => (
+    <Link
+      key={href}
+      href={href}
+      role="menuitem"
+      aria-current={pathname === href ? "page" : undefined}
+      onClick={() => setOpen(false)}
+      className={`block px-4 py-2 text-sm transition-colors hover:bg-stone-100 dark:hover:bg-stone-700 ${
+        pathname === href
+          ? "bg-stone-100 font-semibold text-teal-700 dark:bg-stone-700 dark:text-teal-300"
+          : "text-stone-700 dark:text-stone-200"
+      }`}
+    >
+      {t(labelKey)}
+    </Link>
+  );
 
   return (
     <div ref={ref} className="relative">
@@ -72,22 +94,15 @@ export default function NavMenu() {
           role="menu"
           className="absolute top-full left-0 z-20 mt-1 max-h-[calc(100dvh-4rem)] min-w-[180px] overflow-y-auto rounded border border-stone-200 bg-white shadow-lg dark:border-stone-700 dark:bg-stone-800"
         >
-          {LINKS.map(({ href, labelKey }) => (
-            <Link
-              key={href}
-              href={href}
-              role="menuitem"
-              aria-current={pathname === href ? "page" : undefined}
-              onClick={() => setOpen(false)}
-              className={`block px-4 py-2 text-sm transition-colors hover:bg-stone-100 dark:hover:bg-stone-700 ${
-                pathname === href
-                  ? "bg-stone-100 font-semibold text-teal-700 dark:bg-stone-700 dark:text-teal-300"
-                  : "text-stone-700 dark:text-stone-200"
-              }`}
-            >
-              {t(labelKey)}
-            </Link>
-          ))}
+          {LINKS.map(({ href, labelKey }) => item(href, labelKey))}
+          <div
+            role="separator"
+            aria-label={t("nav.study")}
+            className="mt-1 border-t border-stone-200 px-4 pt-2 pb-1 text-xs font-medium tracking-wider text-stone-500 uppercase dark:border-stone-700 dark:text-stone-400"
+          >
+            {t("nav.study")}
+          </div>
+          {STUDY.map(({ href, labelKey }) => item(href, labelKey))}
         </div>
       )}
     </div>

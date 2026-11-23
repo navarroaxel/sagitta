@@ -1767,7 +1767,7 @@ const EN = {
   "rs.title":
     "Course summary",
   "rs.lead":
-    "One page to study from: every formula of the guides with its units and use, and the five theory questions with a model answer.",
+    "One page to study from: the formulas of every guide with their units and use, and the five theory questions with a model answer (the glossary's own text and figure). Each row and each question links to its guide and its definitions.",
   "rs.footer":
     "Summary of the guides of this site; the formulas are the ones of the course notes (kg and cm).",
   "rs.print":
@@ -1828,62 +1828,6 @@ const EN = {
     "Theory",
   "rs.s2.title":
     "The five exam questions",
-  "rs.q1.t":
-    "Hypotheses of torsion (circular shaft)",
-  "rs.q1.a1":
-    "Plane sections stay plane and circular.",
-  "rs.q1.a2":
-    "Radii stay straight when they turn.",
-  "rs.q1.a3":
-    "The distance between sections does not change (no longitudinal strain).",
-  "rs.q1.a4":
-    "Elastic linear material (Hooke) and small deformations.",
-  "rs.q1.a5":
-    "Consequence: τ grows linearly with ρ, from 0 at the centre to the maximum at the edge.",
-  "rs.q2.t":
-    "Collignon–Jourawski",
-  "rs.q2.a1":
-    "It gives the shear stress that the shear force Q produces in bending: τ = {Q}·{S}/({J}·s).",
-  "rs.q2.a2":
-    "S is the static moment, about the neutral axis, of the area on one side of the fibre studied; s is the width of the section at that fibre.",
-  "rs.q2.a3":
-    "Rectangle: τ is parabolic, 0 at the edges and maximum at the neutral axis, τ_max = 3Q/(2A).",
-  "rs.q2.a4":
-    "Double T: almost all the shear is carried by the web.",
-  "rs.q3.t":
-    "Stable, unstable and indifferent equilibrium",
-  "rs.q3.a1":
-    "Stable, F < {F}_k: after a small push the bar goes back to its position.",
-  "rs.q3.a2":
-    "Indifferent, {F} = {F}_k: it stays in any nearby position.",
-  "rs.q3.a3":
-    "Unstable, F > {F}_k: it moves away from the position and buckles.",
-  "rs.q4.t":
-    "Hooke's law",
-  "rs.q4.a1":
-    "σ = {E}·ε: stress and strain are proportional up to the proportionality limit σ_P.",
-  "rs.q4.a2":
-    "E is the slope of the straight line ({E} = tg β) and measures the stiffness of the material.",
-  "rs.q4.a3":
-    "It holds only in the elastic zone.",
-  "rs.q5.t":
-    "Steiner's theorem",
-  "rs.q5.a1":
-    "{J} = {J}_g + {A}·{d}²: the inertia about an axis parallel to the centroidal one is the centroidal inertia plus the area times the distance squared.",
-  "rs.q5.a2":
-    "It is used for composite sections, where every part has its centroid away from the common axis.",
-  "rs.q5.a3":
-    "It follows that {J}_g is the smallest of all the parallel axes.",
-  "rs.f1":
-    "Circular shaft: τ grows linearly with ρ, from 0 at the centre to τ_max at the edge.",
-  "rs.f2":
-    "Rectangular section: τ is parabolic, 0 at the edges and τ_max = 3Q/(2A) at the neutral axis (E.N.). S is the shaded area above the fibre studied and s its width.",
-  "rs.f3":
-    "A ball in a valley, on a plane and on a hill: stable, indifferent and unstable equilibrium ({F} <, = and > {F}_k for a bar).",
-  "rs.f4":
-    "σ–ε diagram: a straight line up to σ_P, with slope {E} = tg β.",
-  "rs.f5":
-    "Steiner: the inertia about the axis x, at distance d from the centroidal axis {x}_g, is {J}_x = {J}_g + {A}·{d}².",
   "rs.fig.stable":
     "Stable",
   "rs.fig.indiff":
@@ -2168,6 +2112,18 @@ const EN = {
     "near the axis: little",
   "def.fig.conc":
     "A concentrated",
+  "def.f.htor":
+    "Circular shaft: τ grows linearly with ρ, from 0 at the centre to τ_max at the edge.",
+  "def.f.jour":
+    "Rectangular section: τ is parabolic, 0 at the edges and τ_max = 3Q/(2A) at the neutral axis (E.N.). S is the shaded area above the fibre studied and s its width.",
+  "rs.th.see":
+    "Guide and definitions",
+  "rs.guide":
+    "Guide",
+  "rs.s2.see":
+    "See it in the glossary →",
+  "nav.study":
+    "Study",
   "def.d.fsimple":
     "Simple bending: the forces on both sides of the section reduce, at its centroid, to two couples normal to the plane of the section, with or without shear. Without shear it is pure bending; with shear, bending and shear.",
   "def.t.plano":
@@ -4019,7 +3975,7 @@ const ES: Record<TranslationKey, string> = {
   "rs.title":
     "Resumen del curso",
   "rs.lead":
-    "Una hoja para estudiar: todas las fórmulas de las guías con sus unidades y para qué se usan, y las cinco preguntas de teoría con una respuesta modelo.",
+    "Una hoja para estudiar: las fórmulas de cada guía con sus unidades y para qué se usan, y las cinco preguntas de teoría con una respuesta modelo (el mismo texto y la misma figura del glosario). Cada fila y cada pregunta enlazan a su guía y a sus definiciones.",
   "rs.footer":
     "Resumen de las guías de este sitio; las fórmulas son las de los apuntes del curso (kg y cm).",
   "rs.print":
@@ -4080,62 +4036,6 @@ const ES: Record<TranslationKey, string> = {
     "Teoría",
   "rs.s2.title":
     "Las cinco preguntas del parcial",
-  "rs.q1.t":
-    "Hipótesis de la torsión (eje circular)",
-  "rs.q1.a1":
-    "Las secciones planas siguen planas y circulares.",
-  "rs.q1.a2":
-    "Los radios siguen rectos al girar.",
-  "rs.q1.a3":
-    "La distancia entre secciones no cambia (no hay deformación longitudinal).",
-  "rs.q1.a4":
-    "Material elástico lineal (Hooke) y deformaciones pequeñas.",
-  "rs.q1.a5":
-    "Consecuencia: τ crece linealmente con ρ, de 0 en el centro al máximo en el borde.",
-  "rs.q2.t":
-    "Collignon–Jourawski",
-  "rs.q2.a1":
-    "Da la tensión de corte que produce el esfuerzo de corte Q en flexión: τ = {Q}·{S}/({J}·s).",
-  "rs.q2.a2":
-    "S es el momento estático, respecto del eje neutro, del área de un lado de la fibra estudiada; s es el ancho de la sección en esa fibra.",
-  "rs.q2.a3":
-    "Rectángulo: τ es parabólica, 0 en los bordes y máxima en el eje neutro, τ_max = 3Q/(2A).",
-  "rs.q2.a4":
-    "Doble T: casi todo el corte lo toma el alma.",
-  "rs.q3.t":
-    "Equilibrio estable, inestable e indiferente",
-  "rs.q3.a1":
-    "Estable, F < {F}_k: tras un pequeño empujón la barra vuelve a su posición.",
-  "rs.q3.a2":
-    "Indiferente, {F} = {F}_k: queda en cualquier posición cercana.",
-  "rs.q3.a3":
-    "Inestable, F > {F}_k: se aleja de la posición y pandea.",
-  "rs.q4.t":
-    "Ley de Hooke",
-  "rs.q4.a1":
-    "σ = {E}·ε: tensión y deformación son proporcionales hasta el límite de proporcionalidad σ_P.",
-  "rs.q4.a2":
-    "E es la pendiente de la recta ({E} = tg β) y mide la rigidez del material.",
-  "rs.q4.a3":
-    "Vale solo en la zona elástica.",
-  "rs.q5.t":
-    "Teorema de Steiner",
-  "rs.q5.a1":
-    "{J} = {J}_g + {A}·{d}²: la inercia respecto de un eje paralelo al baricéntrico es la baricéntrica más el área por la distancia al cuadrado.",
-  "rs.q5.a2":
-    "Sirve para secciones compuestas, donde cada parte tiene su baricentro lejos del eje común.",
-  "rs.q5.a3":
-    "De la fórmula sale que {J}_g es la mínima entre todos los ejes paralelos.",
-  "rs.f1":
-    "Eje circular: τ crece linealmente con ρ, de 0 en el centro a τ_max en el borde.",
-  "rs.f2":
-    "Sección rectangular: τ es parabólica, 0 en los bordes y τ_max = 3Q/(2A) en el eje neutro (E.N.). S es el área sombreada sobre la fibra estudiada y s su ancho.",
-  "rs.f3":
-    "Una bolita en un valle, sobre un plano y sobre una cima: equilibrio estable, indiferente e inestable ({F} <, = y > {F}_k en una barra).",
-  "rs.f4":
-    "Diagrama σ–ε: una recta hasta σ_P, de pendiente {E} = tg β.",
-  "rs.f5":
-    "Steiner: la inercia respecto del eje x, a distancia d del eje baricéntrico {x}_g, es {J}_x = {J}_g + {A}·{d}².",
   "rs.fig.stable":
     "Estable",
   "rs.fig.indiff":
@@ -4420,6 +4320,18 @@ const ES: Record<TranslationKey, string> = {
     "cerca del eje: aporta poco",
   "def.fig.conc":
     "A concentrada",
+  "def.f.htor":
+    "Eje circular: τ crece linealmente con ρ, de 0 en el centro a τ_max en el borde.",
+  "def.f.jour":
+    "Sección rectangular: τ es parabólica, 0 en los bordes y τ_max = 3Q/(2A) en el eje neutro (E.N.). S es el área sombreada sobre la fibra estudiada y s su ancho.",
+  "rs.th.see":
+    "Guía y definiciones",
+  "rs.guide":
+    "Guía",
+  "rs.s2.see":
+    "Ver en el glosario →",
+  "nav.study":
+    "Estudio",
   "def.d.fsimple":
     "Flexión simple: las fuerzas a ambos lados de la sección se reducen, en su baricentro, a dos pares normales al plano de la sección, con o sin esfuerzo de corte. Sin corte se llama flexión pura; con corte, flexión y corte.",
   "def.t.plano":

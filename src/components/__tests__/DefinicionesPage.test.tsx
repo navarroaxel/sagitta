@@ -68,7 +68,7 @@ describe("/definiciones", () => {
     expect(svg.querySelectorAll("path[marker-end]")).toHaveLength(4); // a couple at each face, twice
     expect(svg.querySelectorAll("line[marker-end]")).toHaveLength(2); // Q only in the second segment
     expect(item.querySelectorAll("figure svg")).toHaveLength(1);
-    expect(container.querySelectorAll("figure svg")).toHaveLength(30); // 4 bending + 12 stress–strain + 5 buckling + 9 plane areas
+    expect(container.querySelectorAll("figure svg")).toHaveLength(32); // 4 bending + 12 stress–strain + 5 buckling + 9 plane areas + 2 (torsion hypotheses, Jourawski)
   });
 
   test("the bending plane and the oblique bending have their diagrams", () => {
@@ -200,6 +200,30 @@ describe("/definiciones", () => {
     expect(screen.getByTestId("def-mat.hooke").textContent).toMatch(/stress–strain diagram/);
   });
 
+  test("a #group.term in the URL opens that term (the links of /resumen)", () => {
+    window.location.hash = "#pln.steiner";
+    try {
+      renderPage();
+      const item = screen.getByTestId("def-pln.steiner");
+      expect(item.querySelector("button")!.getAttribute("aria-expanded")).toBe("true");
+      expect(item.id).toBe("def-item-pln.steiner");
+      expect(screen.getByTestId("def-pln.inercia").querySelector("button")!.getAttribute("aria-expanded")).toBe("false");
+      // the user can still close it
+      fireEvent.click(item.querySelector("button")!);
+      expect(item.querySelector("button")!.getAttribute("aria-expanded")).toBe("false");
+    } finally {
+      window.location.hash = "";
+    }
+  });
+
+  test("the torsion hypotheses and Jourawski also have their figure (shared with /resumen)", () => {
+    renderPage();
+    fireEvent.click(screen.getByRole("button", { name: "Open all" }));
+    expect(screen.getByTestId("def-tor.htor").querySelector("figure svg")!.textContent).toMatch(/τmax.*τ = 0/);
+    expect(screen.getByTestId("def-shr.jour").querySelector("figure svg")!.textContent).toMatch(/E\.N\..*S.*s.*τmax/);
+  });
+
+  // last: toggling to Spanish is persisted for the tests that follow
   test("in Spanish the terms are translated too", () => {
     function Es({ children }: { children: React.ReactNode }) {
       const { language, toggle } = useLanguage();

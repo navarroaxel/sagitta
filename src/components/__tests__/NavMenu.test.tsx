@@ -32,4 +32,21 @@ describe("NavMenu", () => {
     expect(menu.className).toMatch(/overflow-y-auto/);
     expect(menu.className).not.toMatch(/overflow-hidden/);
   });
+
+  test("the study material sits under its own heading, after the guides", () => {
+    render(
+      <LanguageProvider>
+        <NavMenu />
+      </LanguageProvider>,
+    );
+    fireEvent.click(screen.getByRole("button"));
+    const menu = screen.getByRole("menu");
+    const sep = screen.getByRole("separator");
+    expect(sep.textContent).toBe("Study");
+    const items = Array.from(menu.querySelectorAll("a")).map((a) => a.getAttribute("href"));
+    expect(items.slice(-2)).toEqual(["/resumen", "/definiciones"]);
+    // the heading comes between the last guide and the study links
+    const all = Array.from(menu.children);
+    expect(all.indexOf(sep)).toBe(all.length - 3);
+  });
 });
