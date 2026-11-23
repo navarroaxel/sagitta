@@ -3,9 +3,28 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
-import { Sub } from "@/components/Sub";
+import { Sub, plain } from "@/components/Sub";
 import { GuidePage } from "@/components/guide/GuideBits";
 import { DEFINITION_GROUPS } from "@/lib/definitions";
+import { SimpleBendingFigure, StressStrainFigure, type StressStrainFocus } from "@/components/DefinitionFigures";
+
+// Terms that carry a figure under their definition (key: group.term); each gets its caption from def.f.<term>.
+const ss = (focus: StressStrainFocus) => (label: string) => <StressStrainFigure focus={focus} label={label} />;
+const FIGURES: Record<string, (label: string) => React.ReactNode> = {
+  "flx.fsimple": (label) => <SimpleBendingFigure label={label} />,
+  "mat.hooke": ss("stiffness"),
+  "mat.rigidez": ss("stiffness"),
+  "mat.sp": ss("P"),
+  "mat.se": ss("E"),
+  "mat.sfl": ss("Fl"),
+  "mat.srot": ss("Rot"),
+  "mat.seguridad": ss("safety"),
+  "mat.defelas": ss("elastic"),
+  "mat.ductilidad": ss("ductility"),
+  "mat.resiliencia": ss("resilience"),
+  "mat.tenacidad": ss("toughness"),
+  "mat.tipos": ss("types"),
+};
 
 const ALL = DEFINITION_GROUPS.flatMap((g) => g.terms.map((t) => `${g.id}.${t}`));
 
@@ -70,6 +89,14 @@ export default function DefinicionesPage() {
                     className="px-4 pb-4 leading-relaxed text-stone-700 print:!block dark:text-stone-300"
                   >
                     <Sub>{k(`def.d.${term}`)}</Sub>
+                    {FIGURES[id] && (
+                      <figure className="mt-3 max-w-md rounded-lg border border-stone-200 bg-white p-3 dark:border-stone-700 dark:bg-stone-100">
+                        {FIGURES[id](plain(k(`def.f.${term}`)))}
+                        <figcaption className="mt-2 text-center text-[13px] leading-snug text-stone-500 dark:text-stone-600">
+                          <Sub>{k(`def.f.${term}`)}</Sub>
+                        </figcaption>
+                      </figure>
+                    )}
                   </div>
                 </li>
               );

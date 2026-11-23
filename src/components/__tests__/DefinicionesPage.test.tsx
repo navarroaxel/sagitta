@@ -57,6 +57,47 @@ describe("/definiciones", () => {
     expect(document.body.textContent).not.toMatch(/[A-Za-z]_[A-Za-z0-9]/);
   });
 
+  test("simple bending keeps the notes' wording and carries a figure of pure bending and of bending with shear", () => {
+    const { container } = renderPage();
+    const item = screen.getByTestId("def-flx.fsimple");
+    fireEvent.click(item.querySelector("button")!);
+    expect(item.textContent).toMatch(/two couples normal to the plane of the section/);
+    const svg = item.querySelector("figure svg")!;
+    expect(svg.getAttribute("aria-label")).toMatch(/bending couple M/);
+    expect(svg.textContent).toMatch(/Pure bending.*Bending and shear/);
+    expect(svg.querySelectorAll("path[marker-end]")).toHaveLength(4); // a couple at each face, twice
+    expect(svg.querySelectorAll("line[marker-end]")).toHaveLength(2); // Q only in the second segment
+    expect(item.querySelectorAll("figure svg")).toHaveLength(1);
+    expect(container.querySelectorAll("figure svg")).toHaveLength(13); // 1 bending + 12 stress–strain
+  });
+
+  test("the material definitions show the stress–strain diagram with the thing they define highlighted", () => {
+    const { container } = renderPage();
+    const ids = ["hooke", "rigidez", "sp", "se", "sfl", "srot", "seguridad", "defelas", "ductilidad", "resiliencia", "tenacidad", "tipos"];
+    fireEvent.click(screen.getByRole("button", { name: "Open all" }));
+    for (const id of ids) {
+      const svg = screen.getByTestId(`def-mat.${id}`).querySelector("figure svg");
+      expect(svg, id).toBeTruthy();
+      expect(svg!.getAttribute("aria-label")).toBeTruthy();
+      expect(svg!.getAttribute("aria-label")).not.toMatch(/[{}_]/);
+    }
+    const text = (id: string) => screen.getByTestId(`def-mat.${id}`).querySelector("figure svg")!.textContent!;
+    expect(text("sp")).toMatch(/σP/);
+    expect(text("srot")).toMatch(/σRot/);
+    expect(text("seguridad")).toMatch(/σadm = σE \/ ν/);
+    expect(text("resiliencia")).toMatch(/U = ½·σe² \/ E/);
+    expect(text("tipos")).toMatch(/Brittle.*Ductile|Ductile.*Brittle/);
+    expect(text("defelas")).toMatch(/permanent strain/);
+    // resilience and toughness are areas: a filled path under the curve
+    const fills = (id: string) => screen.getByTestId(`def-mat.${id}`).querySelectorAll("figure svg path[fill]:not([fill=none])").length;
+    expect(fills("resiliencia")).toBe(1);
+    expect(fills("tenacidad")).toBe(1);
+    expect(fills("defelas")).toBe(2);
+    expect(fills("rigidez")).toBe(0);
+    // the diagram has the better name: stress–strain
+    expect(screen.getByTestId("def-mat.hooke").textContent).toMatch(/stress–strain diagram/);
+  });
+
   test("in Spanish the terms are translated too", () => {
     function Es({ children }: { children: React.ReactNode }) {
       const { language, toggle } = useLanguage();

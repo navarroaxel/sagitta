@@ -1985,11 +1985,11 @@ const EN = {
   "def.t.hooke":
     "Hooke’s law",
   "def.d.hooke":
-    "In the straight part of the σ–ε diagram the stresses are proportional to the strains: σ = {E}·ε. Young’s modulus {E} is the slope of the line.",
+    "In the straight part of the stress–strain diagram the stresses are proportional to the strains: σ = {E}·ε. Young’s modulus {E} is the slope of the line.",
   "def.t.sp":
     "Proportionality limit σ_P",
   "def.d.sp":
-    "Stress up to which the σ–ε diagram is a straight line. Above it, the strains grow faster than the stress.",
+    "Stress up to which the stress–strain diagram is a straight line. Above it, the strains grow faster than the stress.",
   "def.t.se":
     "Elastic limit σ_E",
   "def.d.se":
@@ -2017,11 +2017,11 @@ const EN = {
   "def.t.resiliencia":
     "Resilience",
   "def.d.resiliencia":
-    "Capacity to give back the energy stored by deformation in the elastic period. It is the area under the σ–ε curve in that period: up to σ_e it is {U} = ½·σ_e² / {E}.",
+    "Capacity to give back the energy stored by deformation in the elastic period. It is the area under the stress–strain curve in that period: up to σ_e it is {U} = ½·σ_e² / {E}.",
   "def.t.tenacidad":
     "Toughness",
   "def.d.tenacidad":
-    "Capacity to absorb energy in the inelastic or large-deformation period. It is the area under the σ–ε curve up to rupture.",
+    "Capacity to absorb energy in the inelastic or large-deformation period. It is the area under the stress–strain curve up to rupture.",
   "def.t.dureza":
     "Hardness",
   "def.d.dureza":
@@ -2052,8 +2052,48 @@ const EN = {
     "Triple or spatial if {I}_3 ≠ 0; double or plane if {I}_3 = 0 and {I}_2 ≠ 0; simple or uniaxial if only {I}_1 ≠ 0.",
   "def.t.fsimple":
     "Simple and pure bending",
+  "def.f.fsimple":
+    "A segment of beam between two sections: the forces on each side reduce, at the centroid, to the bending couple M (equal and opposite on the two faces); in bending and shear there is also the shear force Q.",
+  "def.fig.pure":
+    "Pure bending",
+  "def.fig.shear":
+    "Bending and shear",
+  "def.f.hooke":
+    "Hooke’s zone: the straight part of the stress–strain diagram, with slope E = tg β.",
+  "def.f.rigidez":
+    "The steeper the line (the larger E), the stiffer the material.",
+  "def.f.sp":
+    "σ_P: where the straight part of the diagram ends.",
+  "def.f.se":
+    "σ_E: the end of the elastic period.",
+  "def.f.sfl":
+    "σ_Fl: the yield stretch, where the strain grows with no appreciable increase of the load.",
+  "def.f.srot":
+    "σ_Rot: the highest stress of the curve.",
+  "def.f.seguridad":
+    "The admissible stress σ_adm = σ_E / ν stays below the elastic limit (here ν = 2).",
+  "def.f.defelas":
+    "In the elastic zone the strain is recovered; in the plastic one, unloading along a parallel to the straight line leaves a permanent strain.",
+  "def.f.ductilidad":
+    "Ductility: how much strain the material has in the plastic period, up to rupture (the length marked on the ε axis).",
+  "def.f.resiliencia":
+    "Resilience: the area under the curve in the elastic period, U = ½·σ_e² / E.",
+  "def.f.tenacidad":
+    "Toughness: the area under the whole curve, up to rupture.",
+  "def.f.tipos":
+    "Ductile: a lot of strain before breaking. Brittle: it breaks with little strain, with σ_P very close to σ_Rot.",
+  "def.fig.elastic":
+    "elastic",
+  "def.fig.plastic":
+    "plastic",
+  "def.fig.permanent":
+    "permanent strain",
+  "def.fig.ductile":
+    "Ductile",
+  "def.fig.brittle":
+    "Brittle",
   "def.d.fsimple":
-    "Loading in which each section carries only a bending moment, with or without shear. Without shear it is pure bending; with shear, bending and shear.",
+    "Simple bending: the forces on both sides of the section reduce, at its centroid, to two couples normal to the plane of the section, with or without shear. Without shear it is pure bending; with shear, bending and shear.",
   "def.t.plano":
     "Bending plane and line of forces",
   "def.d.plano":
@@ -4121,11 +4161,11 @@ const ES: Record<TranslationKey, string> = {
   "def.t.hooke":
     "Ley de Hooke",
   "def.d.hooke":
-    "En el tramo recto del diagrama σ–ε las tensiones son proporcionales a las deformaciones: σ = {E}·ε. El módulo de Young {E} es la pendiente de la recta.",
+    "En el tramo recto del diagrama tensión–deformación las tensiones son proporcionales a las deformaciones: σ = {E}·ε. El módulo de Young {E} es la pendiente de la recta.",
   "def.t.sp":
     "Límite de proporcionalidad σ_P",
   "def.d.sp":
-    "Tensión hasta la cual el diagrama σ–ε es una recta. Por encima, las deformaciones crecen más que la tensión.",
+    "Tensión hasta la cual el diagrama tensión–deformación es una recta. Por encima, las deformaciones crecen más que la tensión.",
   "def.t.se":
     "Límite de elasticidad σ_E",
   "def.d.se":
@@ -4153,11 +4193,11 @@ const ES: Record<TranslationKey, string> = {
   "def.t.resiliencia":
     "Resiliencia",
   "def.d.resiliencia":
-    "Capacidad de restituir la energía almacenada por deformación en el período elástico. Es el área bajo la curva σ–ε en ese período: hasta σ_e vale {U} = ½·σ_e² / {E}.",
+    "Capacidad de restituir la energía almacenada por deformación en el período elástico. Es el área bajo la curva tensión–deformación en ese período: hasta σ_e vale {U} = ½·σ_e² / {E}.",
   "def.t.tenacidad":
     "Tenacidad",
   "def.d.tenacidad":
-    "Capacidad de absorber energía en el período anelástico o de grandes deformaciones. Es el área bajo la curva σ–ε hasta la rotura.",
+    "Capacidad de absorber energía en el período anelástico o de grandes deformaciones. Es el área bajo la curva tensión–deformación hasta la rotura.",
   "def.t.dureza":
     "Dureza",
   "def.d.dureza":
@@ -4188,8 +4228,48 @@ const ES: Record<TranslationKey, string> = {
     "Triple o espacial si {I}_3 ≠ 0; doble o plano si {I}_3 = 0 e {I}_2 ≠ 0; simple o uniaxial si solo {I}_1 ≠ 0.",
   "def.t.fsimple":
     "Flexión simple y flexión pura",
+  "def.f.fsimple":
+    "Un tramo de viga entre dos secciones: las fuerzas de cada lado se reducen, en el baricentro, al par flector M (igual y opuesto en las dos caras); en flexión y corte hay además el esfuerzo de corte Q.",
+  "def.fig.pure":
+    "Flexión pura",
+  "def.fig.shear":
+    "Flexión y corte",
+  "def.f.hooke":
+    "Zona de Hooke: la recta del diagrama tensión–deformación, de pendiente E = tg β.",
+  "def.f.rigidez":
+    "Cuanto más empinada la recta (mayor E), más rígido el material.",
+  "def.f.sp":
+    "σ_P: donde termina la recta del diagrama.",
+  "def.f.se":
+    "σ_E: el final del período elástico.",
+  "def.f.sfl":
+    "σ_Fl: el tramo de fluencia, donde la deformación crece sin aumento apreciable de la carga.",
+  "def.f.srot":
+    "σ_Rot: la máxima tensión de la curva.",
+  "def.f.seguridad":
+    "La tensión admisible σ_adm = σ_E / ν queda por debajo del límite de elasticidad (acá ν = 2).",
+  "def.f.defelas":
+    "En la zona elástica la deformación se recupera; en la plástica, al descargar siguiendo una paralela a la recta queda una deformación permanente.",
+  "def.f.ductilidad":
+    "Ductilidad: cuánta deformación tiene el material en el período plástico, hasta la rotura (la longitud marcada sobre el eje ε).",
+  "def.f.resiliencia":
+    "Resiliencia: el área bajo la curva en el período elástico, U = ½·σ_e² / E.",
+  "def.f.tenacidad":
+    "Tenacidad: el área bajo toda la curva, hasta la rotura.",
+  "def.f.tipos":
+    "Dúctil: mucha deformación antes de romper. Frágil: rompe con poca deformación, y σ_P está muy cerca de σ_Rot.",
+  "def.fig.elastic":
+    "elástica",
+  "def.fig.plastic":
+    "plástica",
+  "def.fig.permanent":
+    "deformación permanente",
+  "def.fig.ductile":
+    "Dúctil",
+  "def.fig.brittle":
+    "Frágil",
   "def.d.fsimple":
-    "Solicitación en la que cada sección soporta solo momento flector, con o sin esfuerzo de corte. Sin corte se llama flexión pura; con corte, flexión y corte.",
+    "Flexión simple: las fuerzas a ambos lados de la sección se reducen, en su baricentro, a dos pares normales al plano de la sección, con o sin esfuerzo de corte. Sin corte se llama flexión pura; con corte, flexión y corte.",
   "def.t.plano":
     "Plano de flexión y línea de fuerzas",
   "def.d.plano":
