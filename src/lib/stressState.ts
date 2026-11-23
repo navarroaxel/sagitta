@@ -23,13 +23,20 @@ export function invariants(T: Tensor) {
 
 export type StressKind = "triple" | "double" | "simple" | "null";
 
-/** Triple (spatial) if I3 ≠ 0; double (plane) if I3 = 0 and I2 ≠ 0; simple (uniaxial) if only I1 ≠ 0; null otherwise. */
+const maxAbs = (T: Tensor) => Math.max(...T.flat().map(Math.abs));
+const scaled = (T: Tensor, k: number) => T.map((row) => row.map((v) => v * k)) as Tensor;
+
+/**
+ * Triple (spatial) if I3 ≠ 0; double (plane) if I3 = 0 and I2 ≠ 0; simple (uniaxial) if only I1 ≠ 0; null otherwise.
+ * The tensor is normalised by its largest component first, so the result does not depend on the unit (kPa or MPa).
+ */
 export function classify(T: Tensor, eps = 1e-9): StressKind {
-  const scale = Math.max(1, ...T.flat().map(Math.abs));
-  const { I1, I2, I3 } = invariants(T);
-  if (Math.abs(I3) > eps * scale ** 3) return "triple";
-  if (Math.abs(I2) > eps * scale ** 2) return "double";
-  if (Math.abs(I1) > eps * scale) return "simple";
+  const mag = maxAbs(T);
+  if (mag === 0) return "null";
+  const { I1, I2, I3 } = invariants(scaled(T, 1 / mag));
+  if (Math.abs(I3) > eps) return "triple";
+  if (Math.abs(I2) > eps) return "double";
+  if (Math.abs(I1) > eps) return "simple";
   return "null";
 }
 
@@ -51,30 +58,44 @@ export function stressOnPlane(T: Tensor, nIn: Vec3) {
   return { n, rho, sigma, tau, rhoMag: norm(rho), sigmaN: s, tauMag: norm(tau) };
 }
 
-/** Principal stresses σ1 ≥ σ2 ≥ σ3: roots of σ³ − I1·σ² + I2·σ − I3 = 0 (trigonometric solution, all real). */
+/**
+ * Principal stresses σ1 ≥ σ2 ≥ σ3: roots of σ³ − I1·σ² + I2·σ − I3 = 0 (trigonometric solution, all real).
+ * Solved on the deviator (T minus its mean) of the tensor normalised by its largest component, so a hydrostatic state
+ * (all three equal) and a repeated root come out exact instead of through the cancellation of I2 − I1²/3.
+ */
 export function principalStresses(T: Tensor): [number, number, number] {
-  const { I1, I2, I3 } = invariants(T);
-  const a = -I1;
-  const p = I2 - (a * a) / 3;
-  const q = (2 * a ** 3) / 27 - (a * I2) / 3 - I3;
-  if (Math.abs(p) < 1e-14) {
-    const r = Math.cbrt(-q);
-    return [r - a / 3, r - a / 3, r - a / 3];
-  }
+  const mag = maxAbs(T);
+  if (mag === 0) return [0, 0, 0];
+  const [[a, txy, txz], [, b, tyz], [, , c]] = scaled(T, 1 / mag);
+  const m0 = (a + b + c) / 3;
+  const sx = a - m0;
+  const sy = b - m0;
+  const sz = c - m0;
+  // σ'³ + p·σ' + q = 0 for the deviator (its first invariant is 0): p = I2', q = −I3'
+  const p = sx * sy - txy ** 2 + (sy * sz - tyz ** 2) + (sx * sz - txz ** 2);
+  if (p > -1e-14) return [m0 * mag, m0 * mag, m0 * mag];
+  const q = -(sx * sy * sz + 2 * txy * tyz * txz - (sx * tyz ** 2 + sy * txz ** 2 + sz * txy ** 2));
   const m = 2 * Math.sqrt(-p / 3);
-  const arg = Math.max(-1, Math.min(1, ((3 * q) / (p * m))));
-  const th = Math.acos(arg) / 3;
-  const roots = [0, 1, 2].map((k) => m * Math.cos(th - (2 * Math.PI * k) / 3) - a / 3).sort((x, y) => y - x);
+  const th = Math.acos(Math.max(-1, Math.min(1, (3 * q) / (p * m)))) / 3;
+  const roots = [0, 1, 2].map((k) => (m * Math.cos(th - (2 * Math.PI * k) / 3) + m0) * mag).sort((x, y) => y - x);
   return roots as [number, number, number];
+}
+
+/** How many of the three principal stresses equal σ (within 1e-6 of the tensor's size): 1 unique, 2 a plane, 3 all. */
+export function eigenspaceSize(T: Tensor, s: number): number {
+  const tol = 1e-6 * maxAbs(T);
+  return principalStresses(T).filter((r) => Math.abs(r - s) <= tol).length;
 }
 
 /**
  * Unit vector of the principal direction for σ: solves (T − σI)·n = 0 as the course does, by fixing one unknown and
  * solving the rest (here: the cross product of two independent rows). The sign of n is arbitrary. Returns null if the
- * eigenvalue is repeated (every direction of the eigenspace is principal).
+ * eigenvalue is repeated (every direction of its eigenspace is principal; see `eigenspaceSize`).
  */
 export function principalDirection(T: Tensor, s: number): Vec3 | null {
-  const A = T.map((row, i) => row.map((v, j) => v - (i === j ? s : 0))) as Tensor;
+  const mag = maxAbs(T);
+  if (mag === 0 || eigenspaceSize(T, s) >= 2) return null;
+  const A = scaled(T, 1 / mag).map((row, i) => row.map((v, j) => v - (i === j ? s / mag : 0))) as Tensor;
   let best: Vec3 = [0, 0, 0];
   let bestN = 0;
   for (const [i, j] of [[0, 1], [0, 2], [1, 2]]) {
@@ -85,7 +106,6 @@ export function principalDirection(T: Tensor, s: number): Vec3 | null {
       best = c;
     }
   }
-  const scale = Math.max(1, ...T.flat().map(Math.abs));
-  if (bestN < 1e-9 * scale * scale) return null;
+  if (bestN < 1e-12) return null;
   return [best[0] / bestN, best[1] / bestN, best[2] / bestN];
 }

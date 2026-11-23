@@ -55,7 +55,7 @@ export function SvgSub({ children }: { children: string }) {
         const wasSub = i > 0 && toks[i - 1].kind === "sub";
         if (tk.kind === "sub")
           return (
-            <tspan key={i} fontSize="0.75em" dy="0.3em">
+            <tspan key={i} fontSize="0.75em" dy="0.4em">
               {tk.text}
             </tspan>
           );

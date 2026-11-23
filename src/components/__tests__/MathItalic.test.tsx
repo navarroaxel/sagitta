@@ -60,6 +60,20 @@ describe("math variables in italic", () => {
     expect(tspans[2].getAttribute("dy")).toBe("-0.3em");
   });
 
+  test("SvgSub lowers and restores by the same distance: 0.4em of the 0.75em subscript = 0.3em of the text", () => {
+    const { container } = render(
+      <svg>
+        <text>
+          <SvgSub>{"σ_x{y}"}</SvgSub>
+        </text>
+      </svg>,
+    );
+    const [sub, variable] = Array.from(container.querySelectorAll("tspan"));
+    const down = parseFloat(sub.getAttribute("dy")!) * parseFloat(sub.getAttribute("font-size")!);
+    const up = parseFloat(variable.getAttribute("dy")!);
+    expect(down + up).toBeCloseTo(0, 10);
+  });
+
   test.each(PAGES)("/%s shows no raw braces and has italic variables", (_name, Page) => {
     const { container } = render(
       <LanguageProvider>

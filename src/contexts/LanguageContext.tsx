@@ -1144,7 +1144,7 @@ const EN = {
   "shr.s2.p2":
     "In a beam under shear and moment, the horizontal stresses needed to keep equilibrium would produce sliding on horizontal planes: shear on vertical planes necessarily implies shear on horizontal planes, and vice versa. These are the sliding stresses τ_L, present in all fibres (stacked planks that slide against each other are the picture).",
   "shr.s2.p3":
-    "The shear Q at a section is the resultant of all the forces on its left; by equilibrium, the resultant of those on the right is equal and opposite, acting on an infinitely close section.",
+    "The shear Q at a section is the projection, perpendicular to the axis of the bar, of the resultant of all the forces on its left; by equilibrium, that of the forces on the right is equal and opposite, acting on an infinitely close section.",
   "shr.s2.fig":
     "Cauchy: on two perpendicular planes the shear stresses τ_xy and τ_yx are equal; both arrows point towards the common edge (here the top right) or both away from it.",
   "shr.s3.fig":
@@ -1358,7 +1358,7 @@ const EN = {
   "pnd.s1.title":
     "Stable, indifferent and unstable equilibrium",
   "pnd.s1.p1":
-    "A straight bar under compression can be checked with σ = {F}/{A} ≤ σ_adm as long as it is short: the notes give the condition l < 30·{b}, with b the smallest width of the section. If l > 30·{b} the situation is one of unstable equilibrium: the smallest lateral force deviates the bar from its axis and breaks it as it deforms, before the stress reaches σ_adm.",
+    "A straight bar under compression can be checked with σ = {F}/{A} ≤ σ_adm as long as it is short: the notes give the condition l < 30·{b}, with b the smallest width of the section. If l > 30·{b} the stress check is no longer enough and the buckling check is needed, because the bar can reach an unstable equilibrium, in which the smallest lateral force deviates it from its axis and breaks it as it deforms, before the stress reaches σ_adm. Whether it does depends on the load {F} compared with {F}_k (below).",
   "pnd.s1.p2":
     "For a piece of given section A and length l there is a load {F} = {F}_k, the critical buckling load, that corresponds to a state of indifferent equilibrium. Load the bar with F and apply a transverse load H; three cases appear:",
   "pnd.s1.c1.t":
@@ -1394,11 +1394,11 @@ const EN = {
   "pnd.s3.p1":
     "The force at which buckling starts is the critical load or buckling limit. With the bending moment {M} = {F}·s at a section where the bar has deflected s, Euler’s expression is, valid only for σ ≤ σ_EL (the elastic limit):",
   "pnd.s3.p2":
-    "{J}_min is the smallest moment of inertia of the section (the bar buckles about the weak axis), c the end-condition coefficient and l the length. With {J}_min = i_min²·{A}, where i = √({J}/{A}) is the radius of gyration, and the slenderness λ = {l}/i_min:",
+    "{J}_min is the smallest moment of inertia of the section (the bar buckles about the weak axis), c the end-condition coefficient and l the length. With {J}_min = i_min²·{A}, where i = √({J}/{A}) is the radius of gyration, and the slenderness λ = {l}_0 / i_min, with the equivalent length {l}_0 = c·{l} (the distance between two consecutive inflection points of the deformed bar):",
   "pnd.s3.p3":
     "Dividing by the area gives the critical stress. Its graph against λ is a hyperbola, Euler’s hyperbola: the more slender the bar, the lower the stress it can carry.",
   "pnd.s3.p4":
-    "Using the equivalent length {l}_0 = c·{l} (the distance between two consecutive inflection points of the deformed bar), the same thing reads λ = {l}_0 / i_min and σ_k = π²·{E} / λ².",
+    "For the pinned bar c = 1, so {l}_0 = {l}; the cantilever buckles over twice its length and the fixed–fixed bar over half of it (next section).",
   "pnd.s3.fig":
     "Euler’s hyperbola σ_k(λ) for steel, {E} = 2 100 000 kg/cm²; only the branch with σ_k below the elastic limit is valid.",
   "pnd.s3.fig.axis.x":
@@ -1594,7 +1594,9 @@ const EN = {
   "tns.calc.princ":
     "Principal stresses and directions",
   "tns.calc.any":
-    "any direction (repeated stress)",
+    "any direction (the three principal stresses are equal)",
+  "tns.calc.eigen":
+    "not unique: any direction perpendicular to the other principal one (repeated stress)",
   "tns.footer":
     "The worked exercise is the professor’s (“Estado de tensión EJ1”); the theory text around it was written for this page.",
 
@@ -1809,7 +1811,7 @@ const EN = {
   "rs.t.flecha":
     "Deflection",
   "rs.u.flecha":
-    "Curvature of the elastic line; 5/384 simply supported + UDL, 1/48 central load, 1/3 cantilever + end load, 1/8 cantilever + UDL",
+    "Curvature of the elastic line; 5/384 simply supported + UDL, 1/48 central load, 1/3 cantilever + end load, 1/8 cantilever + UDL; for a cantilever, f = ∫M·x dx/(E·J) with x from the free end",
   "rs.t.pandeo":
     "Buckling",
   "rs.u.pandeo":
@@ -2075,7 +2077,7 @@ const EN = {
   "def.t.corte":
     "Shear force {Q}",
   "def.d.corte":
-    "Resultant of all the forces on the left of the section. On the right the resultant is equal and opposite.",
+    "Projection, perpendicular to the axis of the bar, of the resultant of all the forces on the left of the section. On the right it is equal and opposite.",
   "def.t.cauchy":
     "Cauchy’s theorem",
   "def.d.cauchy":
@@ -3278,7 +3280,7 @@ const ES: Record<TranslationKey, string> = {
   "shr.s2.p2":
     "En una viga sometida a corte y momento, las tensiones horizontales necesarias para mantener el equilibrio producirían un deslizamiento en planos horizontales: el corte en planos verticales implica necesariamente corte en planos horizontales, y viceversa. Son las tensiones de resbalamiento τ_L, presentes en todas las fibras (la imagen es la de tablones apilados que resbalan unos contra otros).",
   "shr.s2.p3":
-    "El corte Q en una sección es la resultante de todas las fuerzas que actúan a la izquierda de la sección considerada; por razones de equilibrio, la resultante de todas las de la derecha es igual y opuesta, y actúa sobre una sección infinitamente próxima.",
+    "El corte Q en una sección es la proyección, perpendicular al eje de la barra, de la resultante de todas las fuerzas que actúan a la izquierda de la sección considerada; por razones de equilibrio, la de las fuerzas de la derecha es igual y opuesta, y actúa sobre una sección infinitamente próxima.",
   "shr.s2.fig":
     "Cauchy: sobre dos planos perpendiculares las tensiones de corte τ_xy y τ_yx son iguales; las dos flechas van hacia la arista común (acá la de arriba a la derecha) o las dos se alejan de ella.",
   "shr.s3.fig":
@@ -3492,7 +3494,7 @@ const ES: Record<TranslationKey, string> = {
   "pnd.s1.title":
     "Equilibrio estable, indiferente e inestable",
   "pnd.s1.p1":
-    "Una barra de eje recto sometida a compresión puede calcularse con σ = {F}/{A} ≤ σ_adm mientras sea corta: el apunte da la condición l < 30·{b}, con b el ancho mínimo de la sección. Si l > 30·{b} se produce una situación de equilibrio inestable: la menor fuerza lateral causará la desviación respecto del eje y la rotura de la pieza al deformarse, antes de llegar a la tensión σ_adm.",
+    "Una barra de eje recto sometida a compresión puede calcularse con σ = {F}/{A} ≤ σ_adm mientras sea corta: el apunte da la condición l < 30·{b}, con b el ancho mínimo de la sección. Si l > 30·{b} ya no alcanza con la verificación por tensión y hay que verificar el pandeo, porque la barra puede llegar a un equilibrio inestable, en el que la menor fuerza lateral causa la desviación respecto del eje y la rotura al deformarse, antes de llegar a la tensión σ_adm. Que ocurra o no depende de la carga {F} comparada con {F}_k (más abajo).",
   "pnd.s1.p2":
     "Para una pieza de sección A y longitud l dadas existe un valor de carga {F} = {F}_k, denominada carga crítica de pandeo, que corresponde a un estado de equilibrio indiferente. Cargada la pieza con F y aplicada una carga transversal H, pueden presentarse tres casos:",
   "pnd.s1.c1.t":
@@ -3528,11 +3530,11 @@ const ES: Record<TranslationKey, string> = {
   "pnd.s3.p1":
     "El valor de la fuerza con la cual se inicia el pandeo se denomina carga crítica o límite de pandeo. Con el momento {M} = {F}·s en una sección donde la barra se desvió s, la expresión de Euler es, válida solo para σ ≤ σ_EL (límite elástico):",
   "pnd.s3.p2":
-    "{J}_min es el menor momento de inercia de la sección (la barra pandea alrededor del eje débil), c el coeficiente de empotramiento y l la longitud. Con {J}_min = i_min²·{A}, donde i = √({J}/{A}) es el radio de giro, y la esbeltez λ = {l}/i_min:",
+    "{J}_min es el menor momento de inercia de la sección (la barra pandea alrededor del eje débil), c el coeficiente de empotramiento y l la longitud. Con {J}_min = i_min²·{A}, donde i = √({J}/{A}) es el radio de giro, y la esbeltez λ = {l}_0 / i_min, con la longitud equivalente {l}_0 = c·{l} (la distancia entre dos puntos de inflexión consecutivos de la barra deformada):",
   "pnd.s3.p3":
     "Dividiendo por el área se obtiene la tensión crítica. Su gráfico contra λ es una hipérbola, la hipérbola de Euler: cuanto más esbelta la barra, menor la tensión que puede soportar.",
   "pnd.s3.p4":
-    "Con la longitud equivalente {l}_0 = c·{l} (la distancia entre dos puntos de inflexión consecutivos de la barra deformada), lo mismo se escribe λ = {l}_0 / i_min y σ_k = π²·{E} / λ².",
+    "Para la barra articulada c = 1 y {l}_0 = {l}; la ménsula pandea sobre el doble de su longitud y la empotrada–empotrada sobre la mitad (sección siguiente).",
   "pnd.s3.fig":
     "Hipérbola de Euler σ_k(λ) para acero, {E} = 2 100 000 kg/cm²; solo vale la rama con σ_k por debajo del límite elástico.",
   "pnd.s3.fig.axis.x":
@@ -3728,7 +3730,9 @@ const ES: Record<TranslationKey, string> = {
   "tns.calc.princ":
     "Tensiones y direcciones principales",
   "tns.calc.any":
-    "cualquier dirección (tensión repetida)",
+    "cualquier dirección (las tres tensiones principales son iguales)",
+  "tns.calc.eigen":
+    "no única: cualquier dirección perpendicular a la otra principal (tensión repetida)",
   "tns.footer":
     "El ejercicio resuelto es del profesor (“Estado de tensión EJ1”); el texto teórico que lo rodea se escribió para esta página.",
 
@@ -3943,7 +3947,7 @@ const ES: Record<TranslationKey, string> = {
   "rs.t.flecha":
     "Flecha",
   "rs.u.flecha":
-    "Curvatura de la elástica; 5/384 apoyada + uniforme, 1/48 carga central, 1/3 ménsula + carga en el extremo, 1/8 ménsula + uniforme",
+    "Curvatura de la elástica; 5/384 apoyada + uniforme, 1/48 carga central, 1/3 ménsula + carga en el extremo, 1/8 ménsula + uniforme; en una ménsula, f = ∫M·x dx/(E·J) con x desde el extremo libre",
   "rs.t.pandeo":
     "Pandeo",
   "rs.u.pandeo":
@@ -4209,7 +4213,7 @@ const ES: Record<TranslationKey, string> = {
   "def.t.corte":
     "Esfuerzo de corte {Q}",
   "def.d.corte":
-    "Resultante de todas las fuerzas que actúan a la izquierda de la sección. A la derecha la resultante es igual y opuesta.",
+    "Proyección, perpendicular al eje de la barra, de la resultante de todas las fuerzas que actúan a la izquierda de la sección. A la derecha es igual y opuesta.",
   "def.t.cauchy":
     "Teorema de Cauchy",
   "def.d.cauchy":

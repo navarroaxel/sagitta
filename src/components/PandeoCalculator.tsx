@@ -50,7 +50,7 @@ export default function PandeoCalculator() {
         {field(t("pnd.calc.c"), c, setC)}
         {field(t("pnd.calc.F"), F, setF)}
       </div>
-      <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1 font-mono text-[15px] sm:grid-cols-4" data-testid="pandeo-result">
+      <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1 font-mono text-[15px] sm:grid-cols-4" data-testid="pandeo-result" aria-live="polite">
         <div>
           <dt className="text-xs text-stone-500"><Sub>{t("pnd.calc.Fk")}</Sub></dt>
           <dd>{ok ? `${fmt(Fk)} kg` : "—"}</dd>

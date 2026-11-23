@@ -109,9 +109,9 @@ export default function PandeoPage() {
         <Para k="pnd.s3.p1" />
         <Eq boxed>{"{F}_k = π²·{E}·{J}_min / (c²·{l}²)"}</Eq>
         <Para k="pnd.s3.p2" />
-        <Eq>{"λ = {l} / i_min        {F}_k = π²·{E}·{A} / (c²·λ²)"}</Eq>
+        <Eq>{"λ = {l}_0 / i_min        {F}_k = π²·{E}·{A} / λ²"}</Eq>
         <Para k="pnd.s3.p3" />
-        <Eq boxed>{"σ_k = {F}_k / {A} = π²·{E} / (c²·λ²)"}</Eq>
+        <Eq boxed>{"σ_k = {F}_k / {A} = π²·{E} / λ²"}</Eq>
         <div className="mx-auto max-w-md">
           <Figure caption={<Sub>{t("pnd.s3.fig")}</Sub>}>
             <HyperbolaSVG />
@@ -127,7 +127,7 @@ export default function PandeoPage() {
             <div key={ec.id} data-testid={`pnd-end-${ec.id}`} className="rounded-lg border border-stone-200 bg-white p-2 text-center dark:border-stone-700 dark:bg-stone-100">
               <EndConditionSVG id={ec.id} />
               <p className="text-[13px] text-stone-600">
-                {t(`pnd.s4.${ec.id.replace(/-/g, "")}` as TranslationKey)}
+                {t(`pnd.s4.${ec.id === "cantilever" ? "fixedfree" : ec.id.replace(/-/g, "")}` as TranslationKey)}
               </p>
               <p className="font-mono text-sm text-stone-800">c = {String(ec.c).replace(".", language === "es" ? "," : ".")}</p>
             </div>

@@ -5,6 +5,7 @@ import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 import {
   classify,
   invariants,
+  eigenspaceSize,
   principalDirection,
   principalStresses,
   stressOnPlane,
@@ -99,7 +100,7 @@ export default function StressStateCalculator() {
                 const d = principalDirection(T, s);
                 return (
                   <li key={i}>
-                    <Sub>{`σ_${i + 1} = ${f4(s)}`}</Sub>  n = {d ? vec(d) : t("tns.calc.any")}
+                    <Sub>{`σ_${i + 1} = ${f4(s)}`}</Sub>  n = {d ? vec(d) : eigenspaceSize(T, s) >= 3 ? t("tns.calc.any") : t("tns.calc.eigen")}
                   </li>
                 );
               })}

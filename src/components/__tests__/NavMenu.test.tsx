@@ -19,4 +19,17 @@ describe("NavMenu", () => {
     expect(current).toHaveLength(1);
     expect(current[0].getAttribute("href")).toBe("/flecha");
   });
+
+  test("the menu is capped to the viewport and scrolls, so every guide stays reachable on a short screen", () => {
+    render(
+      <LanguageProvider>
+        <NavMenu />
+      </LanguageProvider>,
+    );
+    fireEvent.click(screen.getByRole("button"));
+    const menu = screen.getByRole("menu");
+    expect(menu.className).toMatch(/max-h-\[calc\(100dvh-4rem\)\]/);
+    expect(menu.className).toMatch(/overflow-y-auto/);
+    expect(menu.className).not.toMatch(/overflow-hidden/);
+  });
 });

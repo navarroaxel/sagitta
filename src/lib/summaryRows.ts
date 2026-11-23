@@ -6,7 +6,7 @@ export const ROWS: { id: string; formula: string }[] = [
   { id: "torsion", formula: "τ = M_t·ρ/J_0 ; φ = M_t·l/(G·J_0) ; J_0 = πd⁴/32" },
   { id: "flexion", formula: "σ = M·y/J ; σ_max = M/W" },
   { id: "shear", formula: "τ = Q·S/(J·s)" },
-  { id: "flecha", formula: "1/ρ = M/(E·J) ; f = ∫M·x dx/(E·J)" },
+  { id: "flecha", formula: "1/ρ = M/(E·J)" },
   { id: "pandeo", formula: "F_k = π²·E·J_min/(c²·l²)" },
   { id: "steiner", formula: "J = J_g + A·d²" },
   { id: "stress", formula: "ρ = T·n" },

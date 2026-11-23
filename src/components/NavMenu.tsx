@@ -70,7 +70,7 @@ export default function NavMenu() {
       {open && (
         <div
           role="menu"
-          className="absolute top-full left-0 z-20 mt-1 min-w-[180px] overflow-hidden rounded border border-stone-200 bg-white shadow-lg dark:border-stone-700 dark:bg-stone-800"
+          className="absolute top-full left-0 z-20 mt-1 max-h-[calc(100dvh-4rem)] min-w-[180px] overflow-y-auto rounded border border-stone-200 bg-white shadow-lg dark:border-stone-700 dark:bg-stone-800"
         >
           {LINKS.map(({ href, labelKey }) => (
             <Link

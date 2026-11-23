@@ -1,4 +1,4 @@
-import { classify, invariants, principalDirection, principalStresses, stressOnPlane, tensor, type Vec3 } from "../stressState";
+import { classify, eigenspaceSize, invariants, principalDirection, principalStresses, stressOnPlane, tensor, type Vec3 } from "../stressState";
 
 // The professor's exercise (MPa): σx = −20, σy = 30, σz = 0, τxy = 10, τyz = 0, τxz = 5.
 const T = tensor(-20, 30, 0, 10, 0, 5);
@@ -73,5 +73,45 @@ describe("classification", () => {
   test("a hydrostatic state has no preferred direction", () => {
     expect(principalDirection(tensor(5, 5, 5, 0, 0, 0), 5)).toBeNull();
     expect(principalStresses(tensor(5, 5, 5, 0, 0, 0))).toEqual([5, 5, 5]);
+  });
+});
+
+describe("stress state: edge cases of the review", () => {
+  test("a hydrostatic state with a fractional value gives three equal principal stresses, not NaN", () => {
+    for (const v of [10.1, 0.1 + 0.2, 1e-7, 123456.789]) {
+      const r = principalStresses(tensor(v, v, v, 0, 0, 0));
+      for (const x of r) expect(x).toBeCloseTo(v, 9);
+      expect(eigenspaceSize(tensor(v, v, v, 0, 0, 0), v)).toBe(3);
+    }
+  });
+
+  test("a repeated root (diag 100, 100, 0) is recognised: no direction for 100, the z axis for 0", () => {
+    const D = tensor(100, 100, 0, 0, 0, 0);
+    const [s1, s2, s3] = principalStresses(D);
+    expect(s1).toBeCloseTo(100, 8);
+    expect(s2).toBeCloseTo(100, 8);
+    expect(s3).toBeCloseTo(0, 8);
+    expect(eigenspaceSize(D, s1)).toBe(2);
+    expect(eigenspaceSize(D, s3)).toBe(1);
+    expect(principalDirection(D, s1)).toBeNull();
+    expect(principalDirection(D, s2)).toBeNull();
+    const z = principalDirection(D, s3)!;
+    expect(Math.abs(z[2])).toBeCloseTo(1, 8);
+  });
+
+  test("classification does not depend on the unit: kPa, MPa and a tiny tensor agree", () => {
+    const small = tensor(0.0001, 0.0002, 0.0003, 0, 0, 0);
+    expect(classify(small)).toBe("triple");
+    expect(classify(tensor(0.1, 0.2, 0.3, 0, 0, 0))).toBe("triple");
+    expect(classify(tensor(100, 200, 300, 0, 0, 0))).toBe("triple");
+    expect(classify(tensor(0.0001, 0.0002, 0, 0, 0, 0))).toBe("double");
+    expect(classify(tensor(0.0001, 0, 0, 0, 0, 0))).toBe("simple");
+    expect(classify(tensor(0, 0, 0, 0, 0, 0))).toBe("null");
+  });
+
+  test("the professor's tensor in kPa gives the same principal stresses ×1000", () => {
+    const k = principalStresses(tensor(-20000, 30000, 0, 10000, 0, 5000));
+    const m = principalStresses(T);
+    k.forEach((x, i) => expect(x / 1000).toBeCloseTo(m[i], 8));
   });
 });

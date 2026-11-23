@@ -41,7 +41,7 @@ describe("Euler buckling (the notes' exercises)", () => {
 });
 
 describe("slenderness and the Euler hyperbola", () => {
-  test("Fk = π²·E·A / (c²·λ²) and σk = π²·E/λ² agree with Fk/A", () => {
+  test("with the effective slenderness λ = c·l / i, Fk = π²·E·A / λ² and σk = π²·E/λ² agree with Fk/A for every c", () => {
     const A = 360;
     const J = 6750;
     const i = radiusOfGyration(J, A);
@@ -50,6 +50,12 @@ describe("slenderness and the Euler hyperbola", () => {
     expect(criticalStress(E, lam)).toBeCloseTo(Fk / A, 8);
     expect((Math.PI ** 2 * E * A) / lam ** 2).toBeCloseTo(Fk, 4);
     expect(lam).toBeCloseTo(800 / 4.33, 0); // i = 15/√12 = 4.33 cm
+    for (const c of [2, 1, 0.7, 0.5]) {
+      const lamC = slenderness(c, 800, i);
+      expect(lamC).toBeCloseTo((c * 800) / i, 8);
+      expect((Math.PI ** 2 * E * A) / lamC ** 2).toBeCloseTo(criticalLoad(E, J, c, 800), 4);
+      expect(criticalStress(E, lamC)).toBeCloseTo(criticalLoad(E, J, c, 800) / A, 8);
+    }
   });
 
   test("end conditions: l0 = c·l with c = 2, 1, 0.7, 0.5; the load scales as 1/c²", () => {

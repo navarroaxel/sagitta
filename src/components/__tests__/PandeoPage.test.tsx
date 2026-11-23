@@ -21,6 +21,14 @@ describe("/pandeo", () => {
     expect(screen.getByTestId("pnd-e3").textContent).toMatch(/218 596 kg.*632 cm/);
     expect(screen.getByTestId("pnd-e4").textContent).toMatch(/744\.34 cm = 7\.44 m/);
     expect(container.querySelectorAll("figure svg")).toHaveLength(1);
+    // every end-condition card has its label (the cantilever one used a key that did not exist)
+    for (const id of ["cantilever", "pinned", "fixed-pinned", "fixed-fixed"]) {
+      const label = screen.getByTestId(`pnd-end-${id}`).querySelector("p")!.textContent;
+      expect(label).toBeTruthy();
+      expect(label).not.toMatch(/undefined/);
+    }
+    expect(screen.getByTestId("pnd-end-cantilever").textContent).toMatch(/c = 2/);
+    expect(screen.getByTestId("pandeo-result").getAttribute("aria-live")).toBe("polite");
     expect(document.body.textContent).not.toMatch(/[A-Za-z]_[A-Za-z0-9]/);
   });
 

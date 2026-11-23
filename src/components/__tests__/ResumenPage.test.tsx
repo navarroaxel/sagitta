@@ -17,6 +17,9 @@ describe("/resumen", () => {
     for (const r of ROWS) expect(screen.getByTestId(`rs-row-${r.id}`)).toBeTruthy();
     expect(screen.getByTestId("rs-row-flexion").textContent).toMatch(/σ = M·y\/J/);
     expect(screen.getByTestId("rs-row-pandeo").textContent).toMatch(/π²·E·Jmin\/\(c²·l²\)/);
+    // the integral for the deflection only holds for a cantilever with x from the free end: it carries its condition
+    expect(screen.getByTestId("rs-row-flecha").textContent).toMatch(/1\/ρ = M\/\(E·J\)/);
+    expect(screen.getByTestId("rs-row-flecha").textContent).toMatch(/cantilever, f = ∫M·x dx.*from the free end/);
     expect(screen.getByTestId("rs-row-steiner").textContent).toMatch(/J = Jg \+ A·d²/);
     for (const q of ["q1", "q2", "q3", "q4", "q5"]) expect(screen.getByTestId(`rs-${q}`)).toBeTruthy();
     expect(screen.getByTestId("rs-q3").textContent).toMatch(/F < Fk.*F = Fk.*F > Fk/);
