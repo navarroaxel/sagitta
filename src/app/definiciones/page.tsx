@@ -9,22 +9,26 @@ import { DEFINITION_GROUPS } from "@/lib/definitions";
 import { SimpleBendingFigure, StressStrainFigure, type StressStrainFocus } from "@/components/DefinitionFigures";
 
 // Terms that carry a figure under their definition (key: group.term); each gets its caption from def.f.<term>.
-const ss = (focus: StressStrainFocus) => (label: string) => <StressStrainFigure focus={focus} label={label} />;
-const FIGURES: Record<string, (label: string) => React.ReactNode> = {
-  "flx.fsimple": (label) => <SimpleBendingFigure label={label} />,
-  "mat.hooke": ss("stiffness"),
-  "mat.rigidez": ss("stiffness"),
-  "mat.sp": ss("P"),
-  "mat.se": ss("E"),
-  "mat.sfl": ss("Fl"),
-  "mat.srot": ss("Rot"),
-  "mat.seguridad": ss("safety"),
-  "mat.defelas": ss("elastic"),
-  "mat.ductilidad": ss("ductility"),
-  "mat.resiliencia": ss("resilience"),
-  "mat.tenacidad": ss("toughness"),
-  "mat.tipos": ss("types"),
+type Spec = "bending" | StressStrainFocus;
+const FIGURES: Record<string, Spec> = {
+  "flx.fsimple": "bending",
+  "mat.hooke": "stiffness",
+  "mat.rigidez": "stiffness",
+  "mat.sp": "P",
+  "mat.se": "E",
+  "mat.sfl": "Fl",
+  "mat.srot": "Rot",
+  "mat.seguridad": "safety",
+  "mat.defelas": "elastic",
+  "mat.ductilidad": "ductility",
+  "mat.resiliencia": "resilience",
+  "mat.tenacidad": "toughness",
+  "mat.tipos": "types",
 };
+
+function renderFigure(spec: Spec, label: string) {
+  return spec === "bending" ? <SimpleBendingFigure label={label} /> : <StressStrainFigure focus={spec} label={label} />;
+}
 
 const ALL = DEFINITION_GROUPS.flatMap((g) => g.terms.map((t) => `${g.id}.${t}`));
 
@@ -91,7 +95,7 @@ export default function DefinicionesPage() {
                     <Sub>{k(`def.d.${term}`)}</Sub>
                     {FIGURES[id] && (
                       <figure className="mt-3 max-w-md rounded-lg border border-stone-200 bg-white p-3 dark:border-stone-700 dark:bg-stone-100">
-                        {FIGURES[id](plain(k(`def.f.${term}`)))}
+                        {renderFigure(FIGURES[id], plain(k(`def.f.${term}`)))}
                         <figcaption className="mt-2 text-center text-[13px] leading-snug text-stone-500 dark:text-stone-600">
                           <Sub>{k(`def.f.${term}`)}</Sub>
                         </figcaption>

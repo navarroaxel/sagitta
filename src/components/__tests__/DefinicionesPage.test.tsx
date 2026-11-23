@@ -72,7 +72,7 @@ describe("/definiciones", () => {
   });
 
   test("the material definitions show the stress–strain diagram with the thing they define highlighted", () => {
-    const { container } = renderPage();
+    renderPage();
     const ids = ["hooke", "rigidez", "sp", "se", "sfl", "srot", "seguridad", "defelas", "ductilidad", "resiliencia", "tenacidad", "tipos"];
     fireEvent.click(screen.getByRole("button", { name: "Open all" }));
     for (const id of ids) {
