@@ -2,73 +2,11 @@
 
 import React from "react";
 import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
-import { Sub, SvgSub, plain } from "@/components/Sub";
+import { Sub, plain } from "@/components/Sub";
 import { Eq, Figure, GuidePage, Para, Section } from "@/components/guide/GuideBits";
 import PandeoCalculator from "@/components/PandeoCalculator";
-import { criticalStress, END_CONDITIONS } from "@/lib/buckling";
-
-const INK = "#16232E";
-const FAINT = "#C9D2D8";
-const LOAD = "#C0392B";
-const MOMENT = "#7A2A9A";
-
-// Euler's hyperbola σk(λ) = π²E/λ² for steel.
-function HyperbolaSVG() {
-  const { t } = useLanguage();
-  const E = 2_100_000;
-  const x0 = 40, x1 = 330, y0 = 150, y1 = 20;
-  const lamMin = 30, lamMax = 200;
-  const smax = criticalStress(E, lamMin);
-  const px = (lam: number) => x0 + ((lam - lamMin) / (lamMax - lamMin)) * (x1 - x0);
-  const py = (s: number) => y0 - (s / smax) * (y0 - y1);
-  const pts: string[] = [];
-  for (let lam = lamMin; lam <= lamMax; lam += 2) pts.push(`${px(lam).toFixed(1)},${py(criticalStress(E, lam)).toFixed(1)}`);
-  return (
-    <svg viewBox="0 0 360 180" className="h-auto w-full" role="img" aria-label={plain(t("pnd.s3.fig"))}>
-      <line x1={x0} y1={y0} x2={x1 + 10} y2={y0} stroke={INK} strokeWidth="1.5" />
-      <line x1={x0} y1={y0} x2={x0} y2={y1 - 6} stroke={INK} strokeWidth="1.5" />
-      <polyline points={pts.join(" ")} fill="none" stroke={LOAD} strokeWidth="2.5" />
-      <text x={x1 + 12} y={y0 + 4} fontSize="13" fontStyle="italic" fill={INK}>{t("pnd.s3.fig.axis.x")}</text>
-      <text x={x0 + 6} y={y1 - 6} fontSize="12" fill={INK}><SvgSub>{t("pnd.s3.fig.axis.y")}</SvgSub></text>
-      <text x={x1 - 90} y={y0 - 70} fontSize="12" fill={LOAD}><SvgSub>σ_k = π²·E / λ²</SvgSub></text>
-    </svg>
-  );
-}
-
-// One bar per end condition with its buckled shape (schematic) and l0 = c·l.
-function EndConditionSVG({ id }: { id: (typeof END_CONDITIONS)[number]["id"] }) {
-  const top = 14, bot = 110;
-  const fixedTop = id === "fixed-fixed";
-  const fixedBottom = id !== "pinned";
-  const shape: Record<string, string> = {
-    cantilever: `M 50 ${bot} C 50 ${bot - 50} 75 ${top + 25} 78 ${top}`,
-    pinned: `M 50 ${bot} C 80 ${bot - 40} 80 ${top + 40} 50 ${top}`,
-    "fixed-pinned": `M 50 ${bot} C 50 ${bot - 35} 76 ${top + 45} 50 ${top}`,
-    "fixed-fixed": `M 50 ${bot} C 50 ${bot - 30} 78 ${bot - 34} 78 ${(top + bot) / 2} C 78 ${top + 34} 50 ${top + 30} 50 ${top}`,
-  };
-  return (
-    <svg viewBox="0 0 100 130" className="h-auto w-full" role="img" aria-hidden="true">
-      <line x1="50" y1={top} x2="50" y2={bot} stroke={FAINT} strokeWidth="1.5" strokeDasharray="3 3" />
-      <path d={shape[id]} fill="none" stroke={MOMENT} strokeWidth="2.5" />
-      {fixedBottom ? (
-        <g stroke={INK} strokeWidth="1.5">
-          <line x1="34" y1={bot} x2="66" y2={bot} />
-          {[36, 44, 52, 60].map((x) => <line key={x} x1={x} y1={bot} x2={x - 5} y2={bot + 8} />)}
-        </g>
-      ) : (
-        <polygon points={`50,${bot} 44,${bot + 10} 56,${bot + 10}`} fill="none" stroke={INK} strokeWidth="1.5" />
-      )}
-      {fixedTop && (
-        <g stroke={INK} strokeWidth="1.5">
-          <line x1="34" y1={top} x2="66" y2={top} />
-          {[36, 44, 52, 60].map((x) => <line key={x} x1={x} y1={top} x2={x - 5} y2={top - 8} />)}
-        </g>
-      )}
-      {!fixedTop && id !== "cantilever" && <polygon points={`${id === "pinned" ? 50 : 50},${top} 44,${top - 10} 56,${top - 10}`} fill="none" stroke={INK} strokeWidth="1.5" />}
-      {id === "cantilever" && <circle cx="78" cy={top} r="2.5" fill={LOAD} />}
-    </svg>
-  );
-}
+import { END_CONDITIONS } from "@/lib/buckling";
+import { EndConditionSVG, HyperbolaSVG } from "@/components/PandeoFigures";
 
 const EXAMPLES = ["e1", "e2", "e3", "e4"] as const;
 

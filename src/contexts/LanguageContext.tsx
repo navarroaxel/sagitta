@@ -2092,6 +2092,42 @@ const EN = {
     "Ductile",
   "def.fig.brittle":
     "Brittle",
+  "def.f.plano":
+    "The bending plane (shaded) contains the axis of the bar and the loads; its trace on the plane of the section is the line of forces.",
+  "def.f.normal":
+    "Normal (straight) bending: the line of forces coincides with a principal axis of inertia of the section. Oblique bending: it forms an angle α with it.",
+  "def.fig.plane":
+    "Bending plane",
+  "def.fig.forceline":
+    "Line of forces",
+  "def.fig.straight":
+    "Normal (straight) bending",
+  "def.fig.oblique":
+    "Oblique bending",
+  "pnd.fig.back":
+    "goes back to straight",
+  "pnd.fig.stays":
+    "stays deviated",
+  "pnd.fig.grows":
+    "keeps deforming",
+  "pnd.fig.axis":
+    "axis of the bar",
+  "pnd.fig.pinned":
+    "pinned",
+  "pnd.fig.guided":
+    "guided along the axis",
+  "pnd.fig.nolateral":
+    "no lateral forces",
+  "def.f.equil":
+    "The bar loaded with F and pushed by a lateral load H: when H stops it goes back to straight (F < F_k), stays deviated (F = F_k) or keeps deforming (F > F_k).",
+  "def.f.fk":
+    "F against the lateral deflection δ: the straight position is stable below F_k and unstable above it; at F_k the bar can stay in any deviated position.",
+  "def.f.esbeltez":
+    "Euler’s hyperbola: the larger the slenderness λ, the lower the critical stress σ_k.",
+  "def.f.l0":
+    "The four end conditions with the buckled shape of the bar: l_0 = c·l is the distance between two inflection points (c = 2, 1, 0.7 and 0.5).",
+  "def.f.hipotesis":
+    "Euler’s ideal bar: pinned at one end, guided along the axis at the other, with the compressive force exactly on the axis and no lateral forces.",
   "def.d.fsimple":
     "Simple bending: the forces on both sides of the section reduce, at its centroid, to two couples normal to the plane of the section, with or without shear. Without shear it is pure bending; with shear, bending and shear.",
   "def.t.plano":
@@ -4268,6 +4304,42 @@ const ES: Record<TranslationKey, string> = {
     "Dúctil",
   "def.fig.brittle":
     "Frágil",
+  "def.f.plano":
+    "El plano de flexión (sombreado) contiene el eje de la barra y las cargas; su traza en el plano de la sección es la línea de fuerzas.",
+  "def.f.normal":
+    "Flexión normal (recta): la línea de fuerzas coincide con un eje principal de inercia de la sección. Flexión oblicua: forma un ángulo α con él.",
+  "def.fig.plane":
+    "Plano de flexión",
+  "def.fig.forceline":
+    "Línea de fuerzas",
+  "def.fig.straight":
+    "Flexión normal (recta)",
+  "def.fig.oblique":
+    "Flexión oblicua",
+  "pnd.fig.back":
+    "vuelve a la recta",
+  "pnd.fig.stays":
+    "queda desviada",
+  "pnd.fig.grows":
+    "sigue deformándose",
+  "pnd.fig.axis":
+    "eje de la barra",
+  "pnd.fig.pinned":
+    "articulada",
+  "pnd.fig.guided":
+    "guiada según el eje",
+  "pnd.fig.nolateral":
+    "sin fuerzas laterales",
+  "def.f.equil":
+    "La barra cargada con F y empujada por una carga lateral H: al cesar H vuelve a la recta (F < F_k), queda desviada (F = F_k) o sigue deformándose (F > F_k).",
+  "def.f.fk":
+    "F contra la deflexión lateral δ: la posición recta es estable por debajo de F_k e inestable por encima; en F_k la barra puede quedar en cualquier posición desviada.",
+  "def.f.esbeltez":
+    "Hipérbola de Euler: cuanto mayor es la esbeltez λ, menor es la tensión crítica σ_k.",
+  "def.f.l0":
+    "Los cuatro vínculos con la forma pandeada de la barra: l_0 = c·l es la distancia entre dos puntos de inflexión (c = 2, 1, 0,7 y 0,5).",
+  "def.f.hipotesis":
+    "La barra ideal de Euler: articulada en un extremo, guiada según el eje en el otro, con la fuerza de compresión exactamente en el eje y sin fuerzas laterales.",
   "def.d.fsimple":
     "Flexión simple: las fuerzas a ambos lados de la sección se reducen, en su baricentro, a dos pares normales al plano de la sección, con o sin esfuerzo de corte. Sin corte se llama flexión pura; con corte, flexión y corte.",
   "def.t.plano":

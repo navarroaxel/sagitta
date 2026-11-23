@@ -234,3 +234,66 @@ export function StressStrainFigure({ focus, label }: { focus: StressStrainFocus;
     </svg>
   );
 }
+
+// The bending plane (axis + loads) in oblique perspective; its trace on the end section is the line of forces.
+export function BendingPlaneFigure({ label }: { label: string }) {
+  const { t } = useLanguage();
+  return (
+    <svg viewBox="0 0 430 190" className="h-auto w-full" role="img" aria-label={label}>
+      <defs>
+        <marker id="def-bp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill={LOAD} />
+        </marker>
+      </defs>
+      {/* the beam: front, top and end faces */}
+      <polygon points="40,60 260,60 260,120 40,120" fill={FAINT} fillOpacity="0.35" stroke={INK} strokeWidth="1.5" />
+      <polygon points="40,60 260,60 296,34 76,34" fill={FAINT} fillOpacity="0.2" stroke={INK} strokeWidth="1.5" />
+      <polygon points="260,60 296,34 296,94 260,120" fill={FAINT} fillOpacity="0.5" stroke={INK} strokeWidth="1.5" />
+      {/* the bending plane: vertical, through the axis, in the middle of the width */}
+      <polygon points="48,150 293,150 293,14 48,14" fill={TENSION} fillOpacity="0.14" stroke={TENSION} strokeWidth="1.5" strokeDasharray="5 3" />
+      <line x1="58" y1="90" x2="278" y2="90" stroke={INK} strokeWidth="1" strokeDasharray="6 3" />
+      <line x1="278" y1="47" x2="278" y2="107" stroke={LOAD} strokeWidth="3.5" />
+      <circle cx="278" cy="77" r="2.5" fill={INK} />
+      <line x1="208" y1="14" x2="208" y2="44" stroke={LOAD} strokeWidth="2.5" markerEnd="url(#def-bp)" />
+      <Txt x="214" y="30" fill={LOAD}>P</Txt>
+      <Txt x="60" y="30" fill={TENSION} fontWeight="600">{t("def.fig.plane")}</Txt>
+      <line x1="280" y1="108" x2="318" y2="138" stroke={LOAD} strokeWidth="1" />
+      <Txt x="320" y="146" fill={LOAD} fontWeight="600">{t("def.fig.forceline")}</Txt>
+    </svg>
+  );
+}
+
+// Normal (straight) bending vs oblique bending: the line of forces on the section against the principal axes.
+export function ObliqueBendingFigure({ label }: { label: string }) {
+  const { t } = useLanguage();
+  const panel = (cx: number, angle: number, title: string) => {
+    const a = (angle * Math.PI) / 180;
+    const dx = 80 * Math.sin(a);
+    const dy = 80 * Math.cos(a);
+    return (
+      <g>
+        <rect x={cx - 30} y="35" width="60" height="100" fill={TENSION} fillOpacity="0.14" stroke={INK} strokeWidth="1.5" />
+        <line x1={cx - 78} y1="85" x2={cx + 78} y2="85" stroke={INK} strokeWidth="1" />
+        <line x1={cx} y1="10" x2={cx} y2="160" stroke={INK} strokeWidth="1" />
+        <Txt x={cx + 82} y="89">{"{x}"}</Txt>
+        <Txt x={cx + 5} y="14">{"{y}"}</Txt>
+        <line x1={cx - dx} y1={85 + dy} x2={cx + dx} y2={85 - dy} stroke={LOAD} strokeWidth="3" strokeDasharray={angle ? undefined : "7 4"} />
+        {angle > 0 && (
+          <g>
+            <path d={`M ${cx} 45 A 40 40 0 0 1 ${cx + 40 * Math.sin(a)} ${85 - 40 * Math.cos(a)}`} fill="none" stroke={INK} strokeWidth="1" />
+            <Txt x={cx + 5} y="32">α</Txt>
+          </g>
+        )}
+        <circle cx={cx} cy="85" r="2.5" fill={INK} />
+        <Txt x={cx} y="180" textAnchor="middle" fontWeight="600">{title}</Txt>
+      </g>
+    );
+  };
+  return (
+    <svg viewBox="0 0 420 190" className="h-auto w-full" role="img" aria-label={label}>
+      {panel(100, 0, t("def.fig.straight"))}
+      {panel(320, 25, t("def.fig.oblique"))}
+      <Txt x="210" y="85" textAnchor="middle" fill={LOAD} fontWeight="600" fontSize="10">{" "}</Txt>
+    </svg>
+  );
+}

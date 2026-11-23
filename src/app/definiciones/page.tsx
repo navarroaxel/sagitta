@@ -6,12 +6,26 @@ import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 import { Sub, plain } from "@/components/Sub";
 import { GuidePage } from "@/components/guide/GuideBits";
 import { DEFINITION_GROUPS } from "@/lib/definitions";
-import { SimpleBendingFigure, StressStrainFigure, type StressStrainFocus } from "@/components/DefinitionFigures";
+import { BifurcationFigure, EndConditionsFigure, EquilibriumBarsFigure, HyperbolaSVG, IdealBarFigure } from "@/components/PandeoFigures";
+import {
+  BendingPlaneFigure,
+  ObliqueBendingFigure,
+  SimpleBendingFigure,
+  StressStrainFigure,
+  type StressStrainFocus,
+} from "@/components/DefinitionFigures";
 
 // Terms that carry a figure under their definition (key: group.term); each gets its caption from def.f.<term>.
-type Spec = "bending" | StressStrainFocus;
+type Spec = "bending" | "plane" | "oblique" | "equil" | "bifurcation" | "hyperbola" | "ends" | "ideal" | StressStrainFocus;
 const FIGURES: Record<string, Spec> = {
   "flx.fsimple": "bending",
+  "flx.plano": "plane",
+  "flx.normal": "oblique",
+  "pnd.equil": "equil",
+  "pnd.fk": "bifurcation",
+  "pnd.esbeltez": "hyperbola",
+  "pnd.l0": "ends",
+  "pnd.hipotesis": "ideal",
   "mat.hooke": "stiffness",
   "mat.rigidez": "stiffness",
   "mat.sp": "P",
@@ -27,7 +41,15 @@ const FIGURES: Record<string, Spec> = {
 };
 
 function renderFigure(spec: Spec, label: string) {
-  return spec === "bending" ? <SimpleBendingFigure label={label} /> : <StressStrainFigure focus={spec} label={label} />;
+  if (spec === "bending") return <SimpleBendingFigure label={label} />;
+  if (spec === "plane") return <BendingPlaneFigure label={label} />;
+  if (spec === "oblique") return <ObliqueBendingFigure label={label} />;
+  if (spec === "equil") return <EquilibriumBarsFigure label={label} />;
+  if (spec === "bifurcation") return <BifurcationFigure label={label} />;
+  if (spec === "hyperbola") return <HyperbolaSVG label={label} />;
+  if (spec === "ends") return <EndConditionsFigure label={label} />;
+  if (spec === "ideal") return <IdealBarFigure label={label} />;
+  return <StressStrainFigure focus={spec} label={label} />;
 }
 
 const ALL = DEFINITION_GROUPS.flatMap((g) => g.terms.map((t) => `${g.id}.${t}`));

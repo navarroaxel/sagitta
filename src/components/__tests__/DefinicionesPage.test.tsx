@@ -68,7 +68,37 @@ describe("/definiciones", () => {
     expect(svg.querySelectorAll("path[marker-end]")).toHaveLength(4); // a couple at each face, twice
     expect(svg.querySelectorAll("line[marker-end]")).toHaveLength(2); // Q only in the second segment
     expect(item.querySelectorAll("figure svg")).toHaveLength(1);
-    expect(container.querySelectorAll("figure svg")).toHaveLength(13); // 1 bending + 12 stress–strain
+    expect(container.querySelectorAll("figure svg")).toHaveLength(20); // 3 bending (simple, plane, oblique) + 12 stress–strain + 5 buckling
+  });
+
+  test("the bending plane and the oblique bending have their diagrams", () => {
+    renderPage();
+    fireEvent.click(screen.getByRole("button", { name: "Open all" }));
+    const plane = screen.getByTestId("def-flx.plano").querySelector("figure svg")!;
+    expect(plane.textContent).toMatch(/Bending plane/);
+    expect(plane.textContent).toMatch(/Line of forces/);
+    expect(plane.querySelectorAll("polygon").length).toBeGreaterThanOrEqual(4); // beam faces + the plane
+    const obl = screen.getByTestId("def-flx.normal").querySelector("figure svg")!;
+    expect(obl.textContent).toMatch(/Normal \(straight\) bending.*Oblique bending/);
+    expect(obl.textContent).toMatch(/α/);
+    expect(obl.querySelectorAll("rect")).toHaveLength(2); // the section, drawn twice
+    expect(document.body.textContent).not.toMatch(/[{}]/);
+  });
+
+  test("the buckling definitions have their diagrams: bars, bifurcation, hyperbola, end conditions, ideal bar", () => {
+    renderPage();
+    fireEvent.click(screen.getByRole("button", { name: "Open all" }));
+    const svg = (id: string) => screen.getByTestId(`def-pnd.${id}`).querySelector("figure svg")!;
+    expect(svg("equil").textContent).toMatch(/Stable.*Indifferent.*Unstable/);
+    expect(svg("equil").textContent).toMatch(/F < Fk.*F = Fk.*F > Fk/);
+    expect(svg("equil").textContent).toMatch(/goes back to straight.*stays deviated.*keeps deforming/);
+    expect(svg("fk").textContent).toMatch(/Fk/);
+    expect(svg("fk").textContent).toMatch(/Stable.*Unstable|Unstable.*Stable/);
+    expect(svg("esbeltez").textContent).toMatch(/σk = π²·E \/ λ²/);
+    expect(svg("l0").textContent).toMatch(/c = 2.*c = 1.*c = 0\.7.*c = 0\.5/);
+    expect(svg("l0").querySelectorAll("path[stroke='#7A2A9A']")).toHaveLength(4); // one buckled shape per end condition
+    expect(svg("hipotesis").textContent).toMatch(/axis of the bar.*pinned.*no lateral forces/);
+    expect(document.body.textContent).not.toMatch(/[{}]/);
   });
 
   test("the material definitions show the stress–strain diagram with the thing they define highlighted", () => {
