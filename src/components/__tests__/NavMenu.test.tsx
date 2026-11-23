@@ -33,7 +33,7 @@ describe("NavMenu", () => {
     expect(menu.className).not.toMatch(/overflow-hidden/);
   });
 
-  test("the study material sits under its own heading, after the guides", () => {
+  test("the links are in three groups, each under its heading: Guides, Tools and Study", () => {
     render(
       <LanguageProvider>
         <NavMenu />
@@ -41,12 +41,23 @@ describe("NavMenu", () => {
     );
     fireEvent.click(screen.getByRole("button"));
     const menu = screen.getByRole("menu");
-    const sep = screen.getByRole("separator");
-    expect(sep.textContent).toBe("Study");
-    const items = Array.from(menu.querySelectorAll("a")).map((a) => a.getAttribute("href"));
-    expect(items.slice(-2)).toEqual(["/resumen", "/definiciones"]);
-    // the heading comes between the last guide and the study links
-    const all = Array.from(menu.children);
-    expect(all.indexOf(sep)).toBe(all.length - 3);
+    const headings = screen.getAllByRole("separator").map((s) => s.textContent);
+    expect(headings).toEqual(["Guides", "Tools", "Study"]);
+    // what sits under each heading: walk the menu in order
+    const groups: Record<string, string[]> = {};
+    let current = "";
+    for (const el of Array.from(menu.children)) {
+      if (el.getAttribute("role") === "separator") {
+        current = el.textContent!;
+        groups[current] = [];
+      } else groups[current].push(el.getAttribute("href")!);
+    }
+    expect(groups["Guides"]).toHaveLength(13);
+    expect(groups["Guides"]).toEqual(expect.arrayContaining(["/learn", "/flexion", "/pandeo", "/corte-en-flexion"]));
+    expect(groups["Tools"]).toEqual(["/quiz", "/frame3d", "/perfiles"]);
+    expect(groups["Study"]).toEqual(["/resumen", "/definiciones"]);
+    // the first heading has no divider above it, the others do
+    expect(screen.getAllByRole("separator")[0].className).not.toMatch(/border-t/);
+    expect(screen.getAllByRole("separator")[1].className).toMatch(/border-t/);
   });
 });

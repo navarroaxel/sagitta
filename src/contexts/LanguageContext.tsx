@@ -2122,6 +2122,8 @@ const EN = {
     "Guide",
   "rs.s2.see":
     "See it in the glossary →",
+  "nav.tools":
+    "Tools",
   "nav.study":
     "Study",
   "def.d.fsimple":
@@ -4330,6 +4332,8 @@ const ES: Record<TranslationKey, string> = {
     "Guía",
   "rs.s2.see":
     "Ver en el glosario →",
+  "nav.tools":
+    "Herramientas",
   "nav.study":
     "Estudio",
   "def.d.fsimple":

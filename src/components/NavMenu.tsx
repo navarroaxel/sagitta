@@ -2,34 +2,46 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 
-// Guide/nav links, grouped into a single dropdown so the header stays compact
-// (especially on mobile).
-const LINKS: { href: string; labelKey: TranslationKey }[] = [
-  { href: "/learn", labelKey: "learn.link" },
-  { href: "/esfuerzos-caracteristicos", labelKey: "esf.link" },
-  { href: "/quiz", labelKey: "quiz.link" },
-  { href: "/frame3d", labelKey: "f3d.link" },
-  { href: "/perfiles", labelKey: "prof.link" },
-  { href: "/flexion-compuesta", labelKey: "ecc.link" },
-  { href: "/corte-de-seccion", labelKey: "cut.link" },
-  { href: "/flexion", labelKey: "flx.link" },
-  { href: "/torsion", labelKey: "tor.link" },
-  { href: "/axil", labelKey: "axl.link" },
-  { href: "/superficies-planas", labelKey: "pln.link" },
-  { href: "/propiedades-materiales", labelKey: "mat.link" },
-  { href: "/estado-de-tension", labelKey: "tns.link" },
-  { href: "/pandeo", labelKey: "pnd.link" },
-  { href: "/flecha", labelKey: "fla.link" },
-  { href: "/corte-en-flexion", labelKey: "shr.link" },
-];
+type NavLink = { href: string; labelKey: TranslationKey };
 
-// Study material, shown under its own heading at the end of the menu.
-const STUDY: { href: string; labelKey: TranslationKey }[] = [
-  { href: "/resumen", labelKey: "rs.link" },
-  { href: "/definiciones", labelKey: "def.link" },
+// The links of the dropdown (so the header stays compact, especially on mobile), in three groups, each under a heading.
+const GROUPS: { headingKey: TranslationKey; links: NavLink[] }[] = [
+  {
+    headingKey: "nav.guides",
+    links: [
+      { href: "/learn", labelKey: "learn.link" },
+      { href: "/esfuerzos-caracteristicos", labelKey: "esf.link" },
+      { href: "/flexion-compuesta", labelKey: "ecc.link" },
+      { href: "/corte-de-seccion", labelKey: "cut.link" },
+      { href: "/flexion", labelKey: "flx.link" },
+      { href: "/torsion", labelKey: "tor.link" },
+      { href: "/axil", labelKey: "axl.link" },
+      { href: "/superficies-planas", labelKey: "pln.link" },
+      { href: "/propiedades-materiales", labelKey: "mat.link" },
+      { href: "/estado-de-tension", labelKey: "tns.link" },
+      { href: "/pandeo", labelKey: "pnd.link" },
+      { href: "/flecha", labelKey: "fla.link" },
+      { href: "/corte-en-flexion", labelKey: "shr.link" },
+    ],
+  },
+  {
+    headingKey: "nav.tools",
+    links: [
+      { href: "/quiz", labelKey: "quiz.link" },
+      { href: "/frame3d", labelKey: "f3d.link" },
+      { href: "/perfiles", labelKey: "prof.link" },
+    ],
+  },
+  {
+    headingKey: "nav.study",
+    links: [
+      { href: "/resumen", labelKey: "rs.link" },
+      { href: "/definiciones", labelKey: "def.link" },
+    ],
+  },
 ];
 
 export default function NavMenu() {
@@ -94,15 +106,22 @@ export default function NavMenu() {
           role="menu"
           className="absolute top-full left-0 z-20 mt-1 max-h-[calc(100dvh-4rem)] min-w-[180px] overflow-y-auto rounded border border-stone-200 bg-white shadow-lg dark:border-stone-700 dark:bg-stone-800"
         >
-          {LINKS.map(({ href, labelKey }) => item(href, labelKey))}
-          <div
-            role="separator"
-            aria-label={t("nav.study")}
-            className="mt-1 border-t border-stone-200 px-4 pt-2 pb-1 text-xs font-medium tracking-wider text-stone-500 uppercase dark:border-stone-700 dark:text-stone-400"
-          >
-            {t("nav.study")}
-          </div>
-          {STUDY.map(({ href, labelKey }) => item(href, labelKey))}
+          {GROUPS.map(({ headingKey, links }, g) => (
+            <React.Fragment key={headingKey}>
+              <div
+                role="separator"
+                aria-label={t(headingKey)}
+                className={`px-4 pt-2 pb-1 text-xs font-medium tracking-wider text-stone-500 uppercase dark:text-stone-400 ${
+                  g > 0
+                    ? "mt-1 border-t border-stone-200 dark:border-stone-700"
+                    : ""
+                }`}
+              >
+                {t(headingKey)}
+              </div>
+              {links.map(({ href, labelKey }) => item(href, labelKey))}
+            </React.Fragment>
+          ))}
         </div>
       )}
     </div>
