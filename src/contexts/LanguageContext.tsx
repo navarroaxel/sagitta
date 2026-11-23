@@ -2065,7 +2065,7 @@ const EN = {
   "def.f.sp":
     "σ_P: where the straight part of the diagram ends.",
   "def.f.se":
-    "σ_E: the end of the elastic period.",
+    "σ_E: the end of the elastic period. The green line, up to σ_P, is the proportional part (Hooke); between σ_P and σ_E the curve bends away from it: proportionality is lost although the strain is still recovered.",
   "def.f.sfl":
     "σ_Fl: the yield stretch, where the strain grows with no appreciable increase of the load.",
   "def.f.srot":
@@ -4241,7 +4241,7 @@ const ES: Record<TranslationKey, string> = {
   "def.f.sp":
     "σ_P: donde termina la recta del diagrama.",
   "def.f.se":
-    "σ_E: el final del período elástico.",
+    "σ_E: el final del período elástico. La recta verde, hasta σ_P, es la parte proporcional (Hooke); entre σ_P y σ_E la curva se separa de ella: se pierde la proporcionalidad aunque la deformación todavía se recupera.",
   "def.f.sfl":
     "σ_Fl: el tramo de fluencia, donde la deformación crece sin aumento apreciable de la carga.",
   "def.f.srot":

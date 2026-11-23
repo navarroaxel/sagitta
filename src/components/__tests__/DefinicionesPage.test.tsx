@@ -88,6 +88,11 @@ describe("/definiciones", () => {
     expect(text("resiliencia")).toMatch(/U = ½·σe² \/ E/);
     expect(text("tipos")).toMatch(/Brittle.*Ductile|Ductile.*Brittle/);
     expect(text("defelas")).toMatch(/permanent strain/);
+    // σE keeps the proportional line (teal, up to σP) marked, to see where proportionality is lost
+    const se = screen.getByTestId("def-mat.se").querySelector("figure svg")!;
+    expect(se.textContent).toMatch(/σP.*σE|σE.*σP/);
+    expect(se.querySelectorAll('line[stroke="#0B8A8A"][stroke-width="4.5"]')).toHaveLength(1);
+    expect(screen.getByTestId("def-mat.se").textContent).toMatch(/proportionality is lost/);
     // resilience and toughness are areas: a filled path under the curve
     const fills = (id: string) => screen.getByTestId(`def-mat.${id}`).querySelectorAll("figure svg path[fill]:not([fill=none])").length;
     expect(fills("resiliencia")).toBe(1);

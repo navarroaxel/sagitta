@@ -158,6 +158,12 @@ export function StressStrainFigure({ focus, label }: { focus: StressStrainFocus;
       )}
       {focus === "E" && (
         <g>
+          {/* the proportional part (up to σP) stays marked, so the stretch where proportionality is lost (σP to σE) stands out */}
+          {guide(P[1], P[0], "σ_P", TENSION)}
+          <line x1={P[0]} y1={P[1]} x2={P[0]} y2="170" stroke={FAINT} strokeWidth="1" strokeDasharray="3 3" />
+          <line x1={O[0]} y1={O[1]} x2={P[0]} y2={P[1]} stroke={TENSION} strokeWidth="4.5" />
+          <circle cx={P[0]} cy={P[1]} r="3.5" fill={TENSION} stroke="#fff" strokeWidth="1" />
+          <text x="104" y="136" fontSize="11" fill={TENSION}>E = tg β</text>
           {guide(E[1], E[0], "σ_E", LOAD)}
           <line x1={E[0]} y1={E[1]} x2={E[0]} y2="170" stroke={FAINT} strokeWidth="1" strokeDasharray="3 3" />
           {dot(E)}
