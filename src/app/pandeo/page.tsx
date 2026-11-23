@@ -141,7 +141,7 @@ export default function PandeoPage() {
           {EXAMPLES.map((e) => (
             <div key={e} data-testid={`pnd-${e}`} className="rounded-lg border border-stone-200 bg-white p-4 dark:border-stone-700 dark:bg-stone-900">
               <p className="mb-1 text-[15px] font-semibold"><Sub>{t(`pnd.s5.${e}.t` as TranslationKey)}</Sub></p>
-              <p className="font-mono text-[14px] leading-relaxed"><Sub>{t(`pnd.s5.${e}.r` as TranslationKey)}</Sub></p>
+              <p className="whitespace-pre-line font-mono text-[14px] leading-relaxed"><Sub>{t(`pnd.s5.${e}.r` as TranslationKey)}</Sub></p>
             </div>
           ))}
         </div>

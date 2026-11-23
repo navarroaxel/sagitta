@@ -217,7 +217,7 @@ export default function TorsionPage() {
                   <p className="mb-2 text-[15px] text-stone-600 dark:text-stone-400">
                     <Sub>{t(`tor.s7.${e}.p` as TranslationKey)}</Sub>
                   </p>
-                  <p className="font-mono text-[14px] leading-relaxed">
+                  <p className="whitespace-pre-line font-mono text-[14px] leading-relaxed">
                     <Sub>{t(`tor.s7.${e}.r` as TranslationKey)}</Sub>
                   </p>
                 </div>
