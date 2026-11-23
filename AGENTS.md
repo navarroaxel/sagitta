@@ -17,7 +17,7 @@ A Next.js 16 + React 19 client-side app that renders structural internal force d
 ```bash
 npm install     # required: installs jsdom + testing-library for the component tests
 npm run dev     # dev server on localhost:3000
-npm test        # full Vitest suite (1017 checks, 2 projects — must stay green)
+npm test        # full Vitest suite (1022 checks, 2 projects — must stay green)
 npm run build   # production build (must stay clean)
 npm run lint    # ESLint
 npx tsc --noEmit  # TypeScript check
@@ -85,6 +85,7 @@ How diagrams are *drawn and labelled* is selected by the **sign-convention setti
 | `src/app/estado-de-tension/page.tsx`, `src/lib/stressState.ts`, `src/components/StressStateCalculator.tsx` | `/estado-de-tension` — the professor's worked exercise "Estado de tensión EJ1" (tensor −20/10/5 · 10/30/0 · 5/0/0 MPa): invariants I1/I2/I3 and classification (triple/double/simple), stress vector ρ = T·n and its σ / τ components, principal stresses (cubic) and directions ((T−σI)n = 0, one unknown fixed — here the cross product of two rows). Figures (`TensionFigures.tsx`): the stress element with its 9 components, the stress vector ρ = σ·n + τ on a plane, the principal element and the three Mohr circles drawn to scale from `principalStresses` (Mohr is not in the notes). The explanatory text is ours; every number of the exercise is recomputed in `stressState.test.ts` (directions up to sign) and a calculator takes any tensor + normal. Bilingual, `tns.*` |
 | `src/app/propiedades-materiales/page.tsx`, `src/lib/materials.ts` | `/propiedades-materiales` — the theory behind the course, from the .docx "Propiedades de los materiales" (not in the repo): volume vs surface forces, stress ρ → σ, τ and the 3 types of state, the tensile test, σ–ε diagram (σP, σE, σFl, σRot, ε_R; Hooke σ = E·ε, E = tg β; figure redrawn in SVG), safety factor σadm = σE/ν (ν = 2–4), stiffness / ductility / resilience (U = ½σe²/E) / toughness / hardness, ductile / brittle / plastic, and the equations of equivalence (N, Qy, Qz, MT, My, Mz). The notes write MT with a plus and My/Mz with τ; the page uses the difference and σ and says so. Bilingual, `mat.*` |
 | `src/app/resumen/page.tsx`, `src/lib/summaryRows.ts` | `/resumen` — one-page course summary: a formula table (one row per guide, formulas in kg and cm), the five theory questions of the exam with a model answer (torsion hypotheses, Collignon–Jourawski, stable/unstable/indifferent equilibrium, Hooke, Steiner), a figure per answer (`ResumenFigures.tsx`), and a print button (print styles hide the header and un-clip `GuidePage`). Bilingual, `rs.*`; the rows live in `summaryRows.ts` because a Next page cannot export extra names |
+| `src/app/definiciones/page.tsx`, `src/lib/definitions.ts` | `/definiciones` — glossary of the guides (55 terms in 9 groups: plane areas, material properties, state of stress, axial, bending, shear, torsion, deflection, buckling), one accordion item per term (`aria-expanded` buttons, panels `hidden` until opened, all shown when printing) with open-all / close-all and a link to the guide of each group. Definitions are shortened from the notes keeping their meaning, with the formulas the notes use; keys `def.g.<group>`, `def.t.<id>`, `def.d.<id>`; the groups and term ids live in `definitions.ts`. Adding a term = add its two keys (EN + ES) and its id to its group |
 | `src/lib/solver.ts`                                  | `solveFrame` — direct stiffness method, Gaussian elimination                                                                                     |
 | `src/lib/sampling.ts`                                | `sampleMember` — N/Q/M at 64+ stations along a member                                                                                            |
 | `src/lib/solve.ts`                                   | Adapter: id-based model → solver input + `sampleMember` calls                                                                                    |
@@ -127,7 +128,7 @@ How diagrams are *drawn and labelled* is selected by the **sign-convention setti
 - `sectionCut.test.ts`, `sectionLoads.test.ts`, `resultantDiagram.test.ts` — the cut's σ field (`stressAt`, `sectionRects`, `memberStressField`: equals the cut's field at its own z, varies along the member, same maximum as the stress check), the loads in the section's axes (free body only), and the resultant diagram's geometry (σ max / σ min where the parallels meet the baseline, σ = 0 on the E.N., baseline ⟂ E.N.).
 - Components: `SectionCut.test.tsx` (figures, loads on the prism, σ along z on the prism's sides and the plate moving with the slider, legend width, full screen + the Z slider inside it), `Frame3DPage.test.tsx` (collapsible editor panel, full screen on the frame canvas).
 
-Total 1017 checks (`npm test`). Component tests render with `@testing-library/react`; remember to add a test there when adding a canvas layer or fixing a rendering bug.
+Total 1022 checks (`npm test`). Component tests render with `@testing-library/react`; remember to add a test there when adding a canvas layer or fixing a rendering bug.
 
 ## 3D presets: numbering (do not "fix" this)
 

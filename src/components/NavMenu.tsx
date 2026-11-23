@@ -25,6 +25,7 @@ const LINKS: { href: string; labelKey: TranslationKey }[] = [
   { href: "/flecha", labelKey: "fla.link" },
   { href: "/corte-en-flexion", labelKey: "shr.link" },
   { href: "/resumen", labelKey: "rs.link" },
+  { href: "/definiciones", labelKey: "def.link" },
 ];
 
 export default function NavMenu() {

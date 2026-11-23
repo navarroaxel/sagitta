@@ -11,6 +11,7 @@ import PandeoPage from "@/app/pandeo/page";
 import TensionPage from "@/app/estado-de-tension/page";
 import MaterialesPage from "@/app/propiedades-materiales/page";
 import ResumenPage from "@/app/resumen/page";
+import DefinicionesPage from "@/app/definiciones/page";
 import React from "react";
 
 const PAGES: [string, React.ComponentType][] = [
@@ -24,6 +25,7 @@ const PAGES: [string, React.ComponentType][] = [
   ["estado-de-tension", TensionPage],
   ["propiedades-materiales", MaterialesPage],
   ["resumen", ResumenPage],
+  ["definiciones", DefinicionesPage],
 ];
 
 // Starts in English; one toggle switches to Spanish.

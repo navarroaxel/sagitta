@@ -1888,6 +1888,258 @@ const EN = {
     "Indifferent",
   "rs.fig.unstable":
     "Unstable",
+  "def.link":
+    "Definitions",
+  "def.title":
+    "Definitions",
+  "def.lead":
+    "The definitions of every guide in one place, grouped by topic: open the ones you need, or all of them. The wording is shortened but keeps the meaning of the notes.",
+  "def.footer":
+    "Summarised from the guides of this site; each group links to the guide where the definition is explained and used.",
+  "def.expand":
+    "Open all",
+  "def.collapse":
+    "Close all",
+  "def.go":
+    "Open the guide →",
+  "def.g.pln":
+    "Plane areas",
+  "def.g.mat":
+    "Material properties",
+  "def.g.tns":
+    "State of stress",
+  "def.g.axl":
+    "Axial load",
+  "def.g.flx":
+    "Bending",
+  "def.g.shr":
+    "Shear in bending",
+  "def.g.tor":
+    "Torsion",
+  "def.g.fla":
+    "Deflection",
+  "def.g.pnd":
+    "Buckling",
+  "def.t.estatico":
+    "Static moment",
+  "def.d.estatico":
+    "Product of the area of a surface by the distance from its centroid to an axis: {S}_x = ∫ {y} {dA}. It is measured in cm³. About a centroidal axis it is zero.",
+  "def.t.baricentro":
+    "Centroid",
+  "def.d.baricentro":
+    "Point whose coordinates are the static moments divided by the area: {x}_g = {S}_y / {A}, {y}_g = {S}_x / {A}. It coincides with the centre of gravity only if the body is homogeneous and of constant thickness.",
+  "def.t.inercia":
+    "Moment of inertia",
+  "def.d.inercia":
+    "Integral of each element of area times the square of its distance to an axis: {J}_x = ∫ {y}² {dA}. It is always positive and measured in cm⁴.",
+  "def.t.centrifugo":
+    "Product of inertia",
+  "def.d.centrifugo":
+    "Integral of each element of area times its two distances to the axes: {J}_xy = ∫ {x}·{y} {dA}. It can be positive, negative or zero.",
+  "def.t.polar":
+    "Polar moment",
+  "def.d.polar":
+    "Integral of each element of area times the square of its distance to a point: {J}_p = ∫ ρ² {dA} = {J}_x + {J}_y.",
+  "def.t.giro":
+    "Radius of gyration",
+  "def.d.giro":
+    "Distance {i} at which the whole area would have to be concentrated to give the same moment of inertia: {J} = {A}·{i}², that is {i} = √({J}/{A}).",
+  "def.t.steiner":
+    "Steiner’s theorem (parallel axes)",
+  "def.d.steiner":
+    "The moment of inertia about any axis equals the moment about the parallel centroidal axis plus the area times the square of the distance between the axes: {J} = {J}_g + {A}·{d}². Hence the centroidal moment is the smallest of all the parallel axes.",
+  "def.t.ppales":
+    "Principal axes of inertia",
+  "def.d.ppales":
+    "Pair of perpendicular axes about which the moment of inertia is maximum and minimum; the product of inertia about them is zero. If the two principal moments are equal (circle, square), every orthogonal pair through the centroid is principal.",
+  "def.t.mppales":
+    "Principal moments of inertia",
+  "def.d.mppales":
+    "The maximum and minimum moments of inertia, computed about the principal axes.",
+  "def.t.fvol":
+    "Body (mass) forces",
+  "def.d.fvol":
+    "They act on every particle of the body. They can be gravitational, inertial or electromagnetic.",
+  "def.t.fsup":
+    "Surface forces",
+  "def.d.fsup":
+    "They act on the surface of the body, as contact or pressure forces. The pressure {p} is the force per unit of surface.",
+  "def.t.tension":
+    "Stress",
+  "def.d.tension":
+    "Unit stress: force per unit of surface, in kg/cm², kN/cm² or T/m². It is the mutual action between the particles of the body, caused by the external forces.",
+  "def.t.estado":
+    "State of stress",
+  "def.d.estado":
+    "The set of the stresses ρ on the infinitely many planes through a point. It is triple or spatial if ρ can have any orientation, double or plane if ρ stays parallel to a plane, and simple or linear if it stays parallel to a direction.",
+  "def.t.defesp":
+    "Strain",
+  "def.d.defesp":
+    "Unit elongation: the elongation divided by the initial length, ε = Δ{l} / {l}. It has no units.",
+  "def.t.defelas":
+    "Elastic and plastic deformation",
+  "def.d.defelas":
+    "Elastic: the body returns to its original shape when the load is removed. Plastic: it does not, and stays deformed.",
+  "def.t.hooke":
+    "Hooke’s law",
+  "def.d.hooke":
+    "In the straight part of the σ–ε diagram the stresses are proportional to the strains: σ = {E}·ε. Young’s modulus {E} is the slope of the line.",
+  "def.t.sp":
+    "Proportionality limit σ_P",
+  "def.d.sp":
+    "Stress up to which the σ–ε diagram is a straight line. Above it, the strains grow faster than the stress.",
+  "def.t.se":
+    "Elastic limit σ_E",
+  "def.d.se":
+    "Stress above which the deformations become permanent.",
+  "def.t.sfl":
+    "Yield limit σ_Fl",
+  "def.d.sfl":
+    "Stress at which the material deforms with no appreciable increase of the load.",
+  "def.t.srot":
+    "Ultimate limit σ_Rot",
+  "def.d.srot":
+    "Maximum stress the material can resist.",
+  "def.t.seguridad":
+    "Safety factor",
+  "def.d.seguridad":
+    "Number ν (2 to 4 in the notes) by which the elastic limit is divided to get the admissible stress: σ_adm = σ_E / ν.",
+  "def.t.rigidez":
+    "Stiffness",
+  "def.d.rigidez":
+    "Property of opposing deformation; it grows with Young’s modulus {E}.",
+  "def.t.ductilidad":
+    "Ductility",
+  "def.d.ductilidad":
+    "Ability to deform in the plastic or inelastic period.",
+  "def.t.resiliencia":
+    "Resilience",
+  "def.d.resiliencia":
+    "Capacity to give back the energy stored by deformation in the elastic period. It is the area under the σ–ε curve in that period: up to σ_e it is {U} = ½·σ_e² / {E}.",
+  "def.t.tenacidad":
+    "Toughness",
+  "def.d.tenacidad":
+    "Capacity to absorb energy in the inelastic or large-deformation period. It is the area under the σ–ε curve up to rupture.",
+  "def.t.dureza":
+    "Hardness",
+  "def.d.dureza":
+    "Capacity to resist mechanical actions such as punching, abrasion and cutting.",
+  "def.t.tipos":
+    "Ductile, brittle and plastic material",
+  "def.d.tipos":
+    "Ductile: it deforms a lot before breaking, so the failure can be foreseen (steels, aluminium). Brittle: it deforms little before breaking, with σ_P very close to σ_Rot (glass, plain concrete, marble). Plastic: large deformations for very small load increments, with little elasticity (some asphalts, clay).",
+  "def.t.tensor":
+    "Stress tensor",
+  "def.d.tensor":
+    "The stresses on three perpendicular planes through a point: each plane gives one normal and two shear stresses. It is symmetric (τ_xy = τ_yx, …) and has six independent components.",
+  "def.t.vector":
+    "Stress vector",
+  "def.d.vector":
+    "ρ = {T}·{n}: the tensor applied to the normal {n} of the plane. Its component along {n} is the normal stress σ and what is left is the shear stress τ, with |ρ|² = σ² + τ².",
+  "def.t.invariantes":
+    "Invariants",
+  "def.d.invariantes":
+    "{I}_1, {I}_2 and {I}_3: combinations of the tensor components that do not change when the axes are rotated. They are the symmetric functions of the principal stresses.",
+  "def.t.tppales":
+    "Principal stresses and planes",
+  "def.d.tppales":
+    "The principal planes are the three perpendicular planes on which the shear stress is zero; the normal stress on them is a principal stress. They are the roots of σ³ − {I}_1·σ² + {I}_2·σ − {I}_3 = 0.",
+  "def.t.clasif":
+    "Classification of the state",
+  "def.d.clasif":
+    "Triple or spatial if {I}_3 ≠ 0; double or plane if {I}_3 = 0 and {I}_2 ≠ 0; simple or uniaxial if only {I}_1 ≠ 0.",
+  "def.t.fsimple":
+    "Simple and pure bending",
+  "def.d.fsimple":
+    "Simple bending: the forces on both sides of the section reduce, at its centroid, to two couples normal to the plane of the section, with or without shear. Without shear it is pure bending; with shear, bending and shear.",
+  "def.t.plano":
+    "Bending plane and line of forces",
+  "def.d.plano":
+    "The bending plane is the plane in which the bending couples act. The line of forces is the trace of that plane with the plane of the section.",
+  "def.t.normal":
+    "Normal and oblique bending",
+  "def.d.normal":
+    "It is normal (straight) if the line of forces coincides with a principal axis of inertia of the section, and oblique if it forms an angle α with it.",
+  "def.t.en":
+    "Neutral axis (N.A.)",
+  "def.d.en":
+    "Fibre that does not change length in bending and therefore carries no stress (σ = 0). It is a centroidal axis of the section.",
+  "def.t.w":
+    "Section modulus {W}",
+  "def.d.w":
+    "{W} = {J} / {v}, with {v} the distance from the neutral axis to the farthest fibre. The maximum stress is σ_max = {M} / {W}. It is measured in cm³.",
+  "def.t.cpuro":
+    "Pure shear",
+  "def.d.cpuro":
+    "It occurs, exactly or approximately, in shearing and in rivets or bolts joining plates: the stress is taken as uniform over the resisting area {A}, τ = {Q} / {A}.",
+  "def.t.corte":
+    "Shear force {Q}",
+  "def.d.corte":
+    "Resultant of all the forces on the left of the section. On the right the resultant is equal and opposite.",
+  "def.t.cauchy":
+    "Cauchy’s theorem",
+  "def.d.cauchy":
+    "On two perpendicular planes, the components of the shear stresses normal to their common edge are equal, and both point towards the edge or both away from it: τ_xy = τ_yx.",
+  "def.t.resbal":
+    "Sliding stresses",
+  "def.d.resbal":
+    "Shear stresses on the horizontal planes of a beam under shear and moment: shear on vertical planes implies shear on horizontal planes, and vice versa. They are present in all fibres.",
+  "def.t.jour":
+    "Jourawski–Colignon formula",
+  "def.d.jour":
+    "τ_m = {Q}·{S}_x / ({J}_x·{s}): mean value of the shear stress along a cut of width {s}. {S}_x is the static moment, about the neutral axis, of the part of the section on one side of the cut.",
+  "def.t.tsimple":
+    "Simple torsion and torque",
+  "def.d.tsimple":
+    "A solid is in simple torsion if the forces on one side of the section reduce to a single couple in the plane of the section. Its moment {M}_t is the torque.",
+  "def.t.htor":
+    "Hypotheses of circular torsion",
+  "def.d.htor":
+    "The geometric axis stays straight, the other longitudinal fibres become helices, and each cross-section stays plane and perpendicular to the axis: it only rotates about its centre. So τ is proportional to the distance ρ from the centre, zero at the centre and maximum at the edge.",
+  "def.t.g":
+    "Shear modulus {G}",
+  "def.d.g":
+    "It links the distortion to the shear stress (Hooke’s law in shear). It is measured in kg/cm² and {G} = 0.385·{E}, close to 0.4·{E} for steel.",
+  "def.t.unitario":
+    "Twist per unit length",
+  "def.d.unitario":
+    "φ/{l} = {M}_t / ({G}·{J}_0): angle of twist per unit length. The product {G}·{J}_0 is the torsional rigidity.",
+  "def.t.axil":
+    "Simple tension or compression",
+  "def.d.axil":
+    "A bar works like this when the load is applied at the centroid and equals {N} over the whole section, with {Q} = {M}_f = {M}_t = 0. The stress is uniform: σ = {N} / {A}.",
+  "def.t.stvenant":
+    "Saint-Venant’s principle",
+  "def.d.stvenant":
+    "Far from the ends, the section normal to the axis stays plane and parallel to itself after the deformation, so there is no stress concentration.",
+  "def.t.equil":
+    "Stable, indifferent and unstable equilibrium",
+  "def.d.equil":
+    "With {F} < {F}_k, when the transverse load {H} stops the bar goes back to its straight position (stable). With {F} = {F}_k it stays in the deviated position (indifferent). With {F} > {F}_k it keeps deforming until it breaks (unstable).",
+  "def.t.fk":
+    "Critical buckling load {F}_k",
+  "def.d.fk":
+    "Value of the force at which buckling starts; it corresponds to indifferent equilibrium. According to Euler, {F}_k = π²·{E}·{J}_min / (c²·{l}²).",
+  "def.t.esbeltez":
+    "Slenderness λ",
+  "def.d.esbeltez":
+    "λ = {l}_0 / {i}_min. The larger the slenderness, the smaller the critical stress σ_k = π²·{E} / λ² (Euler hyperbola).",
+  "def.t.l0":
+    "Equivalent length and coefficient {c}",
+  "def.d.l0":
+    "{l}_0 = {c}·{l} is the distance between two consecutive inflection points of the deformed bar. {c} is 2, 1, 0.7 and 0.5 for cantilever, pinned, fixed–pinned and fixed–fixed.",
+  "def.t.hipotesis":
+    "Euler’s hypotheses",
+  "def.d.hipotesis":
+    "Both ends pinned, without friction, one of them guided along the axis of the bar; the compressive force acts exactly on the axis; the material is elastic and homogeneous ({E} constant); no lateral forces act.",
+  "def.t.curvatura":
+    "Curvature",
+  "def.d.curvatura":
+    "1/ρ = {M} / ({E}·{J}): inverse of the radius of curvature ρ of the axis of the beam.",
+  "def.t.flecha":
+    "Deflection and elastic line",
+  "def.d.flecha":
+    "The elastic line is the shape the axis of the beam takes when it bends. Integrating its equation once gives the slope θ({z}) and twice, the deflection {y}({z}), the displacement of the axis.",
 } as const;
 
 export type TranslationKey = keyof typeof EN;
@@ -3770,6 +4022,258 @@ const ES: Record<TranslationKey, string> = {
     "Indiferente",
   "rs.fig.unstable":
     "Inestable",
+  "def.link":
+    "Definiciones",
+  "def.title":
+    "Definiciones",
+  "def.lead":
+    "Las definiciones de todas las guías juntas, agrupadas por tema: abrí las que necesites, o todas. La redacción está resumida pero conserva el sentido de los apuntes.",
+  "def.footer":
+    "Resumido de las guías de este sitio; cada grupo enlaza a la guía donde la definición se explica y se usa.",
+  "def.expand":
+    "Abrir todas",
+  "def.collapse":
+    "Cerrar todas",
+  "def.go":
+    "Ir a la guía →",
+  "def.g.pln":
+    "Superficies planas",
+  "def.g.mat":
+    "Propiedades de los materiales",
+  "def.g.tns":
+    "Estado de tensión",
+  "def.g.axl":
+    "Esfuerzo axil",
+  "def.g.flx":
+    "Flexión",
+  "def.g.shr":
+    "Corte en flexión",
+  "def.g.tor":
+    "Torsión",
+  "def.g.fla":
+    "Flecha",
+  "def.g.pnd":
+    "Pandeo",
+  "def.t.estatico":
+    "Momento estático",
+  "def.d.estatico":
+    "Producto del área de la superficie por la distancia de su baricentro a un eje: {S}_x = ∫ {y} {dA}. Se mide en cm³. Respecto de un eje baricéntrico vale cero.",
+  "def.t.baricentro":
+    "Baricentro",
+  "def.d.baricentro":
+    "Punto cuyas coordenadas son los momentos estáticos divididos por el área: {x}_g = {S}_y / {A}, {y}_g = {S}_x / {A}. Coincide con el centro de gravedad solo si el cuerpo es homogéneo y de espesor constante.",
+  "def.t.inercia":
+    "Momento de inercia",
+  "def.d.inercia":
+    "Integral de cada elemento de área por el cuadrado de su distancia a un eje: {J}_x = ∫ {y}² {dA}. Es siempre positivo y se mide en cm⁴.",
+  "def.t.centrifugo":
+    "Momento centrífugo",
+  "def.d.centrifugo":
+    "Integral de cada elemento de área por sus dos distancias a los ejes: {J}_xy = ∫ {x}·{y} {dA}. Puede ser positivo, negativo o nulo.",
+  "def.t.polar":
+    "Momento polar",
+  "def.d.polar":
+    "Integral de cada elemento de área por el cuadrado de su distancia a un punto: {J}_p = ∫ ρ² {dA} = {J}_x + {J}_y.",
+  "def.t.giro":
+    "Radio de giro",
+  "def.d.giro":
+    "Distancia {i} a la que habría que concentrar toda el área para obtener el mismo momento de inercia: {J} = {A}·{i}², o sea {i} = √({J}/{A}).",
+  "def.t.steiner":
+    "Teorema de Steiner (ejes paralelos)",
+  "def.d.steiner":
+    "El momento de inercia respecto de un eje cualquiera es el momento respecto del eje baricéntrico paralelo más el área por el cuadrado de la distancia entre los ejes: {J} = {J}_g + {A}·{d}². Por eso el momento baricéntrico es el menor de todos los ejes paralelos.",
+  "def.t.ppales":
+    "Ejes principales de inercia",
+  "def.d.ppales":
+    "Par de ejes perpendiculares respecto de los cuales el momento de inercia es máximo y mínimo; el momento centrífugo respecto de ellos es nulo. Si los dos momentos principales son iguales (círculo, cuadrado), todo par ortogonal por el baricentro es principal.",
+  "def.t.mppales":
+    "Momentos principales de inercia",
+  "def.d.mppales":
+    "Los momentos de inercia máximo y mínimo, calculados respecto de los ejes principales.",
+  "def.t.fvol":
+    "Fuerzas de volumen (de masa)",
+  "def.d.fvol":
+    "Actúan sobre cada partícula del cuerpo. Pueden ser gravitacionales, de inercia o electromagnéticas.",
+  "def.t.fsup":
+    "Fuerzas de superficie",
+  "def.d.fsup":
+    "Actúan sobre la superficie del cuerpo, como fuerzas de contacto o de presión. La presión {p} es la fuerza por unidad de superficie.",
+  "def.t.tension":
+    "Tensión",
+  "def.d.tension":
+    "Esfuerzo unitario: fuerza por unidad de superficie, en kg/cm², kN/cm² o T/m². Son las acciones mutuas entre las partículas del cuerpo, causadas por las fuerzas exteriores.",
+  "def.t.estado":
+    "Estado de tensión",
+  "def.d.estado":
+    "Conjunto de las tensiones ρ sobre los infinitos planos que pasan por un punto. Es triple o espacial si ρ tiene cualquier orientación, doble o plano si ρ se mantiene paralela a un plano, y simple o lineal si se mantiene paralela a una dirección.",
+  "def.t.defesp":
+    "Deformación específica",
+  "def.d.defesp":
+    "Alargamiento unitario: el alargamiento dividido por la longitud inicial, ε = Δ{l} / {l}. No tiene unidades.",
+  "def.t.defelas":
+    "Deformación elástica y plástica",
+  "def.d.defelas":
+    "Elástica: el cuerpo vuelve a su forma original al cesar el esfuerzo. Plástica: no vuelve, y queda deformado.",
+  "def.t.hooke":
+    "Ley de Hooke",
+  "def.d.hooke":
+    "En el tramo recto del diagrama σ–ε las tensiones son proporcionales a las deformaciones: σ = {E}·ε. El módulo de Young {E} es la pendiente de la recta.",
+  "def.t.sp":
+    "Límite de proporcionalidad σ_P",
+  "def.d.sp":
+    "Tensión hasta la cual el diagrama σ–ε es una recta. Por encima, las deformaciones crecen más que la tensión.",
+  "def.t.se":
+    "Límite de elasticidad σ_E",
+  "def.d.se":
+    "Tensión por encima de la cual las deformaciones pasan a ser permanentes.",
+  "def.t.sfl":
+    "Límite de fluencia σ_Fl",
+  "def.d.sfl":
+    "Tensión a la que el material se deforma sin aumento apreciable de la carga.",
+  "def.t.srot":
+    "Límite de rotura σ_Rot",
+  "def.d.srot":
+    "Máxima tensión que puede resistir el material.",
+  "def.t.seguridad":
+    "Coeficiente de seguridad",
+  "def.d.seguridad":
+    "Número ν (de 2 a 4 en el apunte) por el que se divide la tensión de elasticidad para obtener la tensión admisible: σ_adm = σ_E / ν.",
+  "def.t.rigidez":
+    "Rigidez",
+  "def.d.rigidez":
+    "Propiedad de oponerse a la deformación; aumenta con el módulo de Young {E}.",
+  "def.t.ductilidad":
+    "Ductilidad",
+  "def.d.ductilidad":
+    "Deformabilidad en el período plástico o anelástico.",
+  "def.t.resiliencia":
+    "Resiliencia",
+  "def.d.resiliencia":
+    "Capacidad de restituir la energía almacenada por deformación en el período elástico. Es el área bajo la curva σ–ε en ese período: hasta σ_e vale {U} = ½·σ_e² / {E}.",
+  "def.t.tenacidad":
+    "Tenacidad",
+  "def.d.tenacidad":
+    "Capacidad de absorber energía en el período anelástico o de grandes deformaciones. Es el área bajo la curva σ–ε hasta la rotura.",
+  "def.t.dureza":
+    "Dureza",
+  "def.d.dureza":
+    "Capacidad de resistir acciones mecánicas como el punzonado, la abrasión y el corte.",
+  "def.t.tipos":
+    "Material dúctil, frágil y plástico",
+  "def.d.tipos":
+    "Dúctil: tiene grandes deformaciones antes de romperse, lo que permite prever la ruina (aceros, aluminio). Frágil: se deforma poco antes de romperse, con σ_P muy cerca de σ_Rot (vidrio, hormigón simple, mármol). Plástico: grandes deformaciones para incrementos muy pequeños de carga, con poca elasticidad (algunos asfaltos, arcilla).",
+  "def.t.tensor":
+    "Tensor de tensiones",
+  "def.d.tensor":
+    "Conjunto de las tensiones sobre tres planos perpendiculares por un punto: cada plano aporta una tensión normal y dos tangenciales. Es simétrico (τ_xy = τ_yx, …) y tiene seis componentes independientes.",
+  "def.t.vector":
+    "Vector tensión",
+  "def.d.vector":
+    "ρ = {T}·{n}: el tensor aplicado a la normal {n} del plano. Su componente según {n} es la tensión normal σ y lo que queda es la tangencial τ, con |ρ|² = σ² + τ².",
+  "def.t.invariantes":
+    "Invariantes",
+  "def.d.invariantes":
+    "{I}_1, {I}_2 e {I}_3: combinaciones de las componentes del tensor que no cambian al rotar los ejes. Son las funciones simétricas de las tensiones principales.",
+  "def.t.tppales":
+    "Tensiones y planos principales",
+  "def.d.tppales":
+    "Los planos principales son los tres planos perpendiculares sobre los que la tensión tangencial es nula; la tensión normal sobre ellos es una tensión principal. Son las raíces de σ³ − {I}_1·σ² + {I}_2·σ − {I}_3 = 0.",
+  "def.t.clasif":
+    "Clasificación del estado",
+  "def.d.clasif":
+    "Triple o espacial si {I}_3 ≠ 0; doble o plano si {I}_3 = 0 e {I}_2 ≠ 0; simple o uniaxial si solo {I}_1 ≠ 0.",
+  "def.t.fsimple":
+    "Flexión simple y flexión pura",
+  "def.d.fsimple":
+    "Flexión simple: las fuerzas a ambos lados de la sección se reducen, en su baricentro, a dos pares normales al plano de la sección, con o sin esfuerzo de corte. Sin corte se llama flexión pura; con corte, flexión y corte.",
+  "def.t.plano":
+    "Plano de flexión y línea de fuerzas",
+  "def.d.plano":
+    "El plano de flexión es el plano en el que actúan los pares flexores. La línea de fuerzas es la traza de ese plano con el plano de la sección.",
+  "def.t.normal":
+    "Flexión normal y oblicua",
+  "def.d.normal":
+    "Es normal (recta) si la línea de fuerzas coincide con un eje principal de inercia de la sección, y oblicua si forma un ángulo α con él.",
+  "def.t.en":
+    "Eje neutro (E.N.)",
+  "def.d.en":
+    "Fibra que no cambia de longitud al flexar y por lo tanto no tiene tensión (σ = 0). Es un eje baricéntrico de la sección.",
+  "def.t.w":
+    "Módulo resistente {W}",
+  "def.d.w":
+    "{W} = {J} / {v}, con {v} la distancia del eje neutro a la fibra más alejada. La tensión máxima es σ_max = {M} / {W}. Se mide en cm³.",
+  "def.t.cpuro":
+    "Corte puro",
+  "def.d.cpuro":
+    "Se da, exacta o aproximadamente, en la cizalladura y en remaches o tornillos que unen chapas: la tensión se toma uniforme en el área {A} que resiste, τ = {Q} / {A}.",
+  "def.t.corte":
+    "Esfuerzo de corte {Q}",
+  "def.d.corte":
+    "Resultante de todas las fuerzas que actúan a la izquierda de la sección. A la derecha la resultante es igual y opuesta.",
+  "def.t.cauchy":
+    "Teorema de Cauchy",
+  "def.d.cauchy":
+    "En dos planos perpendiculares, las componentes de las tensiones tangenciales normales a la arista común son iguales, y las dos se acercan a la arista o las dos se alejan de ella: τ_xy = τ_yx.",
+  "def.t.resbal":
+    "Tensiones de resbalamiento",
+  "def.d.resbal":
+    "Tensiones tangenciales en planos horizontales de una viga con corte y momento: el corte en planos verticales implica corte en planos horizontales, y viceversa. Están presentes en todas las fibras.",
+  "def.t.jour":
+    "Fórmula de Jourawski–Colignon",
+  "def.d.jour":
+    "τ_m = {Q}·{S}_x / ({J}_x·{s}): valor medio de la tensión tangencial a lo largo de un corte de ancho {s}. {S}_x es el momento estático, respecto del eje neutro, de la parte de la sección a un lado del corte.",
+  "def.t.tsimple":
+    "Torsión simple y momento torsor",
+  "def.d.tsimple":
+    "Un sólido trabaja a torsión simple si las fuerzas de un lado de la sección se reducen a una única cupla situada en el plano de la sección. Su momento {M}_t es el momento torsor.",
+  "def.t.htor":
+    "Hipótesis de la torsión circular",
+  "def.d.htor":
+    "El eje geométrico sigue recto, las demás fibras longitudinales se transforman en hélices, y cada sección recta permanece plana y perpendicular al eje: solo gira en torno a su centro. Por eso τ es proporcional a la distancia ρ al centro, nula en el centro y máxima en el borde.",
+  "def.t.g":
+    "Módulo de elasticidad transversal {G}",
+  "def.d.g":
+    "Vincula la distorsión con la tensión tangencial (ley de Hooke al corte). Se mide en kg/cm² y {G} = 0,385·{E}, cerca de 0,4·{E} para el acero.",
+  "def.t.unitario":
+    "Ángulo unitario de torsión",
+  "def.d.unitario":
+    "φ/{l} = {M}_t / ({G}·{J}_0): ángulo de giro por unidad de longitud. El producto {G}·{J}_0 es el módulo de rigidez a la torsión.",
+  "def.t.axil":
+    "Tracción o compresión simple",
+  "def.d.axil":
+    "Una barra trabaja así cuando la carga se aplica en el baricentro y vale {N} en toda la sección, con {Q} = {M}_f = {M}_t = 0. La tensión es uniforme: σ = {N} / {A}.",
+  "def.t.stvenant":
+    "Principio de Saint-Venant",
+  "def.d.stvenant":
+    "Lejos de los extremos, la sección normal al eje se mantiene plana y paralela a sí misma luego de la deformación, por lo tanto no hay concentración de tensiones.",
+  "def.t.equil":
+    "Equilibrio estable, indiferente e inestable",
+  "def.d.equil":
+    "Con {F} < {F}_k, al cesar la carga transversal {H} la barra vuelve a su posición recta (estable). Con {F} = {F}_k queda en la posición desviada (indiferente). Con {F} > {F}_k sigue deformándose hasta la rotura (inestable).",
+  "def.t.fk":
+    "Carga crítica de pandeo {F}_k",
+  "def.d.fk":
+    "Valor de la fuerza con el que se inicia el pandeo; corresponde al equilibrio indiferente. Según Euler, {F}_k = π²·{E}·{J}_min / (c²·{l}²).",
+  "def.t.esbeltez":
+    "Esbeltez λ",
+  "def.d.esbeltez":
+    "λ = {l}_0 / {i}_min. Cuanto mayor es la esbeltez, menor es la tensión crítica σ_k = π²·{E} / λ² (hipérbola de Euler).",
+  "def.t.l0":
+    "Longitud equivalente y coeficiente {c}",
+  "def.d.l0":
+    "{l}_0 = {c}·{l} es la distancia entre dos puntos de inflexión consecutivos de la barra deformada. {c} vale 2, 1, 0,7 y 0,5 para ménsula, articulada, empotrada–articulada y empotrada–empotrada.",
+  "def.t.hipotesis":
+    "Hipótesis de Euler",
+  "def.d.hipotesis":
+    "Ambos extremos articulados, sin rozamiento, uno de ellos guiado según el eje de la barra; la fuerza de compresión actúa exactamente en el eje; el material es elástico y homogéneo ({E} constante); no actúan fuerzas laterales.",
+  "def.t.curvatura":
+    "Curvatura",
+  "def.d.curvatura":
+    "1/ρ = {M} / ({E}·{J}): inversa del radio de curvatura ρ del eje de la viga.",
+  "def.t.flecha":
+    "Flecha y línea elástica",
+  "def.d.flecha":
+    "La línea elástica es la forma que toma el eje de la viga al flexar. Integrar una vez su ecuación da la pendiente θ({z}) y dos veces, la flecha {y}({z}), el desplazamiento del eje.",
 };
 
 const translations: Record<Language, Record<TranslationKey, string>> = {
