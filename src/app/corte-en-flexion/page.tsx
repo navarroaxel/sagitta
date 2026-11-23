@@ -194,6 +194,10 @@ export default function CorteEnFlexionPage() {
           </Figure>
         </div>
         <Eq>{t("shr.s3.e1")}</Eq>
+        <Para k="shr.s3.why" />
+        <p data-testid="shr-why-example" className="mb-4 max-w-[66ch] rounded-md bg-stone-100 px-4 py-2 font-mono text-[14px] dark:bg-stone-900">
+          <Sub>{t("shr.s3.why.ex")}</Sub>
+        </p>
         <Para k="shr.s3.p3" />
         <Eq>{t("shr.s3.e2")}</Eq>
         <Para k="shr.s3.p4" />

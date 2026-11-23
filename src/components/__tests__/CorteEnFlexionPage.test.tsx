@@ -89,4 +89,29 @@ describe("/corte-en-flexion", () => {
     expect(arrows[2][1]).toBeGreaterThan(arrows[2][0]); // dT on the cut points right: dT = dN balances the net (leftwards) push
     expect(document.body.textContent).not.toMatch(/[{}]/);
   });
+
+  test("it says why dN is not zero: the moment changes by dM = Q·dx, so there is shear only if Q ≠ 0 — with a checked example", () => {
+    render(
+      <LanguageProvider>
+        <CorteEnFlexionPage />
+      </LanguageProvider>,
+    );
+    const why = document.body.textContent!;
+    expect(why).toMatch(/Not in the notes/);
+    expect(why).toMatch(/dM = Q·dx/);
+    expect(why).toMatch(/is not zero because Q is not zero/);
+    expect(why).toMatch(/pure bending \(Q = 0\).*dN = 0/);
+    // the numbers of the example: S = 375, J = 6 667, N = 5 625, N + dN = 5 681, dN = 56
+    const J = (10 * 20 ** 3) / 12;
+    const S = 10 * 5 * 7.5;
+    const N = (100_000 * S) / J;
+    const N2 = (101_000 * S) / J;
+    expect(S).toBe(375);
+    expect(N).toBeCloseTo(5625, 0);
+    expect(N2).toBeCloseTo(5681, 0);
+    expect(N2 - N).toBeCloseTo((1000 * S) / J, 8);
+    expect(N2 - N).toBeCloseTo(56, 0);
+    const ex = screen.getByTestId("shr-why-example").textContent!;
+    expect(ex).toMatch(/375 cm³.*6 667 cm⁴.*5 625 kg.*5 681 kg.*56 kg/);
+  });
 });

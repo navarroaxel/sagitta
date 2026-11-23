@@ -1152,7 +1152,7 @@ const EN = {
   "shr.steps.title":
     "Step by step: the cuts we make to the beam",
   "shr.steps.1":
-    "We cut the beam with two sections, 1 and 2, a distance dx apart. The slice is in equilibrium with M and Q on face 1 and M + dM and Q on face 2 (the shear hardly changes over dx; the moment does).",
+    "We cut the beam with two sections, 1 and 2, a distance dx apart. The slice is in equilibrium with M and Q on face 1 and M + dM and Q on face 2: the shear hardly changes over dx, but the moment grows by dM = Q·dx.",
   "shr.steps.2":
     "The moments give linear normal stresses, zero at the neutral axis: σ = M·y/J_x on face 1 and σ + dσ = (M + dM)·y/J_x on face 2, a little larger.",
   "shr.steps.3":
@@ -1164,7 +1164,7 @@ const EN = {
   "shr.steps.section":
     "cross-section",
   "shr.steps.5":
-    "We isolate the part Ω: the normal stresses on it give N on face 1 and N + dN on face 2, and the shear force dT on the cut balances the difference, dT = dN.",
+    "We isolate the part Ω: the normal stresses on it give N on face 1 and N + dN on face 2 (it is not the same force because the moment changed, dM = Q·dx), and the shear force dT on the cut balances the difference, dT = dN.",
   "shr.steps.plane":
     "straight s: a plane",
   "shr.steps.curved":
@@ -1177,6 +1177,10 @@ const EN = {
     "The Jourawski–Colignon formula",
   "shr.s3.p1":
     "The existence of shear produces tangential stresses in the plane of the section. Take a beam of constant section and a slice of length {dx} between sections 1 and 2. Because of bending, at a distance {y} from the neutral axis the stress is σ = {M}·{y}/{J}_x on section 1 and σ + dσ = ({M} + {dM})·{y}/{J}_x on section 2.",
+  "shr.s3.why":
+    "Not in the notes, but it is what explains why there is shear at all: N here is the force given by the normal stresses on the part Ω only (not the axial force of the bar, which is zero in bending), and N = ({M}/{J}_x)·{S}_x. Between faces 1 and 2 the moment goes from {M} to {M} + {dM}, and that change is the shear force: {dM} = {Q}·{dx}. So {dN} = ({dM}/{J}_x)·{S}_x = {Q}·{dx}·{S}_x/{J}_x is not zero because {Q} is not zero. In pure bending ({Q} = 0) the two forces are equal, {dN} = 0, no force {dT} is needed on the cut and there is no shear stress.",
+  "shr.s3.why.ex":
+    "Example: rectangle 10 × 20 cm, cut at y = 5 cm above the neutral axis: S_x = 10·5·7.5 = 375 cm³, J_x = 10·20³/12 = 6 667 cm⁴. With M = 100 000 kg·cm the part Ω carries N ≈ 5 625 kg; with M + dM = 101 000 kg·cm, N + dN ≈ 5 681 kg. The difference dN ≈ 56 kg is what dT must balance (dN = dM·S_x/J_x = 1 000·375/6 667).",
   "shr.s3.p2":
     "Now cut off part of the slice by a cylindrical surface of width s. On the hatched part (area Ω) the normal stresses give a force N on section 1 and N + {dN} on section 2; both are coaxial and their resultant is",
   "shr.s3.e1":
@@ -3384,7 +3388,7 @@ const ES: Record<TranslationKey, string> = {
   "shr.steps.title":
     "Paso a paso: los cortes que le hacemos a la viga",
   "shr.steps.1":
-    "Cortamos la viga con dos secciones, 1 y 2, separadas dx. La rebanada queda en equilibrio con M y Q en la cara 1 y M + dM y Q en la cara 2 (el corte casi no cambia en dx; el momento sí).",
+    "Cortamos la viga con dos secciones, 1 y 2, separadas dx. La rebanada queda en equilibrio con M y Q en la cara 1 y M + dM y Q en la cara 2: el corte casi no cambia en dx, pero el momento crece dM = Q·dx.",
   "shr.steps.2":
     "Los momentos producen tensiones normales lineales, nulas en el eje neutro: σ = M·y/J_x en la cara 1 y σ + dσ = (M + dM)·y/J_x en la cara 2, un poco mayor.",
   "shr.steps.3":
@@ -3396,7 +3400,7 @@ const ES: Record<TranslationKey, string> = {
   "shr.steps.section":
     "sección transversal",
   "shr.steps.5":
-    "Aislamos la parte Ω: las tensiones normales sobre ella dan N en la cara 1 y N + dN en la 2, y la fuerza de corte dT sobre el corte equilibra la diferencia, dT = dN.",
+    "Aislamos la parte Ω: las tensiones normales sobre ella dan N en la cara 1 y N + dN en la 2 (no es la misma fuerza porque el momento cambió, dM = Q·dx), y la fuerza de corte dT sobre el corte equilibra la diferencia, dT = dN.",
   "shr.steps.plane":
     "s recta: un plano",
   "shr.steps.curved":
@@ -3409,6 +3413,10 @@ const ES: Record<TranslationKey, string> = {
     "La fórmula de Jourawski–Colignon",
   "shr.s3.p1":
     "La existencia del corte origina tensiones tangenciales en el plano de la sección. Sea una viga de sección constante y una rebanada de largo {dx} entre las secciones 1 y 2. Por la flexión, a una distancia {y} del eje neutro la tensión es σ = {M}·{y}/{J}_x en la sección 1 y σ + dσ = ({M} + {dM})·{y}/{J}_x en la 2.",
+  "shr.s3.why":
+    "No está en el apunte, pero es lo que explica por qué hay corte: acá N es la fuerza que dan las tensiones normales sobre la parte Ω solamente (no la fuerza axial de la barra, que es nula en flexión), y N = ({M}/{J}_x)·{S}_x. Entre las caras 1 y 2 el momento pasa de {M} a {M} + {dM}, y ese cambio es el esfuerzo de corte: {dM} = {Q}·{dx}. Por eso {dN} = ({dM}/{J}_x)·{S}_x = {Q}·{dx}·{S}_x/{J}_x no es cero: porque {Q} no es cero. En flexión pura ({Q} = 0) las dos fuerzas son iguales, {dN} = 0, no hace falta ninguna fuerza {dT} sobre el corte y no hay tensión tangencial.",
+  "shr.s3.why.ex":
+    "Ejemplo: rectángulo de 10 × 20 cm, corte a y = 5 cm sobre el eje neutro: S_x = 10·5·7,5 = 375 cm³, J_x = 10·20³/12 = 6 667 cm⁴. Con M = 100 000 kg·cm la parte Ω soporta N ≈ 5 625 kg; con M + dM = 101 000 kg·cm, N + dN ≈ 5 681 kg. La diferencia dN ≈ 56 kg es la que tiene que equilibrar dT (dN = dM·S_x/J_x = 1 000·375/6 667).",
   "shr.s3.p2":
     "Ahora separamos una parte de la rebanada por una superficie cilíndrica de ancho s. En la parte rayada (área Ω) las tensiones normales generan una fuerza N en la sección 1 y N + {dN} en la 2; ambas son coaxiales y su resultante es",
   "shr.s3.e1":
