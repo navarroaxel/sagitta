@@ -16,10 +16,17 @@ const readHash = () => {
     return "";
   }
 };
+// Every change of the fragment bumps a version: what the reader closed by hand is forgotten, so the link target is shown again.
+let hashVersion = 0;
 const subscribeHash = (cb: () => void) => {
-  window.addEventListener("hashchange", cb);
-  return () => window.removeEventListener("hashchange", cb);
+  const onChange = () => {
+    hashVersion += 1;
+    cb();
+  };
+  window.addEventListener("hashchange", onChange);
+  return () => window.removeEventListener("hashchange", onChange);
 };
+const readSnapshot = () => `${hashVersion}|${readHash()}`;
 
 const ALL = DEFINITION_GROUPS.flatMap((g) => g.terms.map((t) => `${g.id}.${t}`));
 
@@ -27,13 +34,14 @@ export default function DefinicionesPage() {
   const { t } = useLanguage();
   const k = (s: string) => t(s as TranslationKey);
   // /definiciones#group.term opens that term and scrolls to it (the links of /resumen); read from the URL without a state copy
-  const hash = useSyncExternalStore(subscribeHash, readHash, () => "");
+  const snapshot = useSyncExternalStore(subscribeHash, readSnapshot, () => "0|");
+  const hash = snapshot.slice(snapshot.indexOf("|") + 1);
   const fromUrl = ALL.includes(hash) ? hash : "";
   const [opened, setOpened] = useState<Set<string>>(new Set());
   const [closed, setClosed] = useState<Set<string>>(new Set());
-  // a close is remembered together with the fragment it was made under, so a new fragment re-opens its term even after
-  // "Close all" (the target of a link is always shown), while the reader can still close it during that visit
-  const closeKey = (id: string) => `${id}|${fromUrl}`;
+  // a close is remembered together with the fragment (and its version) it was made under, so a new fragment shows its
+  // term again (also coming back to the same one), while the reader can still close it during that visit
+  const closeKey = (id: string) => `${id}|${snapshot}`;
   const isOpen = (id: string) => !closed.has(closeKey(id)) && (opened.has(id) || id === fromUrl);
   useEffect(() => {
     if (fromUrl) requestAnimationFrame(() => document.getElementById(`def-item-${fromUrl}`)?.scrollIntoView?.());
@@ -53,27 +61,8 @@ export default function DefinicionesPage() {
       return next;
     });
   };
-  const openAll = () => {
-    setOpened(new Set(ALL));
-    setClosed(new Set());
-  };
-  const closeAll = () => {
-    setOpened(new Set());
-    setClosed(new Set(ALL.map(closeKey)));
-  };
-  const btn =
-    "rounded-md border border-teal-600 px-3 py-1.5 text-sm font-medium text-teal-700 hover:bg-teal-50 print:hidden dark:border-teal-400 dark:text-teal-300 dark:hover:bg-stone-800";
   return (
     <GuidePage title="def.title" kicker="Σ" lead="def.lead" footer="def.footer">
-      <div className="mb-2 flex gap-2">
-        <button type="button" className={btn} onClick={openAll}>
-          {t("def.expand")}
-        </button>
-        <button type="button" className={btn} onClick={closeAll}>
-          {t("def.collapse")}
-        </button>
-      </div>
-
       {DEFINITION_GROUPS.map((g) => (
         <section key={g.id} data-testid={`def-group-${g.id}`} className="mt-10 border-t border-stone-200 pt-6 dark:border-stone-800">
           <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">

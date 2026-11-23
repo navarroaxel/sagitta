@@ -4,6 +4,11 @@ import { LanguageProvider, useLanguage } from "@/contexts/LanguageContext";
 import DefinicionesPage from "@/app/definiciones/page";
 import { DEFINITION_GROUPS } from "@/lib/definitions";
 
+// there is no "open all" button: open every term one by one
+const openAll = () => {
+  for (const b of Array.from(document.querySelectorAll("li button[aria-expanded=false]"))) fireEvent.click(b);
+};
+
 const renderPage = () =>
   render(
     <LanguageProvider>
@@ -26,7 +31,7 @@ describe("/definiciones", () => {
     }
   });
 
-  test("a term opens and closes, and open / close all work", () => {
+  test("a term opens and closes", () => {
     renderPage();
     const steiner = screen.getByTestId("def-pln.steiner");
     const button = steiner.querySelector("button")!;
@@ -38,10 +43,9 @@ describe("/definiciones", () => {
     fireEvent.click(button);
     expect(button.getAttribute("aria-expanded")).toBe("false");
 
-    fireEvent.click(screen.getByRole("button", { name: "Open all" }));
-    expect(document.querySelectorAll("[role=region][hidden]")).toHaveLength(0);
-    fireEvent.click(screen.getByRole("button", { name: "Close all" }));
-    expect(document.querySelectorAll("[role=region]:not([hidden])")).toHaveLength(0);
+    // there is no open-all / close-all button: the terms are opened one by one
+    expect(screen.queryByRole("button", { name: /open all|close all/i })).toBeNull();
+    expect(document.querySelectorAll("section > button, main > div > button")).toHaveLength(0);
   });
 
   test("each group links to its guide and the key definitions carry the notes' formulas", () => {
@@ -73,7 +77,7 @@ describe("/definiciones", () => {
 
   test("the bending plane and the oblique bending have their diagrams", () => {
     renderPage();
-    fireEvent.click(screen.getByRole("button", { name: "Open all" }));
+    openAll();
     const plane = screen.getByTestId("def-flx.plano").querySelector("figure svg")!;
     expect(plane.textContent).toMatch(/Bending plane/);
     expect(plane.textContent).toMatch(/the plane of the drawing/);
@@ -90,7 +94,7 @@ describe("/definiciones", () => {
 
   test("the neutral axis has its diagram: the bent segment and the linear σ with zero on the axis", () => {
     renderPage();
-    fireEvent.click(screen.getByRole("button", { name: "Open all" }));
+    openAll();
     const svg = screen.getByTestId("def-flx.en").querySelector("figure svg")!;
     expect(svg.textContent).toMatch(/shortens.*lengthens/);
     expect(svg.textContent).toMatch(/Compression/);
@@ -102,7 +106,7 @@ describe("/definiciones", () => {
 
   test("every plane-area definition has a diagram with what it adds up", () => {
     renderPage();
-    fireEvent.click(screen.getByRole("button", { name: "Open all" }));
+    openAll();
     const svg = (id: string) => screen.getByTestId(`def-pln.${id}`).querySelector("figure svg")!;
     for (const id of ["estatico", "baricentro", "inercia", "centrifugo", "polar", "giro", "steiner", "ppales", "mppales"]) expect(svg(id), id).toBeTruthy();
     expect(svg("estatico").textContent).toMatch(/Sx = ∫ y dA/);
@@ -136,7 +140,7 @@ describe("/definiciones", () => {
 
   test("the buckling definitions have their diagrams: bars, bifurcation, hyperbola, end conditions, ideal bar", () => {
     renderPage();
-    fireEvent.click(screen.getByRole("button", { name: "Open all" }));
+    openAll();
     const svg = (id: string) => screen.getByTestId(`def-pnd.${id}`).querySelector("figure svg")!;
     expect(svg("equil").textContent).toMatch(/Stable.*Indifferent.*Unstable/);
     expect(svg("equil").textContent).toMatch(/F < Fk.*F = Fk.*F > Fk/);
@@ -153,7 +157,7 @@ describe("/definiciones", () => {
   test("the material definitions show the stress–strain diagram with the thing they define highlighted", () => {
     renderPage();
     const ids = ["hooke", "rigidez", "sp", "se", "sfl", "srot", "seguridad", "defelas", "ductilidad", "resiliencia", "tenacidad", "tipos"];
-    fireEvent.click(screen.getByRole("button", { name: "Open all" }));
+    openAll();
     for (const id of ids) {
       const svg = screen.getByTestId(`def-mat.${id}`).querySelector("figure svg");
       expect(svg, id).toBeTruthy();
@@ -202,7 +206,7 @@ describe("/definiciones", () => {
 
   test("every shear-in-bending definition has a diagram: pure shear, Q, Cauchy, sliding stresses and Jourawski", () => {
     renderPage();
-    fireEvent.click(screen.getByRole("button", { name: "Open all" }));
+    openAll();
     const svg = (id: string) => screen.getByTestId(`def-shr.${id}`).querySelector("figure svg")!;
     for (const id of ["cpuro", "corte", "cauchy", "resbal", "jour"]) expect(svg(id), id).toBeTruthy();
     expect(svg("cpuro").textContent).toMatch(/rivet.*shear plane.*Q = P.*area A of the rivet.*τ = Q \/ A/);
@@ -249,20 +253,24 @@ describe("/definiciones", () => {
     }
   });
 
-  test("a new fragment opens its term even after Close all, and the reader can still close it", () => {
+  test("a fragment opens its term, the reader can close it, and a new fragment (or coming back to one) shows its target again", () => {
     window.location.hash = "#pln.steiner";
     try {
       renderPage();
       const btn = (id: string) => screen.getByTestId(`def-${id}`).querySelector("button")!;
-      fireEvent.click(screen.getByRole("button", { name: "Close all" }));
+      const go = (hash: string) =>
+        act(() => {
+          window.location.hash = hash;
+          window.dispatchEvent(new HashChangeEvent("hashchange"));
+        });
+      expect(btn("pln.steiner").getAttribute("aria-expanded")).toBe("true");
+      fireEvent.click(btn("pln.steiner")); // the reader closes it
       expect(btn("pln.steiner").getAttribute("aria-expanded")).toBe("false");
-      act(() => {
-        window.location.hash = "#pln.inercia";
-        window.dispatchEvent(new HashChangeEvent("hashchange"));
-      });
-      expect(btn("pln.inercia").getAttribute("aria-expanded")).toBe("true"); // the target is shown again
+      go("#pln.inercia");
+      expect(btn("pln.inercia").getAttribute("aria-expanded")).toBe("true");
       expect(btn("pln.steiner").getAttribute("aria-expanded")).toBe("false");
-      fireEvent.click(btn("pln.inercia")); // closing it by hand still works during that visit
+      go("#pln.steiner"); // coming back to the first one shows it again
+      expect(btn("pln.steiner").getAttribute("aria-expanded")).toBe("true");
       expect(btn("pln.inercia").getAttribute("aria-expanded")).toBe("false");
     } finally {
       window.location.hash = "";
@@ -271,7 +279,7 @@ describe("/definiciones", () => {
 
   test("bending and shear: the moments of the two faces differ (M and M + dM), in pure bending they are equal", () => {
     renderPage();
-    fireEvent.click(screen.getByRole("button", { name: "Open all" }));
+    openAll();
     const svg = screen.getByTestId("def-flx.fsimple").querySelector("figure svg")!;
     const ms = Array.from(svg.querySelectorAll("text")).map((t) => t.textContent).filter((t) => t === "M" || t === "M + dM");
     expect(ms).toEqual(["M", "M", "M", "M + dM"]); // pure bending: M, M; with shear: M, M + dM
@@ -280,7 +288,7 @@ describe("/definiciones", () => {
 
   test("the torsion hypotheses and Jourawski also have their figure (shared with /resumen)", () => {
     renderPage();
-    fireEvent.click(screen.getByRole("button", { name: "Open all" }));
+    openAll();
     expect(screen.getByTestId("def-tor.htor").querySelector("figure svg")!.textContent).toMatch(/τmax.*τ = 0/);
     expect(screen.getByTestId("def-shr.jour").querySelector("figure svg")!.textContent).toMatch(/E\.N\..*S.*s.*τmax/);
   });
@@ -302,6 +310,6 @@ describe("/definiciones", () => {
       </LanguageProvider>,
     );
     expect(screen.getByTestId("def-pln.estatico").textContent).toMatch(/Momento estático/);
-    expect(screen.getByRole("button", { name: "Abrir todas" })).toBeTruthy();
+    expect(screen.getByTestId("def-pln.inercia").textContent).toMatch(/Momento de inercia/);
   });
 });

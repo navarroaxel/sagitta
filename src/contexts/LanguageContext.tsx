@@ -1868,10 +1868,6 @@ const EN = {
     "The definitions of every guide in one place, grouped by topic: open the ones you need, or all of them. The wording is shortened but keeps the meaning of the notes.",
   "def.footer":
     "Summarised from the guides of this site; each group links to the guide where the definition is explained and used.",
-  "def.expand":
-    "Open all",
-  "def.collapse":
-    "Close all",
   "def.go":
     "Open the guide →",
   "def.g.pln":
@@ -4122,10 +4118,6 @@ const ES: Record<TranslationKey, string> = {
     "Las definiciones de todas las guías juntas, agrupadas por tema: abrí las que necesites, o todas. La redacción está resumida pero conserva el sentido de los apuntes.",
   "def.footer":
     "Resumido de las guías de este sitio; cada grupo enlaza a la guía donde la definición se explica y se usa.",
-  "def.expand":
-    "Abrir todas",
-  "def.collapse":
-    "Cerrar todas",
   "def.go":
     "Ir a la guía →",
   "def.g.pln":
