@@ -235,30 +235,41 @@ export function StressStrainFigure({ focus, label }: { focus: StressStrainFocus;
   );
 }
 
-// The bending plane (axis + loads) in oblique perspective; its trace on the end section is the line of forces.
+// The bending plane and the line of forces in two views: the beam seen from the side (the plane of the drawing is the
+// bending plane: it holds the axis and the load) and the cross-section A–A, where that plane is seen edge-on as a line.
 export function BendingPlaneFigure({ label }: { label: string }) {
   const { t } = useLanguage();
+  const id = "def-bp";
   return (
-    <svg viewBox="0 0 430 190" className="h-auto w-full" role="img" aria-label={label}>
+    <svg viewBox="0 0 440 190" className="h-auto w-full" role="img" aria-label={label}>
       <defs>
-        <marker id="def-bp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <marker id={id} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
           <path d="M 0 0 L 10 5 L 0 10 z" fill={LOAD} />
         </marker>
       </defs>
-      {/* the beam: front, top and end faces */}
-      <polygon points="40,60 260,60 260,120 40,120" fill={FAINT} fillOpacity="0.35" stroke={INK} strokeWidth="1.5" />
-      <polygon points="40,60 260,60 296,34 76,34" fill={FAINT} fillOpacity="0.2" stroke={INK} strokeWidth="1.5" />
-      <polygon points="260,60 296,34 296,94 260,120" fill={FAINT} fillOpacity="0.5" stroke={INK} strokeWidth="1.5" />
-      {/* the bending plane: vertical, through the axis, in the middle of the width */}
-      <polygon points="48,150 293,150 293,14 48,14" fill={TENSION} fillOpacity="0.14" stroke={TENSION} strokeWidth="1.5" strokeDasharray="5 3" />
-      <line x1="58" y1="90" x2="278" y2="90" stroke={INK} strokeWidth="1" strokeDasharray="6 3" />
-      <line x1="278" y1="47" x2="278" y2="107" stroke={LOAD} strokeWidth="3.5" />
-      <circle cx="278" cy="77" r="2.5" fill={INK} />
-      <line x1="208" y1="14" x2="208" y2="44" stroke={LOAD} strokeWidth="2.5" markerEnd="url(#def-bp)" />
-      <Txt x="214" y="30" fill={LOAD}>P</Txt>
-      <Txt x="60" y="30" fill={TENSION} fontWeight="600">{t("def.fig.plane")}</Txt>
-      <line x1="280" y1="108" x2="318" y2="138" stroke={LOAD} strokeWidth="1" />
-      <Txt x="320" y="146" fill={LOAD} fontWeight="600">{t("def.fig.forceline")}</Txt>
+      {/* side view: the shaded rectangle is the bending plane itself */}
+      <rect x="14" y="16" width="240" height="150" fill={TENSION} fillOpacity="0.1" stroke={TENSION} strokeWidth="1.5" strokeDasharray="5 3" />
+      <rect x="40" y="60" width="190" height="60" fill={FAINT} fillOpacity="0.4" stroke={INK} strokeWidth="1.5" />
+      <line x1="40" y1="90" x2="230" y2="90" stroke={INK} strokeWidth="1" strokeDasharray="6 3" />
+      <polygon points="50,120 40,138 60,138" fill="none" stroke={INK} strokeWidth="1.5" />
+      <polygon points="220,120 210,138 230,138" fill="none" stroke={INK} strokeWidth="1.5" />
+      <line x1="135" y1="22" x2="135" y2="58" stroke={LOAD} strokeWidth="2.5" markerEnd={`url(#${id})`} />
+      <Txt x="143" y="36" fill={LOAD}>P</Txt>
+      <Txt x="22" y="32" fill={TENSION} fontWeight="600">{t("def.fig.plane")}</Txt>
+      <Txt x="22" y="158" fill={TENSION} fontSize="11">{t("def.fig.planedraw")}</Txt>
+      {/* the cut A–A and its trace */}
+      <line x1="190" y1="44" x2="190" y2="136" stroke={INK} strokeWidth="1" strokeDasharray="4 3" />
+      <line x1="190" y1="60" x2="190" y2="120" stroke={LOAD} strokeWidth="3.5" />
+      <Txt x="190" y="40" textAnchor="middle">A</Txt>
+      <Txt x="190" y="150" textAnchor="middle">A</Txt>
+      {/* the section: the plane seen edge-on is the line of forces */}
+      <line x1="196" y1="60" x2="320" y2="60" stroke={FAINT} strokeWidth="1" strokeDasharray="3 3" />
+      <line x1="196" y1="120" x2="320" y2="120" stroke={FAINT} strokeWidth="1" strokeDasharray="3 3" />
+      <rect x="320" y="60" width="60" height="60" fill={FAINT} fillOpacity="0.4" stroke={INK} strokeWidth="1.5" />
+      <line x1="350" y1="42" x2="350" y2="138" stroke={LOAD} strokeWidth="3.5" />
+      <circle cx="350" cy="90" r="3" fill={INK} />
+      <Txt x="350" y="22" textAnchor="middle" fontWeight="600">{t("def.fig.section")}</Txt>
+      <Txt x="350" y="158" textAnchor="middle" fill={LOAD} fontWeight="600">{t("def.fig.forceline")}</Txt>
     </svg>
   );
 }
@@ -294,6 +305,40 @@ export function ObliqueBendingFigure({ label }: { label: string }) {
       {panel(100, 0, t("def.fig.straight"))}
       {panel(320, 25, t("def.fig.oblique"))}
       <Txt x="210" y="85" textAnchor="middle" fill={LOAD} fontWeight="600" fontSize="10">{" "}</Txt>
+    </svg>
+  );
+}
+
+// The neutral axis: on the left a bent segment (the top fibre shortens, the bottom one lengthens, the neutral one keeps its
+// length); on the right the section with σ linear in the distance to the neutral axis and zero on it.
+export function NeutralAxisFigure({ label }: { label: string }) {
+  const { t } = useLanguage();
+  const na = t("def.fig.na");
+  return (
+    <svg viewBox="0 0 440 205" className="h-auto w-full" role="img" aria-label={label}>
+      <path
+        d="M 69.4 95.2 A 135 135 0 0 0 170.6 95.2 L 189.3 141.5 A 185 185 0 0 1 50.7 141.5 Z"
+        fill={TENSION}
+        fillOpacity="0.1"
+        stroke={INK}
+        strokeWidth="1.5"
+      />
+      <path d="M 60.1 118.4 A 160 160 0 0 0 179.9 118.4" fill="none" stroke={INK} strokeWidth="1.5" strokeDasharray="6 3" />
+      <path d="M 69.4 95.2 A 135 135 0 0 0 170.6 95.2" fill="none" stroke={LOAD} strokeWidth="3" />
+      <path d="M 50.7 141.5 A 185 185 0 0 0 189.3 141.5" fill="none" stroke={TENSION} strokeWidth="3" />
+      <Txt x="120" y="83" textAnchor="middle" fill={LOAD}>{t("def.fig.shortens")}</Txt>
+      <Txt x="120" y="168" textAnchor="middle" fill={TENSION}>{t("def.fig.lengthens")}</Txt>
+      <Txt x="40" y="122" textAnchor="end" fill={INK}>{na}</Txt>
+
+      <rect x="222" y="50" width="30" height="120" fill={FAINT} fillOpacity="0.35" stroke={INK} strokeWidth="1.5" />
+      <line x1="216" y1="110" x2="362" y2="110" stroke={INK} strokeWidth="1.5" strokeDasharray="6 3" />
+      <line x1="310" y1="44" x2="310" y2="176" stroke={INK} strokeWidth="1" />
+      <polygon points="310,110 310,50 266,50" fill={LOAD} fillOpacity="0.2" stroke={LOAD} strokeWidth="2" />
+      <polygon points="310,110 310,170 354,170" fill={TENSION} fillOpacity="0.2" stroke={TENSION} strokeWidth="2" />
+      <Txt x="262" y="44" textAnchor="end" fill={LOAD}>{t("def.fig.compression")}</Txt>
+      <Txt x="358" y="186" fill={TENSION}>{t("def.fig.tension")}</Txt>
+      <Txt x="366" y="114" fill={INK}>{na}</Txt>
+      <Txt x="316" y="104" fill={INK} fontSize="11">σ = 0</Txt>
     </svg>
   );
 }

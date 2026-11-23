@@ -9,6 +9,7 @@ import { DEFINITION_GROUPS } from "@/lib/definitions";
 import { BifurcationFigure, EndConditionsFigure, EquilibriumBarsFigure, HyperbolaSVG, IdealBarFigure } from "@/components/PandeoFigures";
 import {
   BendingPlaneFigure,
+  NeutralAxisFigure,
   ObliqueBendingFigure,
   SimpleBendingFigure,
   StressStrainFigure,
@@ -16,11 +17,12 @@ import {
 } from "@/components/DefinitionFigures";
 
 // Terms that carry a figure under their definition (key: group.term); each gets its caption from def.f.<term>.
-type Spec = "bending" | "plane" | "oblique" | "equil" | "bifurcation" | "hyperbola" | "ends" | "ideal" | StressStrainFocus;
+type Spec = "bending" | "plane" | "oblique" | "neutral" | "equil" | "bifurcation" | "hyperbola" | "ends" | "ideal" | StressStrainFocus;
 const FIGURES: Record<string, Spec> = {
   "flx.fsimple": "bending",
   "flx.plano": "plane",
   "flx.normal": "oblique",
+  "flx.en": "neutral",
   "pnd.equil": "equil",
   "pnd.fk": "bifurcation",
   "pnd.esbeltez": "hyperbola",
@@ -44,6 +46,7 @@ function renderFigure(spec: Spec, label: string) {
   if (spec === "bending") return <SimpleBendingFigure label={label} />;
   if (spec === "plane") return <BendingPlaneFigure label={label} />;
   if (spec === "oblique") return <ObliqueBendingFigure label={label} />;
+  if (spec === "neutral") return <NeutralAxisFigure label={label} />;
   if (spec === "equil") return <EquilibriumBarsFigure label={label} />;
   if (spec === "bifurcation") return <BifurcationFigure label={label} />;
   if (spec === "hyperbola") return <HyperbolaSVG label={label} />;

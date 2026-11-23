@@ -68,7 +68,7 @@ describe("/definiciones", () => {
     expect(svg.querySelectorAll("path[marker-end]")).toHaveLength(4); // a couple at each face, twice
     expect(svg.querySelectorAll("line[marker-end]")).toHaveLength(2); // Q only in the second segment
     expect(item.querySelectorAll("figure svg")).toHaveLength(1);
-    expect(container.querySelectorAll("figure svg")).toHaveLength(20); // 3 bending (simple, plane, oblique) + 12 stress–strain + 5 buckling
+    expect(container.querySelectorAll("figure svg")).toHaveLength(21); // 4 bending (simple, plane, oblique, neutral axis) + 12 stress–strain + 5 buckling
   });
 
   test("the bending plane and the oblique bending have their diagrams", () => {
@@ -76,13 +76,28 @@ describe("/definiciones", () => {
     fireEvent.click(screen.getByRole("button", { name: "Open all" }));
     const plane = screen.getByTestId("def-flx.plano").querySelector("figure svg")!;
     expect(plane.textContent).toMatch(/Bending plane/);
+    expect(plane.textContent).toMatch(/the plane of the drawing/);
+    expect(plane.textContent).toMatch(/Section A–A/);
     expect(plane.textContent).toMatch(/Line of forces/);
-    expect(plane.querySelectorAll("polygon").length).toBeGreaterThanOrEqual(4); // beam faces + the plane
+    expect(plane.querySelectorAll("rect")).toHaveLength(3); // the plane, the beam seen from the side, the section
+    expect(plane.querySelectorAll('line[stroke="#C0392B"]').length).toBeGreaterThanOrEqual(3); // load, trace in the cut, line of forces
     const obl = screen.getByTestId("def-flx.normal").querySelector("figure svg")!;
     expect(obl.textContent).toMatch(/Normal \(straight\) bending.*Oblique bending/);
     expect(obl.textContent).toMatch(/α/);
     expect(obl.querySelectorAll("rect")).toHaveLength(2); // the section, drawn twice
     expect(document.body.textContent).not.toMatch(/[{}]/);
+  });
+
+  test("the neutral axis has its diagram: the bent segment and the linear σ with zero on the axis", () => {
+    renderPage();
+    fireEvent.click(screen.getByRole("button", { name: "Open all" }));
+    const svg = screen.getByTestId("def-flx.en").querySelector("figure svg")!;
+    expect(svg.textContent).toMatch(/shortens.*lengthens/);
+    expect(svg.textContent).toMatch(/Compression/);
+    expect(svg.textContent).toMatch(/Tension/);
+    expect(svg.textContent).toMatch(/σ = 0/);
+    expect((svg.textContent!.match(/N\.A\./g) ?? []).length).toBe(2); // on the bent segment and on the section
+    expect(svg.querySelectorAll("polygon")).toHaveLength(2); // σ: compression above, tension below
   });
 
   test("the buckling definitions have their diagrams: bars, bifurcation, hyperbola, end conditions, ideal bar", () => {

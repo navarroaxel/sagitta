@@ -2093,7 +2093,7 @@ const EN = {
   "def.fig.brittle":
     "Brittle",
   "def.f.plano":
-    "The bending plane (shaded) contains the axis of the bar and the loads; its trace on the plane of the section is the line of forces.",
+    "Left, the beam seen from the side: the bending plane (shaded, the plane of the drawing) contains the axis of the bar and the load. Right, the section A–A: the bending plane, seen edge-on, is the line of forces.",
   "def.f.normal":
     "Normal (straight) bending: the line of forces coincides with a principal axis of inertia of the section. Oblique bending: it forms an angle α with it.",
   "def.fig.plane":
@@ -2128,6 +2128,22 @@ const EN = {
     "The four end conditions with the buckled shape of the bar: l_0 = c·l is the distance between two inflection points (c = 2, 1, 0.7 and 0.5).",
   "def.f.hipotesis":
     "Euler’s ideal bar: pinned at one end, guided along the axis at the other, with the compressive force exactly on the axis and no lateral forces.",
+  "def.f.en":
+    "The neutral axis is the fibre that keeps its length when the beam bends: above it the fibres shorten (compression), below they lengthen (tension), and σ is zero on it.",
+  "def.fig.na":
+    "N.A.",
+  "def.fig.compression":
+    "Compression",
+  "def.fig.tension":
+    "Tension",
+  "def.fig.shortens":
+    "shortens",
+  "def.fig.lengthens":
+    "lengthens",
+  "def.fig.planedraw":
+    "(the plane of the drawing)",
+  "def.fig.section":
+    "Section A–A",
   "def.d.fsimple":
     "Simple bending: the forces on both sides of the section reduce, at its centroid, to two couples normal to the plane of the section, with or without shear. Without shear it is pure bending; with shear, bending and shear.",
   "def.t.plano":
@@ -4305,7 +4321,7 @@ const ES: Record<TranslationKey, string> = {
   "def.fig.brittle":
     "Frágil",
   "def.f.plano":
-    "El plano de flexión (sombreado) contiene el eje de la barra y las cargas; su traza en el plano de la sección es la línea de fuerzas.",
+    "A la izquierda, la viga vista de costado: el plano de flexión (sombreado, el plano del dibujo) contiene el eje de la barra y la carga. A la derecha, la sección A–A: el plano de flexión, visto de canto, es la línea de fuerzas.",
   "def.f.normal":
     "Flexión normal (recta): la línea de fuerzas coincide con un eje principal de inercia de la sección. Flexión oblicua: forma un ángulo α con él.",
   "def.fig.plane":
@@ -4340,6 +4356,22 @@ const ES: Record<TranslationKey, string> = {
     "Los cuatro vínculos con la forma pandeada de la barra: l_0 = c·l es la distancia entre dos puntos de inflexión (c = 2, 1, 0,7 y 0,5).",
   "def.f.hipotesis":
     "La barra ideal de Euler: articulada en un extremo, guiada según el eje en el otro, con la fuerza de compresión exactamente en el eje y sin fuerzas laterales.",
+  "def.f.en":
+    "El eje neutro es la fibra que conserva su longitud al flexar la viga: por encima las fibras se acortan (compresión), por debajo se alargan (tracción), y sobre él σ es nula.",
+  "def.fig.na":
+    "E.N.",
+  "def.fig.compression":
+    "Compresión",
+  "def.fig.tension":
+    "Tracción",
+  "def.fig.shortens":
+    "se acorta",
+  "def.fig.lengthens":
+    "se alarga",
+  "def.fig.planedraw":
+    "(el plano del dibujo)",
+  "def.fig.section":
+    "Sección A–A",
   "def.d.fsimple":
     "Flexión simple: las fuerzas a ambos lados de la sección se reducen, en su baricentro, a dos pares normales al plano de la sección, con o sin esfuerzo de corte. Sin corte se llama flexión pura; con corte, flexión y corte.",
   "def.t.plano":
