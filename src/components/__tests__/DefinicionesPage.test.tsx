@@ -254,6 +254,14 @@ describe("/definiciones", () => {
     expect(normals).toHaveLength(3);
     expect(shears).toHaveLength(6);
     for (const c of normals) expect(shears.filter((s) => s === c), c).toHaveLength(2);
+    // and that point is the centre of the face: the average of the four corners of each visible face
+    const centres = Array.from(svg("tensor").querySelectorAll("polygon")).map((p) => {
+      const pts = p.getAttribute("points")!.split(" ").map((q) => q.split(",").map(Number));
+      return [pts.reduce((a, q) => a + q[0], 0) / 4, pts.reduce((a, q) => a + q[1], 0) / 4];
+    });
+    expect(centres).toHaveLength(3);
+    for (const c of normals.map((n) => n.split(",").map(Number)))
+      expect(centres.some((m) => Math.abs(m[0] - c[0]) < 1e-9 && Math.abs(m[1] - c[1]) < 1e-9), `${c}`).toBe(true);
     expect(svg("tppales").textContent).toMatch(/σ1/);
     expect(svg("tppales").textContent).not.toMatch(/τ/);
     expect(svg("vector").textContent).toMatch(/ρ/);
