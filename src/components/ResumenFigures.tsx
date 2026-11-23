@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { SvgSub } from "@/components/Sub";
+import { SvgSub, plain } from "@/components/Sub";
 
 const INK = "#16232E";
 const FAINT = "#C9D2D8";
@@ -22,7 +22,7 @@ function Txt(props: React.SVGProps<SVGTextElement> & { children: string }) {
 export function TorsionFigure() {
   const { t } = useLanguage();
   return (
-    <svg viewBox="0 0 300 150" className="h-auto w-full" role="img" aria-label={t("rs.f1")}>
+    <svg viewBox="0 0 300 150" className="h-auto w-full" role="img" aria-label={plain(t("rs.f1"))}>
       <circle cx="80" cy="75" r="55" fill="none" stroke={INK} strokeWidth="1.5" />
       <line x1="25" y1="75" x2="135" y2="75" stroke={INK} strokeWidth="1" strokeDasharray="4 3" />
       {/* τ on the right radius (up) and the left one (down) */}
@@ -43,7 +43,7 @@ export function TorsionFigure() {
 export function ShearFigure() {
   const { t } = useLanguage();
   return (
-    <svg viewBox="0 0 300 170" className="h-auto w-full" role="img" aria-label={t("rs.f2")}>
+    <svg viewBox="0 0 300 170" className="h-auto w-full" role="img" aria-label={plain(t("rs.f2"))}>
       <rect x="40" y="20" width="70" height="130" fill="none" stroke={INK} strokeWidth="1.5" />
       <rect x="40" y="20" width="70" height="35" fill={TENSION} fillOpacity="0.25" />
       <line x1="30" y1="85" x2="120" y2="85" stroke={INK} strokeWidth="1" strokeDasharray="4 3" />
@@ -66,7 +66,7 @@ export function ShearFigure() {
 export function EquilibriumFigure() {
   const { t } = useLanguage();
   return (
-    <svg viewBox="0 0 360 160" className="h-auto w-full" role="img" aria-label={t("rs.f3")}>
+    <svg viewBox="0 0 360 160" className="h-auto w-full" role="img" aria-label={plain(t("rs.f3"))}>
       <path d="M 10 40 Q 60 130 110 40" fill="none" stroke={INK} strokeWidth="2" />
       <circle cx="60" cy="77" r="8" fill={TENSION} />
       <line x1="130" y1="85" x2="230" y2="85" stroke={INK} strokeWidth="2" />
@@ -87,7 +87,7 @@ export function EquilibriumFigure() {
 export function HookeFigure() {
   const { t } = useLanguage();
   return (
-    <svg viewBox="0 0 300 160" className="h-auto w-full" role="img" aria-label={t("rs.f4")}>
+    <svg viewBox="0 0 300 160" className="h-auto w-full" role="img" aria-label={plain(t("rs.f4"))}>
       <line x1="40" y1="130" x2="280" y2="130" stroke={INK} strokeWidth="1.5" />
       <line x1="40" y1="130" x2="40" y2="15" stroke={INK} strokeWidth="1.5" />
       <line x1="40" y1="50" x2="150" y2="50" stroke={FAINT} strokeWidth="1" strokeDasharray="3 3" />
@@ -111,7 +111,7 @@ export function HookeFigure() {
 export function SteinerFigure() {
   const { t } = useLanguage();
   return (
-    <svg viewBox="0 0 300 175" className="h-auto w-full" role="img" aria-label={t("rs.f5")}>
+    <svg viewBox="0 0 300 175" className="h-auto w-full" role="img" aria-label={plain(t("rs.f5"))}>
       <rect x="90" y="30" width="120" height="60" fill={TENSION} fillOpacity="0.2" stroke={INK} strokeWidth="1.5" />
       <line x1="70" y1="60" x2="230" y2="60" stroke={INK} strokeWidth="1" strokeDasharray="5 3" />
       <line x1="70" y1="130" x2="230" y2="130" stroke={INK} strokeWidth="1.5" />

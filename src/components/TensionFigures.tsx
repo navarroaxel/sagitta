@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { SvgSub } from "@/components/Sub";
+import { SvgSub, plain } from "@/components/Sub";
 import { principalStresses, tensor } from "@/lib/stressState";
 
 const INK = "#16232E";
@@ -36,7 +36,7 @@ function Marker({ id, color }: { id: string; color: string }) {
 export function ElementFigure({ principal = false }: { principal?: boolean }) {
   const { t } = useLanguage();
   const id = principal ? "tns-el-p" : "tns-el-g";
-  const label = t(principal ? "tns.f3" : "tns.f1");
+  const label = plain(t(principal ? "tns.f3" : "tns.f1"));
   return (
     <svg viewBox="0 0 260 185" className="h-auto w-full" role="img" aria-label={label}>
       <defs>
@@ -95,7 +95,7 @@ export function PlaneVectorFigure() {
   const { t } = useLanguage();
   const id = "tns-pv";
   return (
-    <svg viewBox="0 0 250 170" className="h-auto w-full" role="img" aria-label={t("tns.f2")}>
+    <svg viewBox="0 0 250 170" className="h-auto w-full" role="img" aria-label={plain(t("tns.f2"))}>
       <defs>
         <Marker id={`${id}-r`} color={LOAD} />
         <Marker id={`${id}-s`} color={TENSION} />
@@ -131,7 +131,7 @@ export function MohrFigure() {
   );
   const tmax = (s1 - s3) / 2;
   return (
-    <svg viewBox="0 0 300 175" className="h-auto w-full" role="img" aria-label={t("tns.f4")}>
+    <svg viewBox="0 0 300 175" className="h-auto w-full" role="img" aria-label={plain(t("tns.f4"))}>
       <line x1="8" y1={base} x2="290" y2={base} stroke={INK} strokeWidth="1.5" />
       <line x1={x0} y1={base + 4} x2={x0} y2="12" stroke={INK} strokeWidth="1.5" />
       {arc(s3, s1, LOAD, 2.5)}

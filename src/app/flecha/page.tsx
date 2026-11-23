@@ -94,9 +94,9 @@ export default function FlechaPage() {
     <GuidePage title="fla.title" kicker="M · E · J_x · f" lead="fla.lead" footer="fla.footer">
       <Section kicker="fla.s1.kicker" title="fla.s1.title">
         <Para k="fla.s1.p1" />
-        <Eq>1/ρ = ε / y</Eq>
+        <Eq>{"1/ρ = ε / {y}"}</Eq>
         <Para k="fla.s1.p2" />
-        <Eq>ε = σ/E = M·y / (J_x·E)</Eq>
+        <Eq>{"ε = σ/E = M·{y} / (J_x·E)"}</Eq>
         <Para k="fla.s1.p3" />
         <Eq boxed>1/ρ = M / (E·J_x)</Eq>
         <Eq boxed>ρ = E·J_x / M</Eq>
@@ -109,17 +109,17 @@ export default function FlechaPage() {
 
       <Section kicker="fla.s2.kicker" title="fla.s2.title">
         <Para k="fla.s2.p1" />
-        <Eq>1/ρ = dθ/dz = d²y/dz²</Eq>
+        <Eq>{"1/ρ = dθ/dz = d²{y}/dz²"}</Eq>
         <Para k="fla.s2.p2" />
-        <Eq boxed>d²y/dz² = − M / (E·J_x)</Eq>
+        <Eq boxed>{"d²{y}/dz² = − M / (E·J_x)"}</Eq>
         <Para k="fla.s2.p3" />
       </Section>
 
       <Section kicker="fla.s3.kicker" title="fla.s3.title">
         <Para k="fla.s3.p1" />
-        <Eq>df = x·tg α ≈ x·dα = x·dx/ρ = M·x·dx / (E·J_x)</Eq>
+        <Eq>{"df = {x}·tg α ≈ {x}·dα = {x}·dx/ρ = M·{x}·dx / (E·J_x)"}</Eq>
         <Para k="fla.s3.p2" />
-        <Eq boxed>f = ∫₀^l M·x·dx / (E·J_x)</Eq>
+        <Eq boxed>{"f = ∫₀^l M·{x}·dx / (E·J_x)"}</Eq>
         <Para k="fla.s3.p3" />
       </Section>
 

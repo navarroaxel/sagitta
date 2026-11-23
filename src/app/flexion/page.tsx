@@ -191,15 +191,15 @@ export default function FlexionPage() {
           <Section kicker="flx.s5.kicker" title="flx.s5.title">
             <Para k="flx.s5.p1" />
             <Eq n={1}>∫ σ dA = 0</Eq>
-            <Eq n={2}>∫ y (σ dA) = M</Eq>
+            <Eq n={2}>{"∫ {y} (σ dA) = M"}</Eq>
             <Para k="flx.s5.p2" />
-            <Eq n={3}>σ_1 = σ / y   →   σ = σ_1·y</Eq>
+            <Eq n={3}>{"σ_1 = σ / {y}   →   σ = σ_1·{y}"}</Eq>
             <Para k="flx.s5.p3" />
-            <Eq n={4}>σ_1 ∫ y dA = 0</Eq>
-            <Eq n={5}>σ_1 ∫ y² dA = M</Eq>
+            <Eq n={4}>{"σ_1 ∫ {y} dA = 0"}</Eq>
+            <Eq n={5}>{"σ_1 ∫ {y}² dA = M"}</Eq>
             <Para k="flx.s5.p4" />
             <Para k="flx.s5.p5" />
-            <Eq n={7}>M = σ_1·J_x = (σ / y)·J_x</Eq>
+            <Eq n={7}>{"M = σ_1·J_x = (σ / {y})·J_x"}</Eq>
             <div className="my-3 rounded-md border-2 border-teal-600 px-4 py-3 text-center font-mono text-xl dark:border-teal-400">
               σ = M·y / <Sub>J_x</Sub>
             </div>

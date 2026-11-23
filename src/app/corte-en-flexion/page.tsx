@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { SvgSub } from "@/components/Sub";
+import { Sub, SvgSub, plain } from "@/components/Sub";
 import { Eq, Figure, GuidePage, Para, Section } from "@/components/guide/GuideBits";
 import { tauIFlange, tauIWeb, tauRect, tauRectMax, type ISection } from "@/lib/shear";
 
@@ -19,7 +19,7 @@ function CauchySVG() {
     <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={LOADC} strokeWidth="2.5" markerEnd="url(#shr-arr-a)" />
   );
   return (
-    <svg viewBox="0 0 240 180" className="h-auto w-full" role="img" aria-label={t("shr.s2.fig")}>
+    <svg viewBox="0 0 240 180" className="h-auto w-full" role="img" aria-label={plain(t("shr.s2.fig"))}>
       <defs>
         <marker id="shr-arr-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M 0 0 L 10 5 L 0 10 z" fill={LOADC} />
@@ -48,7 +48,7 @@ function SliceSVG() {
     <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={LOADC} strokeWidth="2.5" markerEnd="url(#shr-arr-b)" />
   );
   return (
-    <svg viewBox="0 0 360 195" className="h-auto w-full" role="img" aria-label={t("shr.s3.fig")}>
+    <svg viewBox="0 0 360 195" className="h-auto w-full" role="img" aria-label={plain(t("shr.s3.fig"))}>
       <defs>
         <marker id="shr-arr-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M 0 0 L 10 5 L 0 10 z" fill={LOADC} />
@@ -111,7 +111,7 @@ function RectSVG() {
     pts.push(`${(130 + (tauRect(1, b, h, y) / tmax) * 70).toFixed(1)},${(top + (i / 40) * H).toFixed(1)}`);
   }
   return (
-    <svg viewBox="0 0 240 180" className="h-auto w-full" role="img" aria-label={t("shr.s4.fig")}>
+    <svg viewBox="0 0 240 180" className="h-auto w-full" role="img" aria-label={plain(t("shr.s4.fig"))}>
       <rect x="40" y={top} width="70" height={H} fill="#E7EEF2" stroke={INK} strokeWidth="2" />
       <line x1="30" y1={top + H / 2} x2="215" y2={top + H / 2} stroke={INK} strokeWidth="1.2" strokeDasharray="3 3" />
       <polygon points={`130,${top} ${pts.join(" ")} 130,${top + H}`} fill={SHEAR} opacity="0.3" stroke={SHEAR} strokeWidth="1.8" />
@@ -149,7 +149,7 @@ function IProfileSVG() {
   const poly = samples.map(([y, v]) => `${x(v).toFixed(1)},${(cy - y * k).toFixed(1)}`).join(" ");
   const fl = ((s.h - s.h0) / 2) * k;
   return (
-    <svg viewBox="0 0 240 180" className="h-auto w-full" role="img" aria-label={t("shr.s5.fig")}>
+    <svg viewBox="0 0 240 180" className="h-auto w-full" role="img" aria-label={plain(t("shr.s5.fig"))}>
       <rect x={cx - (s.b * k) / 2} y={cy - (s.h * k) / 2} width={s.b * k} height={fl} fill="#E7EEF2" stroke={INK} strokeWidth="1.8" />
       <rect x={cx - (s.b * k) / 2} y={cy + (s.h * k) / 2 - fl} width={s.b * k} height={fl} fill="#E7EEF2" stroke={INK} strokeWidth="1.8" />
       <rect x={cx - (s.tw * k) / 2} y={cy - (s.h0 * k) / 2} width={s.tw * k} height={s.h0 * k} fill="#E7EEF2" stroke={INK} strokeWidth="1.8" />
@@ -175,7 +175,7 @@ export default function CorteEnFlexionPage() {
         <Para k="shr.s2.p1" />
         <Eq>{t("shr.s2.e1")}</Eq>
         <div className="mx-auto max-w-xs">
-          <Figure caption={t("shr.s2.fig")}>
+          <Figure caption={<Sub>{t("shr.s2.fig")}</Sub>}>
             <CauchySVG />
           </Figure>
         </div>
@@ -187,7 +187,7 @@ export default function CorteEnFlexionPage() {
         <Para k="shr.s3.p1" />
         <Para k="shr.s3.p2" />
         <div className="mx-auto max-w-md">
-          <Figure caption={t("shr.s3.fig")}>
+          <Figure caption={<Sub>{t("shr.s3.fig")}</Sub>}>
             <SliceSVG />
           </Figure>
         </div>
@@ -201,12 +201,12 @@ export default function CorteEnFlexionPage() {
 
       <Section kicker="shr.s4.kicker" title="shr.s4.title">
         <Para k="shr.s4.p1" />
-        <Eq boxed>τ_zy = (3/2)·Q/(b·h)·[1 − (2y/h)²]</Eq>
+        <Eq boxed>{"τ_zy = (3/2)·Q/(b·h)·[1 − (2{y}/h)²]"}</Eq>
         <Para k="shr.s4.p2" />
         <Eq boxed>τ_max = 3·Q / (2·b·h) = 1,5·Q/A</Eq>
         <Para k="shr.s4.p3" />
         <div className="mx-auto max-w-xs">
-          <Figure caption={t("shr.s4.fig")}>
+          <Figure caption={<Sub>{t("shr.s4.fig")}</Sub>}>
             <RectSVG />
           </Figure>
         </div>
@@ -218,12 +218,12 @@ export default function CorteEnFlexionPage() {
       <Section kicker="shr.s5.kicker" title="shr.s5.title">
         <Para k="shr.s5.p1" />
         <p className="mb-1 text-sm font-semibold">{t("shr.s5.flange")}</p>
-        <Eq boxed>τ = Q/(2·J_x) · (h²/4 − y²)</Eq>
+        <Eq boxed>{"τ = Q/(2·J_x) · (h²/4 − {y}²)"}</Eq>
         <p className="mb-1 text-sm font-semibold">{t("shr.s5.web")}</p>
-        <Eq boxed>τ = Q/(2·δ_1·J_x) · [ b/4·(h² − h_0²) + δ_1·(h_0²/4 − y²) ]</Eq>
+        <Eq boxed>{"τ = Q/(2·δ_1·J_x) · [ b/4·(h² − h_0²) + δ_1·(h_0²/4 − {y}²) ]"}</Eq>
         <Para k="shr.s5.p2" />
         <div className="mx-auto max-w-xs">
-          <Figure caption={t("shr.s5.fig")}>
+          <Figure caption={<Sub>{t("shr.s5.fig")}</Sub>}>
             <IProfileSVG />
           </Figure>
         </div>

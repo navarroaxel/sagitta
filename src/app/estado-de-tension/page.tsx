@@ -109,7 +109,7 @@ export default function EstadoDeTensionPage() {
           <table className="w-full text-left text-[14px]">
             <thead>
               <tr className="border-b border-stone-300 text-stone-500 dark:border-stone-700">
-                <th className="py-2 pr-3 font-medium">{t("tns.s5.th.s")} / {t("tns.s5.th.sys")}</th>
+                <th className="py-2 pr-3 font-medium"><Sub>{t("tns.s5.th.s")}</Sub> / <Sub>{t("tns.s5.th.sys")}</Sub></th>
                 <th className="py-2 font-medium">{t("tns.s5.th.n")}</th>
               </tr>
             </thead>

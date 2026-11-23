@@ -749,7 +749,7 @@ const EN = {
   "flx.title":
     "Bending (flexión)",
   "flx.lead":
-    "Simple bending, straight and oblique: where the formula σ = M·y / J_x comes from, what the neutral axis is, and how to use it to verify and size a section. Based on the course notes (AMS 2020).",
+    "Simple bending, straight and oblique: where the formula σ = M·{y} / J_x comes from, what the neutral axis is, and how to use it to verify and size a section. Based on the course notes (AMS 2020).",
   "flx.s1.kicker":
     "01 — Definition",
   "flx.s1.title":
@@ -783,7 +783,7 @@ const EN = {
   "flx.s3.c":
     "The loads P_i act perpendicular to the axis of the bar and lie in the plane α.",
   "flx.s3.note":
-    "Plane α is the plane of forces (of bending) and the axis y–y is the axis of symmetry of the piece, hence a principal axis of inertia: it can be the one with J_max or the one with J_min.",
+    "Plane α is the plane of forces (of bending) and the axis {y}–{y} is the axis of symmetry of the piece, hence a principal axis of inertia: it can be the one with J_max or the one with J_min.",
   "flx.s4.kicker":
     "04 — Deformation",
   "flx.s4.title":
@@ -803,19 +803,19 @@ const EN = {
   "flx.s5.kicker":
     "05 — The formula",
   "flx.s5.title":
-    "From equilibrium to σ = M·y / J_x",
+    "From equilibrium to σ = M·{y} / J_x",
   "flx.s5.p1":
-    "An element of area dA at a distance y from the neutral axis is loaded by an internal force σ·dA, where σ is the stress at that element: tension or compression depending on whether it is below or above the N.A. For the section to be in equilibrium, the sum of all internal forces must be zero and the sum of their moments about the N.A. must equal the moment M of the external forces at that section:",
+    "An element of area dA at a distance {y} from the neutral axis is loaded by an internal force σ·dA, where σ is the stress at that element: tension or compression depending on whether it is below or above the N.A. For the section to be in equilibrium, the sum of all internal forces must be zero and the sum of their moments about the N.A. must equal the moment M of the external forces at that section:",
   "flx.s5.p2":
-    "A fibre at a distance y from the N.A. changes length in proportion to its distance. If σ_1 is the stress on the unit of area at distance 1 from the N.A. and σ the one at distance y:",
+    "A fibre at a distance {y} from the N.A. changes length in proportion to its distance. If σ_1 is the stress on the unit of area at distance 1 from the N.A. and σ the one at distance y:",
   "flx.s5.p3":
-    "Substituting σ = σ_1·y into (1) and (2):",
+    "Substituting σ = σ_1·{y} into (1) and (2):",
   "flx.s5.p4":
-    "Since σ_1 ≠ 0, (4) gives ∫y dA = 0 (6): the first moment of the area is zero, so the neutral axis is a centroidal axis. The axis X–X lies in the cross-section and crosses the longitudinal axis of the bar at the centroid.",
+    "Since σ_1 ≠ 0, (4) gives ∫{y} dA = 0 (6): the first moment of the area is zero, so the neutral axis is a centroidal axis. The axis X–X lies in the cross-section and crosses the longitudinal axis of the bar at the centroid.",
   "flx.s5.p5":
-    "In (5) the integral ∫y² dA = J_x is the moment of inertia of the section about the neutral axis X–X, so M = σ_1·J_x and, from (3):",
+    "In (5) the integral ∫{y}² dA = J_x is the moment of inertia of the section about the neutral axis X–X, so M = σ_1·J_x and, from (3):",
   "flx.s5.p6":
-    "This gives the stress σ at a generic point at distance y of a section loaded by a moment M. For safety, M_max is taken together with the farthest fibre from the neutral axis, v:",
+    "This gives the stress σ at a generic point at distance {y} of a section loaded by a moment M. For safety, M_max is taken together with the farthest fibre from the neutral axis, v:",
   "flx.s5.p7":
     "J_x / v is called the section modulus W_x (cm³), and the formula becomes:",
   "flx.s6.kicker":
@@ -876,7 +876,7 @@ const EN = {
   "tor.s3.p3":
     "To balance the torque, the elementary force τ·dA at distance ρ must have a moment about O equal to M_t when added over the whole section. Since G and φ/l are constants:",
   "tor.s3.p4":
-    "where J_0 = ∫ρ² dA is the polar moment of inertia. So the unit twist is φ/l = M_t / (G·J_0). The product G·J_0 is the torsional rigidity of the bar. Eliminating φ/l gives the resistance equation, the analogue of σ = M·y / J_x in bending (valid for circular sections only):",
+    "where J_0 = ∫ρ² dA is the polar moment of inertia. So the unit twist is φ/l = M_t / (G·J_0). The product G·J_0 is the torsional rigidity of the bar. Eliminating φ/l gives the resistance equation, the analogue of σ = M·{y} / J_x in bending (valid for circular sections only):",
   "tor.s3.fig":
     "τ grows linearly with ρ: zero at the centre, τ_max at the surface.",
   "tor.s4.kicker":
@@ -944,9 +944,9 @@ const EN = {
   "axl.s1.e2":
     "0 = ∫ τ_xy dA        0 = ∫ τ_xz dA",
   "axl.s1.e3":
-    "0 = ∫ (τ_xz·y − τ_xy·z) dA",
+    "0 = ∫ (τ_xz·{y} − τ_xy·{z}) dA",
   "axl.s1.e4":
-    "0 = ∫ σ·z dA        0 = ∫ σ·y dA",
+    "0 = ∫ σ·{z} dA        0 = ∫ σ·{y} dA",
   "axl.s2.kicker":
     "02 — Hypotheses",
   "axl.s2.title":
@@ -958,7 +958,7 @@ const EN = {
   "axl.s2.p1":
     "The shear strains must then be zero or constant. If γ = 0 then τ = 0. If γ were a nonzero constant, τ would be constant and ∫τ dA = 0 could not hold. So τ_xy = τ_xz = 0 and conditions 2, 3 and 4 are identically satisfied.",
   "axl.s2.p2":
-    "Since the sections just translate parallel to themselves, ε = Δl/l is constant, hence σ = E·ε is constant. Then ∫σ·z dA = σ·∫z dA and ∫σ·y dA = σ·∫y dA are the static moments of the area about the centroidal axes y and z: zero, so conditions 5 and 6 hold. The first one gives σ·A = N.",
+    "Since the sections just translate parallel to themselves, ε = Δl/l is constant, hence σ = E·ε is constant. Then ∫σ·{z} dA = σ·∫{z} dA and ∫σ·{y} dA = σ·∫{y} dA are the static moments of the area about the centroidal axes {y} and {z}: zero, so conditions 5 and 6 hold. The first one gives σ·A = N.",
   "axl.fig":
     "A bar under N: every cross-section carries the same σ = N/A.",
   "axl.s3.kicker":
@@ -1034,19 +1034,19 @@ const EN = {
   "fla.title":
     "Deflection of beams",
   "fla.lead":
-    "From the curvature 1/ρ = M/(E·J) to the elastic line and the deflection f = ∫M·x dx/(E·J), plus the seven usual cases and a calculator. From the course notes “Flecha AMS 2020”.",
+    "From the curvature 1/ρ = M/(E·J) to the elastic line and the deflection f = ∫M·{x} dx/(E·J), plus the seven usual cases and a calculator. From the course notes “Flecha AMS 2020”.",
   "fla.s1.kicker":
     "01 — Curvature",
   "fla.s1.title":
     "Deformation in normal pure bending",
   "fla.s1.p1":
-    "A section of the beam rotates about its neutral axis. By similar triangles, a fibre at distance y from the neutral axis has strain ε = y/ρ, where ρ is the radius of curvature of the beam’s axis (C is the centre of curvature):",
+    "A section of the beam rotates about its neutral axis. By similar triangles, a fibre at distance {y} from the neutral axis has strain ε = {y}/ρ, where ρ is the radius of curvature of the beam’s axis (C is the centre of curvature):",
   "fla.s1.e1":
-    "1/ρ = ε / y",
+    "1/ρ = ε / {y}",
   "fla.s1.p2":
-    "With Hooke’s law ε = σ/E and the bending stress σ = M·y/J_x:",
+    "With Hooke’s law ε = σ/E and the bending stress σ = M·{y}/J_x:",
   "fla.s1.e2":
-    "ε = σ/E = M·y / (J_x·E)",
+    "ε = σ/E = M·{y} / (J_x·E)",
   "fla.s1.p3":
     "Substituting gives the curvature, and the radius, whose units check out: (kg/cm²)·cm⁴ / (kg·cm) = cm.",
   "fla.s1.fig":
@@ -1058,21 +1058,21 @@ const EN = {
   "fla.s2.p1":
     "For an element of the axis, ds = ρ·dθ, so 1/ρ = dθ/ds, and for small slopes ds ≈ dz. Also tan θ = dy/dz ≈ θ. Therefore:",
   "fla.s2.e1":
-    "1/ρ = dθ/dz = d²y/dz²",
+    "1/ρ = dθ/dz = d²{y}/dz²",
   "fla.s2.p2":
-    "With the axes the notes adopt (z grows while θ decreases) the sign is negative, 1/ρ = −d²y/dz², and equating with the curvature gives the differential equation of the elastic line:",
+    "With the axes the notes adopt ({z} grows while θ decreases) the sign is negative, 1/ρ = −d²{y}/dz², and equating with the curvature gives the differential equation of the elastic line:",
   "fla.s2.p3":
-    "Integrating it once gives the slope θ(z), and twice, the deflection y(z), with the integration constants fixed by the supports.",
+    "Integrating it once gives the slope θ({z}), and twice, the deflection {y}({z}), with the integration constants fixed by the supports.",
   "fla.s3.kicker":
     "03 — Deflection at a point",
   "fla.s3.title":
     "The deflection as an integral",
   "fla.s3.p1":
-    "Take an element CD of length dx at distance x from the end where we want the deflection. The two sections rotate a relative angle dα, with dx = ρ·dα, so dα = dx/ρ. The tangent at D deviates from that at C, at the end, by:",
+    "Take an element CD of length dx at distance {x} from the end where we want the deflection. The two sections rotate a relative angle dα, with dx = ρ·dα, so dα = dx/ρ. The tangent at D deviates from that at C, at the end, by:",
   "fla.s3.p2":
     "and adding over the whole length:",
   "fla.s3.p3":
-    "That is the moment of the M/(E·J) diagram about the end where the deflection is measured: the first moment-area theorem. For a cantilever, with x from the free end, it gives f directly.",
+    "That is the moment of the M/(E·J) diagram about the end where the deflection is measured: the first moment-area theorem. For a cantilever, with {x} from the free end, it gives f directly.",
   "fla.s4.kicker":
     "04 — Usual cases",
   "fla.s4.title":
@@ -1148,21 +1148,21 @@ const EN = {
   "shr.s2.fig":
     "Cauchy: on two perpendicular planes the shear stresses τ_xy and τ_yx are equal; both arrows point towards the common edge (here the top right) or both away from it.",
   "shr.s3.fig":
-    "Slice dx of the beam: the normal stresses give N on section 1 and N + dN on section 2 over the hatched area Ω, at distance y from the neutral axis; the difference dN is balanced by the shear force dT on the cut.",
+    "Slice dx of the beam: the normal stresses give N on section 1 and N + dN on section 2 over the hatched area Ω, at distance {y} from the neutral axis; the difference dN is balanced by the shear force dT on the cut.",
   "shr.s3.kicker":
     "03 — Jourawski",
   "shr.s3.title":
     "The Jourawski–Colignon formula",
   "shr.s3.p1":
-    "The existence of shear produces tangential stresses in the plane of the section. Take a beam of constant section and a slice of length dx between sections 1 and 2. Because of bending, at a distance y from the neutral axis the stress is σ = M·y/J_x on section 1 and σ + dσ = (M + dM)·y/J_x on section 2.",
+    "The existence of shear produces tangential stresses in the plane of the section. Take a beam of constant section and a slice of length dx between sections 1 and 2. Because of bending, at a distance {y} from the neutral axis the stress is σ = M·{y}/J_x on section 1 and σ + dσ = (M + dM)·{y}/J_x on section 2.",
   "shr.s3.p2":
     "Now cut off part of the slice by a cylindrical surface of width s. On the hatched part (area Ω) the normal stresses give a force N on section 1 and N + dN on section 2; both are coaxial and their resultant is",
   "shr.s3.e1":
-    "dN = ∫Ω (dM/J_x)·y dΩ",
+    "dN = ∫Ω (dM/J_x)·{y} dΩ",
   "shr.s3.p3":
     "That force tends to slide the part above the surface against the rest. Tangential stresses τ on the separating surface oppose it; they are parallel to the axis and vary continuously. With s the length of the curve where the surface meets the section, dT = dx·∫τ ds, and equilibrium requires dT = dN:",
   "shr.s3.e2":
-    "(dM/J_x)·∫Ω y dΩ = dx·∫s τ ds",
+    "(dM/J_x)·∫Ω {y} dΩ = dx·∫s τ ds",
   "shr.s3.p4":
     "The integral on the left is the static moment S_x of the area Ω about the neutral axis, and the one on the right is τ_m·s, with τ_m the mean value of τ along s. As dM/dx = Q:",
   "shr.s3.p5":
@@ -1172,9 +1172,9 @@ const EN = {
   "shr.s4.title":
     "Distribution in a rectangular section",
   "shr.s4.p1":
-    "For b × h, with the cut at a height y above the neutral axis, s = b, J_x = b·h³/12 and the static moment of the part above is S_x = b·(h/2 − y)·[(h/2 − y)/2 + y] = ½·b·(h²/4 − y²). Replacing:",
+    "For b × h, with the cut at a height {y} above the neutral axis, s = b, J_x = b·h³/12 and the static moment of the part above is S_x = b·(h/2 − {y})·[(h/2 − {y})/2 + {y}] = ½·b·(h²/4 − {y}²). Replacing:",
   "shr.s4.p2":
-    "The distribution is a parabola, zero at the top and bottom fibres and largest at the neutral axis (y = 0):",
+    "The distribution is a parabola, zero at the top and bottom fibres and largest at the neutral axis ({y} = 0):",
   "shr.s4.p3":
     "that is 50 % more than the mean shear Q/area.",
   "shr.s4.ex":
@@ -1209,13 +1209,13 @@ const EN = {
   "pln.s1.title":
     "Static moments",
   "pln.s1.p1":
-    "The static moment (first-order moment) of a plane area about an axis in its plane is the product of the area by the distance from its centroid to that axis. For a differential dA at coordinates x, y:",
+    "The static moment (first-order moment) of a plane area about an axis in its plane is the product of the area by the distance from its centroid to that axis. For a differential dA at coordinates {x}, {y}:",
   "pln.s1.e1":
-    "S_x = ∫ y dA        S_y = ∫ x dA",
+    "S_x = ∫ {y} dA        S_y = ∫ x dA",
   "pln.s1.p2":
     "Units: cm³ for areas (distance × area), kg·cm for masses.",
   "pln.s1.p3":
-    "Example, a rectangle b × h resting on the X axis: dA = b·dy, so S_x = b·∫₀^h y dy = b·h²/2. About a horizontal axis through its centroid the integral runs from −h/2 to +h/2 and gives zero: for every element above the axis there is another at the same distance below it. Hence:",
+    "Example, a rectangle b × h resting on the X axis: dA = b·dy, so S_x = b·∫₀^h {y} dy = b·h²/2. About a horizontal axis through its centroid the integral runs from −h/2 to +h/2 and gives zero: for every element above the axis there is another at the same distance below it. Hence:",
   "pln.s1.p4":
     "The static moment of an area about a centroidal axis is zero.",
   "pln.s2.kicker":
@@ -1225,25 +1225,25 @@ const EN = {
   "pln.s2.p1":
     "The centroid of an area is the point whose coordinates are the static moments divided by the area. It coincides with the centre of gravity (the point of application of the resultant of the weights) only when the body is homogeneous and of constant thickness, that is, with a uniform mass per unit area. For a system of masses the same formulas are used with the masses in place of the areas (as in the example with three weights):",
   "pln.s2.e1":
-    "x_g = Σ A_i·x_i / Σ A_i = S_y / A",
+    "{x}_g = Σ A_i·{x}_i / Σ A_i = S_y / A",
   "pln.s2.e2":
-    "y_g = Σ A_i·y_i / Σ A_i = S_x / A",
+    "{y}_g = Σ A_i·{y}_i / Σ A_i = S_x / A",
   "pln.s2.p2":
-    "For a continuous area the sums become integrals, x_g = ∫x dA / ∫dA and y_g = ∫y dA / ∫dA.",
+    "For a continuous area the sums become integrals, {x}_g = ∫{x} dA / ∫dA and {y}_g = ∫{y} dA / ∫dA.",
   "pln.s2.ex.title":
     "Worked examples from the notes",
   "pln.s2.ex1.t":
     "Rectangle 4 × 16 with its corners at (6, 4) and (10, 20)",
   "pln.s2.ex1.r":
-    "A = 64; S_x = 4·(20² − 4²)/2 = 768; S_y = 16·(10² − 6²)/2 = 512; y_g = 768/64 = 12; x_g = 512/64 = 8.",
+    "A = 64; S_x = 4·(20² − 4²)/2 = 768; S_y = 16·(10² − 6²)/2 = 512; {y}_g = 768/64 = 12; {x}_g = 512/64 = 8.",
   "pln.s2.ex2.t":
     "Three masses: 300 kg at (30, 70), 800 kg at (80, 100), 1 000 kg at (60, 40)",
   "pln.s2.ex2.r":
-    "M = 2 100 kg; S_y = 133 000 kg·cm; S_x = 141 000 kg·cm; x_g = 63.33 cm; y_g = 67.14 cm.",
+    "M = 2 100 kg; S_y = 133 000 kg·cm; S_x = 141 000 kg·cm; {x}_g = 63.33 cm; {y}_g = 67.14 cm.",
   "pln.s2.ex3.t":
     "Irregular plate split into three rectangles (26, 50 and 75 cm²)",
   "pln.s2.ex3.r":
-    "A = 151 cm²; S_y = 26·6.5 + 50·5 + 75·7.5 = 981.5; S_x = 26·11 + 50·7.5 + 75·2.5 = 848.5; x_g = 6.50 cm; y_g = 5.62 cm.",
+    "A = 151 cm²; S_y = 26·6.5 + 50·5 + 75·7.5 = 981.5; S_x = 26·11 + 50·7.5 + 75·2.5 = 848.5; {x}_g = 6.50 cm; {y}_g = 5.62 cm.",
   "pln.s3.kicker":
     "03 — Composite areas",
   "pln.s3.title":
@@ -1251,7 +1251,7 @@ const EN = {
   "pln.s3.p1":
     "An irregular figure is split into parts whose area and centroid are known. A part that is empty counts with a negative area. The notes’ door with a rectangular opening gives the same centroid both ways:",
   "pln.s3.add":
-    "By adding the four solid pieces: A = 19 687.5 cm², S_x = 1 775 390.63, S_y = 2 589 843.75 cm³ → y_g = 90.18 cm, x_g = 131.55 cm.",
+    "By adding the four solid pieces: A = 19 687.5 cm², S_x = 1 775 390.63, S_y = 2 589 843.75 cm³ → {y}_g = 90.18 cm, {x}_g = 131.55 cm.",
   "pln.s3.sub":
     "By subtracting the hole from the full door: (30 000·100 − 10 312.5·118.75) / 19 687.5 = 90.18 cm and (30 000·125 − 10 312.5·112.5) / 19 687.5 = 131.55 cm.",
   "pln.s4.kicker":
@@ -1261,9 +1261,9 @@ const EN = {
   "pln.s4.p1":
     "The product of inertia (centrifugal moment) multiplies dA by both distances; it can be positive, negative or zero. The moment of inertia multiplies dA by the square of the distance to an axis, so it is always positive. The polar moment uses the distance to a point. All are in length⁴ (cm⁴):",
   "pln.s4.e1":
-    "J_xy = ∫ x·y dA",
+    "J_xy = ∫ {x}·{y} dA",
   "pln.s4.e2":
-    "J_x = ∫ y² dA        J_y = ∫ x² dA",
+    "J_x = ∫ {y}² dA        J_y = ∫ {x}² dA",
   "pln.s4.e3":
     "J_p = ∫ ρ² dA = J_x + J_y",
   "pln.s4.p2":
@@ -1271,7 +1271,7 @@ const EN = {
   "pln.s4.e4":
     "J = A·i²        i = √(J/A)        i_p² = i_x² + i_y²",
   "pln.s4.p3":
-    "For a rectangle b × h about its horizontal centroidal axis, integrating y²·b·dy from −h/2 to +h/2:",
+    "For a rectangle b × h about its horizontal centroidal axis, integrating {y}²·b·dy from −h/2 to +h/2:",
   "pln.s4.p4":
     "Position matters. A rectangle of 8 × 16 cm (128 cm²) with the long side parallel to Y has J_x = 8·16³/12 = 2 730.67 cm⁴; turned 90° (16 wide, 8 high) it has J_x = 16·8³/12 = 682.67 cm⁴: four times less with the same material. This is why the long side goes in the direction of the bending.",
   "pln.s4.p5":
@@ -1283,7 +1283,7 @@ const EN = {
   "pln.s5.p1":
     "Statement: the moment of inertia of an area about any axis of its plane equals its moment of inertia about the parallel centroidal axis, plus the product of the area by the square of the distance between both axes.",
   "pln.s5.p2":
-    "Take axes X, Y displaced a and b from the centroidal ones, so x = a + x_g and y = b + y_g. In J_xy = ∫xy dA the product expands into four integrals; two of them are static moments about centroidal axes, hence zero:",
+    "Take axes X, Y displaced a and b from the centroidal ones, so {x} = {a} + {x}_g and {y} = {b} + {y}_g. In J_xy = ∫xy dA the product expands into four integrals; two of them are static moments about centroidal axes, hence zero:",
   "pln.s5.e1":
     "J_xy = J_xgyg + A·a·b",
   "pln.s5.p3":
@@ -1319,7 +1319,7 @@ const EN = {
   "pln.s6.title":
     "Axes rotated an angle α",
   "pln.s6.p1":
-    "With axes X′, Y′ rotated α about the same origin, x′ = x·cosα + y·sinα and y′ = y·cosα − x·sinα. Expanding J_x′ = ∫y′² dA and J_y′ = ∫x′² dA, and using 2·sinα·cosα = sin 2α:",
+    "With axes X′, Y′ rotated α about the same origin, {x}′ = {x}·cosα + {y}·sinα and {y}′ = {y}·cosα − {x}·sinα. Expanding J_x′ = ∫{y}′² dA and J_y′ = ∫{x}′² dA, and using 2·sinα·cosα = sin 2α:",
   "pln.s6.e1":
     "J_x′ = J_x·cos²α + J_y·sin²α − J_xy·sin 2α",
   "pln.s6.e2":
@@ -1490,7 +1490,7 @@ const EN = {
   "tns.s1.p2":
     "In the exercise (MPa): σ_x = −20, σ_y = 30, σ_z = 0, τ_xy = 10, τ_yz = 0 and τ_xz = 5. Tension is positive, compression negative.",
   "tns.f1":
-    "The state of stress at a point: on each of the three visible faces, one normal stress (red) and two shear stresses (teal), positive along the axes (x right, y up, z toward the viewer). The shear pairs τ_xy = τ_yx, τ_yz = τ_zy, τ_xz = τ_zx are equal.",
+    "The state of stress at a point: on each of the three visible faces, one normal stress (red) and two shear stresses (teal), positive along the axes ({x} right, {y} up, {z} toward the viewer). The shear pairs τ_xy = τ_yx, τ_yz = τ_zy, τ_xz = τ_zx are equal.",
   "tns.f2":
     "A plane through B seen edge-on, with unit normal n: the stress vector ρ splits into the normal stress σ (along n) and the tangential stress τ (in the plane), |ρ|² = σ² + τ².",
   "tns.f3":
@@ -1540,7 +1540,7 @@ const EN = {
   "tns.s4.e2":
     "(σ_x − σ)·l + τ_yx·m + τ_zx·n = 0\nτ_xy·l + (σ_y − σ)·m + τ_zy·n = 0\nτ_xz·l + τ_yz·m + (σ_z − σ)·n = 0",
   "tns.s4.p3":
-    "The three equations are dependent, so one unknown is fixed (a = 1) and the other two solved; then the vector is normalised dividing by (a² + b² + c²)^½. The sign of the direction is arbitrary. The plane perpendicular to each direction is the corresponding principal plane.",
+    "The three equations are dependent, so one unknown is fixed ({a} = 1) and the other two solved; then the vector is normalised dividing by (a² + b² + c²)^½. The sign of the direction is arbitrary. The plane perpendicular to each direction is the corresponding principal plane.",
   "tns.s4.p4":
     "In the exercise: σ_1 = 31.9542 MPa, σ_2 = 1.02156 MPa, σ_3 = −22.97576 MPa. Their sum is I_1 = 10 and their product is I_3 = −750, as it has to be.",
   "tns.s5.kicker":
@@ -1550,7 +1550,7 @@ const EN = {
   "tns.s5.th.s":
     "Principal stress",
   "tns.s5.th.sys":
-    "System solved (a = 1)",
+    "System solved ({a} = 1)",
   "tns.s5.th.n":
     "Direction n",
   "tns.s5.r1":
@@ -1747,17 +1747,17 @@ const EN = {
   "mat.s8.e1":
     "along x: dN = σ·dF        along y: dQ_y = τ_xy·dF        along z: dQ_z = τ_xz·dF",
   "mat.s8.p4":
-    "Integrating over the whole area F gives the equations of equivalence (z and y are the coordinates of the element of area):",
+    "Integrating over the whole area F gives the equations of equivalence ({z} and {y} are the coordinates of the element of area):",
   "mat.s8.q1":
     "N = ∫ σ dF",
   "mat.s8.q2":
     "Q_y = ∫ τ_xy dF        Q_z = ∫ τ_xz dF",
   "mat.s8.q3":
-    "M_T = ∫ (τ_xz·y − τ_xy·z) dF",
+    "M_T = ∫ (τ_xz·{y} − τ_xy·{z}) dF",
   "mat.s8.q4":
-    "M_y = ∫ σ·z dF        M_z = ∫ σ·y dF",
+    "M_y = ∫ σ·{z} dF        M_z = ∫ σ·{y} dF",
   "mat.s8.note":
-    "Two details of the notes. The torque is written with a plus sign, (τ_xy·z + τ_xz·y); with y and z the coordinates of dF, the moment of the shear forces about x is a difference. And M_y and M_z are written with τ, but they are the moments of the normal stresses σ (the signs depend on the axis convention).",
+    "Two details of the notes. The torque is written with a plus sign, (τ_xy·{z} + τ_xz·{y}); with {y} and {z} the coordinates of dF, the moment of the shear forces about x is a difference. And M_y and M_z are written with τ, but they are the moments of the normal stresses σ (the signs depend on the axis convention).",
   "mat.footer":
     "Transcribed and ordered from the course notes “Propiedades de los materiales”; the diagrams were redrawn.",
   "rs.link":
@@ -1775,7 +1775,7 @@ const EN = {
   "rs.s1.title":
     "Everything in one table",
   "rs.s1.units":
-    "Units: kg and cm. J in cm⁴, W in cm³, σ and τ in kg/cm². J is ∫y²dA, so it is length⁴.",
+    "Units: kg and cm. J in cm⁴, W in cm³, σ and τ in kg/cm². J is ∫{y}²dA, so it is length⁴.",
   "rs.th.topic":
     "Topic",
   "rs.th.formula":
@@ -1801,7 +1801,7 @@ const EN = {
   "rs.t.flexion":
     "Bending",
   "rs.u.flexion":
-    "Check and size beams; W = J/y_max",
+    "Check and size beams; W = J/{y}_max",
   "rs.t.shear":
     "Shear in bending",
   "rs.u.shear":
@@ -1881,7 +1881,7 @@ const EN = {
   "rs.f4":
     "σ–ε diagram: a straight line up to σ_P, with slope E = tg β.",
   "rs.f5":
-    "Steiner: the inertia about the axis x, at distance d from the centroidal axis x_g, is J_x = J_g + A·d².",
+    "Steiner: the inertia about the axis x, at distance d from the centroidal axis {x}_g, is J_x = J_g + A·d².",
   "rs.fig.stable":
     "Stable",
   "rs.fig.indiff":
@@ -2631,7 +2631,7 @@ const ES: Record<TranslationKey, string> = {
   "flx.title":
     "Flexión",
   "flx.lead":
-    "Flexión simple, recta y oblicua: de dónde sale la fórmula σ = M·y / J_x, qué es el eje neutro y cómo se usa para verificar y dimensionar una sección. Según el apunte de la cátedra (AMS 2020).",
+    "Flexión simple, recta y oblicua: de dónde sale la fórmula σ = M·{y} / J_x, qué es el eje neutro y cómo se usa para verificar y dimensionar una sección. Según el apunte de la cátedra (AMS 2020).",
   "flx.s1.kicker":
     "01 — Definición",
   "flx.s1.title":
@@ -2665,7 +2665,7 @@ const ES: Record<TranslationKey, string> = {
   "flx.s3.c":
     "Las cargas P_i actúan perpendicularmente al eje de la barra y se hallan en el plano α.",
   "flx.s3.note":
-    "El plano α es el plano de fuerzas (de flexión) y el eje y–y es eje de simetría de la pieza, siendo eje principal de inercia: puede ser el que tiene el J_max o el J_min.",
+    "El plano α es el plano de fuerzas (de flexión) y el eje {y}–{y} es eje de simetría de la pieza, siendo eje principal de inercia: puede ser el que tiene el J_max o el J_min.",
   "flx.s4.kicker":
     "04 — Deformación",
   "flx.s4.title":
@@ -2685,19 +2685,19 @@ const ES: Record<TranslationKey, string> = {
   "flx.s5.kicker":
     "05 — La fórmula",
   "flx.s5.title":
-    "Del equilibrio a σ = M·y / J_x",
+    "Del equilibrio a σ = M·{y} / J_x",
   "flx.s5.p1":
-    "Un elemento de área dA situado a una distancia y del eje neutro está solicitado por un esfuerzo interior σ·dA, siendo σ la tensión en ese elemento: de tracción o de compresión según se halle abajo o arriba del E.N. Para que la sección esté en equilibrio, la suma de todos los esfuerzos interiores debe ser nula y la suma de sus momentos respecto al E.N. debe ser igual al momento M de las fuerzas exteriores en la sección:",
+    "Un elemento de área dA situado a una distancia {y} del eje neutro está solicitado por un esfuerzo interior σ·dA, siendo σ la tensión en ese elemento: de tracción o de compresión según se halle abajo o arriba del E.N. Para que la sección esté en equilibrio, la suma de todos los esfuerzos interiores debe ser nula y la suma de sus momentos respecto al E.N. debe ser igual al momento M de las fuerzas exteriores en la sección:",
   "flx.s5.p2":
-    "Una fibra a una distancia y del E.N. varía su longitud en proporción a esa distancia. Si σ_1 es la tensión sobre la unidad de área distante 1 del E.N. y σ la de la distante y:",
+    "Una fibra a una distancia {y} del E.N. varía su longitud en proporción a esa distancia. Si σ_1 es la tensión sobre la unidad de área distante 1 del E.N. y σ la de la distante {y}:",
   "flx.s5.p3":
-    "Reemplazando σ = σ_1·y en (1) y (2):",
+    "Reemplazando σ = σ_1·{y} en (1) y (2):",
   "flx.s5.p4":
-    "Como σ_1 ≠ 0, de (4) resulta ∫y dA = 0 (6): el momento estático del área es nulo, por lo tanto el eje neutro es un eje baricéntrico. El eje X–X está en la sección transversal y cruza el eje longitudinal de la barra en el baricentro.",
+    "Como σ_1 ≠ 0, de (4) resulta ∫{y} dA = 0 (6): el momento estático del área es nulo, por lo tanto el eje neutro es un eje baricéntrico. El eje X–X está en la sección transversal y cruza el eje longitudinal de la barra en el baricentro.",
   "flx.s5.p5":
-    "En (5) la integral ∫y² dA = J_x es el momento de inercia de la sección respecto al eje neutro X–X, de modo que M = σ_1·J_x y, de (3):",
+    "En (5) la integral ∫{y}² dA = J_x es el momento de inercia de la sección respecto al eje neutro X–X, de modo que M = σ_1·J_x y, de (3):",
   "flx.s5.p6":
-    "Esta fórmula da la tensión σ en un punto genérico a distancia y de una sección solicitada por un momento M. Por seguridad se toma M_max junto con la fibra más alejada del eje neutro, v:",
+    "Esta fórmula da la tensión σ en un punto genérico a distancia {y} de una sección solicitada por un momento M. Por seguridad se toma M_max junto con la fibra más alejada del eje neutro, v:",
   "flx.s5.p7":
     "J_x / v se denomina momento resistente de la sección W_x (cm³), y la fórmula queda:",
   "flx.s6.kicker":
@@ -2758,7 +2758,7 @@ const ES: Record<TranslationKey, string> = {
   "tor.s3.p3":
     "Para equilibrar el momento torsor, el momento de la fuerza elemental τ·dA a distancia ρ respecto de O, sumado en toda la sección, debe valer M_t. Como G y φ/l son constantes:",
   "tor.s3.p4":
-    "donde J_0 = ∫ρ² dA es el momento de inercia polar. Resulta φ/l = M_t / (G·J_0), el ángulo unitario de torsión; el producto G·J_0 es el módulo de rigidez a la torsión. Eliminando φ/l queda la ecuación de resistencia, análoga a σ = M·y / J_x de la flexión (vale solo para secciones circulares):",
+    "donde J_0 = ∫ρ² dA es el momento de inercia polar. Resulta φ/l = M_t / (G·J_0), el ángulo unitario de torsión; el producto G·J_0 es el módulo de rigidez a la torsión. Eliminando φ/l queda la ecuación de resistencia, análoga a σ = M·{y} / J_x de la flexión (vale solo para secciones circulares):",
   "tor.s3.fig":
     "τ crece linealmente con ρ: nula en el centro, τ_max en la superficie.",
   "tor.s4.kicker":
@@ -2826,9 +2826,9 @@ const ES: Record<TranslationKey, string> = {
   "axl.s1.e2":
     "0 = ∫ τ_xy dA        0 = ∫ τ_xz dA",
   "axl.s1.e3":
-    "0 = ∫ (τ_xz·y − τ_xy·z) dA",
+    "0 = ∫ (τ_xz·{y} − τ_xy·{z}) dA",
   "axl.s1.e4":
-    "0 = ∫ σ·z dA        0 = ∫ σ·y dA",
+    "0 = ∫ σ·{z} dA        0 = ∫ σ·{y} dA",
   "axl.s2.kicker":
     "02 — Hipótesis",
   "axl.s2.title":
@@ -2840,7 +2840,7 @@ const ES: Record<TranslationKey, string> = {
   "axl.s2.p1":
     "Las distorsiones deben ser entonces nulas o constantes. Si γ = 0 entonces τ = 0. Si γ fuera una constante no nula, τ sería constante y no podría cumplirse ∫τ dA = 0. Luego τ_xy = τ_xz = 0 y las condiciones 2, 3 y 4 se verifican idénticamente.",
   "axl.s2.p2":
-    "Como las secciones se desplazan paralelamente, ε = Δl/l es constante y por lo tanto σ = E·ε también. Entonces ∫σ·z dA = σ·∫z dA y ∫σ·y dA = σ·∫y dA son los momentos estáticos del área respecto de los ejes baricéntricos y y z: nulos, así que se verifican la 5 y la 6. La primera da σ·A = N.",
+    "Como las secciones se desplazan paralelamente, ε = Δl/l es constante y por lo tanto σ = E·ε también. Entonces ∫σ·{z} dA = σ·∫{z} dA y ∫σ·{y} dA = σ·∫{y} dA son los momentos estáticos del área respecto de los ejes baricéntricos {y} y {z}: nulos, así que se verifican la 5 y la 6. La primera da σ·A = N.",
   "axl.fig":
     "Una barra bajo N: toda sección recta soporta la misma σ = N/A.",
   "axl.s3.kicker":
@@ -2916,19 +2916,19 @@ const ES: Record<TranslationKey, string> = {
   "fla.title":
     "Flecha de vigas",
   "fla.lead":
-    "De la curvatura 1/ρ = M/(E·J) a la elástica y a la flecha f = ∫M·x dx/(E·J), más los siete casos habituales y una calculadora. Según el apunte “Flecha AMS 2020” de la cátedra.",
+    "De la curvatura 1/ρ = M/(E·J) a la elástica y a la flecha f = ∫M·{x} dx/(E·J), más los siete casos habituales y una calculadora. Según el apunte “Flecha AMS 2020” de la cátedra.",
   "fla.s1.kicker":
     "01 — Curvatura",
   "fla.s1.title":
     "Deformaciones en la flexión pura normal",
   "fla.s1.p1":
-    "Una sección de la viga gira alrededor de su eje neutro. Por semejanza de triángulos, una fibra a distancia y del eje neutro tiene una deformación específica ε = y/ρ, donde ρ es el radio de curvatura del eje de la viga (C es el centro de curvatura):",
+    "Una sección de la viga gira alrededor de su eje neutro. Por semejanza de triángulos, una fibra a distancia {y} del eje neutro tiene una deformación específica ε = {y}/ρ, donde ρ es el radio de curvatura del eje de la viga (C es el centro de curvatura):",
   "fla.s1.e1":
-    "1/ρ = ε / y",
+    "1/ρ = ε / {y}",
   "fla.s1.p2":
-    "Con la ley de Hooke ε = σ/E y la tensión de flexión σ = M·y/J_x:",
+    "Con la ley de Hooke ε = σ/E y la tensión de flexión σ = M·{y}/J_x:",
   "fla.s1.e2":
-    "ε = σ/E = M·y / (J_x·E)",
+    "ε = σ/E = M·{y} / (J_x·E)",
   "fla.s1.p3":
     "Reemplazando resulta la curvatura, y el radio, cuyas unidades cierran: (kg/cm²)·cm⁴ / (kg·cm) = cm.",
   "fla.s1.fig":
@@ -2940,21 +2940,21 @@ const ES: Record<TranslationKey, string> = {
   "fla.s2.p1":
     "Para un elemento del eje, ds = ρ·dθ, o sea 1/ρ = dθ/ds, y para pendientes chicas ds ≈ dz. Además tg θ = dy/dz ≈ θ. Entonces:",
   "fla.s2.e1":
-    "1/ρ = dθ/dz = d²y/dz²",
+    "1/ρ = dθ/dz = d²{y}/dz²",
   "fla.s2.p2":
-    "Con los ejes que adopta el apunte (z crece mientras θ decrece) el signo es negativo, 1/ρ = −d²y/dz², e igualando con la curvatura queda la ecuación diferencial de la línea elástica:",
+    "Con los ejes que adopta el apunte ({z} crece mientras θ decrece) el signo es negativo, 1/ρ = −d²{y}/dz², e igualando con la curvatura queda la ecuación diferencial de la línea elástica:",
   "fla.s2.p3":
-    "Integrándola una vez se obtiene la pendiente θ(z), y dos veces, la flecha y(z), con las constantes de integración fijadas por los vínculos.",
+    "Integrándola una vez se obtiene la pendiente θ({z}), y dos veces, la flecha {y}({z}), con las constantes de integración fijadas por los vínculos.",
   "fla.s3.kicker":
     "03 — Flecha en un punto",
   "fla.s3.title":
     "La flecha como integral",
   "fla.s3.p1":
-    "Sea un elemento CD de longitud dx a distancia x del extremo donde se quiere la flecha. Las dos secciones giran un ángulo relativo dα, con dx = ρ·dα, o sea dα = dx/ρ. La tangente en D se aparta de la de C, en el extremo, en:",
+    "Sea un elemento CD de longitud dx a distancia {x} del extremo donde se quiere la flecha. Las dos secciones giran un ángulo relativo dα, con dx = ρ·dα, o sea dα = dx/ρ. La tangente en D se aparta de la de C, en el extremo, en:",
   "fla.s3.p2":
     "y sumando en toda la longitud:",
   "fla.s3.p3":
-    "Es el momento del diagrama M/(E·J) respecto del extremo donde se mide la flecha: el primer teorema del área de momentos. En una ménsula, con x desde el extremo libre, da f directamente.",
+    "Es el momento del diagrama M/(E·J) respecto del extremo donde se mide la flecha: el primer teorema del área de momentos. En una ménsula, con {x} desde el extremo libre, da f directamente.",
   "fla.s4.kicker":
     "04 — Casos habituales",
   "fla.s4.title":
@@ -3030,21 +3030,21 @@ const ES: Record<TranslationKey, string> = {
   "shr.s2.fig":
     "Cauchy: sobre dos planos perpendiculares las tensiones de corte τ_xy y τ_yx son iguales; las dos flechas van hacia la arista común (acá la de arriba a la derecha) o las dos se alejan de ella.",
   "shr.s3.fig":
-    "Rebanada dx de la viga: las tensiones normales dan N en la sección 1 y N + dN en la 2 sobre el área rayada Ω, a distancia y del eje neutro; la diferencia dN la equilibra la fuerza de corte dT sobre el corte.",
+    "Rebanada dx de la viga: las tensiones normales dan N en la sección 1 y N + dN en la 2 sobre el área rayada Ω, a distancia {y} del eje neutro; la diferencia dN la equilibra la fuerza de corte dT sobre el corte.",
   "shr.s3.kicker":
     "03 — Jourawski",
   "shr.s3.title":
     "La fórmula de Jourawski–Colignon",
   "shr.s3.p1":
-    "La existencia del corte origina tensiones tangenciales en el plano de la sección. Sea una viga de sección constante y una rebanada de largo dx entre las secciones 1 y 2. Por la flexión, a una distancia y del eje neutro la tensión es σ = M·y/J_x en la sección 1 y σ + dσ = (M + dM)·y/J_x en la 2.",
+    "La existencia del corte origina tensiones tangenciales en el plano de la sección. Sea una viga de sección constante y una rebanada de largo dx entre las secciones 1 y 2. Por la flexión, a una distancia {y} del eje neutro la tensión es σ = M·{y}/J_x en la sección 1 y σ + dσ = (M + dM)·{y}/J_x en la 2.",
   "shr.s3.p2":
     "Ahora separamos una parte de la rebanada por una superficie cilíndrica de ancho s. En la parte rayada (área Ω) las tensiones normales generan una fuerza N en la sección 1 y N + dN en la 2; ambas son coaxiales y su resultante es",
   "shr.s3.e1":
-    "dN = ∫Ω (dM/J_x)·y dΩ",
+    "dN = ∫Ω (dM/J_x)·{y} dΩ",
   "shr.s3.p3":
     "Esa fuerza tiende a deslizar la parte superior respecto del resto. A esa acción se oponen tensiones tangenciales τ que actúan en la superficie de separación; son paralelas al eje de la pieza y varían en forma continua. Siendo s la longitud de la curva de intersección de la superficie con el plano de la sección, dT = dx·∫τ ds, y por equilibrio dT = dN:",
   "shr.s3.e2":
-    "(dM/J_x)·∫Ω y dΩ = dx·∫s τ ds",
+    "(dM/J_x)·∫Ω {y} dΩ = dx·∫s τ ds",
   "shr.s3.p4":
     "La integral de la izquierda es el momento estático S_x del área Ω respecto del eje neutro, y la de la derecha es τ_m·s, con τ_m el valor medio de τ a lo largo de s. Como dM/dx = Q:",
   "shr.s3.p5":
@@ -3054,9 +3054,9 @@ const ES: Record<TranslationKey, string> = {
   "shr.s4.title":
     "Distribución en una sección rectangular",
   "shr.s4.p1":
-    "Para b × h, con el corte a una altura y sobre el eje neutro, s = b, J_x = b·h³/12 y el momento estático de la parte superior es S_x = b·(h/2 − y)·[(h/2 − y)/2 + y] = ½·b·(h²/4 − y²). Reemplazando:",
+    "Para b × h, con el corte a una altura {y} sobre el eje neutro, s = b, J_x = b·h³/12 y el momento estático de la parte superior es S_x = b·(h/2 − {y})·[(h/2 − {y})/2 + {y}] = ½·b·(h²/4 − {y}²). Reemplazando:",
   "shr.s4.p2":
-    "La distribución es una parábola, nula en las fibras extremas y máxima en el eje neutro (y = 0):",
+    "La distribución es una parábola, nula en las fibras extremas y máxima en el eje neutro ({y} = 0):",
   "shr.s4.p3":
     "o sea un 50 % más que el corte medio Q/superficie.",
   "shr.s4.ex":
@@ -3091,13 +3091,13 @@ const ES: Record<TranslationKey, string> = {
   "pln.s1.title":
     "Momentos estáticos",
   "pln.s1.p1":
-    "El momento estático (o de primer orden) de una superficie plana respecto de un eje de su plano es el producto del valor de la superficie por la distancia desde su centro de gravedad al eje. Para un diferencial dA de coordenadas x, y:",
+    "El momento estático (o de primer orden) de una superficie plana respecto de un eje de su plano es el producto del valor de la superficie por la distancia desde su centro de gravedad al eje. Para un diferencial dA de coordenadas {x}, {y}:",
   "pln.s1.e1":
-    "S_x = ∫ y dA        S_y = ∫ x dA",
+    "S_x = ∫ {y} dA        S_y = ∫ x dA",
   "pln.s1.p2":
     "Unidades: cm³ para superficies (distancia × superficie), kg·cm para masas.",
   "pln.s1.p3":
-    "Ejemplo, un rectángulo b × h apoyado sobre el eje X: dA = b·dy, entonces S_x = b·∫₀^h y dy = b·h²/2. Respecto de un eje horizontal baricéntrico la integral va de −h/2 a +h/2 y da cero: por cada elemento por encima del eje hay otro a igual distancia por debajo. Por lo tanto:",
+    "Ejemplo, un rectángulo b × h apoyado sobre el eje X: dA = b·dy, entonces S_x = b·∫₀^h {y} dy = b·h²/2. Respecto de un eje horizontal baricéntrico la integral va de −h/2 a +h/2 y da cero: por cada elemento por encima del eje hay otro a igual distancia por debajo. Por lo tanto:",
   "pln.s1.p4":
     "El momento estático de una superficie respecto de un eje baricéntrico es nulo.",
   "pln.s2.kicker":
@@ -3107,25 +3107,25 @@ const ES: Record<TranslationKey, string> = {
   "pln.s2.p1":
     "El baricentro de una superficie es el punto cuyas coordenadas son los momentos estáticos divididos por el área. Coincide con el centro de gravedad (el punto de aplicación de la resultante de los pesos) solo cuando el cuerpo es homogéneo y de espesor constante, es decir, con masa por unidad de área uniforme. Para un sistema de masas se usan las mismas fórmulas con las masas en lugar de las áreas (como en el ejemplo de los tres pesos):",
   "pln.s2.e1":
-    "x_g = Σ A_i·x_i / Σ A_i = S_y / A",
+    "{x}_g = Σ A_i·{x}_i / Σ A_i = S_y / A",
   "pln.s2.e2":
-    "y_g = Σ A_i·y_i / Σ A_i = S_x / A",
+    "{y}_g = Σ A_i·{y}_i / Σ A_i = S_x / A",
   "pln.s2.p2":
-    "Para una superficie continua las sumas pasan a integrales, x_g = ∫x dA / ∫dA e y_g = ∫y dA / ∫dA.",
+    "Para una superficie continua las sumas pasan a integrales, {x}_g = ∫{x} dA / ∫dA e {y}_g = ∫{y} dA / ∫dA.",
   "pln.s2.ex.title":
     "Ejemplos resueltos del apunte",
   "pln.s2.ex1.t":
     "Rectángulo de 4 × 16 con esquinas en (6, 4) y (10, 20)",
   "pln.s2.ex1.r":
-    "A = 64; S_x = 4·(20² − 4²)/2 = 768; S_y = 16·(10² − 6²)/2 = 512; y_g = 768/64 = 12; x_g = 512/64 = 8.",
+    "A = 64; S_x = 4·(20² − 4²)/2 = 768; S_y = 16·(10² − 6²)/2 = 512; {y}_g = 768/64 = 12; {x}_g = 512/64 = 8.",
   "pln.s2.ex2.t":
     "Tres masas: 300 kg en (30, 70), 800 kg en (80, 100), 1 000 kg en (60, 40)",
   "pln.s2.ex2.r":
-    "M = 2 100 kg; S_y = 133 000 kg·cm; S_x = 141 000 kg·cm; x_g = 63,33 cm; y_g = 67,14 cm.",
+    "M = 2 100 kg; S_y = 133 000 kg·cm; S_x = 141 000 kg·cm; {x}_g = 63,33 cm; {y}_g = 67,14 cm.",
   "pln.s2.ex3.t":
     "Chapa irregular dividida en tres rectángulos (26, 50 y 75 cm²)",
   "pln.s2.ex3.r":
-    "A = 151 cm²; S_y = 26·6,5 + 50·5 + 75·7,5 = 981,5; S_x = 26·11 + 50·7,5 + 75·2,5 = 848,5; x_g = 6,50 cm; y_g = 5,62 cm.",
+    "A = 151 cm²; S_y = 26·6,5 + 50·5 + 75·7,5 = 981,5; S_x = 26·11 + 50·7,5 + 75·2,5 = 848,5; {x}_g = 6,50 cm; {y}_g = 5,62 cm.",
   "pln.s3.kicker":
     "03 — Superficies compuestas",
   "pln.s3.title":
@@ -3133,7 +3133,7 @@ const ES: Record<TranslationKey, string> = {
   "pln.s3.p1":
     "Una figura irregular se divide en partes de área y baricentro conocidos. Una parte vacía cuenta con área negativa. La puerta con vacío rectangular del apunte da el mismo baricentro de las dos maneras:",
   "pln.s3.add":
-    "Sumando las cuatro piezas llenas: A = 19 687,5 cm², S_x = 1 775 390,63, S_y = 2 589 843,75 cm³ → y_g = 90,18 cm, x_g = 131,55 cm.",
+    "Sumando las cuatro piezas llenas: A = 19 687,5 cm², S_x = 1 775 390,63, S_y = 2 589 843,75 cm³ → {y}_g = 90,18 cm, {x}_g = 131,55 cm.",
   "pln.s3.sub":
     "Restando el hueco a la puerta completa: (30 000·100 − 10 312,5·118,75) / 19 687,5 = 90,18 cm y (30 000·125 − 10 312,5·112,5) / 19 687,5 = 131,55 cm.",
   "pln.s4.kicker":
@@ -3143,9 +3143,9 @@ const ES: Record<TranslationKey, string> = {
   "pln.s4.p1":
     "El momento centrífugo multiplica dA por las dos distancias; puede ser positivo, negativo o nulo. El momento de inercia multiplica dA por el cuadrado de la distancia a un eje, así que es siempre positivo. El polar usa la distancia a un punto. Todos están en longitud⁴ (cm⁴):",
   "pln.s4.e1":
-    "J_xy = ∫ x·y dA",
+    "J_xy = ∫ {x}·{y} dA",
   "pln.s4.e2":
-    "J_x = ∫ y² dA        J_y = ∫ x² dA",
+    "J_x = ∫ {y}² dA        J_y = ∫ {x}² dA",
   "pln.s4.e3":
     "J_p = ∫ ρ² dA = J_x + J_y",
   "pln.s4.p2":
@@ -3153,7 +3153,7 @@ const ES: Record<TranslationKey, string> = {
   "pln.s4.e4":
     "J = A·i²        i = √(J/A)        i_p² = i_x² + i_y²",
   "pln.s4.p3":
-    "Para un rectángulo b × h respecto de su eje horizontal baricéntrico, integrando y²·b·dy de −h/2 a +h/2:",
+    "Para un rectángulo b × h respecto de su eje horizontal baricéntrico, integrando {y}²·b·dy de −h/2 a +h/2:",
   "pln.s4.p4":
     "La posición importa. Un rectángulo de 8 × 16 cm (128 cm²) con el lado mayor paralelo a Y tiene J_x = 8·16³/12 = 2 730,67 cm⁴; girado 90° (16 de base, 8 de altura) tiene J_x = 16·8³/12 = 682,67 cm⁴: cuatro veces menos con el mismo material. Por eso el lado mayor va en la dirección de la flexión.",
   "pln.s4.p5":
@@ -3165,7 +3165,7 @@ const ES: Record<TranslationKey, string> = {
   "pln.s5.p1":
     "Enunciado: el momento de inercia de una superficie respecto a un eje cualquiera de su plano es igual al momento de inercia de la misma respecto a un eje baricéntrico paralelo al anterior, más el producto del área de la superficie por el cuadrado de la distancia que separa ambos ejes.",
   "pln.s5.p2":
-    "Sean los ejes X, Y desplazados a y b de los baricéntricos, de modo que x = a + x_g e y = b + y_g. En J_xy = ∫xy dA el producto se expande en cuatro integrales; dos son momentos estáticos respecto de ejes baricéntricos, o sea nulos:",
+    "Sean los ejes X, Y desplazados {a} y {b} de los baricéntricos, de modo que {x} = {a} + {x}_g e {y} = {b} + {y}_g. En J_xy = ∫xy dA el producto se expande en cuatro integrales; dos son momentos estáticos respecto de ejes baricéntricos, o sea nulos:",
   "pln.s5.e1":
     "J_xy = J_xgyg + A·a·b",
   "pln.s5.p3":
@@ -3201,7 +3201,7 @@ const ES: Record<TranslationKey, string> = {
   "pln.s6.title":
     "Ejes girados un ángulo α",
   "pln.s6.p1":
-    "Con ejes X′, Y′ girados α alrededor del mismo origen, x′ = x·cosα + y·senα e y′ = y·cosα − x·senα. Desarrollando J_x′ = ∫y′² dA y J_y′ = ∫x′² dA, y usando 2·senα·cosα = sen 2α:",
+    "Con ejes X′, Y′ girados α alrededor del mismo origen, {x}′ = {x}·cosα + {y}·senα e {y}′ = {y}·cosα − {x}·senα. Desarrollando J_x′ = ∫{y}′² dA y J_y′ = ∫{x}′² dA, y usando 2·senα·cosα = sen 2α:",
   "pln.s6.e1":
     "J_x′ = J_x·cos²α + J_y·sen²α − J_xy·sen 2α",
   "pln.s6.e2":
@@ -3372,7 +3372,7 @@ const ES: Record<TranslationKey, string> = {
   "tns.s1.p2":
     "En el ejercicio (MPa): σ_x = −20, σ_y = 30, σ_z = 0, τ_xy = 10, τ_yz = 0 y τ_xz = 5. La tracción es positiva y la compresión negativa.",
   "tns.f1":
-    "El estado de tensión en un punto: sobre cada una de las tres caras visibles, una tensión normal (roja) y dos de corte (verde), positivas según los ejes (x a la derecha, y hacia arriba, z hacia el observador). Los pares τ_xy = τ_yx, τ_yz = τ_zy, τ_xz = τ_zx son iguales.",
+    "El estado de tensión en un punto: sobre cada una de las tres caras visibles, una tensión normal (roja) y dos de corte (verde), positivas según los ejes ({x} a la derecha, {y} hacia arriba, {z} hacia el observador). Los pares τ_xy = τ_yx, τ_yz = τ_zy, τ_xz = τ_zx son iguales.",
   "tns.f2":
     "Un plano por B visto de canto, con normal unitaria n: el vector tensión ρ se descompone en la tensión normal σ (según n) y la tangencial τ (en el plano), |ρ|² = σ² + τ².",
   "tns.f3":
@@ -3422,7 +3422,7 @@ const ES: Record<TranslationKey, string> = {
   "tns.s4.e2":
     "(σ_x − σ)·l + τ_yx·m + τ_zx·n = 0\nτ_xy·l + (σ_y − σ)·m + τ_zy·n = 0\nτ_xz·l + τ_yz·m + (σ_z − σ)·n = 0",
   "tns.s4.p3":
-    "Las tres ecuaciones son dependientes, así que se fija una incógnita (a = 1) y se resuelven las otras dos; luego se normaliza el vector dividiendo por (a² + b² + c²)^½. El sentido de la dirección es arbitrario. El plano perpendicular a cada dirección es el plano principal correspondiente.",
+    "Las tres ecuaciones son dependientes, así que se fija una incógnita ({a} = 1) y se resuelven las otras dos; luego se normaliza el vector dividiendo por (a² + b² + c²)^½. El sentido de la dirección es arbitrario. El plano perpendicular a cada dirección es el plano principal correspondiente.",
   "tns.s4.p4":
     "En el ejercicio: σ_1 = 31,9542 MPa, σ_2 = 1,02156 MPa, σ_3 = −22,97576 MPa. Su suma es I_1 = 10 y su producto es I_3 = −750, como debe ser.",
   "tns.s5.kicker":
@@ -3432,7 +3432,7 @@ const ES: Record<TranslationKey, string> = {
   "tns.s5.th.s":
     "Tensión principal",
   "tns.s5.th.sys":
-    "Sistema resuelto (a = 1)",
+    "Sistema resuelto ({a} = 1)",
   "tns.s5.th.n":
     "Dirección n",
   "tns.s5.r1":
@@ -3623,23 +3623,23 @@ const ES: Record<TranslationKey, string> = {
   "mat.s8.p1":
     "Al reducir al baricentro G de una sección las fuerzas que actúan a un lado de ella se generan cuatro esfuerzos característicos: el normal N, el corte Q, el momento flexor M_F y el momento torsor M_T. Si existe uno solo la solicitación es simple; si hay varios, compuesta. En todos los casos el material es elástico, las tensiones están en el rango elástico y se cumple la ley de Hooke σ = E·ε.",
   "mat.s8.p2":
-    "Los ejes: x es saliente de la sección, e y y z son las direcciones principales de inercia. M_T va según x, igual que la fuerza normal N (N_x). El corte Q está en el plano de la sección y se descompone en Q_y y Q_z; el momento flector actúa en general en un plano que no contiene a y ni a z, así que se descompone en M_Fy y M_Fz.",
+    "Los ejes: x es saliente de la sección, e {y} y {z} son las direcciones principales de inercia. M_T va según x, igual que la fuerza normal N (N_x). El corte Q está en el plano de la sección y se descompone en Q_y y Q_z; el momento flector actúa en general en un plano que no contiene a {y} ni a {z}, así que se descompone en M_Fy y M_Fz.",
   "mat.s8.p3":
     "Las tensiones son las que los producen: σ es normal a la sección y τ está contenida en su plano. Para cada elemento dF hay tres fuerzas elementales:",
   "mat.s8.e1":
     "sobre x: dN = σ·dF        sobre y: dQ_y = τ_xy·dF        sobre z: dQ_z = τ_xz·dF",
   "mat.s8.p4":
-    "Integrando en toda la superficie F quedan las ecuaciones de equivalencia (z e y son las coordenadas del elemento de superficie):",
+    "Integrando en toda la superficie F quedan las ecuaciones de equivalencia ({z} e {y} son las coordenadas del elemento de superficie):",
   "mat.s8.q1":
     "N = ∫ σ dF",
   "mat.s8.q2":
     "Q_y = ∫ τ_xy dF        Q_z = ∫ τ_xz dF",
   "mat.s8.q3":
-    "M_T = ∫ (τ_xz·y − τ_xy·z) dF",
+    "M_T = ∫ (τ_xz·{y} − τ_xy·{z}) dF",
   "mat.s8.q4":
-    "M_y = ∫ σ·z dF        M_z = ∫ σ·y dF",
+    "M_y = ∫ σ·{z} dF        M_z = ∫ σ·{y} dF",
   "mat.s8.note":
-    "Dos detalles del apunte. El torsor está escrito con signo más, (τ_xy·z + τ_xz·y); con y y z las coordenadas de dF, el momento de las fuerzas de corte respecto de x es una diferencia. Y M_y y M_z están escritos con τ, pero son los momentos de las tensiones normales σ (los signos dependen de la convención de ejes).",
+    "Dos detalles del apunte. El torsor está escrito con signo más, (τ_xy·{z} + τ_xz·{y}); con {y} y {z} las coordenadas de dF, el momento de las fuerzas de corte respecto de x es una diferencia. Y M_y y M_z están escritos con τ, pero son los momentos de las tensiones normales σ (los signos dependen de la convención de ejes).",
   "mat.footer":
     "Transcripto y ordenado del apunte “Propiedades de los materiales” de la cátedra; los diagramas se redibujaron.",
   "rs.link":
@@ -3657,7 +3657,7 @@ const ES: Record<TranslationKey, string> = {
   "rs.s1.title":
     "Todo en una tabla",
   "rs.s1.units":
-    "Unidades: kg y cm. J en cm⁴, W en cm³, σ y τ en kg/cm². J es ∫y²dA, por eso es longitud⁴.",
+    "Unidades: kg y cm. J en cm⁴, W en cm³, σ y τ en kg/cm². J es ∫{y}²dA, por eso es longitud⁴.",
   "rs.th.topic":
     "Tema",
   "rs.th.formula":
@@ -3683,7 +3683,7 @@ const ES: Record<TranslationKey, string> = {
   "rs.t.flexion":
     "Flexión",
   "rs.u.flexion":
-    "Verificar y dimensionar vigas; W = J/y_max",
+    "Verificar y dimensionar vigas; W = J/{y}_max",
   "rs.t.shear":
     "Corte en flexión",
   "rs.u.shear":
@@ -3763,7 +3763,7 @@ const ES: Record<TranslationKey, string> = {
   "rs.f4":
     "Diagrama σ–ε: una recta hasta σ_P, de pendiente E = tg β.",
   "rs.f5":
-    "Steiner: la inercia respecto del eje x, a distancia d del eje baricéntrico x_g, es J_x = J_g + A·d².",
+    "Steiner: la inercia respecto del eje x, a distancia d del eje baricéntrico {x}_g, es J_x = J_g + A·d².",
   "rs.fig.stable":
     "Estable",
   "rs.fig.indiff":
