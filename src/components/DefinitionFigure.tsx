@@ -3,11 +3,15 @@
 import React from "react";
 import {
   BendingPlaneFigure,
+  CauchyFigure,
   NeutralAxisFigure,
   ObliqueBendingFigure,
   PLANE_FOCI,
   PlaneAreaFigure,
+  PureShearFigure,
   ShearFigure,
+  ShearForceFigure,
+  SlidingFigure,
   SimpleBendingFigure,
   SteinerFigure,
   StressStrainFigure,
@@ -30,6 +34,10 @@ type Spec =
   | "steiner"
   | "torsion"
   | "shear"
+  | "pureShear"
+  | "shearForce"
+  | "cauchy"
+  | "sliding"
   | PlaneFocus
   | StressStrainFocus;
 
@@ -54,6 +62,10 @@ const FIGURES: Record<string, Spec> = {
   "pnd.l0": "ends",
   "pnd.hipotesis": "ideal",
   "tor.htor": "torsion",
+  "shr.cpuro": "pureShear",
+  "shr.corte": "shearForce",
+  "shr.cauchy": "cauchy",
+  "shr.resbal": "sliding",
   "shr.jour": "shear",
   "mat.hooke": "stiffness",
   "mat.rigidez": "stiffness",
@@ -87,6 +99,10 @@ export function DefinitionFigure({ id, label }: { id: string; label: string }) {
   if (spec === "steiner") return <SteinerFigure label={label} />;
   if (spec === "torsion") return <TorsionFigure label={label} />;
   if (spec === "shear") return <ShearFigure label={label} />;
+  if (spec === "pureShear") return <PureShearFigure label={label} />;
+  if (spec === "shearForce") return <ShearForceFigure label={label} />;
+  if (spec === "cauchy") return <CauchyFigure label={label} />;
+  if (spec === "sliding") return <SlidingFigure label={label} />;
   if (isPlane(spec)) return <PlaneAreaFigure focus={spec} label={label} />;
   return <StressStrainFigure focus={spec} label={label} />;
 }

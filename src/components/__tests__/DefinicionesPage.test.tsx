@@ -68,7 +68,7 @@ describe("/definiciones", () => {
     expect(svg.querySelectorAll("path[marker-end]")).toHaveLength(4); // a couple at each face, twice
     expect(svg.querySelectorAll("line[marker-end]")).toHaveLength(2); // Q only in the second segment
     expect(item.querySelectorAll("figure svg")).toHaveLength(1);
-    expect(container.querySelectorAll("figure svg")).toHaveLength(32); // 4 bending + 12 stress–strain + 5 buckling + 9 plane areas + 2 (torsion hypotheses, Jourawski)
+    expect(container.querySelectorAll("figure svg")).toHaveLength(36); // 4 bending + 12 stress–strain + 5 buckling + 9 plane areas + 6 shear (all) + 1 torsion hypotheses
   });
 
   test("the bending plane and the oblique bending have their diagrams", () => {
@@ -198,6 +198,25 @@ describe("/definiciones", () => {
     expect(fills("rigidez")).toBe(0);
     // the diagram has the better name: stress–strain
     expect(screen.getByTestId("def-mat.hooke").textContent).toMatch(/stress–strain diagram/);
+  });
+
+  test("every shear-in-bending definition has a diagram: pure shear, Q, Cauchy, sliding stresses and Jourawski", () => {
+    renderPage();
+    fireEvent.click(screen.getByRole("button", { name: "Open all" }));
+    const svg = (id: string) => screen.getByTestId(`def-shr.${id}`).querySelector("figure svg")!;
+    for (const id of ["cpuro", "corte", "cauchy", "resbal", "jour"]) expect(svg(id), id).toBeTruthy();
+    expect(svg("cpuro").textContent).toMatch(/rivet.*shear plane.*Q = P.*area A of the rivet.*τ = Q \/ A/);
+    expect(svg("cpuro").querySelectorAll("line[marker-end]").length).toBeGreaterThanOrEqual(5); // the two P and the uniform τ
+    expect(svg("corte").textContent).toMatch(/P.*R.*A–A.*Q.*Q.*Q = R/);
+    // Q on the left face points down and on the right face up (equal and opposite)
+    const qs = Array.from(svg("corte").querySelectorAll('line[stroke="#0B8A8A"]')).map((l) => Number(l.getAttribute("y2")) - Number(l.getAttribute("y1")));
+    expect(qs[0]).toBeGreaterThan(0);
+    expect(qs[1]).toBeLessThan(0);
+    expect(svg("cauchy").textContent).toMatch(/τyx.*τyx.*τxy.*τxy/);
+    expect(svg("cauchy").querySelectorAll("line[marker-end]")).toHaveLength(4);
+    expect(svg("resbal").textContent).toMatch(/not joined: they slide.*τL.*joined: τL holds them/);
+    expect(svg("resbal").querySelectorAll("path[fill-opacity]")).toHaveLength(6); // three planks, twice
+    expect(svg("jour").textContent).toMatch(/E\.N\./);
   });
 
   test("a #group.term in the URL opens that term (the links of /resumen)", () => {

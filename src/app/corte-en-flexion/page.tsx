@@ -5,6 +5,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Sub, SvgSub, plain } from "@/components/Sub";
 import { Eq, Figure, GuidePage, Para, Section } from "@/components/guide/GuideBits";
 import JourawskiSteps from "@/components/JourawskiSteps";
+import { CauchyFigure } from "@/components/DefinitionFigures";
 import { tauIFlange, tauIWeb, tauRect, tauRectMax, type ISection } from "@/lib/shear";
 
 const INK = "#16232E";
@@ -12,33 +13,6 @@ const SHEAR = "#3A6B8C";
 
 const LOADC = "#C0392B";
 const TEAL = "#0B8A8A";
-
-// Cauchy: the four shear arrows of a small element; the pairs meet at the top-right edge.
-function CauchySVG() {
-  const { t } = useLanguage();
-  const arrow = (x1: number, y1: number, x2: number, y2: number) => (
-    <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={LOADC} strokeWidth="2.5" markerEnd="url(#shr-arr-a)" />
-  );
-  return (
-    <svg viewBox="0 0 240 180" className="h-auto w-full" role="img" aria-label={plain(t("shr.s2.fig"))}>
-      <defs>
-        <marker id="shr-arr-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-          <path d="M 0 0 L 10 5 L 0 10 z" fill={LOADC} />
-        </marker>
-      </defs>
-      <rect x="80" y="45" width="80" height="80" fill={TEAL} fillOpacity="0.12" stroke={INK} strokeWidth="1.5" />
-      {arrow(95, 38, 145, 38)}
-      {arrow(145, 132, 95, 132)}
-      {arrow(168, 110, 168, 60)}
-      {arrow(72, 60, 72, 110)}
-      <circle cx="160" cy="45" r="3" fill={INK} />
-      <text x="120" y="29" fontSize="12" textAnchor="middle" fill={INK}><SvgSub>τ_yx</SvgSub></text>
-      <text x="120" y="152" fontSize="12" textAnchor="middle" fill={INK}><SvgSub>τ_yx</SvgSub></text>
-      <text x="184" y="88" fontSize="12" fill={INK}><SvgSub>τ_xy</SvgSub></text>
-      <text x="58" y="88" fontSize="12" textAnchor="end" fill={INK}><SvgSub>τ_xy</SvgSub></text>
-    </svg>
-  );
-}
 
 // Jourawski: slice dx between sections 1 and 2 in oblique (cabinet) perspective, x along the beam, y up, depth up-right.
 // The horizontal cut leaves the part Ω on top; its force dN_Ω is balanced by dT on the cut surface.
@@ -177,7 +151,7 @@ export default function CorteEnFlexionPage() {
         <Eq>{t("shr.s2.e1")}</Eq>
         <div className="mx-auto max-w-xs">
           <Figure caption={<Sub>{t("shr.s2.fig")}</Sub>}>
-            <CauchySVG />
+            <CauchyFigure label={plain(t("shr.s2.fig"))} />
           </Figure>
         </div>
         <Para k="shr.s2.p2" />

@@ -578,3 +578,147 @@ export function SteinerFigure({ label }: { label: string }) {
     </svg>
   );
 }
+
+// ---- Shear in bending: pure shear, the shear force Q, Cauchy's element and the sliding stresses ----
+
+// Cauchy: the four shear arrows of a small element; the pairs meet at the top-right edge.
+export function CauchyFigure({ label }: { label: string }) {
+  const arrow = (x1: number, y1: number, x2: number, y2: number) => (
+    <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={LOAD} strokeWidth="2.5" markerEnd="url(#def-cau)" />
+  );
+  return (
+    <svg viewBox="0 0 240 180" className="h-auto w-full" role="img" aria-label={label}>
+      <defs>
+        <marker id="def-cau" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill={LOAD} />
+        </marker>
+      </defs>
+      <rect x="80" y="45" width="80" height="80" fill={TENSION} fillOpacity="0.12" stroke={INK} strokeWidth="1.5" />
+      {arrow(95, 38, 145, 38)}
+      {arrow(145, 132, 95, 132)}
+      {arrow(168, 110, 168, 60)}
+      {arrow(72, 60, 72, 110)}
+      <circle cx="160" cy="45" r="3" fill={INK} />
+      <Txt x="120" y="29" textAnchor="middle">τ_yx</Txt>
+      <Txt x="120" y="152" textAnchor="middle">τ_yx</Txt>
+      <Txt x="184" y="88">τ_xy</Txt>
+      <Txt x="58" y="88" textAnchor="end">τ_xy</Txt>
+    </svg>
+  );
+}
+
+// Pure shear: two plates joined by a rivet and pulled apart; the rivet is cut along the plane between the plates and the
+// stress is taken as uniform over its cross-section A.
+export function PureShearFigure({ label }: { label: string }) {
+  const { t } = useLanguage();
+  const id = "def-ps";
+  return (
+    <svg viewBox="0 0 400 190" className="h-auto w-full" role="img" aria-label={label}>
+      <defs>
+        <marker id={id} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill={LOAD} />
+        </marker>
+        <marker id={`${id}-t`} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill={TENSION} />
+        </marker>
+      </defs>
+      {/* side view: the upper plate pulled to the left, the lower one to the right */}
+      <rect x="20" y="50" width="130" height="30" fill={FAINT} fillOpacity="0.5" stroke={INK} strokeWidth="1.5" />
+      <rect x="80" y="80" width="130" height="30" fill={FAINT} fillOpacity="0.8" stroke={INK} strokeWidth="1.5" />
+      <rect x="106" y="42" width="20" height="76" fill={TENSION} fillOpacity="0.3" stroke={INK} strokeWidth="1.5" />
+      <line x1="100" y1="80" x2="132" y2="80" stroke={LOAD} strokeWidth="3.5" />
+      <line x1="20" y1="65" x2="2" y2="65" stroke={LOAD} strokeWidth="2.5" markerEnd={`url(#${id})`} />
+      <line x1="210" y1="95" x2="232" y2="95" stroke={LOAD} strokeWidth="2.5" markerEnd={`url(#${id})`} />
+      <Txt x="14" y="42" fill={LOAD}>P</Txt>
+      <Txt x="216" y="116" fill={LOAD}>P</Txt>
+      <Txt x="116" y="136" textAnchor="middle" fill={TENSION}>{t("def.fig.rivet")}</Txt>
+      <Txt x="116" y="150" textAnchor="middle" fill={LOAD} fontSize="11">{t("def.fig.shearplane")}</Txt>
+      <Txt x="116" y="168" textAnchor="middle" fill={LOAD}>Q = P</Txt>
+      {/* the section of the rivet: τ uniform over the area A */}
+      <circle cx="320" cy="85" r="36" fill={TENSION} fillOpacity="0.18" stroke={INK} strokeWidth="1.5" />
+      {[-18, 0, 18].map((dy) => (
+        <line key={dy} x1="300" y1={85 + dy} x2="340" y2={85 + dy} stroke={TENSION} strokeWidth="2" markerEnd={`url(#${id}-t)`} />
+      ))}
+      <Txt x="320" y="140" textAnchor="middle">{t("def.fig.areaA")}</Txt>
+      <Txt x="320" y="160" textAnchor="middle" fontWeight="600">τ = Q / A</Txt>
+    </svg>
+  );
+}
+
+// The shear force Q: the resultant (perpendicular to the axis) of the forces on one side of the section; the other side gives
+// the equal and opposite one.
+export function ShearForceFigure({ label }: { label: string }) {
+  const id = "def-sf";
+  return (
+    <svg viewBox="0 0 420 175" className="h-auto w-full" role="img" aria-label={label}>
+      <defs>
+        <marker id={id} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill={LOAD} />
+        </marker>
+        <marker id={`${id}-t`} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill={TENSION} />
+        </marker>
+      </defs>
+      <rect x="30" y="70" width="360" height="22" fill={FAINT} fillOpacity="0.5" stroke={INK} strokeWidth="1.5" />
+      <polygon points="30,92 20,112 40,112" fill="none" stroke={INK} strokeWidth="1.5" />
+      <polygon points="390,92 380,112 400,112" fill="none" stroke={INK} strokeWidth="1.5" />
+      <line x1="300" y1="30" x2="300" y2="68" stroke={LOAD} strokeWidth="2.5" markerEnd={`url(#${id})`} />
+      <Txt x="308" y="44" fill={LOAD}>P</Txt>
+      <line x1="30" y1="150" x2="30" y2="116" stroke={LOAD} strokeWidth="2.5" markerEnd={`url(#${id})`} />
+      <Txt x="38" y="144" fill={LOAD}>R</Txt>
+      {/* the cut: on its left face the rest of the beam pushes down (it balances R), on the right face up */}
+      <line x1="170" y1="52" x2="170" y2="130" stroke={INK} strokeWidth="1.5" strokeDasharray="5 3" />
+      <Txt x="170" y="46" textAnchor="middle">A–A</Txt>
+      <line x1="156" y1="70" x2="156" y2="104" stroke={TENSION} strokeWidth="3" markerEnd={`url(#${id}-t)`} />
+      <line x1="184" y1="104" x2="184" y2="70" stroke={TENSION} strokeWidth="3" markerEnd={`url(#${id}-t)`} />
+      <Txt x="146" y="124" textAnchor="end" fill={TENSION} fontWeight="600">Q</Txt>
+      <Txt x="194" y="124" fill={TENSION} fontWeight="600">Q</Txt>
+      <path d="M 24 160 L 156 160" stroke={INK} strokeWidth="1" />
+      <Txt x="90" y="173" textAnchor="middle" fontSize="11">Q = R</Txt>
+    </svg>
+  );
+}
+
+// The sliding stresses: stacked planks slide on each other when the beam bends; glued, the shear τ_L on the horizontal
+// planes keeps them together.
+export function SlidingFigure({ label }: { label: string }) {
+  const { t } = useLanguage();
+  const id = "def-sl";
+  const T = 22; // plank thickness
+  const plank = (x1: number, x2: number, y: number) => (
+    <path
+      key={`${x1}-${y}`}
+      d={`M ${x1} ${y} Q ${(x1 + x2) / 2} ${y + 14} ${x2} ${y} L ${x2} ${y + T} Q ${(x1 + x2) / 2} ${y + T + 14} ${x1} ${y + T} Z`}
+      fill={FAINT}
+      fillOpacity="0.5"
+      stroke={INK}
+      strokeWidth="1.5"
+    />
+  );
+  return (
+    <svg viewBox="0 0 440 185" className="h-auto w-full" role="img" aria-label={label}>
+      <defs>
+        <marker id={id} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill={LOAD} />
+        </marker>
+      </defs>
+      {/* not joined: the ends are staggered (the top one is pushed in, the bottom one sticks out) */}
+      {plank(30, 190, 40)}
+      {plank(22, 198, 62)}
+      {plank(14, 206, 84)}
+      <Txt x="110" y="150" textAnchor="middle" fontWeight="600">{t("def.fig.unbonded")}</Txt>
+      {/* joined: no slip, so the interfaces carry τ_L */}
+      {[40, 62, 84].map((y) => plank(246, 426, y))}
+      {[62, 84].map((y) =>
+        [290, 336, 382].map((x) => (
+          <g key={`${x}-${y}`}>
+            <line x1={x} y1={y + 14} x2={x + 22} y2={y + 14} stroke={LOAD} strokeWidth="2" markerEnd={`url(#${id})`} />
+            <line x1={x + 22} y1={y + 18} x2={x} y2={y + 18} stroke={LOAD} strokeWidth="2" markerEnd={`url(#${id})`} />
+          </g>
+        )),
+      )}
+      <Txt x="336" y="30" textAnchor="middle" fill={LOAD} fontWeight="600">τ_L</Txt>
+      <Txt x="336" y="150" textAnchor="middle" fontWeight="600">{t("def.fig.bonded")}</Txt>
+    </svg>
+  );
+}

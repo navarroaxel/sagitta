@@ -2152,6 +2152,24 @@ const EN = {
     "Tools",
   "nav.study":
     "Study",
+  "def.f.cpuro":
+    "Two plates joined by a rivet and pulled apart by P: the rivet is cut along the plane between the plates (Q = P) and the stress is taken as uniform over its cross-section A, τ = Q / A.",
+  "def.f.corte":
+    "In the cut A–A, the rest of the beam on the left pushes down on the left part with a force Q that balances the reaction R; on the right part, the same Q acts upwards (equal and opposite).",
+  "def.f.cauchy":
+    "Cauchy: on two perpendicular planes the shear stresses τ_xy and τ_yx are equal; both arrows point towards the common edge (here the top right) or both away from it.",
+  "def.f.resbal":
+    "Stacked planks that are not joined slide on each other when the beam bends (the ends are staggered); if they are joined, the sliding stresses τ_L on the horizontal planes hold them together. They exist at every fibre.",
+  "def.fig.rivet":
+    "rivet",
+  "def.fig.shearplane":
+    "shear plane",
+  "def.fig.areaA":
+    "area A of the rivet",
+  "def.fig.unbonded":
+    "not joined: they slide",
+  "def.fig.bonded":
+    "joined: τ_L holds them",
   "def.d.fsimple":
     "Simple bending: the forces on both sides of the section reduce, at its centroid, to two couples normal to the plane of the section, with or without shear. Without shear it is pure bending; with shear, bending and shear.",
   "def.t.plano":
@@ -4388,6 +4406,24 @@ const ES: Record<TranslationKey, string> = {
     "Herramientas",
   "nav.study":
     "Estudio",
+  "def.f.cpuro":
+    "Dos chapas unidas por un remache y estiradas por P: el remache se corta por el plano entre las chapas (Q = P) y la tensión se toma uniforme sobre su sección A, τ = Q / A.",
+  "def.f.corte":
+    "En el corte A–A, el resto de la viga empuja hacia abajo a la parte izquierda con una fuerza Q que equilibra la reacción R; sobre la parte derecha, la misma Q actúa hacia arriba (igual y opuesta).",
+  "def.f.cauchy":
+    "Cauchy: sobre dos planos perpendiculares las tensiones de corte τ_xy y τ_yx son iguales; las dos flechas van hacia la arista común (acá la de arriba a la derecha) o las dos se alejan de ella.",
+  "def.f.resbal":
+    "Tablones apilados sin unión resbalan unos contra otros al flexar la viga (los extremos quedan escalonados); si están unidos, las tensiones de resbalamiento τ_L en los planos horizontales los mantienen juntos. Existen en todas las fibras.",
+  "def.fig.rivet":
+    "remache",
+  "def.fig.shearplane":
+    "plano de corte",
+  "def.fig.areaA":
+    "área A del remache",
+  "def.fig.unbonded":
+    "sin unión: resbalan",
+  "def.fig.bonded":
+    "unidos: τ_L los mantiene",
   "def.d.fsimple":
     "Flexión simple: las fuerzas a ambos lados de la sección se reducen, en su baricentro, a dos pares normales al plano de la sección, con o sin esfuerzo de corte. Sin corte se llama flexión pura; con corte, flexión y corte.",
   "def.t.plano":
