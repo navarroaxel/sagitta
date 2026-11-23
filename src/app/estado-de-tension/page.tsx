@@ -61,7 +61,7 @@ export default function EstadoDeTensionPage() {
         <Eq>{t("tns.s2.e2")}</Eq>
         <Eq>{t("tns.s2.e3")}</Eq>
         <Para k="tns.s2.p2" />
-        <p data-testid="tns-invariants" className="mb-4 max-w-[66ch] rounded-md bg-stone-100 px-4 py-2 font-mono text-[14px] dark:bg-stone-900">
+        <p data-testid="tns-invariants" className="mb-4 max-w-[66ch] whitespace-pre-line rounded-md bg-stone-100 px-4 py-2 font-mono text-[14px] dark:bg-stone-900">
           <Sub>{t("tns.s2.p3")}</Sub>
         </p>
       </Section>
@@ -76,7 +76,7 @@ export default function EstadoDeTensionPage() {
             <PlaneVectorFigure />
           </Figure>
         </div>
-        <p data-testid="tns-plane" className="mb-4 max-w-[66ch] rounded-md bg-stone-100 px-4 py-2 font-mono text-[14px] dark:bg-stone-900">
+        <p data-testid="tns-plane" className="mb-4 max-w-[66ch] whitespace-pre-line rounded-md bg-stone-100 px-4 py-2 font-mono text-[14px] dark:bg-stone-900">
           {t("tns.s3.p2")}
         </p>
       </Section>
@@ -99,7 +99,7 @@ export default function EstadoDeTensionPage() {
             <MohrFigure />
           </Figure>
         </div>
-        <p data-testid="tns-principal" className="mb-4 max-w-[66ch] rounded-md bg-stone-100 px-4 py-2 font-mono text-[14px] dark:bg-stone-900">
+        <p data-testid="tns-principal" className="mb-4 max-w-[66ch] whitespace-pre-line rounded-md bg-stone-100 px-4 py-2 font-mono text-[14px] dark:bg-stone-900">
           <Sub>{t("tns.s4.p4")}</Sub>
         </p>
       </Section>

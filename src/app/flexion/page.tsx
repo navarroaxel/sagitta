@@ -5,7 +5,7 @@ import React from "react";
 import Link from "next/link";
 import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 import { SettingsPanel } from "@/components/SettingsPanel";
-import { Sub, SvgSub } from "@/components/Sub";
+import { Sub, SvgSub, eqLines } from "@/components/Sub";
 
 const INK = "#16232E";
 const FAINT = "#C9D2D8";
@@ -37,7 +37,13 @@ function Figure({ children, caption }: { children: React.ReactNode; caption?: Re
 function Eq({ children, n }: { children: string; n?: number }) {
   return (
     <div className="my-3 flex items-baseline justify-between gap-4 rounded-md bg-stone-100 px-4 py-2 font-mono text-[15px] dark:bg-stone-900">
-      <span><Sub>{children}</Sub></span>
+      <span>
+        {eqLines(children).map((line, i) => (
+          <div key={i}>
+            <Sub>{line}</Sub>
+          </div>
+        ))}
+      </span>
       {n !== undefined && <span className="text-stone-400">({n})</span>}
     </div>
   );

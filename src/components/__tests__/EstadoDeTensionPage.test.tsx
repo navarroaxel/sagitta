@@ -13,9 +13,9 @@ describe("/estado-de-tension", () => {
   test("shows the professor's tensor, invariants, plane and principal values", () => {
     renderPage();
     expect(screen.getAllByTestId("tensor-matrix")).toHaveLength(2);
-    expect(screen.getByTestId("tns-invariants").textContent).toMatch(/−725.*−750/);
-    expect(screen.getByTestId("tns-plane").textContent).toMatch(/20\.21.*11\.04.*16\.93/);
-    expect(screen.getByTestId("tns-principal").textContent).toMatch(/31\.9542.*1\.02156.*−22\.97576/);
+    expect(screen.getByTestId("tns-invariants").textContent).toMatch(/−725[\s\S]*−750/);
+    expect(screen.getByTestId("tns-plane").textContent).toMatch(/20\.21[\s\S]*11\.04[\s\S]*16\.93/);
+    expect(screen.getByTestId("tns-principal").textContent).toMatch(/31\.9542[\s\S]*1\.02156[\s\S]*−22\.97576/);
     expect(screen.getByTestId("tns-dir-3").textContent).toMatch(/0\.961/);
     expect(document.body.textContent).not.toMatch(/[A-Za-z]_[A-Za-z0-9]/);
   });

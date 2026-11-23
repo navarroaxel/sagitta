@@ -71,7 +71,7 @@ export default function SuperficiesPlanasPage() {
               className="rounded-lg border border-stone-200 bg-white p-4 dark:border-stone-700 dark:bg-stone-900"
             >
               <p className="mb-1 text-[15px] font-semibold">{t(`pln.s2.${e}.t` as TranslationKey)}</p>
-              <p className="font-mono text-[14px] leading-relaxed">
+              <p className="whitespace-pre-line font-mono text-[14px] leading-relaxed">
                 <Sub>{t(`pln.s2.${e}.r` as TranslationKey)}</Sub>
               </p>
             </div>

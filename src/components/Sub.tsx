@@ -20,6 +20,12 @@ function tokenize(s: string): Tok[] {
   return out;
 }
 
+// An <Eq> string may hold several equations separated by a run of spaces (or a newline): each goes on its own line, so
+// the cut between two formulas is never ambiguous inside one box.
+export function eqLines(s: string): string[] {
+  return s.split(/\s{4,}|\n/).filter((l) => l.length > 0);
+}
+
 // Removes the markup (for aria-labels and plain-text uses).
 export function plain(s: string): string {
   return s.replace(/\{([^{}]*)\}/g, "$1");

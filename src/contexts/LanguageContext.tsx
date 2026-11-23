@@ -914,13 +914,13 @@ const EN = {
   "tor.s7.e1.p":
     "Steel round bar, {D} = 6 cm, {l} = 3 m, {M}_t = 200 kg·m. Find τ_max and φ. {G} = 0.4·2 100 000 = 840 000 kg/cm².",
   "tor.s7.e1.r":
-    "{M}_t = 20 000 kg·cm; {J}_0 = π·6⁴/32 = 127 cm⁴; τ_max = 16·20 000 / (π·6³) ≈ 472 kg/cm²; φ = 20 000·300 / (840 000·127) = 0.056 rad ≈ 3°12′.",
+    "{M}_t = 20 000 kg·cm\n{J}_0 = π·6⁴/32 = 127 cm⁴\nτ_max = 16·20 000 / (π·6³) ≈ 472 kg/cm²\nφ = 20 000·300 / (840 000·127) = 0.056 rad ≈ 3°12′.",
   "tor.s7.e2.title":
     "Size a bar",
   "tor.s7.e2.p":
     "Steel bar, {l} = 2 m, loaded by a 500 kg force with a 120 cm arm at the free end. τ_adm = 600 kg/cm², {G} = 800 000 kg/cm². Find D and φ.",
   "tor.s7.e2.r":
-    "{M}_t = 500·120 = 60 000 kg·cm; {R} = ∛(2·60 000 / (π·600)) ≈ 4 cm, so {D} = 8 cm; {J}_0 = π·8⁴/32 ≈ 402 cm⁴; φ = 60 000·200 / (800 000·402) ≈ 0.037 rad ≈ 2°7′.",
+    "{M}_t = 500·120 = 60 000 kg·cm\n{R} = ∛(2·60 000 / (π·600)) ≈ 4 cm, so {D} = 8 cm\n{J}_0 = π·8⁴/32 ≈ 402 cm⁴\nφ = 60 000·200 / (800 000·402) ≈ 0.037 rad ≈ 2°7′.",
   "tor.note":
     "A note on the source: the book prints τ_max = 549 kg/cm² for the first exercise, but its own formula gives 472 kg/cm²; the value above is recomputed.",
   "tor.footer":
@@ -1014,19 +1014,19 @@ const EN = {
   "axl.s6.e1.p":
     "A steel cable passes over pulleys along 7 m + 10 m + 6 m + 2 m and holds 5 000 kg. σ_adm = 1 400 kg/cm², {E} = 2 100 000 kg/cm². Find the radius and the elongation. Then find the radius needed to keep the elongation to 10 % of that value.",
   "axl.s6.e1.r":
-    "{A}_nec = 5 000 / 1 400 = 3.57 cm² = π·r² → r = 1.066 cm. Total length 700 + 1 000 + 600 + 200 = 2 500 cm. Δ{l} = 5 000·2 500 / (3.57·2 100 000) = 1.67 cm. For Δ{l}′ = 0.167 cm: {A} = 5 000·2 500 / (0.167·2 100 000) = 35.7 cm² → r = 3.37 cm.",
+    "{A}_nec = 5 000 / 1 400 = 3.57 cm² = π·r² → r = 1.066 cm\nTotal length 700 + 1 000 + 600 + 200 = 2 500 cm\nΔ{l} = 5 000·2 500 / (3.57·2 100 000) = 1.67 cm\nFor Δ{l}′ = 0.167 cm: {A} = 5 000·2 500 / (0.167·2 100 000) = 35.7 cm² → r = 3.37 cm.",
   "axl.s6.e2.title":
     "Admissible load of a wire",
   "axl.s6.e2.p":
     "A hanging wire, 6 m long, radius 0.50 cm, σ_adm = 1 600 kg/cm². Find the admissible load.",
   "axl.s6.e2.r":
-    "{A} = π·0.5² = 0.7854 cm²; {F}_adm = σ_adm·{A} = 1 600·0.7854 = 1 256.6 kg.",
+    "{A} = π·0.5² = 0.7854 cm²\n{F}_adm = σ_adm·{A} = 1 600·0.7854 = 1 256.6 kg.",
   "axl.s6.e3.title":
     "Imposed elongation",
   "axl.s6.e3.p":
     "The same cable ({A} = 3.57 cm², {l} = 25 m) is forced to elongate 5 cm. What load does that imply, and is it admissible?",
   "axl.s6.e3.r":
-    "{F} = Δ{l}·{A}·{E} / {l} = 5·3.57·2 100 000 / 2 500 ≈ 15 000 kg; σ = {F}/{A} ≈ 4 202 kg/cm² > σ_adm = 1 400: it does NOT verify.",
+    "{F} = Δ{l}·{A}·{E} / {l} = 5·3.57·2 100 000 / 2 500 ≈ 15 000 kg\nσ = {F}/{A} ≈ 4 202 kg/cm² > σ_adm = 1 400: it does NOT verify.",
   "axl.footer":
     "Transcribed from the handwritten course notes “Axil AMS”; numbers in the exercises were recomputed and agree with the notes.",
   "fla.link":
@@ -1235,15 +1235,15 @@ const EN = {
   "pln.s2.ex1.t":
     "Rectangle 4 × 16 with its corners at (6, 4) and (10, 20)",
   "pln.s2.ex1.r":
-    "{A} = 64; {S}_x = 4·(20² − 4²)/2 = 768; {S}_y = 16·(10² − 6²)/2 = 512; {y}_g = 768/64 = 12; {x}_g = 512/64 = 8.",
+    "{A} = 64\n{S}_x = 4·(20² − 4²)/2 = 768\n{S}_y = 16·(10² − 6²)/2 = 512\n{y}_g = 768/64 = 12\n{x}_g = 512/64 = 8.",
   "pln.s2.ex2.t":
     "Three masses: 300 kg at (30, 70), 800 kg at (80, 100), 1 000 kg at (60, 40)",
   "pln.s2.ex2.r":
-    "{M} = 2 100 kg; {S}_y = 133 000 kg·cm; {S}_x = 141 000 kg·cm; {x}_g = 63.33 cm; {y}_g = 67.14 cm.",
+    "{M} = 2 100 kg\n{S}_y = 133 000 kg·cm\n{S}_x = 141 000 kg·cm\n{x}_g = 63.33 cm\n{y}_g = 67.14 cm.",
   "pln.s2.ex3.t":
     "Irregular plate split into three rectangles (26, 50 and 75 cm²)",
   "pln.s2.ex3.r":
-    "{A} = 151 cm²; {S}_y = 26·6.5 + 50·5 + 75·7.5 = 981.5; {S}_x = 26·11 + 50·7.5 + 75·2.5 = 848.5; {x}_g = 6.50 cm; {y}_g = 5.62 cm.",
+    "{A} = 151 cm²\n{S}_y = 26·6.5 + 50·5 + 75·7.5 = 981.5\n{S}_x = 26·11 + 50·7.5 + 75·2.5 = 848.5\n{x}_g = 6.50 cm\n{y}_g = 5.62 cm.",
   "pln.s3.kicker":
     "03 — Composite areas",
   "pln.s3.title":
@@ -1428,15 +1428,15 @@ const EN = {
   "pnd.s5.e1.t":
     "IPN 10, {h} = 7 m ({J}_y = 12.20 cm⁴)",
   "pnd.s5.e1.r":
-    "Pinned (c = 1): {F}_k = π²·2 100 000·12.20 / 700² = 516 kg. Fixed–fixed (c = 0.5): {F}_k = 2 064 kg.",
+    "Pinned (c = 1): {F}_k = π²·2 100 000·12.20 / 700² = 516 kg\nFixed–fixed (c = 0.5): {F}_k = 2 064 kg.",
   "pnd.s5.e2.t":
     "IPN 23, {h} = 7 m ({J}_y = 189 cm⁴)",
   "pnd.s5.e2.r":
-    "Pinned: {F}_k = π²·2 100 000·189 / 700² = 7 994 kg. Fixed–fixed (c = 0.5): {F}_k = 31 978 kg.",
+    "Pinned: {F}_k = π²·2 100 000·189 / 700² = 7 994 kg\nFixed–fixed (c = 0.5): {F}_k = 31 978 kg.",
   "pnd.s5.e3.t":
     "Bar 15 × 24 cm, 8 m long, pinned, with 350 t (σ_adm = 1 200 kg/cm²)",
   "pnd.s5.e3.r":
-    "{A} = 360 cm², σ = 350 000/360 = 972.2 kg/cm² < 1 200: it passes the stress check. {J}_min = 24·15³/12 = 6 750 cm⁴ and {F}_k = π²·2 100 000·6 750 / 800² = 218 596 kg < 350 000 kg: it buckles. The load “admissible by stress”, 1 200·360 = 432 t, is not the real limit. The longest bar that carries 350 t is {l} = √(π²·{E}·{J}/{F}) = 632 cm.",
+    "{A} = 360 cm², σ = 350 000/360 = 972.2 kg/cm² < 1 200: it passes the stress check\n{J}_min = 24·15³/12 = 6 750 cm⁴ and {F}_k = π²·2 100 000·6 750 / 800² = 218 596 kg < 350 000 kg: it buckles\nThe load “admissible by stress”, 1 200·360 = 432 t, is not the real limit\nThe longest bar that carries 350 t is {l} = √(π²·{E}·{J}/{F}) = 632 cm.",
   "pnd.s5.e4.t":
     "Cantilever (c = 2) carrying 135 000 kg, with {J}_y = 14 435 cm⁴",
   "pnd.s5.e4.r":
@@ -1512,7 +1512,7 @@ const EN = {
   "tns.s2.p2":
     "Classification: if {I}_3 ≠ 0 the state is triple or spatial (three nonzero principal stresses); if {I}_3 = 0 and {I}_2 ≠ 0 it is double or plane; if only {I}_1 ≠ 0 it is simple or uniaxial.",
   "tns.s2.p3":
-    "In the exercise: {I}_1 = −20 + 30 + 0 = 10 MPa; {I}_2 = (−600 − 100) + (0 − 0) + (0 − 25) = −725 MPa²; {I}_3 = 0 + 0 − (0 + 30·25 + 0) = −750 MPa³. Since {I}_3 ≠ 0 the state at B is triple (spatial).",
+    "In the exercise:\n{I}_1 = −20 + 30 + 0 = 10 MPa\n{I}_2 = (−600 − 100) + (0 − 0) + (0 − 25) = −725 MPa²\n{I}_3 = 0 + 0 − (0 + 30·25 + 0) = −750 MPa³\nSince {I}_3 ≠ 0 the state at B is triple (spatial).",
   "tns.s3.kicker":
     "03 — Stress vector",
   "tns.s3.title":
@@ -1526,7 +1526,7 @@ const EN = {
   "tns.s3.e3":
     "τ = ρ − σ        |ρ|² = |σ|² + |τ|²",
   "tns.s3.p2":
-    "In the exercise, with n = (0.5; 0.5; 0.7071): ρ = (−1.4645; 20; 2.5) MPa, |ρ| = 20.21 MPa; σ = (5.5178; 5.5178; 7.8032) MPa, |σ| = 11.04 MPa; τ = (−6.9823; 14.4822; −5.3032) MPa, |τ| = 16.93 MPa.",
+    "In the exercise, with n = (0.5; 0.5; 0.7071):\nρ = (−1.4645; 20; 2.5) MPa, |ρ| = 20.21 MPa\nσ = (5.5178; 5.5178; 7.8032) MPa, |σ| = 11.04 MPa\nτ = (−6.9823; 14.4822; −5.3032) MPa, |τ| = 16.93 MPa.",
   "tns.s4.kicker":
     "04 — Principal stresses",
   "tns.s4.title":
@@ -1542,7 +1542,7 @@ const EN = {
   "tns.s4.p3":
     "The three equations are dependent, so one unknown is fixed ({a} = 1) and the other two solved; then the vector is normalised dividing by (a² + {b}² + c²)^½. The sign of the direction is arbitrary. The plane perpendicular to each direction is the corresponding principal plane.",
   "tns.s4.p4":
-    "In the exercise: σ_1 = 31.9542 MPa, σ_2 = 1.02156 MPa, σ_3 = −22.97576 MPa. Their sum is {I}_1 = 10 and their product is {I}_3 = −750, as it has to be.",
+    "In the exercise:\nσ_1 = 31.9542 MPa\nσ_2 = 1.02156 MPa\nσ_3 = −22.97576 MPa\nTheir sum is {I}_1 = 10 and their product is {I}_3 = −750, as it has to be.",
   "tns.s5.kicker":
     "05 — The directions",
   "tns.s5.title":
@@ -1747,7 +1747,7 @@ const EN = {
   "mat.s8.p3":
     "The stresses are what produce them: σ is normal to the section and τ lies in its plane. For each element {dF} there are three elementary forces:",
   "mat.s8.e1":
-    "along x: {dN} = σ·{dF}        along y: dQ_y = τ_xy·{dF}        along z: dQ_z = τ_xz·{dF}",
+    "along x: {dN} = σ·{dF}        along y: {dQ}_y = τ_xy·{dF}        along z: {dQ}_z = τ_xz·{dF}",
   "mat.s8.p4":
     "Integrating over the whole area F gives the equations of equivalence ({z} and {y} are the coordinates of the element of area):",
   "mat.s8.q1":
@@ -3050,13 +3050,13 @@ const ES: Record<TranslationKey, string> = {
   "tor.s7.e1.p":
     "Barra redonda de acero, {D} = 6 cm, {l} = 3 m, {M}_t = 200 kg·m. Hallar τ_max y φ. {G} = 0,4·2 100 000 = 840 000 kg/cm².",
   "tor.s7.e1.r":
-    "{M}_t = 20 000 kg·cm; {J}_0 = π·6⁴/32 = 127 cm⁴; τ_max = 16·20 000 / (π·6³) ≈ 472 kg/cm²; φ = 20 000·300 / (840 000·127) = 0,056 rad ≈ 3°12′.",
+    "{M}_t = 20 000 kg·cm\n{J}_0 = π·6⁴/32 = 127 cm⁴\nτ_max = 16·20 000 / (π·6³) ≈ 472 kg/cm²\nφ = 20 000·300 / (840 000·127) = 0,056 rad ≈ 3°12′.",
   "tor.s7.e2.title":
     "Dimensionar una barra",
   "tor.s7.e2.p":
     "Barra de acero, {l} = 2 m, cargada por una fuerza de 500 kg con brazo de 120 cm en el extremo libre. τ_adm = 600 kg/cm², {G} = 800 000 kg/cm². Hallar D y φ.",
   "tor.s7.e2.r":
-    "{M}_t = 500·120 = 60 000 kg·cm; {R} = ∛(2·60 000 / (π·600)) ≈ 4 cm, o sea {D} = 8 cm; {J}_0 = π·8⁴/32 ≈ 402 cm⁴; φ = 60 000·200 / (800 000·402) ≈ 0,037 rad ≈ 2°7′.",
+    "{M}_t = 500·120 = 60 000 kg·cm\n{R} = ∛(2·60 000 / (π·600)) ≈ 4 cm, o sea {D} = 8 cm\n{J}_0 = π·8⁴/32 ≈ 402 cm⁴\nφ = 60 000·200 / (800 000·402) ≈ 0,037 rad ≈ 2°7′.",
   "tor.note":
     "Una aclaración sobre la fuente: el libro imprime τ_max = 549 kg/cm² en el primer ejercicio, pero con su propia fórmula da 472 kg/cm²; el valor de arriba está recalculado.",
   "tor.footer":
@@ -3150,19 +3150,19 @@ const ES: Record<TranslationKey, string> = {
   "axl.s6.e1.p":
     "Un cable de acero pasa por poleas a lo largo de 7 m + 10 m + 6 m + 2 m y sostiene 5 000 kg. σ_adm = 1 400 kg/cm², {E} = 2 100 000 kg/cm². Hallar el radio y el alargamiento. Luego, el radio necesario para que el alargamiento sea el 10 % de ese valor.",
   "axl.s6.e1.r":
-    "{A}_nec = 5 000 / 1 400 = 3,57 cm² = π·r² → r = 1,066 cm. Longitud total 700 + 1 000 + 600 + 200 = 2 500 cm. Δ{l} = 5 000·2 500 / (3,57·2 100 000) = 1,67 cm. Para Δ{l}′ = 0,167 cm: {A} = 5 000·2 500 / (0,167·2 100 000) = 35,7 cm² → r = 3,37 cm.",
+    "{A}_nec = 5 000 / 1 400 = 3,57 cm² = π·r² → r = 1,066 cm\nLongitud total 700 + 1 000 + 600 + 200 = 2 500 cm\nΔ{l} = 5 000·2 500 / (3,57·2 100 000) = 1,67 cm\nPara Δ{l}′ = 0,167 cm: {A} = 5 000·2 500 / (0,167·2 100 000) = 35,7 cm² → r = 3,37 cm.",
   "axl.s6.e2.title":
     "Carga admisible de un alambre",
   "axl.s6.e2.p":
     "Un alambre colgado de 6 m, radio 0,50 cm, σ_adm = 1 600 kg/cm². Hallar la carga admisible.",
   "axl.s6.e2.r":
-    "{A} = π·0,5² = 0,7854 cm²; {F}_adm = σ_adm·{A} = 1 600·0,7854 = 1 256,6 kg.",
+    "{A} = π·0,5² = 0,7854 cm²\n{F}_adm = σ_adm·{A} = 1 600·0,7854 = 1 256,6 kg.",
   "axl.s6.e3.title":
     "Alargamiento impuesto",
   "axl.s6.e3.p":
     "El mismo cable ({A} = 3,57 cm², {l} = 25 m) se fuerza a alargarse 5 cm. ¿Qué carga implica y es admisible?",
   "axl.s6.e3.r":
-    "{F} = Δ{l}·{A}·{E} / {l} = 5·3,57·2 100 000 / 2 500 ≈ 15 000 kg; σ = {F}/{A} ≈ 4 202 kg/cm² > σ_adm = 1 400: NO verifica.",
+    "{F} = Δ{l}·{A}·{E} / {l} = 5·3,57·2 100 000 / 2 500 ≈ 15 000 kg\nσ = {F}/{A} ≈ 4 202 kg/cm² > σ_adm = 1 400: NO verifica.",
   "axl.footer":
     "Transcripto del apunte manuscrito “Axil AMS” de la cátedra; los números de los ejercicios se recalcularon y coinciden con el apunte.",
   "fla.link":
@@ -3371,15 +3371,15 @@ const ES: Record<TranslationKey, string> = {
   "pln.s2.ex1.t":
     "Rectángulo de 4 × 16 con esquinas en (6, 4) y (10, 20)",
   "pln.s2.ex1.r":
-    "{A} = 64; {S}_x = 4·(20² − 4²)/2 = 768; {S}_y = 16·(10² − 6²)/2 = 512; {y}_g = 768/64 = 12; {x}_g = 512/64 = 8.",
+    "{A} = 64\n{S}_x = 4·(20² − 4²)/2 = 768\n{S}_y = 16·(10² − 6²)/2 = 512\n{y}_g = 768/64 = 12\n{x}_g = 512/64 = 8.",
   "pln.s2.ex2.t":
     "Tres masas: 300 kg en (30, 70), 800 kg en (80, 100), 1 000 kg en (60, 40)",
   "pln.s2.ex2.r":
-    "{M} = 2 100 kg; {S}_y = 133 000 kg·cm; {S}_x = 141 000 kg·cm; {x}_g = 63,33 cm; {y}_g = 67,14 cm.",
+    "{M} = 2 100 kg\n{S}_y = 133 000 kg·cm\n{S}_x = 141 000 kg·cm\n{x}_g = 63,33 cm\n{y}_g = 67,14 cm.",
   "pln.s2.ex3.t":
     "Chapa irregular dividida en tres rectángulos (26, 50 y 75 cm²)",
   "pln.s2.ex3.r":
-    "{A} = 151 cm²; {S}_y = 26·6,5 + 50·5 + 75·7,5 = 981,5; {S}_x = 26·11 + 50·7,5 + 75·2,5 = 848,5; {x}_g = 6,50 cm; {y}_g = 5,62 cm.",
+    "{A} = 151 cm²\n{S}_y = 26·6,5 + 50·5 + 75·7,5 = 981,5\n{S}_x = 26·11 + 50·7,5 + 75·2,5 = 848,5\n{x}_g = 6,50 cm\n{y}_g = 5,62 cm.",
   "pln.s3.kicker":
     "03 — Superficies compuestas",
   "pln.s3.title":
@@ -3564,15 +3564,15 @@ const ES: Record<TranslationKey, string> = {
   "pnd.s5.e1.t":
     "IPN 10, {h} = 7 m ({J}_y = 12,20 cm⁴)",
   "pnd.s5.e1.r":
-    "Articulada (c = 1): {F}_k = π²·2 100 000·12,20 / 700² = 516 kg. Empotrada–empotrada (c = 0,5): {F}_k = 2 064 kg.",
+    "Articulada (c = 1): {F}_k = π²·2 100 000·12,20 / 700² = 516 kg\nEmpotrada–empotrada (c = 0,5): {F}_k = 2 064 kg.",
   "pnd.s5.e2.t":
     "IPN 23, {h} = 7 m ({J}_y = 189 cm⁴)",
   "pnd.s5.e2.r":
-    "Articulada: {F}_k = π²·2 100 000·189 / 700² = 7 994 kg. Empotrada–empotrada (c = 0,5): {F}_k = 31 978 kg.",
+    "Articulada: {F}_k = π²·2 100 000·189 / 700² = 7 994 kg\nEmpotrada–empotrada (c = 0,5): {F}_k = 31 978 kg.",
   "pnd.s5.e3.t":
     "Barra de 15 × 24 cm, 8 m de largo, articulada, con 350 t (σ_adm = 1 200 kg/cm²)",
   "pnd.s5.e3.r":
-    "{A} = 360 cm², σ = 350 000/360 = 972,2 kg/cm² < 1 200: verifica por tensión. {J}_min = 24·15³/12 = 6 750 cm⁴ y {F}_k = π²·2 100 000·6 750 / 800² = 218 596 kg < 350 000 kg: pandea. La carga “admisible por tensión”, 1 200·360 = 432 t, no es el límite real. La barra más larga que soporta 350 t es {l} = √(π²·{E}·{J}/{F}) = 632 cm.",
+    "{A} = 360 cm², σ = 350 000/360 = 972,2 kg/cm² < 1 200: verifica por tensión\n{J}_min = 24·15³/12 = 6 750 cm⁴ y {F}_k = π²·2 100 000·6 750 / 800² = 218 596 kg < 350 000 kg: pandea\nLa carga “admisible por tensión”, 1 200·360 = 432 t, no es el límite real\nLa barra más larga que soporta 350 t es {l} = √(π²·{E}·{J}/{F}) = 632 cm.",
   "pnd.s5.e4.t":
     "Ménsula (c = 2) con 135 000 kg, con {J}_y = 14 435 cm⁴",
   "pnd.s5.e4.r":
@@ -3648,7 +3648,7 @@ const ES: Record<TranslationKey, string> = {
   "tns.s2.p2":
     "Clasificación: si {I}_3 ≠ 0 el estado es triple o espacial (tres tensiones principales no nulas); si {I}_3 = 0 e {I}_2 ≠ 0 es doble o plano; si solo {I}_1 ≠ 0 es simple o uniaxial.",
   "tns.s2.p3":
-    "En el ejercicio: {I}_1 = −20 + 30 + 0 = 10 MPa; {I}_2 = (−600 − 100) + (0 − 0) + (0 − 25) = −725 MPa²; {I}_3 = 0 + 0 − (0 + 30·25 + 0) = −750 MPa³. Como {I}_3 ≠ 0 el estado en B es triple (espacial).",
+    "En el ejercicio:\n{I}_1 = −20 + 30 + 0 = 10 MPa\n{I}_2 = (−600 − 100) + (0 − 0) + (0 − 25) = −725 MPa²\n{I}_3 = 0 + 0 − (0 + 30·25 + 0) = −750 MPa³\nComo {I}_3 ≠ 0 el estado en B es triple (espacial).",
   "tns.s3.kicker":
     "03 — Vector tensión",
   "tns.s3.title":
@@ -3662,7 +3662,7 @@ const ES: Record<TranslationKey, string> = {
   "tns.s3.e3":
     "τ = ρ − σ        |ρ|² = |σ|² + |τ|²",
   "tns.s3.p2":
-    "En el ejercicio, con n = (0,5; 0,5; 0,7071): ρ = (−1,4645; 20; 2,5) MPa, |ρ| = 20,21 MPa; σ = (5,5178; 5,5178; 7,8032) MPa, |σ| = 11,04 MPa; τ = (−6,9823; 14,4822; −5,3032) MPa, |τ| = 16,93 MPa.",
+    "En el ejercicio, con n = (0,5; 0,5; 0,7071):\nρ = (−1,4645; 20; 2,5) MPa, |ρ| = 20,21 MPa\nσ = (5,5178; 5,5178; 7,8032) MPa, |σ| = 11,04 MPa\nτ = (−6,9823; 14,4822; −5,3032) MPa, |τ| = 16,93 MPa.",
   "tns.s4.kicker":
     "04 — Tensiones principales",
   "tns.s4.title":
@@ -3678,7 +3678,7 @@ const ES: Record<TranslationKey, string> = {
   "tns.s4.p3":
     "Las tres ecuaciones son dependientes, así que se fija una incógnita ({a} = 1) y se resuelven las otras dos; luego se normaliza el vector dividiendo por (a² + {b}² + c²)^½. El sentido de la dirección es arbitrario. El plano perpendicular a cada dirección es el plano principal correspondiente.",
   "tns.s4.p4":
-    "En el ejercicio: σ_1 = 31,9542 MPa, σ_2 = 1,02156 MPa, σ_3 = −22,97576 MPa. Su suma es {I}_1 = 10 y su producto es {I}_3 = −750, como debe ser.",
+    "En el ejercicio:\nσ_1 = 31,9542 MPa\nσ_2 = 1,02156 MPa\nσ_3 = −22,97576 MPa\nSu suma es {I}_1 = 10 y su producto es {I}_3 = −750, como debe ser.",
   "tns.s5.kicker":
     "05 — Las direcciones",
   "tns.s5.title":
@@ -3883,7 +3883,7 @@ const ES: Record<TranslationKey, string> = {
   "mat.s8.p3":
     "Las tensiones son las que los producen: σ es normal a la sección y τ está contenida en su plano. Para cada elemento {dF} hay tres fuerzas elementales:",
   "mat.s8.e1":
-    "sobre x: {dN} = σ·{dF}        sobre y: dQ_y = τ_xy·{dF}        sobre z: dQ_z = τ_xz·{dF}",
+    "sobre x: {dN} = σ·{dF}        sobre y: {dQ}_y = τ_xy·{dF}        sobre z: {dQ}_z = τ_xz·{dF}",
   "mat.s8.p4":
     "Integrando en toda la superficie F quedan las ecuaciones de equivalencia ({z} e {y} son las coordenadas del elemento de superficie):",
   "mat.s8.q1":
