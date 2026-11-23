@@ -345,3 +345,171 @@ export function NeutralAxisFigure({ label }: { label: string }) {
     </svg>
   );
 }
+
+// ---- Plane areas: an L-shaped section with what each moment adds up (all measured on the drawing) ----
+
+export const PLANE_FOCI = ["static", "centroid", "inertia", "product", "polar", "gyration", "principal", "principalMoments"] as const;
+export type PlaneFocus = (typeof PLANE_FOCI)[number];
+
+// The L section (screen coordinates), its two rectangles in y-up coordinates measured from the origin O of the axes.
+const AO = [60, 160]; // origin of the x, y axes
+const L_OUTLINE = "90,30 110,30 110,120 180,120 180,140 90,140";
+const L_PARTS = [
+  { x: 90, y: 30, w: 20, h: 110 }, // vertical leg
+  { x: 110, y: 120, w: 70, h: 20 }, // horizontal leg
+];
+const L_AREA = L_PARTS.reduce((a, r) => a + r.w * r.h, 0);
+// centroid (screen)
+const GX = L_PARTS.reduce((a, r) => a + r.w * r.h * (r.x + r.w / 2), 0) / L_AREA;
+const GY = L_PARTS.reduce((a, r) => a + r.w * r.h * (r.y + r.h / 2), 0) / L_AREA;
+// about the axes at O (y up): J_x = Σ(b·h³/12 + A·d²)
+const JX_O = L_PARTS.reduce((a, r) => {
+  const yc = AO[1] - (r.y + r.h / 2);
+  return a + (r.w * r.h ** 3) / 12 + r.w * r.h * yc * yc;
+}, 0);
+const GYRATION = Math.sqrt(JX_O / L_AREA);
+// central principal axes: tg 2θ = 2·Jxy / (Jy − Jx), θ from x counter-clockwise (y up), Jxy the central product of inertia
+const JX_G = L_PARTS.reduce((a, r) => {
+  const dy = GY - (r.y + r.h / 2);
+  return a + (r.w * r.h ** 3) / 12 + r.w * r.h * dy * dy;
+}, 0);
+const JY_G = L_PARTS.reduce((a, r) => {
+  const dx = r.x + r.w / 2 - GX;
+  return a + (r.h * r.w ** 3) / 12 + r.w * r.h * dx * dx;
+}, 0);
+const JXY_G = L_PARTS.reduce((a, r) => a + r.w * r.h * (r.x + r.w / 2 - GX) * (GY - (r.y + r.h / 2)), 0);
+const THETA_A = 0.5 * Math.atan2(2 * JXY_G, JY_G - JX_G); // one of the principal axes
+const J_AT = (th: number) => JX_G * Math.cos(th) ** 2 + JY_G * Math.sin(th) ** 2 - JXY_G * Math.sin(2 * th);
+// axis 1 is the one with the larger moment (J_1 = J_max); its angle from x, turned into (−90°, 90°]
+const THETA1 = (() => {
+  const th = J_AT(THETA_A) >= J_AT(THETA_A + Math.PI / 2) ? THETA_A : THETA_A + Math.PI / 2;
+  return th > Math.PI / 2 ? th - Math.PI : th <= -Math.PI / 2 ? th + Math.PI : th;
+})();
+
+export function PlaneAreaFigure({ focus, label }: { focus: PlaneFocus; label: string }) {
+  const { t } = useLanguage();
+  const centered = focus === "principal" || focus === "principalMoments" || focus === "centroid";
+  const dim = (x1: number, y1: number, x2: number, y2: number, color: string) => (
+    <g stroke={color} strokeWidth="1.5">
+      <line x1={x1} y1={y1} x2={x2} y2={y2} />
+      {y1 === y2 ? (
+        <g>
+          <line x1={x1} y1={y1 - 4} x2={x1} y2={y1 + 4} />
+          <line x1={x2} y1={y2 - 4} x2={x2} y2={y2 + 4} />
+        </g>
+      ) : (
+        <g>
+          <line x1={x1 - 4} y1={y1} x2={x1 + 4} y2={y1} />
+          <line x1={x2 - 4} y1={y2} x2={x2 + 4} y2={y2} />
+        </g>
+      )}
+    </g>
+  );
+  const dA = (x: number, y: number, color = LOAD) => <rect x={x} y={y} width="10" height="8" fill={color} stroke="#fff" strokeWidth="0.8" />;
+  const axes = (ox: number, oy: number) => (
+    <g>
+      <line x1={ox} y1={oy} x2="236" y2={oy} stroke={INK} strokeWidth="1.5" />
+      <line x1={ox} y1={oy} x2={ox} y2="16" stroke={INK} strokeWidth="1.5" />
+      <Txt x="240" y={oy + 4}>{"{x}"}</Txt>
+      <Txt x={ox + 6} y="20">{"{y}"}</Txt>
+    </g>
+  );
+  return (
+    <svg viewBox="0 0 360 195" className="h-auto w-full" role="img" aria-label={label}>
+      <polygon points={L_OUTLINE} fill={TENSION} fillOpacity="0.14" stroke={INK} strokeWidth="1.5" />
+      {!centered && axes(AO[0], AO[1])}
+
+      {focus === "static" && (
+        <g>
+          {dA(150, 124)}
+          {dim(AO[0] - 14, 160, AO[0] - 14, 124, LOAD)}
+          <line x1="150" y1="128" x2={AO[0] - 14} y2="128" stroke={FAINT} strokeWidth="1" strokeDasharray="3 3" />
+          <Txt x={AO[0] - 20} y="146" textAnchor="end" fill={LOAD}>{"{y}"}</Txt>
+          <Txt x="166" y="116" fill={LOAD}>{"{dA}"}</Txt>
+          <Txt x="190" y="90" fill={INK} fontSize="13">{"{S}_x = ∫ {y} {dA}"}</Txt>
+        </g>
+      )}
+      {focus === "centroid" && (
+        <g>
+          <line x1={GX} y1={GY} x2={GX} y2="168" stroke={FAINT} strokeWidth="1" strokeDasharray="3 3" />
+          <line x1={GX} y1={GY} x2="52" y2={GY} stroke={FAINT} strokeWidth="1" strokeDasharray="3 3" />
+          <line x1="52" y1="168" x2="236" y2="168" stroke={INK} strokeWidth="1.5" />
+          <line x1="52" y1="168" x2="52" y2="16" stroke={INK} strokeWidth="1.5" />
+          <Txt x="240" y="172">{"{x}"}</Txt>
+          <Txt x="58" y="20">{"{y}"}</Txt>
+          {dim(52, 176, GX, 176, LOAD)}
+          {dim(44, GY, 44, 168, LOAD)}
+          <Txt x={(52 + GX) / 2} y="190" textAnchor="middle" fill={LOAD}>{"{x}_g"}</Txt>
+          <Txt x="38" y={(GY + 168) / 2 + 4} textAnchor="end" fill={LOAD}>{"{y}_g"}</Txt>
+          <circle cx={GX} cy={GY} r="4" fill={LOAD} stroke="#fff" strokeWidth="1" />
+          <Txt x={GX + 8} y={GY - 6} fill={LOAD} fontWeight="600">G</Txt>
+          <Txt x="196" y="60" fontSize="13">{"{x}_g = {S}_y / {A}"}</Txt>
+          <Txt x="196" y="80" fontSize="13">{"{y}_g = {S}_x / {A}"}</Txt>
+        </g>
+      )}
+      {focus === "inertia" && (
+        <g>
+          {dA(95, 34, LOAD)}
+          {dA(150, 130, TENSION)}
+          {dim(AO[0] - 14, 160, AO[0] - 14, 34, LOAD)}
+          {dim(AO[0] - 30, 160, AO[0] - 30, 130, TENSION)}
+          <Txt x={AO[0] - 36} y="148" textAnchor="end" fill={TENSION}>{"{y}_1"}</Txt>
+          <Txt x={AO[0] - 20} y="100" textAnchor="end" fill={LOAD}>{"{y}_2"}</Txt>
+          <Txt x="112" y="44" fill={LOAD} fontSize="11">{t("def.fig.far")}</Txt>
+          <Txt x="186" y="138" fill={TENSION} fontSize="11">{t("def.fig.near")}</Txt>
+          <Txt x="190" y="90" fontSize="13">{"{J}_x = ∫ {y}² {dA}"}</Txt>
+        </g>
+      )}
+      {focus === "product" && (
+        <g>
+          {dA(150, 124)}
+          <line x1="155" y1="128" x2="155" y2="160" stroke={FAINT} strokeWidth="1" strokeDasharray="3 3" />
+          <line x1="155" y1="128" x2="60" y2="128" stroke={FAINT} strokeWidth="1" strokeDasharray="3 3" />
+          {dim(60, 150, 155, 150, TENSION)}
+          {dim(AO[0] - 14, 160, AO[0] - 14, 128, LOAD)}
+          <Txt x="108" y="146" textAnchor="middle" fill={TENSION}>{"{x}"}</Txt>
+          <Txt x={AO[0] - 20} y="148" textAnchor="end" fill={LOAD}>{"{y}"}</Txt>
+          <Txt x="166" y="118" fill={INK}>{"{dA}"}</Txt>
+          <Txt x="190" y="90" fontSize="13">{"{J}_xy = ∫ {x}·{y} {dA}"}</Txt>
+        </g>
+      )}
+      {focus === "polar" && (
+        <g>
+          {dA(150, 124)}
+          <line x1={AO[0]} y1={AO[1]} x2="155" y2="128" stroke={LOAD} strokeWidth="2" />
+          <line x1="155" y1="128" x2="155" y2="160" stroke={FAINT} strokeWidth="1" strokeDasharray="3 3" />
+          <circle cx={AO[0]} cy={AO[1]} r="3" fill={INK} />
+          <Txt x={AO[0] - 6} y={AO[1] + 14} textAnchor="end">O</Txt>
+          <Txt x="100" y="140" fill={LOAD} fontWeight="600">ρ</Txt>
+          <Txt x="190" y="76" fontSize="13">{"{J}_p = ∫ ρ² {dA}"}</Txt>
+          <Txt x="190" y="96" fontSize="13">{"ρ² = {x}² + {y}²"}</Txt>
+          <Txt x="190" y="116" fontSize="13">{"{J}_p = {J}_x + {J}_y"}</Txt>
+        </g>
+      )}
+      {focus === "gyration" && (
+        <g>
+          <line x1="40" y1={AO[1] - GYRATION} x2="236" y2={AO[1] - GYRATION} stroke={LOAD} strokeWidth="3" strokeDasharray="8 4" />
+          {dim(AO[0] - 14, 160, AO[0] - 14, AO[1] - GYRATION, LOAD)}
+          <Txt x={AO[0] - 20} y={AO[1] - GYRATION / 2 + 4} textAnchor="end" fill={LOAD}>{"{i}"}</Txt>
+          <Txt x="190" y={AO[1] - GYRATION - 6} fill={LOAD} fontSize="11">{t("def.fig.conc")}</Txt>
+          <Txt x="190" y="62" fontSize="13">{"{J} = {A}·{i}²"}</Txt>
+        </g>
+      )}
+      {centered && focus !== "centroid" && (
+        <g>
+          <line x1={GX - 90} y1={GY} x2={GX + 90} y2={GY} stroke={FAINT} strokeWidth="1" strokeDasharray="4 3" />
+          <line x1={GX} y1={GY - 90} x2={GX} y2={GY + 90} stroke={FAINT} strokeWidth="1" strokeDasharray="4 3" />
+          <line x1={GX - 88 * Math.cos(THETA1)} y1={GY + 88 * Math.sin(THETA1)} x2={GX + 88 * Math.cos(THETA1)} y2={GY - 88 * Math.sin(THETA1)} stroke={LOAD} strokeWidth="2.5" />
+          <line x1={GX + 88 * Math.sin(THETA1)} y1={GY + 88 * Math.cos(THETA1)} x2={GX - 88 * Math.sin(THETA1)} y2={GY - 88 * Math.cos(THETA1)} stroke={TENSION} strokeWidth="2.5" />
+          <path d={`M ${GX + 36} ${GY} A 36 36 0 0 0 ${GX + 36 * Math.cos(THETA1)} ${GY - 36 * Math.sin(THETA1)}`} fill="none" stroke={INK} strokeWidth="1" />
+          <Txt x={GX + 44 * Math.cos(THETA1 / 2)} y={GY - 44 * Math.sin(THETA1 / 2) + 4} fontSize="11">α</Txt>
+          <circle cx={GX} cy={GY} r="3.5" fill={INK} />
+          <Txt x={GX + 92 * Math.cos(THETA1)} y={GY - 92 * Math.sin(THETA1) + 4} fill={LOAD} fontWeight="600">{focus === "principal" ? "1" : "{J}_1"}</Txt>
+          <Txt x={GX - 92 * Math.sin(THETA1) - 6} y={GY - 92 * Math.cos(THETA1)} fill={TENSION} fontWeight="600">{focus === "principal" ? "2" : "{J}_2"}</Txt>
+          <Txt x="236" y="40" fontSize="13">{focus === "principal" ? "{J}_xy = 0" : "{J}_1 = {J}_max"}</Txt>
+          {focus === "principalMoments" && <Txt x="236" y="60" fontSize="13">{"{J}_2 = {J}_min"}</Txt>}
+        </g>
+      )}
+    </svg>
+  );
+}

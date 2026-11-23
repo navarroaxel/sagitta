@@ -68,7 +68,7 @@ describe("/definiciones", () => {
     expect(svg.querySelectorAll("path[marker-end]")).toHaveLength(4); // a couple at each face, twice
     expect(svg.querySelectorAll("line[marker-end]")).toHaveLength(2); // Q only in the second segment
     expect(item.querySelectorAll("figure svg")).toHaveLength(1);
-    expect(container.querySelectorAll("figure svg")).toHaveLength(21); // 4 bending (simple, plane, oblique, neutral axis) + 12 stress–strain + 5 buckling
+    expect(container.querySelectorAll("figure svg")).toHaveLength(30); // 4 bending + 12 stress–strain + 5 buckling + 9 plane areas
   });
 
   test("the bending plane and the oblique bending have their diagrams", () => {
@@ -98,6 +98,40 @@ describe("/definiciones", () => {
     expect(svg.textContent).toMatch(/σ = 0/);
     expect((svg.textContent!.match(/N\.A\./g) ?? []).length).toBe(2); // on the bent segment and on the section
     expect(svg.querySelectorAll("polygon")).toHaveLength(2); // σ: compression above, tension below
+  });
+
+  test("every plane-area definition has a diagram with what it adds up", () => {
+    renderPage();
+    fireEvent.click(screen.getByRole("button", { name: "Open all" }));
+    const svg = (id: string) => screen.getByTestId(`def-pln.${id}`).querySelector("figure svg")!;
+    for (const id of ["estatico", "baricentro", "inercia", "centrifugo", "polar", "giro", "steiner", "ppales", "mppales"]) expect(svg(id), id).toBeTruthy();
+    expect(svg("estatico").textContent).toMatch(/Sx = ∫ y dA/);
+    expect(svg("baricentro").textContent).toMatch(/xg = Sy \/ A.*yg = Sx \/ A/);
+    expect(svg("inercia").textContent).toMatch(/Jx = ∫ y² dA/);
+    expect(svg("inercia").textContent).toMatch(/far from the axis.*near the axis|near the axis.*far from the axis/);
+    expect(svg("centrifugo").textContent).toMatch(/Jxy = ∫ x·y dA/);
+    expect(svg("polar").textContent).toMatch(/Jp = Jx \+ Jy/);
+    expect(svg("giro").textContent).toMatch(/J = A·i²/);
+    expect(svg("steiner").textContent).toMatch(/Jx = Jg \+ A·d²/);
+    expect(svg("ppales").textContent).toMatch(/Jxy = 0/);
+    expect(svg("mppales").textContent).toMatch(/J1 = Jmax/);
+    // the distance i of the radius of gyration is √(Jx / A) of the drawn L (not a made-up value)
+    const dashed = svg("giro").querySelector('line[stroke-dasharray="8 4"]')!;
+    const i = 160 - Number(dashed.getAttribute("y1"));
+    const parts = [[20, 110, 20 + 55 - 0], [70, 20, 30]]; // [b, h, centroid height above the axis] of the two legs
+    const heights = [75, 30];
+    const J = [[20, 110], [70, 20]].reduce((a, [b, h], k) => a + (b * h ** 3) / 12 + b * h * heights[k] ** 2, 0);
+    expect(parts.length).toBe(2);
+    expect(i).toBeCloseTo(Math.sqrt(J / 3600), 1);
+    // the principal axes of the L: perpendicular, through the centroid, and the product of inertia about them is zero
+    const lines = svg("ppales").querySelectorAll('line[stroke="#C0392B"], line[stroke="#0B8A8A"][stroke-width="2.5"]');
+    expect(lines).toHaveLength(2);
+    const dir = (l: Element) => [Number(l.getAttribute("x2")) - Number(l.getAttribute("x1")), Number(l.getAttribute("y2")) - Number(l.getAttribute("y1"))];
+    const [d1, d2] = [dir(lines[0]), dir(lines[1])];
+    expect(d1[0] * d2[0] + d1[1] * d2[1]).toBeCloseTo(0, 6);
+    // axis 1 (red) is the strong one: it turns less than 90° from x, counter-clockwise on the drawing (up and to the right)
+    expect(d1[0]).toBeGreaterThan(0);
+    expect(d1[1]).toBeLessThan(0);
   });
 
   test("the buckling definitions have their diagrams: bars, bifurcation, hyperbola, end conditions, ideal bar", () => {

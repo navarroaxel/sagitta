@@ -2144,6 +2144,30 @@ const EN = {
     "(the plane of the drawing)",
   "def.fig.section":
     "Section A–A",
+  "def.f.estatico":
+    "The static moment adds up each element of area dA times its distance y to the axis: S_x = ∫ y dA.",
+  "def.f.baricentro":
+    "The centroid G: its coordinates x_g and y_g are the static moments divided by the area.",
+  "def.f.inercia":
+    "Each element adds dA·y²: one far from the axis weighs much more than one near it.",
+  "def.f.centrifugo":
+    "Each element adds dA·x·y, with its two distances; depending on the quadrant it can be positive or negative.",
+  "def.f.polar":
+    "The distance ρ to the point O satisfies ρ² = x² + y², so J_p = J_x + J_y.",
+  "def.f.giro":
+    "If the whole area A were concentrated at the distance i from the axis it would give the same moment: J = A·i².",
+  "def.f.steiner":
+    "Steiner: the inertia about the axis x, at distance d from the centroidal axis x_g, is J_x = J_g + A·d².",
+  "def.f.ppales":
+    "The principal axes 1 and 2 through the centroid, perpendicular and turned an angle α from x, y: the product of inertia about them is zero.",
+  "def.f.mppales":
+    "The principal moments J_1 and J_2 are the maximum and the minimum of the moments of inertia about axes through the centroid.",
+  "def.fig.far":
+    "far from the axis: much more",
+  "def.fig.near":
+    "near the axis: little",
+  "def.fig.conc":
+    "A concentrated",
   "def.d.fsimple":
     "Simple bending: the forces on both sides of the section reduce, at its centroid, to two couples normal to the plane of the section, with or without shear. Without shear it is pure bending; with shear, bending and shear.",
   "def.t.plano":
@@ -4372,6 +4396,30 @@ const ES: Record<TranslationKey, string> = {
     "(el plano del dibujo)",
   "def.fig.section":
     "Sección A–A",
+  "def.f.estatico":
+    "El momento estático suma cada elemento de área dA por su distancia y al eje: S_x = ∫ y dA.",
+  "def.f.baricentro":
+    "El baricentro G: sus coordenadas x_g e y_g son los momentos estáticos divididos por el área.",
+  "def.f.inercia":
+    "Cada elemento aporta dA·y²: uno lejos del eje pesa mucho más que uno cercano.",
+  "def.f.centrifugo":
+    "Cada elemento aporta dA·x·y, con sus dos distancias; según el cuadrante puede ser positivo o negativo.",
+  "def.f.polar":
+    "La distancia ρ al punto O cumple ρ² = x² + y², por eso J_p = J_x + J_y.",
+  "def.f.giro":
+    "Si toda el área A estuviera concentrada a la distancia i del eje daría el mismo momento: J = A·i².",
+  "def.f.steiner":
+    "Steiner: la inercia respecto del eje x, a distancia d del eje baricéntrico x_g, es J_x = J_g + A·d².",
+  "def.f.ppales":
+    "Los ejes principales 1 y 2 por el baricentro, perpendiculares y girados un ángulo α respecto de x, y: el momento centrífugo respecto de ellos es nulo.",
+  "def.f.mppales":
+    "Los momentos principales J_1 y J_2 son el máximo y el mínimo de los momentos de inercia respecto de ejes por el baricentro.",
+  "def.fig.far":
+    "lejos del eje: aporta mucho más",
+  "def.fig.near":
+    "cerca del eje: aporta poco",
+  "def.fig.conc":
+    "A concentrada",
   "def.d.fsimple":
     "Flexión simple: las fuerzas a ambos lados de la sección se reducen, en su baricentro, a dos pares normales al plano de la sección, con o sin esfuerzo de corte. Sin corte se llama flexión pura; con corte, flexión y corte.",
   "def.t.plano":
