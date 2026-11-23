@@ -1753,7 +1753,7 @@ const EN = {
   "rs.title":
     "Course summary",
   "rs.lead":
-    "One page to study from: every formula of the guides with its units and use, the five theory questions with a model answer, and a checklist for the exam. Print it with the button.",
+    "One page to study from: every formula of the guides with its units and use, the five theory questions with a model answer, and a checklist for the exam.",
   "rs.footer":
     "Summary of the guides of this site; the formulas are the ones of the course notes (kg and cm).",
   "rs.print":
@@ -3619,7 +3619,7 @@ const ES: Record<TranslationKey, string> = {
   "rs.title":
     "Resumen del curso",
   "rs.lead":
-    "Una hoja para estudiar: todas las fórmulas de las guías con sus unidades y para qué se usan, las cinco preguntas de teoría con una respuesta modelo y una lista de chequeo para el parcial. Se imprime con el botón.",
+    "Una hoja para estudiar: todas las fórmulas de las guías con sus unidades y para qué se usan, las cinco preguntas de teoría con una respuesta modelo y una lista de chequeo para el parcial.",
   "rs.footer":
     "Resumen de las guías de este sitio; las fórmulas son las de los apuntes del curso (kg y cm).",
   "rs.print":
