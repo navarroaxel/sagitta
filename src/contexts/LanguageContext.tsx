@@ -1145,6 +1145,10 @@ const EN = {
     "In a beam under shear and moment, the horizontal stresses needed to keep equilibrium would produce sliding on horizontal planes: shear on vertical planes necessarily implies shear on horizontal planes, and vice versa. These are the sliding stresses τ_L, present in all fibres (stacked planks that slide against each other are the picture).",
   "shr.s2.p3":
     "The shear Q at a section is the resultant of all the forces on its left; by equilibrium, the resultant of those on the right is equal and opposite, acting on an infinitely close section.",
+  "shr.s2.fig":
+    "Cauchy: on two perpendicular planes the shear stresses τ_xy and τ_yx are equal; both arrows point towards the common edge (here the top right) or both away from it.",
+  "shr.s3.fig":
+    "Slice dx of the beam: the normal stresses give N on section 1 and N + dN on section 2 over the hatched area Ω, at distance y from the neutral axis; the difference dN is balanced by the shear force dT on the cut.",
   "shr.s3.kicker":
     "03 — Jourawski",
   "shr.s3.title":
@@ -3027,6 +3031,10 @@ const ES: Record<TranslationKey, string> = {
     "En una viga sometida a corte y momento, las tensiones horizontales necesarias para mantener el equilibrio producirían un deslizamiento en planos horizontales: el corte en planos verticales implica necesariamente corte en planos horizontales, y viceversa. Son las tensiones de resbalamiento τ_L, presentes en todas las fibras (la imagen es la de tablones apilados que resbalan unos contra otros).",
   "shr.s2.p3":
     "El corte Q en una sección es la resultante de todas las fuerzas que actúan a la izquierda de la sección considerada; por razones de equilibrio, la resultante de todas las de la derecha es igual y opuesta, y actúa sobre una sección infinitamente próxima.",
+  "shr.s2.fig":
+    "Cauchy: sobre dos planos perpendiculares las tensiones de corte τ_xy y τ_yx son iguales; las dos flechas van hacia la arista común (acá la de arriba a la derecha) o las dos se alejan de ella.",
+  "shr.s3.fig":
+    "Rebanada dx de la viga: las tensiones normales dan N en la sección 1 y N + dN en la 2 sobre el área rayada Ω, a distancia y del eje neutro; la diferencia dN la equilibra la fuerza de corte dT sobre el corte.",
   "shr.s3.kicker":
     "03 — Jourawski",
   "shr.s3.title":

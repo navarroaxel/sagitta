@@ -9,7 +9,7 @@ describe("/corte-en-flexion", () => {
         <CorteEnFlexionPage />
       </LanguageProvider>,
     );
-    expect(container.querySelectorAll("figure svg")).toHaveLength(2);
+    expect(container.querySelectorAll("figure svg")).toHaveLength(4); // Cauchy element, Jourawski slice, rectangle, double T
     expect(screen.getByTestId("shr-rect-example").textContent).toMatch(/7[.,]5 kg\/cm²/);
     expect(document.body.textContent).toMatch(/τ_?m|τm/);
     expect(document.body.textContent).not.toMatch(/[A-Za-z]_[A-Za-z0-9]/);
@@ -24,7 +24,7 @@ describe("/corte-en-flexion", () => {
         <CorteEnFlexionPage />
       </LanguageProvider>,
     );
-    const poly = Array.from(container.querySelectorAll("figure polygon")).at(-1)!; // the double-T is the second figure
+    const poly = Array.from(container.querySelectorAll("figure polygon")).at(-1)!; // the double-T is the last figure
     const pts = poly.getAttribute("points")!.split(" ").map((p) => p.split(",").map(Number));
     const byY = new Map<number, number[]>();
     for (const [x, y] of pts) byY.set(y, [...(byY.get(y) ?? []), x]);

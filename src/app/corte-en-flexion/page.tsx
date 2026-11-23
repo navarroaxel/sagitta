@@ -9,6 +9,71 @@ import { tauIFlange, tauIWeb, tauRect, tauRectMax, type ISection } from "@/lib/s
 const INK = "#16232E";
 const SHEAR = "#3A6B8C";
 
+const LOADC = "#C0392B";
+const TEAL = "#0B8A8A";
+
+// Cauchy: the four shear arrows of a small element; the pairs meet at the top-right edge.
+function CauchySVG() {
+  const { t } = useLanguage();
+  const arrow = (x1: number, y1: number, x2: number, y2: number) => (
+    <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={LOADC} strokeWidth="2.5" markerEnd="url(#shr-arr-a)" />
+  );
+  return (
+    <svg viewBox="0 0 240 180" className="h-auto w-full" role="img" aria-label={t("shr.s2.fig")}>
+      <defs>
+        <marker id="shr-arr-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill={LOADC} />
+        </marker>
+      </defs>
+      <rect x="80" y="45" width="80" height="80" fill={TEAL} fillOpacity="0.12" stroke={INK} strokeWidth="1.5" />
+      {arrow(95, 38, 145, 38)}
+      {arrow(145, 132, 95, 132)}
+      {arrow(168, 110, 168, 60)}
+      {arrow(72, 60, 72, 110)}
+      <circle cx="160" cy="45" r="3" fill={INK} />
+      <text x="120" y="29" fontSize="12" textAnchor="middle" fill={INK}><SvgSub>τ_yx</SvgSub></text>
+      <text x="120" y="152" fontSize="12" textAnchor="middle" fill={INK}><SvgSub>τ_yx</SvgSub></text>
+      <text x="184" y="88" fontSize="12" fill={INK}><SvgSub>τ_xy</SvgSub></text>
+      <text x="58" y="88" fontSize="12" textAnchor="end" fill={INK}><SvgSub>τ_xy</SvgSub></text>
+    </svg>
+  );
+}
+
+// Jourawski: slice dx between sections 1 and 2; the force dN on the part Ω above the cut is balanced by dT.
+function SliceSVG() {
+  const { t } = useLanguage();
+  const tick = (x: number) => <line x1={x} y1="164" x2={x} y2="176" stroke={INK} strokeWidth="1.5" />;
+  return (
+    <svg viewBox="0 0 360 195" className="h-auto w-full" role="img" aria-label={t("shr.s3.fig")}>
+      <defs>
+        <marker id="shr-arr-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill={LOADC} />
+        </marker>
+      </defs>
+      <rect x="90" y="30" width="160" height="120" fill="none" stroke={INK} strokeWidth="1.5" />
+      <rect x="90" y="30" width="160" height="32" fill={TEAL} fillOpacity="0.25" />
+      <line x1="80" y1="92" x2="260" y2="92" stroke={INK} strokeWidth="1" strokeDasharray="5 3" />
+      <line x1="90" y1="62" x2="250" y2="62" stroke={INK} strokeWidth="1.5" strokeDasharray="2 2" />
+      <line x1="90" y1="46" x2="56" y2="46" stroke={LOADC} strokeWidth="2.5" markerEnd="url(#shr-arr-b)" />
+      <line x1="250" y1="46" x2="294" y2="46" stroke={LOADC} strokeWidth="2.5" markerEnd="url(#shr-arr-b)" />
+      <line x1="215" y1="72" x2="120" y2="72" stroke={LOADC} strokeWidth="2.5" markerEnd="url(#shr-arr-b)" />
+      <line x1="232" y1="62" x2="232" y2="92" stroke={INK} strokeWidth="1" />
+      <line x1="90" y1="164" x2="250" y2="164" stroke={INK} strokeWidth="1" />
+      {tick(90)}
+      {tick(250)}
+      <text x="90" y="22" fontSize="12" textAnchor="middle" fill={INK}>1</text>
+      <text x="250" y="22" fontSize="12" textAnchor="middle" fill={INK}>2</text>
+      <text x="170" y="52" fontSize="12" textAnchor="middle" fill={INK}>Ω</text>
+      <text x="52" y="40" fontSize="12" textAnchor="end" fill={INK}>N</text>
+      <text x="298" y="50" fontSize="12" fill={INK}>N + dN</text>
+      <text x="168" y="86" fontSize="11" textAnchor="middle" fill={LOADC}>dT</text>
+      <text x="238" y="80" fontSize="12" fill={INK}>y</text>
+      <text x="74" y="96" fontSize="11" textAnchor="end" fill={INK}>E.N.</text>
+      <text x="170" y="188" fontSize="12" textAnchor="middle" fill={INK}>dx</text>
+    </svg>
+  );
+}
+
 // Rectangle with the parabolic τ(y) drawn from the shared formula.
 function RectSVG() {
   const { t } = useLanguage();
@@ -86,6 +151,11 @@ export default function CorteEnFlexionPage() {
       <Section kicker="shr.s2.kicker" title="shr.s2.title">
         <Para k="shr.s2.p1" />
         <Eq>{t("shr.s2.e1")}</Eq>
+        <div className="mx-auto max-w-xs">
+          <Figure caption={t("shr.s2.fig")}>
+            <CauchySVG />
+          </Figure>
+        </div>
         <Para k="shr.s2.p2" />
         <Para k="shr.s2.p3" />
       </Section>
@@ -93,6 +163,11 @@ export default function CorteEnFlexionPage() {
       <Section kicker="shr.s3.kicker" title="shr.s3.title">
         <Para k="shr.s3.p1" />
         <Para k="shr.s3.p2" />
+        <div className="mx-auto max-w-md">
+          <Figure caption={t("shr.s3.fig")}>
+            <SliceSVG />
+          </Figure>
+        </div>
         <Eq>{t("shr.s3.e1")}</Eq>
         <Para k="shr.s3.p3" />
         <Eq>{t("shr.s3.e2")}</Eq>
