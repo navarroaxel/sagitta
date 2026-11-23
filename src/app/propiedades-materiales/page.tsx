@@ -135,7 +135,7 @@ export default function PropiedadesMaterialesPage() {
           ))}
         </div>
         <Para k="mat.s5.hooke" />
-        <Eq boxed>σ = E · ε        E = tg β</Eq>
+        <Eq boxed>{"σ = {E} · ε        {E} = tg β"}</Eq>
       </Section>
 
       <Section kicker="mat.s6.kicker" title="mat.s6.title">

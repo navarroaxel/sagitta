@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
-import { SvgSub, Sub } from "@/components/Sub";
+import { SvgSub, Sub, plain } from "@/components/Sub";
 import { Eq, Figure, GuidePage, Para, Section } from "@/components/guide/GuideBits";
 import SteinerCalculator from "@/components/SteinerCalculator";
 
@@ -18,7 +18,7 @@ function SteinerSVG() {
   const ox = 60;
   const oy = 150;
   return (
-    <svg viewBox="0 0 260 180" className="h-auto w-full" role="img" aria-label={t("pln.s5.fig")}>
+    <svg viewBox="0 0 260 180" className="h-auto w-full" role="img" aria-label={plain(t("pln.s5.fig"))}>
       <rect x="110" y="40" width="80" height="80" rx="6" fill="#E7EEF2" stroke={INK} strokeWidth="2" />
       {/* centroidal axes */}
       <line x1="96" y1={gy} x2="214" y2={gy} stroke={MOMENT} strokeWidth="1.5" strokeDasharray="5 3" />
@@ -95,7 +95,7 @@ export default function SuperficiesPlanasPage() {
         <Para k="pln.s4.p2" />
         <Eq>{t("pln.s4.e4")}</Eq>
         <Para k="pln.s4.p3" />
-        <Eq boxed>J_x = b·h³ / 12</Eq>
+        <Eq boxed>{"{J}_x = {b}·{h}³ / 12"}</Eq>
         <Para k="pln.s4.p4" />
         <Para k="pln.s4.p5" />
       </Section>
@@ -110,8 +110,8 @@ export default function SuperficiesPlanasPage() {
         <Para k="pln.s5.p2" />
         <Eq>{t("pln.s5.e1")}</Eq>
         <Para k="pln.s5.p3" />
-        <Eq boxed>J_x = J_xg + A·b²</Eq>
-        <Eq boxed>J_y = J_yg + A·a²</Eq>
+        <Eq boxed>{"{J}_x = {J}_xg + {A}·{b}²"}</Eq>
+        <Eq boxed>{"{J}_y = {J}_yg + {A}·a²"}</Eq>
         <div data-testid="pln-steiner-use" className="my-4 rounded-lg border-2 border-teal-600 bg-white p-4 dark:border-teal-400 dark:bg-stone-900">
           <p className="mb-2 font-semibold">{t("pln.s5.use.title")}</p>
           <Para k="pln.s5.use.p1" />

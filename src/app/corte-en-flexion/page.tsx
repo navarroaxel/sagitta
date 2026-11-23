@@ -167,7 +167,7 @@ export default function CorteEnFlexionPage() {
     <GuidePage title="shr.title" kicker="Q · S_x · J_x · τ" lead="shr.lead" footer="shr.footer">
       <Section kicker="shr.s1.kicker" title="shr.s1.title">
         <Para k="shr.s1.p1" />
-        <Eq boxed>τ = Q / A</Eq>
+        <Eq boxed>{"τ = {Q} / {A}"}</Eq>
         <Para k="shr.s1.p2" />
       </Section>
 
@@ -195,15 +195,15 @@ export default function CorteEnFlexionPage() {
         <Para k="shr.s3.p3" />
         <Eq>{t("shr.s3.e2")}</Eq>
         <Para k="shr.s3.p4" />
-        <Eq boxed>τ_m = Q·S_x / (J_x·s)</Eq>
+        <Eq boxed>{"τ_m = {Q}·{S}_x / ({J}_x·s)"}</Eq>
         <Para k="shr.s3.p5" />
       </Section>
 
       <Section kicker="shr.s4.kicker" title="shr.s4.title">
         <Para k="shr.s4.p1" />
-        <Eq boxed>{"τ_zy = (3/2)·Q/(b·h)·[1 − (2{y}/h)²]"}</Eq>
+        <Eq boxed>{"τ_zy = (3/2)·{Q}/({b}·{h})·[1 − (2{y}/{h})²]"}</Eq>
         <Para k="shr.s4.p2" />
-        <Eq boxed>τ_max = 3·Q / (2·b·h) = 1,5·Q/A</Eq>
+        <Eq boxed>{"τ_max = 3·{Q} / (2·{b}·{h}) = 1,5·{Q}/{A}"}</Eq>
         <Para k="shr.s4.p3" />
         <div className="mx-auto max-w-xs">
           <Figure caption={<Sub>{t("shr.s4.fig")}</Sub>}>
@@ -211,16 +211,16 @@ export default function CorteEnFlexionPage() {
           </Figure>
         </div>
         <p data-testid="shr-rect-example" className="mb-4 max-w-[66ch] rounded-md bg-stone-100 px-4 py-2 font-mono text-[14px] dark:bg-stone-900">
-          {t("shr.s4.ex")}
+          <Sub>{t("shr.s4.ex")}</Sub>
         </p>
       </Section>
 
       <Section kicker="shr.s5.kicker" title="shr.s5.title">
         <Para k="shr.s5.p1" />
         <p className="mb-1 text-sm font-semibold">{t("shr.s5.flange")}</p>
-        <Eq boxed>{"τ = Q/(2·J_x) · (h²/4 − {y}²)"}</Eq>
+        <Eq boxed>{"τ = {Q}/(2·{J}_x) · ({h}²/4 − {y}²)"}</Eq>
         <p className="mb-1 text-sm font-semibold">{t("shr.s5.web")}</p>
-        <Eq boxed>{"τ = Q/(2·δ_1·J_x) · [ b/4·(h² − h_0²) + δ_1·(h_0²/4 − {y}²) ]"}</Eq>
+        <Eq boxed>{"τ = {Q}/(2·δ_1·{J}_x) · [ {b}/4·({h}² − {h}_0²) + δ_1·({h}_0²/4 − {y}²) ]"}</Eq>
         <Para k="shr.s5.p2" />
         <div className="mx-auto max-w-xs">
           <Figure caption={<Sub>{t("shr.s5.fig")}</Sub>}>

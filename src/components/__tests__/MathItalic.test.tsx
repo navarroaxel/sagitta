@@ -66,7 +66,9 @@ describe("math variables in italic", () => {
         </Es>
       </LanguageProvider>,
     );
-    expect(document.body.textContent).not.toMatch(/[{}]/);
+    const txt = document.body.textContent!;
+    const hits = Array.from(txt.matchAll(/[{}]/g)).map((m) => txt.slice(Math.max(0, m.index! - 35), m.index! + 25));
+    expect(hits).toEqual([]);
     const labels = Array.from(container.querySelectorAll("[aria-label]")).map((e) => e.getAttribute("aria-label")!);
     for (const l of labels) expect(l).not.toMatch(/[{}]/);
     if (!["axil", "torsion", "pandeo"].includes(_name)) expect(container.querySelectorAll("i").length).toBeGreaterThan(0);

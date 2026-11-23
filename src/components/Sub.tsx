@@ -10,7 +10,8 @@ function tokenize(s: string): Tok[] {
   const out: Tok[] = [];
   let last = 0;
   for (const m of s.matchAll(TOKEN)) {
-    if (m.index! > last) out.push({ kind: "text", text: s.slice(last, m.index) });
+    if (m.index! > last)
+      out.push({ kind: "text", text: s.slice(last, m.index) });
     if (m[1] !== undefined) out.push({ kind: "var", text: m[1] });
     else out.push({ kind: "sub", text: m[2] });
     last = m.index! + m[0].length;
@@ -24,7 +25,8 @@ export function plain(s: string): string {
   return s.replace(/\{([^{}]*)\}/g, "$1");
 }
 
-// Renders "P_z", "e_x", "P_z,max" in a translated string with real subscripts, and "{y}" in italic.
+// Renders "P_z", "e_x", "P_z,max" in a translated string with real subscripts, and "{y}" as a serif italic (a slanted
+// sans-serif y is too close to the upright one, so the variable gets the look of a math symbol).
 export function Sub({ children }: { children: string }) {
   return (
     <>
@@ -32,7 +34,9 @@ export function Sub({ children }: { children: string }) {
         tk.kind === "sub" ? (
           <sub key={i}>{tk.text}</sub>
         ) : tk.kind === "var" ? (
-          <i key={i}>{tk.text}</i>
+          <i key={i} className="font-serif text-[1.06em]">
+            {tk.text}
+          </i>
         ) : (
           <React.Fragment key={i}>{tk.text}</React.Fragment>
         ),
@@ -57,7 +61,12 @@ export function SvgSub({ children }: { children: string }) {
           );
         if (tk.kind === "var")
           return (
-            <tspan key={i} fontStyle="italic" dy={wasSub ? "-0.3em" : undefined}>
+            <tspan
+              key={i}
+              fontStyle="italic"
+              fontFamily="Georgia, serif"
+              dy={wasSub ? "-0.3em" : undefined}
+            >
               {tk.text}
             </tspan>
           );

@@ -157,48 +157,48 @@ export default function TorsionPage() {
               </Figure>
             </div>
             <Para k="tor.s2.p3" />
-            <Eq>γ = ρ·φ / l</Eq>
+            <Eq>{"γ = ρ·φ / {l}"}</Eq>
           </Section>
 
           <Section kicker="tor.s3.kicker" title="tor.s3.title">
             <Para k="tor.s3.p1" />
-            <Eq>τ = G·γ</Eq>
+            <Eq>{"τ = {G}·γ"}</Eq>
             <Para k="tor.s3.p2" />
-            <Eq>τ = G·ρ·φ / l</Eq>
+            <Eq>{"τ = {G}·ρ·φ / {l}"}</Eq>
             <div className="mx-auto max-w-xs">
               <Figure caption={<Sub>{t("tor.s3.fig")}</Sub>}>
                 <TauSVG />
               </Figure>
             </div>
             <Para k="tor.s3.p3" />
-            <Eq>∫ τ·ρ dA = G·(φ/l)·∫ρ² dA = M_t</Eq>
+            <Eq>{"∫ τ·ρ {dA} = {G}·(φ/{l})·∫ρ² {dA} = {M}_t"}</Eq>
             <Para k="tor.s3.p4" />
-            <Eq>φ / l = M_t / (G·J_0)</Eq>
-            <Eq boxed>τ = M_t·ρ / J_0</Eq>
+            <Eq>{"φ / {l} = {M}_t / ({G}·{J}_0)"}</Eq>
+            <Eq boxed>{"τ = {M}_t·ρ / {J}_0"}</Eq>
           </Section>
 
           <Section kicker="tor.s4.kicker" title="tor.s4.title">
             <Para k="tor.s4.p1" />
-            <Eq>J_0 = π·D⁴ / 32</Eq>
-            <Eq boxed>τ_max = 16·M_t / (π·D³) = 2·M_t / (π·R³)</Eq>
+            <Eq>{"{J}_0 = π·{D}⁴ / 32"}</Eq>
+            <Eq boxed>{"τ_max = 16·{M}_t / (π·{D}³) = 2·{M}_t / (π·{R}³)"}</Eq>
             <Para k="tor.s4.p2" />
-            <Eq boxed>φ = M_t·l / (G·J_0)</Eq>
+            <Eq boxed>{"φ = {M}_t·{l} / ({G}·{J}_0)"}</Eq>
             <Para k="tor.s4.p3" />
           </Section>
 
           <Section kicker="tor.s5.kicker" title="tor.s5.title">
             <Para k="tor.s5.p1" />
-            <Eq>J_0 = π·(D_e⁴ − D_i⁴) / 32 = π·D_e⁴·(1 − n⁴) / 32</Eq>
-            <Eq>τ_max = 16·M_t / (π·D_e³·(1 − n⁴))</Eq>
-            <Eq>φ = 32·M_t·l / (π·D_e⁴·(1 − n⁴)·G)</Eq>
+            <Eq>{"{J}_0 = π·({D}_e⁴ − {D}_i⁴) / 32 = π·{D}_e⁴·(1 − n⁴) / 32"}</Eq>
+            <Eq>{"τ_max = 16·{M}_t / (π·{D}_e³·(1 − n⁴))"}</Eq>
+            <Eq>{"φ = 32·{M}_t·{l} / (π·{D}_e⁴·(1 − n⁴)·{G})"}</Eq>
             <Para k="tor.s5.p2" />
           </Section>
 
           <Section kicker="tor.s6.kicker" title="tor.s6.title">
             <Para k="tor.s6.p1" />
-            <Eq>M_t = P / ω = 71 620·N / n   [kg·cm]</Eq>
+            <Eq>{"{M}_t = {P} / ω = 71 620·{N} / n   [kg·cm]"}</Eq>
             <Para k="tor.s6.p2" />
-            <Eq boxed>D = ∛(16·M_t / (π·τ_adm)) ≈ 1,72·∛(M_t / τ_adm)</Eq>
+            <Eq boxed>{"{D} = ∛(16·{M}_t / (π·τ_adm)) ≈ 1,72·∛({M}_t / τ_adm)"}</Eq>
           </Section>
 
           <Section kicker="tor.s7.kicker" title="tor.s7.title">

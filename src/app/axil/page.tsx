@@ -5,7 +5,7 @@ import React from "react";
 import Link from "next/link";
 import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 import { SettingsPanel } from "@/components/SettingsPanel";
-import { Sub } from "@/components/Sub";
+import { Sub, plain } from "@/components/Sub";
 
 const INK = "#16232E";
 const TENSION = "#0B8A8A";
@@ -72,7 +72,7 @@ function Section({ kicker, title, children }: { kicker: TranslationKey; title: T
 function BarSVG() {
   const { t } = useLanguage();
   return (
-    <svg viewBox="0 0 360 140" className="h-auto w-full" role="img" aria-label={t("axl.fig")}>
+    <svg viewBox="0 0 360 140" className="h-auto w-full" role="img" aria-label={plain(t("axl.fig"))}>
       <rect x="70" y="50" width="220" height="40" fill="#E7EEF2" stroke={INK} strokeWidth="2" />
       <line x1="180" y1="46" x2="180" y2="94" stroke={INK} strokeWidth="1.5" strokeDasharray="3 3" />
       <line x1="20" y1="70" x2="68" y2="70" stroke={LOAD} strokeWidth="3" />
@@ -131,13 +131,13 @@ export default function AxilPage() {
 
           <Section kicker="axl.s2.kicker" title="axl.s2.title">
             <ol className="mb-4 max-w-[66ch] list-decimal space-y-2 pl-6 text-stone-700 dark:text-stone-300">
-              <li>{t("axl.s2.h1")}</li>
+              <li><Sub>{t("axl.s2.h1")}</Sub></li>
               <li>{t("axl.s2.h2")}</li>
             </ol>
             <Para k="axl.s2.p1" />
             <Para k="axl.s2.p2" />
             <div className="mx-auto max-w-md">
-              <Figure caption={t("axl.fig")}>
+              <Figure caption={<Sub>{t("axl.fig")}</Sub>}>
                 <BarSVG />
               </Figure>
             </div>
@@ -156,7 +156,7 @@ export default function AxilPage() {
             </div>
             <Para k="axl.s3.sign" />
             <Para k="axl.s3.p1" />
-            <Eq boxed>Δl = N·l / (A·E)</Eq>
+            <Eq boxed>{"Δ{l} = {N}·{l} / ({A}·{E})"}</Eq>
             <Para k="axl.s3.p2" />
             <ul className="mb-4 max-w-[66ch] list-disc space-y-1.5 pl-5 text-stone-700 dark:text-stone-300">
               {(["l1", "l2", "l3", "l4", "l5"] as const).map((k) => (
@@ -194,8 +194,8 @@ export default function AxilPage() {
 
           <Section kicker="axl.s5.kicker" title="axl.s5.title">
             <Para k="axl.s5.p1" />
-            <Eq boxed>σ = N / A + γ·l ≤ σ_adm</Eq>
-            <Eq boxed>A_nec ≥ N / (σ_adm − γ·l)</Eq>
+            <Eq boxed>{"σ = {N} / {A} + γ·{l} ≤ σ_adm"}</Eq>
+            <Eq boxed>{"{A}_nec ≥ N / (σ_adm − γ·{l})"}</Eq>
             <Para k="axl.s5.p2" />
           </Section>
 

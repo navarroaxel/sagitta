@@ -114,7 +114,9 @@ export function GuidePage({
           </p>
           {children}
           <footer className="mt-12 border-t border-stone-200 pt-6 text-sm leading-relaxed text-stone-500 dark:border-stone-800 dark:text-stone-400">
-            <p className="max-w-[64ch]">{t(footer)}</p>
+            <p className="max-w-[64ch]">
+              <Sub>{t(footer)}</Sub>
+            </p>
           </footer>
         </article>
       </main>

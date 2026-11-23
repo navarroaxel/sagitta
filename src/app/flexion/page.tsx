@@ -190,16 +190,16 @@ export default function FlexionPage() {
 
           <Section kicker="flx.s5.kicker" title="flx.s5.title">
             <Para k="flx.s5.p1" />
-            <Eq n={1}>∫ σ dA = 0</Eq>
-            <Eq n={2}>{"∫ {y} (σ dA) = M"}</Eq>
+            <Eq n={1}>{"∫ σ {dA} = 0"}</Eq>
+            <Eq n={2}>{"∫ {y} (σ {dA}) = {M}"}</Eq>
             <Para k="flx.s5.p2" />
             <Eq n={3}>{"σ_1 = σ / {y}   →   σ = σ_1·{y}"}</Eq>
             <Para k="flx.s5.p3" />
-            <Eq n={4}>{"σ_1 ∫ {y} dA = 0"}</Eq>
-            <Eq n={5}>{"σ_1 ∫ {y}² dA = M"}</Eq>
+            <Eq n={4}>{"σ_1 ∫ {y} {dA} = 0"}</Eq>
+            <Eq n={5}>{"σ_1 ∫ {y}² {dA} = {M}"}</Eq>
             <Para k="flx.s5.p4" />
             <Para k="flx.s5.p5" />
-            <Eq n={7}>{"M = σ_1·J_x = (σ / {y})·J_x"}</Eq>
+            <Eq n={7}>{"{M} = σ_1·{J}_x = (σ / {y})·{J}_x"}</Eq>
             <div className="my-3 rounded-md border-2 border-teal-600 px-4 py-3 text-center font-mono text-xl dark:border-teal-400">
               σ = M·y / <Sub>J_x</Sub>
             </div>
@@ -209,10 +209,10 @@ export default function FlexionPage() {
               </Figure>
             </div>
             <Para k="flx.s5.p6" />
-            <Eq n={8}>σ = M_max·v / J_x</Eq>
-            <Eq n={9}>σ = M_max / (J_x / v)</Eq>
+            <Eq n={8}>{"σ = {M}_max·v / {J}_x"}</Eq>
+            <Eq n={9}>{"σ = {M}_max / ({J}_x / v)"}</Eq>
             <Para k="flx.s5.p7" />
-            <Eq n={10}>σ = M / W_x</Eq>
+            <Eq n={10}>{"σ = {M} / {W}_x"}</Eq>
           </Section>
 
           <Section kicker="flx.s6.kicker" title="flx.s6.title">

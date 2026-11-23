@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
-import { Sub, SvgSub } from "@/components/Sub";
+import { Sub, SvgSub, plain } from "@/components/Sub";
 import { Eq, Figure, GuidePage, Para, Section } from "@/components/guide/GuideBits";
 import PandeoCalculator from "@/components/PandeoCalculator";
 import { criticalStress, END_CONDITIONS } from "@/lib/buckling";
@@ -24,7 +24,7 @@ function HyperbolaSVG() {
   const pts: string[] = [];
   for (let lam = lamMin; lam <= lamMax; lam += 2) pts.push(`${px(lam).toFixed(1)},${py(criticalStress(E, lam)).toFixed(1)}`);
   return (
-    <svg viewBox="0 0 360 180" className="h-auto w-full" role="img" aria-label={t("pnd.s3.fig")}>
+    <svg viewBox="0 0 360 180" className="h-auto w-full" role="img" aria-label={plain(t("pnd.s3.fig"))}>
       <line x1={x0} y1={y0} x2={x1 + 10} y2={y0} stroke={INK} strokeWidth="1.5" />
       <line x1={x0} y1={y0} x2={x0} y2={y1 - 6} stroke={INK} strokeWidth="1.5" />
       <polyline points={pts.join(" ")} fill="none" stroke={LOAD} strokeWidth="2.5" />
@@ -98,18 +98,20 @@ export default function PandeoPage() {
       <Section kicker="pnd.s2.kicker" title="pnd.s2.title">
         <ol className="mb-4 max-w-[66ch] list-decimal space-y-2 pl-6 text-stone-700 dark:text-stone-300">
           {(["h1", "h2", "h3", "h4"] as const).map((k) => (
-            <li key={k}>{t(`pnd.s2.${k}` as TranslationKey)}</li>
+            <li key={k}>
+              <Sub>{t(`pnd.s2.${k}` as TranslationKey)}</Sub>
+            </li>
           ))}
         </ol>
       </Section>
 
       <Section kicker="pnd.s3.kicker" title="pnd.s3.title">
         <Para k="pnd.s3.p1" />
-        <Eq boxed>F_k = π²·E·J_min / (c²·l²)</Eq>
+        <Eq boxed>{"{F}_k = π²·{E}·{J}_min / (c²·{l}²)"}</Eq>
         <Para k="pnd.s3.p2" />
-        <Eq>λ = l / i_min        F_k = π²·E·A / (c²·λ²)</Eq>
+        <Eq>{"λ = {l} / i_min        {F}_k = π²·{E}·{A} / (c²·λ²)"}</Eq>
         <Para k="pnd.s3.p3" />
-        <Eq boxed>σ_k = F_k / A = π²·E / (c²·λ²)</Eq>
+        <Eq boxed>{"σ_k = {F}_k / {A} = π²·{E} / (c²·λ²)"}</Eq>
         <div className="mx-auto max-w-md">
           <Figure caption={<Sub>{t("pnd.s3.fig")}</Sub>}>
             <HyperbolaSVG />
