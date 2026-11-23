@@ -1149,6 +1149,20 @@ const EN = {
     "Cauchy: on two perpendicular planes the shear stresses τ_xy and τ_yx are equal; both arrows point towards the common edge (here the top right) or both away from it.",
   "shr.s3.fig":
     "Slice {dx} of the beam: the normal stresses give N on section 1 and N + {dN} on section 2 over the hatched area Ω, at distance {y} from the neutral axis; the difference {dN} is balanced by the shear force {dT} on the cut.",
+  "shr.steps.title":
+    "Step by step: the cuts we make to the beam",
+  "shr.steps.1":
+    "We cut the beam with two sections, 1 and 2, a distance dx apart. The slice is in equilibrium with M and Q on face 1 and M + dM and Q on face 2 (the shear hardly changes over dx; the moment does).",
+  "shr.steps.2":
+    "The moments give linear normal stresses, zero at the neutral axis: σ = M·y/J_x on face 1 and σ + dσ = (M + dM)·y/J_x on face 2, a little larger.",
+  "shr.steps.3":
+    "We cut the slice with a surface parallel to the axis, at a distance y from the neutral axis. From the side it is a line; on the cross-section it is the curve of width s. Above it stays the part Ω.",
+  "shr.steps.4":
+    "We isolate the part Ω: the normal stresses on it give N on face 1 and N + dN on face 2, and the shear force dT on the cut balances the difference, dT = dN.",
+  "shr.steps.side":
+    "side view",
+  "shr.steps.section":
+    "cross-section",
   "shr.s3.kicker":
     "03 — Jourawski",
   "shr.s3.title":
@@ -3359,6 +3373,20 @@ const ES: Record<TranslationKey, string> = {
     "Cauchy: sobre dos planos perpendiculares las tensiones de corte τ_xy y τ_yx son iguales; las dos flechas van hacia la arista común (acá la de arriba a la derecha) o las dos se alejan de ella.",
   "shr.s3.fig":
     "Rebanada {dx} de la viga: las tensiones normales dan N en la sección 1 y N + {dN} en la 2 sobre el área rayada Ω, a distancia {y} del eje neutro; la diferencia {dN} la equilibra la fuerza de corte {dT} sobre el corte.",
+  "shr.steps.title":
+    "Paso a paso: los cortes que le hacemos a la viga",
+  "shr.steps.1":
+    "Cortamos la viga con dos secciones, 1 y 2, separadas dx. La rebanada queda en equilibrio con M y Q en la cara 1 y M + dM y Q en la cara 2 (el corte casi no cambia en dx; el momento sí).",
+  "shr.steps.2":
+    "Los momentos producen tensiones normales lineales, nulas en el eje neutro: σ = M·y/J_x en la cara 1 y σ + dσ = (M + dM)·y/J_x en la cara 2, un poco mayor.",
+  "shr.steps.3":
+    "Cortamos la rebanada con una superficie paralela al eje, a distancia y del eje neutro. De costado se ve como una línea; en la sección transversal es la curva de ancho s. Arriba queda la parte Ω.",
+  "shr.steps.4":
+    "Aislamos la parte Ω: las tensiones normales sobre ella dan N en la cara 1 y N + dN en la 2, y la fuerza de corte dT sobre el corte equilibra la diferencia, dT = dN.",
+  "shr.steps.side":
+    "vista lateral",
+  "shr.steps.section":
+    "sección transversal",
   "shr.s3.kicker":
     "03 — Jourawski",
   "shr.s3.title":

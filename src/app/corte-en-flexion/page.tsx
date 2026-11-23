@@ -4,6 +4,7 @@ import React from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Sub, SvgSub, plain } from "@/components/Sub";
 import { Eq, Figure, GuidePage, Para, Section } from "@/components/guide/GuideBits";
+import JourawskiSteps from "@/components/JourawskiSteps";
 import { tauIFlange, tauIWeb, tauRect, tauRectMax, type ISection } from "@/lib/shear";
 
 const INK = "#16232E";
@@ -72,12 +73,12 @@ function SliceSVG() {
       <polygon points="210,50 246,24 246,124 210,150" fill="none" stroke={INK} strokeWidth="1.5" />
       <line x1="70" y1="110" x2="210" y2="110" stroke={INK} strokeWidth="1" strokeDasharray="5 3" />
       {/* N on section 1 (left, hidden face) and N + dN on section 2 (right face) over Ω */}
-      {force(81, 57, 47, 57)}
-      {force(95, 47, 61, 47)}
-      {force(221, 57, 265, 57)}
-      {force(235, 47, 279, 47)}
+      {force(47, 57, 81, 57)}
+      {force(61, 47, 95, 47)}
+      {force(265, 57, 221, 57)}
+      {force(279, 47, 235, 47)}
       {/* dT on the cut surface, opposite to dN */}
-      {force(196, 67, 126, 67)}
+      {force(126, 67, 196, 67)}
       <line x1="200" y1="80" x2="200" y2="110" stroke={INK} strokeWidth="1" />
       <line x1="196" y1="80" x2="204" y2="80" stroke={INK} strokeWidth="1" />
       <line x1="196" y1="110" x2="204" y2="110" stroke={INK} strokeWidth="1" />
@@ -185,6 +186,7 @@ export default function CorteEnFlexionPage() {
 
       <Section kicker="shr.s3.kicker" title="shr.s3.title">
         <Para k="shr.s3.p1" />
+        <JourawskiSteps />
         <Para k="shr.s3.p2" />
         <div className="mx-auto max-w-md">
           <Figure caption={<Sub>{t("shr.s3.fig")}</Sub>}>
