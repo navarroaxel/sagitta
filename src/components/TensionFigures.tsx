@@ -33,10 +33,10 @@ function Marker({ id, color }: { id: string; color: string }) {
 
 // Oblique element of side a at point B: x right, y up, z toward the viewer (down-left). The three visible faces are the
 // positive ones (+z front, +y top, +x right); a positive stress points along the +axis on a positive face.
-export function ElementFigure({ principal = false }: { principal?: boolean }) {
+export function ElementFigure({ principal = false, label: given }: { principal?: boolean; label?: string }) {
   const { t } = useLanguage();
   const id = principal ? "tns-el-p" : "tns-el-g";
-  const label = plain(t(principal ? "tns.f3" : "tns.f1"));
+  const label = given ?? plain(t(principal ? "tns.f3" : "tns.f1"));
   return (
     <svg viewBox="0 0 260 185" className="h-auto w-full" role="img" aria-label={label}>
       <defs>
@@ -56,25 +56,26 @@ export function ElementFigure({ principal = false }: { principal?: boolean }) {
       {/* normal stresses */}
       <Arrow id={`${id}-n`} x1={120} y1={110} x2={88} y2={134} color={LOAD} w={2.8} />
       <Arrow id={`${id}-n`} x1={140} y1={55} x2={140} y2={24} color={LOAD} w={2.8} />
-      <Arrow id={`${id}-n`} x1={180} y1={80} x2={212} y2={80} color={LOAD} w={2.8} />
-      <Txt x="82" y="138" textAnchor="end">{principal ? "σ_3" : "σ_z"}</Txt>
+      <Arrow id={`${id}-n`} x1={180} y1={95} x2={212} y2={95} color={LOAD} w={2.8} />
+      <Txt x="102" y="144">{principal ? "σ_3" : "σ_z"}</Txt>
       <Txt x="146" y="26">{principal ? "σ_2" : "σ_y"}</Txt>
-      <Txt x="216" y="84">{principal ? "σ_1" : "σ_x"}</Txt>
+      <Txt x="216" y="99">{principal ? "σ_1" : "σ_x"}</Txt>
       {!principal && (
         <g>
-          {/* shear stresses, two per face, positive along the axes */}
-          <Arrow id={`${id}-t`} x1={100} y1={138} x2={132} y2={138} color={TENSION} />
-          <Arrow id={`${id}-t`} x1={148} y1={140} x2={148} y2={104} color={TENSION} />
-          <Arrow id={`${id}-t`} x1={100} y1={62} x2={130} y2={62} color={TENSION} />
-          <Arrow id={`${id}-t`} x1={172} y1={46} x2={150} y2={62.5} color={TENSION} />
-          <Arrow id={`${id}-t`} x1={166} y1={140} x2={166} y2={112} color={TENSION} />
-          <Arrow id={`${id}-t`} x1={196} y1={92} x2={174} y2={108.5} color={TENSION} />
-          <Txt x="116" y="152" textAnchor="middle" fill={TENSION}>τ_zx</Txt>
-          <Txt x="140" y="100" textAnchor="end" fill={TENSION}>τ_zy</Txt>
-          <Txt x="94" y="60" textAnchor="end" fill={TENSION}>τ_yx</Txt>
-          <Txt x="178" y="44" fill={TENSION}>τ_yz</Txt>
-          <Txt x="170" y="136" fill={TENSION}>τ_xy</Txt>
-          <Txt x="200" y="99" fill={TENSION}>τ_xz</Txt>
+          {/* shear stresses: on each face the two of the face start at the same point as its normal stress, the centre of the
+              face, and go along the two axes of the face (positive along the axes) */}
+          <Arrow id={`${id}-t`} x1={120} y1={110} x2={148} y2={110} color={TENSION} />
+          <Arrow id={`${id}-t`} x1={120} y1={110} x2={120} y2={82} color={TENSION} />
+          <Arrow id={`${id}-t`} x1={140} y1={55} x2={168} y2={55} color={TENSION} />
+          <Arrow id={`${id}-t`} x1={140} y1={55} x2={122.4} y2={68.2} color={TENSION} />
+          <Arrow id={`${id}-t`} x1={180} y1={95} x2={180} y2={67} color={TENSION} />
+          <Arrow id={`${id}-t`} x1={180} y1={95} x2={162.4} y2={108.2} color={TENSION} />
+          <Txt x="130" y="126">τ_zx</Txt>
+          <Txt x="126" y="88">τ_zy</Txt>
+          <Txt x="142" y="65">τ_yx</Txt>
+          <Txt x="116" y="64" textAnchor="end">τ_yz</Txt>
+          <Txt x="184" y="64">τ_xy</Txt>
+          <Txt x="168" y="120">τ_xz</Txt>
         </g>
       )}
       {/* triad */}
@@ -91,11 +92,11 @@ export function ElementFigure({ principal = false }: { principal?: boolean }) {
 }
 
 // Stress vector on a plane (seen edge-on) through B with normal n: ρ = σ·n + τ along the plane.
-export function PlaneVectorFigure() {
+export function PlaneVectorFigure({ label }: { label?: string }) {
   const { t } = useLanguage();
   const id = "tns-pv";
   return (
-    <svg viewBox="0 0 250 170" className="h-auto w-full" role="img" aria-label={plain(t("tns.f2"))}>
+    <svg viewBox="0 0 250 170" className="h-auto w-full" role="img" aria-label={label ?? plain(t("tns.f2"))}>
       <defs>
         <Marker id={`${id}-r`} color={LOAD} />
         <Marker id={`${id}-s`} color={TENSION} />

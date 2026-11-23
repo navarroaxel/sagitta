@@ -722,3 +722,99 @@ export function SlidingFigure({ label }: { label: string }) {
     </svg>
   );
 }
+
+// ---- State of stress: invariants and classification ----
+
+// The invariant I1 seen on Mohr's circle of a plane state: turning the axes from x, y to x′, y′ turns the diameter, but the
+// centre (σx + σy)/2 does not move, so σx + σy = σx′ + σy′; the radius does not change either.
+export function InvariantsFigure({ label }: { label: string }) {
+  const { t } = useLanguage();
+  const sx = 30, sy = -10, txy = 15; // an arbitrary plane state (any unit)
+  const c = (sx + sy) / 2;
+  const r = Math.hypot((sx - sy) / 2, txy);
+  const a0 = Math.atan2(txy, (sx - sy) / 2); // angle of the diameter x–y on the circle (τ up)
+  const turn = (50 * Math.PI) / 180; // 2α
+  const k = 3.4; // px per unit
+  const ox = 150, oy = 100;
+  const X = (s: number) => ox + k * s;
+  const Y = (tau: number) => oy - k * tau;
+  const pt = (ang: number): [number, number] => [X(c + r * Math.cos(ang)), Y(r * Math.sin(ang))];
+  const [x1, y1] = pt(a0);
+  const [x2, y2] = pt(a0 + Math.PI);
+  const [x3, y3] = pt(a0 - turn);
+  const [x4, y4] = pt(a0 - turn + Math.PI);
+  return (
+    <svg viewBox="0 0 400 200" className="h-auto w-full" role="img" aria-label={label}>
+      <line x1="20" y1={oy} x2="270" y2={oy} stroke={INK} strokeWidth="1.5" />
+      <line x1={ox} y1="14" x2={ox} y2="186" stroke={INK} strokeWidth="1.5" />
+      <Txt x="274" y={oy + 4}>σ</Txt>
+      <Txt x={ox + 6} y="20">τ</Txt>
+      <circle cx={X(c)} cy={oy} r={k * r} fill="none" stroke={FAINT} strokeWidth="1.5" />
+      <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={TENSION} strokeWidth="3" />
+      <line x1={x3} y1={y3} x2={x4} y2={y4} stroke={LOAD} strokeWidth="3" />
+      {[[x1, y1], [x2, y2]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="3.5" fill={TENSION} />)}
+      {[[x3, y3], [x4, y4]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="3.5" fill={LOAD} />)}
+      <circle cx={X(c)} cy={oy} r="4" fill={INK} stroke="#fff" strokeWidth="1" />
+      <line x1={X(c)} y1={oy} x2={X(c)} y2={oy + 22} stroke={INK} strokeWidth="1" strokeDasharray="3 3" />
+      <Txt x={X(c)} y={oy + 36} textAnchor="middle">(σ_x + σ_y) / 2</Txt>
+      <Txt x={x1 + 6} y={y1 - 4} fill={TENSION}>x</Txt>
+      <Txt x={x2 - 14} y={y2 + 14} fill={TENSION}>y</Txt>
+      <Txt x={x3 + 6} y={y3 + 14} fill={LOAD}>x′</Txt>
+      <Txt x={x4 - 16} y={y4 - 4} fill={LOAD}>y′</Txt>
+      <Txt x="290" y="60" fontSize="13">I_1 = σ_x + σ_y</Txt>
+      <Txt x="290" y="80" fontSize="13">= σ_x′ + σ_y′</Txt>
+      <Txt x="290" y="108" fontSize="12" fill={TENSION}>{t("def.fig.axes")}</Txt>
+      <Txt x="290" y="124" fontSize="12" fill={LOAD}>{t("def.fig.axesTurned")}</Txt>
+    </svg>
+  );
+}
+
+// The three kinds of state by the number of nonzero principal stresses: triple (3), double (2) and simple (1).
+export function ClassificationFigure({ label }: { label: string }) {
+  const { t } = useLanguage();
+  const id = "def-cl";
+  const arrow = (x1: number, y1: number, x2: number, y2: number) => (
+    <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={LOAD} strokeWidth="2.5" markerEnd={`url(#${id})`} />
+  );
+  // a small oblique cube at (ox, oy) with side 50, depth (22, −16)
+  const cube = (ox: number, oy: number) => (
+    <g>
+      <polygon points={`${ox},${oy} ${ox + 50},${oy} ${ox + 50},${oy + 50} ${ox},${oy + 50}`} fill={TENSION} fillOpacity="0.1" stroke={INK} strokeWidth="1.5" />
+      <polygon points={`${ox},${oy} ${ox + 50},${oy} ${ox + 72},${oy - 16} ${ox + 22},${oy - 16}`} fill={TENSION} fillOpacity="0.05" stroke={INK} strokeWidth="1.5" />
+      <polygon points={`${ox + 50},${oy} ${ox + 72},${oy - 16} ${ox + 72},${oy + 34} ${ox + 50},${oy + 50}`} fill={TENSION} fillOpacity="0.18" stroke={INK} strokeWidth="1.5" />
+      {arrow(ox + 61, oy + 18, ox + 90, oy + 18)}
+      {arrow(ox + 36, oy - 8, ox + 36, oy - 32)}
+      {arrow(ox + 25, oy + 25, ox + 6, oy + 38)}
+    </g>
+  );
+  const square = (ox: number, oy: number, vertical: boolean) => (
+    <g>
+      <rect x={ox} y={oy} width="50" height="50" fill={TENSION} fillOpacity="0.12" stroke={INK} strokeWidth="1.5" />
+      {arrow(ox + 50, oy + 25, ox + 80, oy + 25)}
+      {arrow(ox, oy + 25, ox - 30, oy + 25)}
+      {vertical && arrow(ox + 25, oy, ox + 25, oy - 30)}
+      {vertical && arrow(ox + 25, oy + 50, ox + 25, oy + 80)}
+    </g>
+  );
+  return (
+    <svg viewBox="0 0 460 200" className="h-auto w-full" role="img" aria-label={label}>
+      <defs>
+        <marker id={id} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill={LOAD} />
+        </marker>
+      </defs>
+      {cube(20, 60)}
+      {square(200, 50, true)}
+      {square(350, 50, false)}
+      <Txt x="62" y="150" textAnchor="middle" fontWeight="600">{t("def.fig.triple")}</Txt>
+      <Txt x="62" y="166" textAnchor="middle" fontSize="11">σ_1, σ_2, σ_3 ≠ 0</Txt>
+      <Txt x="62" y="182" textAnchor="middle" fontSize="11">I_3 ≠ 0</Txt>
+      <Txt x="225" y="150" textAnchor="middle" fontWeight="600">{t("def.fig.double")}</Txt>
+      <Txt x="225" y="166" textAnchor="middle" fontSize="11">σ_1, σ_2 ≠ 0, σ_3 = 0</Txt>
+      <Txt x="225" y="182" textAnchor="middle" fontSize="11">I_3 = 0, I_2 ≠ 0</Txt>
+      <Txt x="375" y="150" textAnchor="middle" fontWeight="600">{t("def.fig.simple")}</Txt>
+      <Txt x="375" y="166" textAnchor="middle" fontSize="11">σ_1 ≠ 0</Txt>
+      <Txt x="375" y="182" textAnchor="middle" fontSize="11">{t("def.fig.onlyI1")}</Txt>
+    </svg>
+  );
+}
