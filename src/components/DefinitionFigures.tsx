@@ -30,7 +30,7 @@ function Segment({ x, shear, id }: { x: number; shear: boolean; id: string }) {
       <path d="M 20 90 A 20 20 0 0 1 20 50" fill="none" stroke={LOAD} strokeWidth="2.5" markerEnd={`url(#${id})`} />
       <path d="M 160 90 A 20 20 0 0 0 160 50" fill="none" stroke={LOAD} strokeWidth="2.5" markerEnd={`url(#${id})`} />
       <Txt x="-4" y="44" fill={LOAD}>M</Txt>
-      <Txt x="176" y="44" fill={LOAD}>M</Txt>
+      <Txt x="176" y="44" fill={LOAD}>{shear ? "M + dM" : "M"}</Txt>
       {shear && (
         <g>
           <line x1="20" y1="124" x2="20" y2="94" stroke={TENSION} strokeWidth="2.5" markerEnd={`url(#${id}-q)`} />
@@ -46,7 +46,7 @@ function Segment({ x, shear, id }: { x: number; shear: boolean; id: string }) {
 export function SimpleBendingFigure({ label }: { label: string }) {
   const { t } = useLanguage();
   return (
-    <svg viewBox="0 0 420 175" className="h-auto w-full" role="img" aria-label={label}>
+    <svg viewBox="0 0 460 175" className="h-auto w-full" role="img" aria-label={label}>
       <defs>
         <marker id="def-fs" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
           <path d="M 0 0 L 10 5 L 0 10 z" fill={LOAD} />

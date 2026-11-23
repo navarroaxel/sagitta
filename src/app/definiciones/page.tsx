@@ -8,7 +8,14 @@ import { GuidePage } from "@/components/guide/GuideBits";
 import { DEFINITION_GROUPS } from "@/lib/definitions";
 import { DefinitionFigure, hasFigure } from "@/components/DefinitionFigure";
 
-const readHash = () => decodeURIComponent(window.location.hash.slice(1));
+// The fragment of the URL; a malformed one (#%, #%E0%A4) is ignored instead of throwing while rendering.
+const readHash = () => {
+  try {
+    return decodeURIComponent(window.location.hash.slice(1));
+  } catch {
+    return "";
+  }
+};
 const subscribeHash = (cb: () => void) => {
   window.addEventListener("hashchange", cb);
   return () => window.removeEventListener("hashchange", cb);
@@ -24,7 +31,10 @@ export default function DefinicionesPage() {
   const fromUrl = ALL.includes(hash) ? hash : "";
   const [opened, setOpened] = useState<Set<string>>(new Set());
   const [closed, setClosed] = useState<Set<string>>(new Set());
-  const isOpen = (id: string) => !closed.has(id) && (opened.has(id) || id === fromUrl);
+  // a close is remembered together with the fragment it was made under, so a new fragment re-opens its term even after
+  // "Close all" (the target of a link is always shown), while the reader can still close it during that visit
+  const closeKey = (id: string) => `${id}|${fromUrl}`;
+  const isOpen = (id: string) => !closed.has(closeKey(id)) && (opened.has(id) || id === fromUrl);
   useEffect(() => {
     if (fromUrl) requestAnimationFrame(() => document.getElementById(`def-item-${fromUrl}`)?.scrollIntoView?.());
   }, [fromUrl]);
@@ -38,8 +48,8 @@ export default function DefinicionesPage() {
     });
     setClosed((prev) => {
       const next = new Set(prev);
-      if (nextOpen) next.delete(id);
-      else next.add(id);
+      if (nextOpen) next.delete(closeKey(id));
+      else next.add(closeKey(id));
       return next;
     });
   };
@@ -49,7 +59,7 @@ export default function DefinicionesPage() {
   };
   const closeAll = () => {
     setOpened(new Set());
-    setClosed(new Set(ALL));
+    setClosed(new Set(ALL.map(closeKey)));
   };
   const btn =
     "rounded-md border border-teal-600 px-3 py-1.5 text-sm font-medium text-teal-700 hover:bg-teal-50 print:hidden dark:border-teal-400 dark:text-teal-300 dark:hover:bg-stone-800";

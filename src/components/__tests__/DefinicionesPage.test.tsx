@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
 import { LanguageProvider, useLanguage } from "@/contexts/LanguageContext";
 import DefinicionesPage from "@/app/definiciones/page";
@@ -63,7 +63,7 @@ describe("/definiciones", () => {
     fireEvent.click(item.querySelector("button")!);
     expect(item.textContent).toMatch(/two couples normal to the plane of the section/);
     const svg = item.querySelector("figure svg")!;
-    expect(svg.getAttribute("aria-label")).toMatch(/bending couple M/);
+    expect(svg.getAttribute("aria-label")).toMatch(/bending couple/);
     expect(svg.textContent).toMatch(/Pure bending.*Bending and shear/);
     expect(svg.querySelectorAll("path[marker-end]")).toHaveLength(4); // a couple at each face, twice
     expect(svg.querySelectorAll("line[marker-end]")).toHaveLength(2); // Q only in the second segment
@@ -233,6 +233,49 @@ describe("/definiciones", () => {
     } finally {
       window.location.hash = "";
     }
+  });
+
+  test("a malformed fragment (#%, #%E0%A4) is ignored instead of crashing the page", () => {
+    for (const bad of ["#%", "#%E0%A4"]) {
+      window.location.hash = bad;
+      try {
+        const { unmount } = renderPage();
+        expect(screen.getByTestId("def-pln.steiner")).toBeTruthy();
+        expect(document.querySelectorAll("[role=region]:not([hidden])")).toHaveLength(0);
+        unmount();
+      } finally {
+        window.location.hash = "";
+      }
+    }
+  });
+
+  test("a new fragment opens its term even after Close all, and the reader can still close it", () => {
+    window.location.hash = "#pln.steiner";
+    try {
+      renderPage();
+      const btn = (id: string) => screen.getByTestId(`def-${id}`).querySelector("button")!;
+      fireEvent.click(screen.getByRole("button", { name: "Close all" }));
+      expect(btn("pln.steiner").getAttribute("aria-expanded")).toBe("false");
+      act(() => {
+        window.location.hash = "#pln.inercia";
+        window.dispatchEvent(new HashChangeEvent("hashchange"));
+      });
+      expect(btn("pln.inercia").getAttribute("aria-expanded")).toBe("true"); // the target is shown again
+      expect(btn("pln.steiner").getAttribute("aria-expanded")).toBe("false");
+      fireEvent.click(btn("pln.inercia")); // closing it by hand still works during that visit
+      expect(btn("pln.inercia").getAttribute("aria-expanded")).toBe("false");
+    } finally {
+      window.location.hash = "";
+    }
+  });
+
+  test("bending and shear: the moments of the two faces differ (M and M + dM), in pure bending they are equal", () => {
+    renderPage();
+    fireEvent.click(screen.getByRole("button", { name: "Open all" }));
+    const svg = screen.getByTestId("def-flx.fsimple").querySelector("figure svg")!;
+    const ms = Array.from(svg.querySelectorAll("text")).map((t) => t.textContent).filter((t) => t === "M" || t === "M + dM");
+    expect(ms).toEqual(["M", "M", "M", "M + dM"]); // pure bending: M, M; with shear: M, M + dM
+    expect(screen.getByTestId("def-flx.fsimple").textContent).toMatch(/dM = Q·dx/);
   });
 
   test("the torsion hypotheses and Jourawski also have their figure (shared with /resumen)", () => {

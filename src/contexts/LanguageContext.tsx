@@ -2023,7 +2023,7 @@ const EN = {
   "def.t.fsimple":
     "Simple and pure bending",
   "def.f.fsimple":
-    "A segment of beam between two sections: the forces on each side reduce, at the centroid, to the bending couple M (equal and opposite on the two faces); in bending and shear there is also the shear force Q.",
+    "A segment of beam between two sections: the forces on each side reduce, at the centroid, to a bending couple. In pure bending it is the same M on both faces (equal and opposite); in bending and shear there is also the shear force Q, and the moment changes along the segment (M on one face, M + dM on the other, dM = Q·dx).",
   "def.fig.pure":
     "Pure bending",
   "def.fig.shear":
@@ -2045,7 +2045,7 @@ const EN = {
   "def.f.defelas":
     "In the elastic zone the strain is recovered; in the plastic one, unloading along a parallel to the straight line leaves a permanent strain.",
   "def.f.ductilidad":
-    "Ductility: the plastic period, from the elastic limit σ_E to the rupture: the shaded region under the curve (its width on the ε axis is the strain the material can take).",
+    "Ductility: the plastic period, from the elastic limit σ_E to the rupture. The shaded region under the curve marks that period; what measures ductility is its width on the ε axis, the strain the material can take (not the area, which is the energy).",
   "def.f.resiliencia":
     "Resilience: the area under the curve in the elastic period, U = ½·σ_e² / E.",
   "def.f.tenacidad":
@@ -4277,7 +4277,7 @@ const ES: Record<TranslationKey, string> = {
   "def.t.fsimple":
     "Flexión simple y flexión pura",
   "def.f.fsimple":
-    "Un tramo de viga entre dos secciones: las fuerzas de cada lado se reducen, en el baricentro, al par flector M (igual y opuesto en las dos caras); en flexión y corte hay además el esfuerzo de corte Q.",
+    "Un tramo de viga entre dos secciones: las fuerzas de cada lado se reducen, en el baricentro, a un par flector. En flexión pura es el mismo M en las dos caras (igual y opuesto); en flexión y corte hay además el esfuerzo de corte Q, y el momento cambia a lo largo del tramo (M en una cara, M + dM en la otra, dM = Q·dx).",
   "def.fig.pure":
     "Flexión pura",
   "def.fig.shear":
@@ -4299,7 +4299,7 @@ const ES: Record<TranslationKey, string> = {
   "def.f.defelas":
     "En la zona elástica la deformación se recupera; en la plástica, al descargar siguiendo una paralela a la recta queda una deformación permanente.",
   "def.f.ductilidad":
-    "Ductilidad: el período plástico, desde el límite elástico σ_E hasta la rotura: la zona sombreada bajo la curva (su ancho sobre el eje ε es la deformación que aguanta el material).",
+    "Ductilidad: el período plástico, desde el límite elástico σ_E hasta la rotura. La zona sombreada bajo la curva marca ese período; lo que mide la ductilidad es su ancho sobre el eje ε, la deformación que aguanta el material (no el área, que es la energía).",
   "def.f.resiliencia":
     "Resiliencia: el área bajo la curva en el período elástico, U = ½·σ_e² / E.",
   "def.f.tenacidad":
