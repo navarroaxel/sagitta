@@ -120,9 +120,64 @@ function Step3({ label, side, section }: { label: string; side: string; section:
   );
 }
 
-// 4. the free body of Ω: N on face 1, N + dN on face 2 (compression above the neutral axis) and dT on the cut
-function Step4({ label }: { label: string }) {
-  const id = "jr4";
+// 4. the cut surface in perspective: the curve s of the cross-section pushed along dx, parallel to the axis. A straight s
+// gives a plane (rectangle, double T); any curve gives a curved (cylindrical) surface. Ω has the same shape on both faces.
+function Step4({ label, plane, curved, axis }: { label: string; plane: string; curved: string; axis: string }) {
+  const D = [48, -34];
+  const panel = (ox: number, kind: "plane" | "curved") => {
+    const x0 = ox;
+    const x1 = ox + 70;
+    const top = 56;
+    const bot = 136;
+    const cut =
+      kind === "plane"
+        ? `M ${x0} 92 L ${x1} 92`
+        : `M ${x0} 94 C ${x0 + 20} 72 ${x0 + 40} 116 ${x1} 86`;
+    const end = kind === "plane" ? [x1, 92] : [x1, 86];
+    const start = kind === "plane" ? [x0, 92] : [x0, 94];
+    const shifted = (d: string) => d.replace(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g, (_m, a, b) => `${Number(a) + D[0]} ${Number(b) + D[1]}`);
+    const surface =
+      kind === "plane"
+        ? `M ${x0} 92 L ${x1} 92 L ${x1 + D[0]} ${92 + D[1]} L ${x0 + D[0]} ${92 + D[1]} Z`
+        : `${cut} L ${end[0] + D[0]} ${end[1] + D[1]} ${shifted(`C ${x0 + 40} 116 ${x0 + 20} 72 ${x0} 94`)} Z`;
+    const omegaFront =
+      kind === "plane"
+        ? `M ${x0} ${top} L ${x1} ${top} L ${x1} 92 L ${x0} 92 Z`
+        : `M ${x0} ${top} L ${x1} ${top} L ${x1} 86 C ${x0 + 40} 116 ${x0 + 20} 72 ${x0} 94 Z`;
+    return (
+      <g>
+        <rect x={x0} y={top} width="70" height={bot - top} fill="none" stroke={INK} strokeWidth="1.5" />
+        <polygon points={`${x0},${top} ${x1},${top} ${x1 + D[0]},${top + D[1]} ${x0 + D[0]},${top + D[1]}`} fill={TENSION} fillOpacity="0.1" stroke={INK} strokeWidth="1.5" />
+        <polygon points={`${x1},${top} ${x1 + D[0]},${top + D[1]} ${x1 + D[0]},${bot + D[1]} ${x1},${bot}`} fill="none" stroke={INK} strokeWidth="1.5" />
+        <polygon points={`${x1},${top} ${x1 + D[0]},${top + D[1]} ${x1 + D[0]},${end[1] + D[1]} ${x1},${end[1]}`} fill={TENSION} fillOpacity="0.2" />
+        <path d={omegaFront} fill={TENSION} fillOpacity="0.22" />
+        <path d={surface} fill={TENSION} fillOpacity="0.35" stroke={INK} strokeWidth="1" strokeDasharray="3 2" />
+        <path d={cut} fill="none" stroke={LOAD} strokeWidth="3" />
+        <circle cx={start[0]} cy={start[1]} r="2" fill={LOAD} />
+        <Txt x={x0 + 35} y={top + 12} textAnchor="middle" fill={TENSION} fontWeight="600">Ω</Txt>
+        <Txt x={x0 + 35} y={kind === "plane" ? 108 : 124} textAnchor="middle" fill={LOAD}>s</Txt>
+        <Txt x={x0 - 6} y="166" fontSize="11">{kind === "plane" ? plane : curved}</Txt>
+      </g>
+    );
+  };
+  return (
+    <svg viewBox="0 0 400 178" className="h-auto w-full" role="img" aria-label={label}>
+      <defs>
+        <marker id="jr4-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill={INK} />
+        </marker>
+      </defs>
+      {panel(10, "plane")}
+      {panel(210, "curved")}
+      <line x1="158" y1="140" x2="196" y2="112" stroke={INK} strokeWidth="1.5" markerEnd="url(#jr4-a)" />
+      <Txt x="168" y="150" fontSize="11">{axis}</Txt>
+    </svg>
+  );
+}
+
+// 5. the free body of Ω: N on face 1, N + dN on face 2 (compression above the neutral axis) and dT on the cut
+function Step5({ label }: { label: string }) {
+  const id = "jr5";
   const top = 52;
   const bot = 92;
   return (
@@ -148,7 +203,8 @@ const STEPS: { n: number; cap: TranslationKey; render: (label: string, t: (k: Tr
   { n: 1, cap: "shr.steps.1", render: (label) => <Step1 label={label} /> },
   { n: 2, cap: "shr.steps.2", render: (label) => <Step2 label={label} /> },
   { n: 3, cap: "shr.steps.3", render: (label, t) => <Step3 label={label} side={t("shr.steps.side")} section={t("shr.steps.section")} /> },
-  { n: 4, cap: "shr.steps.4", render: (label) => <Step4 label={label} /> },
+  { n: 4, cap: "shr.steps.4", render: (label, t) => <Step4 label={label} plane={t("shr.steps.plane")} curved={t("shr.steps.curved")} axis={t("shr.steps.axis")} /> },
+  { n: 5, cap: "shr.steps.5", render: (label) => <Step5 label={label} /> },
 ];
 
 // The cuts made to the beam, step by step, before the formula.

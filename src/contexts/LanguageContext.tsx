@@ -1158,11 +1158,19 @@ const EN = {
   "shr.steps.3":
     "We cut the slice with a surface parallel to the axis, at a distance y from the neutral axis. From the side it is a line; on the cross-section it is the curve of width s. Above it stays the part Ω.",
   "shr.steps.4":
-    "We isolate the part Ω: the normal stresses on it give N on face 1 and N + dN on face 2, and the shear force dT on the cut balances the difference, dT = dN.",
+    "The cut surface in perspective: the curve s of the cross-section pushed along dx, parallel to the axis. That is what “cylindrical” means here (any curve, not only a circle). If s is a straight line (rectangle, double T) the surface is a plane, a particular case; if it is any curve, the surface is curved. In both, the part Ω has the same shape on face 1 and on face 2.",
   "shr.steps.side":
     "side view",
   "shr.steps.section":
     "cross-section",
+  "shr.steps.5":
+    "We isolate the part Ω: the normal stresses on it give N on face 1 and N + dN on face 2, and the shear force dT on the cut balances the difference, dT = dN.",
+  "shr.steps.plane":
+    "straight s: a plane",
+  "shr.steps.curved":
+    "any curve s: curved surface",
+  "shr.steps.axis":
+    "axis",
   "shr.s3.kicker":
     "03 — Jourawski",
   "shr.s3.title":
@@ -3382,11 +3390,19 @@ const ES: Record<TranslationKey, string> = {
   "shr.steps.3":
     "Cortamos la rebanada con una superficie paralela al eje, a distancia y del eje neutro. De costado se ve como una línea; en la sección transversal es la curva de ancho s. Arriba queda la parte Ω.",
   "shr.steps.4":
-    "Aislamos la parte Ω: las tensiones normales sobre ella dan N en la cara 1 y N + dN en la 2, y la fuerza de corte dT sobre el corte equilibra la diferencia, dT = dN.",
+    "La superficie del corte en perspectiva: la curva s de la sección transversal desplazada a lo largo de dx, paralela al eje. Eso es lo que significa “cilíndrica” acá (una curva cualquiera, no solo un círculo). Si s es una recta (rectángulo, doble T) la superficie es un plano, un caso particular; si es una curva cualquiera, la superficie es curva. En los dos casos la parte Ω tiene la misma forma en la cara 1 y en la cara 2.",
   "shr.steps.side":
     "vista lateral",
   "shr.steps.section":
     "sección transversal",
+  "shr.steps.5":
+    "Aislamos la parte Ω: las tensiones normales sobre ella dan N en la cara 1 y N + dN en la 2, y la fuerza de corte dT sobre el corte equilibra la diferencia, dT = dN.",
+  "shr.steps.plane":
+    "s recta: un plano",
+  "shr.steps.curved":
+    "s curva: superficie curva",
+  "shr.steps.axis":
+    "eje",
   "shr.s3.kicker":
     "03 — Jourawski",
   "shr.s3.title":
