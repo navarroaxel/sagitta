@@ -1489,6 +1489,14 @@ const EN = {
     "The state of stress at a point B is the set of stresses on three perpendicular planes through it. Each plane gives one normal stress (σ_x, σ_y, σ_z) and two shear stresses; because of the reciprocity of shear stresses τ_xy = τ_yx, τ_yz = τ_zy and τ_xz = τ_zx, so the tensor is symmetric and has six independent components:",
   "tns.s1.p2":
     "In the exercise (MPa): σ_x = −20, σ_y = 30, σ_z = 0, τ_xy = 10, τ_yz = 0 and τ_xz = 5. Tension is positive, compression negative.",
+  "tns.f1":
+    "The state of stress at a point: on each of the three visible faces, one normal stress (red) and two shear stresses (teal), positive along the axes (x right, y up, z toward the viewer). The shear pairs τ_xy = τ_yx, τ_yz = τ_zy, τ_xz = τ_zx are equal.",
+  "tns.f2":
+    "A plane through B seen edge-on, with unit normal n: the stress vector ρ splits into the normal stress σ (along n) and the tangential stress τ (in the plane), |ρ|² = σ² + τ².",
+  "tns.f3":
+    "On the principal planes the shear stresses are zero: only σ_1, σ_2 and σ_3 remain, along the principal directions.",
+  "tns.f4":
+    "The three Mohr circles of the exercise, drawn to scale from its principal stresses (upper halves; not in the notes). The largest, between σ_3 and σ_1, gives τ_max = (σ_1 − σ_3)/2 ≈ 27.5 MPa.",
   "tns.s2.kicker":
     "02 — Invariants",
   "tns.s2.title":
@@ -3363,6 +3371,14 @@ const ES: Record<TranslationKey, string> = {
     "El estado de tensión en un punto B es el conjunto de tensiones sobre tres planos perpendiculares que pasan por él. Cada plano aporta una tensión normal (σ_x, σ_y, σ_z) y dos tangenciales; por la reciprocidad de las tangenciales τ_xy = τ_yx, τ_yz = τ_zy y τ_xz = τ_zx, así que el tensor es simétrico y tiene seis componentes independientes:",
   "tns.s1.p2":
     "En el ejercicio (MPa): σ_x = −20, σ_y = 30, σ_z = 0, τ_xy = 10, τ_yz = 0 y τ_xz = 5. La tracción es positiva y la compresión negativa.",
+  "tns.f1":
+    "El estado de tensión en un punto: sobre cada una de las tres caras visibles, una tensión normal (roja) y dos de corte (verde), positivas según los ejes (x a la derecha, y hacia arriba, z hacia el observador). Los pares τ_xy = τ_yx, τ_yz = τ_zy, τ_xz = τ_zx son iguales.",
+  "tns.f2":
+    "Un plano por B visto de canto, con normal unitaria n: el vector tensión ρ se descompone en la tensión normal σ (según n) y la tangencial τ (en el plano), |ρ|² = σ² + τ².",
+  "tns.f3":
+    "Sobre los planos principales las tensiones de corte son nulas: quedan solo σ_1, σ_2 y σ_3, según las direcciones principales.",
+  "tns.f4":
+    "Los tres círculos de Mohr del ejercicio, a escala, a partir de sus tensiones principales (mitades superiores; no están en los apuntes). El mayor, entre σ_3 y σ_1, da τ_max = (σ_1 − σ_3)/2 ≈ 27,5 MPa.",
   "tns.s2.kicker":
     "02 — Invariantes",
   "tns.s2.title":

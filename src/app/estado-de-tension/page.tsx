@@ -3,7 +3,8 @@
 import React from "react";
 import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 import { Sub } from "@/components/Sub";
-import { Eq, GuidePage, Para, Section } from "@/components/guide/GuideBits";
+import { Eq, Figure, GuidePage, Para, Section } from "@/components/guide/GuideBits";
+import { ElementFigure, MohrFigure, PlaneVectorFigure } from "@/components/TensionFigures";
 import StressStateCalculator from "@/components/StressStateCalculator";
 
 function Matrix({ rows }: { rows: string[][] }) {
@@ -39,6 +40,11 @@ export default function EstadoDeTensionPage() {
             ["τ_xz", "τ_yz", "σ_z"],
           ]}
         />
+        <div className="mx-auto max-w-sm">
+          <Figure caption={<Sub>{t("tns.f1")}</Sub>}>
+            <ElementFigure />
+          </Figure>
+        </div>
         <Para k="tns.s1.p2" />
         <Matrix
           rows={[
@@ -65,6 +71,11 @@ export default function EstadoDeTensionPage() {
         <Eq boxed>{t("tns.s3.e1")}</Eq>
         <Eq>{t("tns.s3.e2")}</Eq>
         <Eq>{t("tns.s3.e3")}</Eq>
+        <div className="mx-auto max-w-sm">
+          <Figure caption={<Sub>{t("tns.f2")}</Sub>}>
+            <PlaneVectorFigure />
+          </Figure>
+        </div>
         <p data-testid="tns-plane" className="mb-4 max-w-[66ch] rounded-md bg-stone-100 px-4 py-2 font-mono text-[14px] dark:bg-stone-900">
           {t("tns.s3.p2")}
         </p>
@@ -78,6 +89,16 @@ export default function EstadoDeTensionPage() {
           <Sub>{t("tns.s4.e2")}</Sub>
         </pre>
         <Para k="tns.s4.p3" />
+        <div className="mx-auto max-w-sm">
+          <Figure caption={<Sub>{t("tns.f3")}</Sub>}>
+            <ElementFigure principal />
+          </Figure>
+        </div>
+        <div className="mx-auto max-w-md">
+          <Figure caption={<Sub>{t("tns.f4")}</Sub>}>
+            <MohrFigure />
+          </Figure>
+        </div>
         <p data-testid="tns-principal" className="mb-4 max-w-[66ch] rounded-md bg-stone-100 px-4 py-2 font-mono text-[14px] dark:bg-stone-900">
           <Sub>{t("tns.s4.p4")}</Sub>
         </p>

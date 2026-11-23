@@ -20,6 +20,19 @@ describe("/estado-de-tension", () => {
     expect(document.body.textContent).not.toMatch(/[A-Za-z]_[A-Za-z0-9]/);
   });
 
+  test("has the element, the plane vector, the principal element and the Mohr circles", () => {
+    const { container } = renderPage();
+    expect(container.querySelectorAll("figure svg")).toHaveLength(4);
+    const svgs = Array.from(container.querySelectorAll("figure svg")).map((s) => s.textContent);
+    expect(svgs[0]).toMatch(/σx.*σy.*σz|σz.*σy.*σx/);
+    expect(svgs[0]).toMatch(/τxy.*τyz.*τxz|τzx/);
+    expect(svgs[1]).toMatch(/ρ/);
+    expect(svgs[2]).not.toMatch(/τ/);
+    expect(svgs[2]).toMatch(/σ1/);
+    expect(svgs[3]).toMatch(/τmax/);
+    expect(document.body.textContent).not.toMatch(/[A-Za-z]_[A-Za-z0-9]/);
+  });
+
   test("the calculator reproduces the exercise from the tensor", () => {
     renderPage();
     expect(screen.getByTestId("stress-inv").textContent).toMatch(/I1 = 10\s+I2 = -725\s+I3 = -750/);
