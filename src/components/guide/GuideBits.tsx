@@ -89,8 +89,8 @@ export function GuidePage({
 }) {
   const { t } = useLanguage();
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100">
-      <header className="z-10 flex items-center gap-3 border-b border-stone-200 bg-white px-4 py-2 shadow-sm dark:border-stone-700 dark:bg-stone-900">
+    <div className="flex h-screen flex-col overflow-hidden print:block print:h-auto print:overflow-visible bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100">
+      <header className="z-10 print:hidden flex items-center gap-3 border-b border-stone-200 bg-white px-4 py-2 shadow-sm dark:border-stone-700 dark:bg-stone-900">
         <Link
           href="/"
           className="text-sm text-stone-500 transition-colors hover:text-stone-800 dark:text-stone-400 dark:hover:text-stone-100"
@@ -103,7 +103,7 @@ export function GuidePage({
         <div className="flex-1" />
         <SettingsPanel />
       </header>
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto print:overflow-visible">
         <article className="mx-auto max-w-3xl px-6 py-12">
           <Kicker>
             <Sub>{kicker}</Sub>
@@ -114,7 +114,9 @@ export function GuidePage({
           </p>
           {children}
           <footer className="mt-12 border-t border-stone-200 pt-6 text-sm leading-relaxed text-stone-500 dark:border-stone-800 dark:text-stone-400">
-            <p className="max-w-[64ch]">{t(footer)}</p>
+            <p className="max-w-[64ch]">
+              <Sub>{t(footer)}</Sub>
+            </p>
           </footer>
         </article>
       </main>

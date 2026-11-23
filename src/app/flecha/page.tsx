@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
-import { Sub } from "@/components/Sub";
+import { Sub, plain } from "@/components/Sub";
 import { Eq, Figure, GuidePage, Para, Section } from "@/components/guide/GuideBits";
 import DeflectionCalculator from "@/components/DeflectionCalculator";
 import { DEFLECTION_CASES, type DeflectionCaseId } from "@/lib/deflection";
@@ -28,7 +28,7 @@ function CurvatureSVG() {
   const [ax, ay] = pt(rho, -dphi);
   const [bx, by] = pt(rho, dphi);
   return (
-    <svg viewBox="0 0 260 190" className="h-auto w-full" role="img" aria-label={t("fla.s1.fig")}>
+    <svg viewBox="0 0 260 190" className="h-auto w-full" role="img" aria-label={plain(t("fla.s1.fig"))}>
       <line x1={cx} y1={cy} x2={ax} y2={ay} stroke={FAINT} strokeWidth="1.5" strokeDasharray="4 3" />
       <line x1={cx} y1={cy} x2={bx} y2={by} stroke={FAINT} strokeWidth="1.5" strokeDasharray="4 3" />
       <path d={arc(rho, 0.5)} fill="none" stroke={INK} strokeWidth="2.5" />
@@ -94,14 +94,14 @@ export default function FlechaPage() {
     <GuidePage title="fla.title" kicker="M · E · J_x · f" lead="fla.lead" footer="fla.footer">
       <Section kicker="fla.s1.kicker" title="fla.s1.title">
         <Para k="fla.s1.p1" />
-        <Eq>1/ρ = ε / y</Eq>
+        <Eq>{"1/ρ = ε / {y}"}</Eq>
         <Para k="fla.s1.p2" />
-        <Eq>ε = σ/E = M·y / (J_x·E)</Eq>
+        <Eq>{"ε = σ/{E} = {M}·{y} / ({J}_x·{E})"}</Eq>
         <Para k="fla.s1.p3" />
-        <Eq boxed>1/ρ = M / (E·J_x)</Eq>
-        <Eq boxed>ρ = E·J_x / M</Eq>
+        <Eq boxed>{"1/ρ = {M} / ({E}·{J}_x)"}</Eq>
+        <Eq boxed>{"ρ = {E}·{J}_x / {M}"}</Eq>
         <div className="mx-auto max-w-xs">
-          <Figure caption={t("fla.s1.fig")}>
+          <Figure caption={<Sub>{t("fla.s1.fig")}</Sub>}>
             <CurvatureSVG />
           </Figure>
         </div>
@@ -109,17 +109,17 @@ export default function FlechaPage() {
 
       <Section kicker="fla.s2.kicker" title="fla.s2.title">
         <Para k="fla.s2.p1" />
-        <Eq>1/ρ = dθ/dz = d²y/dz²</Eq>
+        <Eq>{"1/ρ = dθ/{dz} = {d}²{y}/{dz}²"}</Eq>
         <Para k="fla.s2.p2" />
-        <Eq boxed>d²y/dz² = − M / (E·J_x)</Eq>
+        <Eq boxed>{"{d}²{y}/{dz}² = − {M} / ({E}·{J}_x)"}</Eq>
         <Para k="fla.s2.p3" />
       </Section>
 
       <Section kicker="fla.s3.kicker" title="fla.s3.title">
         <Para k="fla.s3.p1" />
-        <Eq>df = x·tg α ≈ x·dα = x·dx/ρ = M·x·dx / (E·J_x)</Eq>
+        <Eq>{"df = {x}·tg α ≈ {x}·{d}α = {x}·{dx}/ρ = {M}·{x}·{dx} / ({E}·{J}_x)"}</Eq>
         <Para k="fla.s3.p2" />
-        <Eq boxed>f = ∫₀^l M·x·dx / (E·J_x)</Eq>
+        <Eq boxed>{"f = ∫₀^l {M}·{x}·{dx} / ({E}·{J}_x)"}</Eq>
         <Para k="fla.s3.p3" />
       </Section>
 
@@ -145,7 +145,7 @@ export default function FlechaPage() {
             </li>
           ))}
         </ol>
-        <p className="mb-2 text-sm text-stone-500 dark:text-stone-400">{t("fla.s4.note")}</p>
+        <p className="mb-2 text-sm text-stone-500 dark:text-stone-400"><Sub>{t("fla.s4.note")}</Sub></p>
         <DeflectionCalculator />
       </Section>
     </GuidePage>

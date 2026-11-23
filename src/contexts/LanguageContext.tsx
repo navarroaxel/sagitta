@@ -749,7 +749,7 @@ const EN = {
   "flx.title":
     "Bending (flexión)",
   "flx.lead":
-    "Simple bending, straight and oblique: where the formula σ = M·y / J_x comes from, what the neutral axis is, and how to use it to verify and size a section. Based on the course notes (AMS 2020).",
+    "Simple bending, straight and oblique: where the formula σ = {M}·{y} / {J}_x comes from, what the neutral axis is, and how to use it to verify and size a section. Based on the course notes (AMS 2020).",
   "flx.s1.kicker":
     "01 — Definition",
   "flx.s1.title":
@@ -781,15 +781,15 @@ const EN = {
   "flx.s3.b":
     "The bar has a vertical plane of symmetry α.",
   "flx.s3.c":
-    "The loads P_i act perpendicular to the axis of the bar and lie in the plane α.",
+    "The loads {P}_i act perpendicular to the axis of the bar and lie in the plane α.",
   "flx.s3.note":
-    "Plane α is the plane of forces (of bending) and the axis y–y is the axis of symmetry of the piece, hence a principal axis of inertia: it can be the one with J_max or the one with J_min.",
+    "Plane α is the plane of forces (of bending) and the axis {y}–{y} is the axis of symmetry of the piece, hence a principal axis of inertia: it can be the one with {J}_max or the one with {J}_min.",
   "flx.s4.kicker":
     "04 — Deformation",
   "flx.s4.title":
     "The neutral axis",
   "flx.s4.p1":
-    "The longitudinal axis of the piece bends under the system of forces P_i. The sections CD and EF, originally a rectangle, form a trapezoid once loaded: the distance CE gets shorter and DF gets longer. The upper part has been compressed and the lower part has been put in tension.",
+    "The longitudinal axis of the piece bends under the system of forces {P}_i. The sections CD and EF, originally a rectangle, form a trapezoid once loaded: the distance CE gets shorter and DF gets longer. The upper part has been compressed and the lower part has been put in tension.",
   "flx.s4.p2":
     "So between the two extreme fibres there is a middle fibre that has not been deformed and therefore carries no stress: the neutral axis (N.A.) of the piece.",
   "flx.s4.fig":
@@ -803,21 +803,21 @@ const EN = {
   "flx.s5.kicker":
     "05 — The formula",
   "flx.s5.title":
-    "From equilibrium to σ = M·y / J_x",
+    "From equilibrium to σ = {M}·{y} / {J}_x",
   "flx.s5.p1":
-    "An element of area dA at a distance y from the neutral axis is loaded by an internal force σ·dA, where σ is the stress at that element: tension or compression depending on whether it is below or above the N.A. For the section to be in equilibrium, the sum of all internal forces must be zero and the sum of their moments about the N.A. must equal the moment M of the external forces at that section:",
+    "An element of area {dA} at a distance {y} from the neutral axis is loaded by an internal force σ·{dA}, where σ is the stress at that element: tension or compression depending on whether it is below or above the N.A. For the section to be in equilibrium, the sum of all internal forces must be zero and the sum of their moments about the N.A. must equal the moment M of the external forces at that section:",
   "flx.s5.p2":
-    "A fibre at a distance y from the N.A. changes length in proportion to its distance. If σ_1 is the stress on the unit of area at distance 1 from the N.A. and σ the one at distance y:",
+    "A fibre at a distance {y} from the N.A. changes length in proportion to its distance. If σ_1 is the stress on the unit of area at distance 1 from the N.A. and σ the one at distance y:",
   "flx.s5.p3":
-    "Substituting σ = σ_1·y into (1) and (2):",
+    "Substituting σ = σ_1·{y} into (1) and (2):",
   "flx.s5.p4":
-    "Since σ_1 ≠ 0, (4) gives ∫y dA = 0 (6): the first moment of the area is zero, so the neutral axis is a centroidal axis. The axis X–X lies in the cross-section and crosses the longitudinal axis of the bar at the centroid.",
+    "Since σ_1 ≠ 0, (4) gives ∫{y} {dA} = 0 (6): the first moment of the area is zero, so the neutral axis is a centroidal axis. The axis {X}–{X} lies in the cross-section and crosses the longitudinal axis of the bar at the centroid.",
   "flx.s5.p5":
-    "In (5) the integral ∫y² dA = J_x is the moment of inertia of the section about the neutral axis X–X, so M = σ_1·J_x and, from (3):",
+    "In (5) the integral ∫{y}² {dA} = {J}_x is the moment of inertia of the section about the neutral axis {X}–{X}, so {M} = σ_1·{J}_x and, from (3):",
   "flx.s5.p6":
-    "This gives the stress σ at a generic point at distance y of a section loaded by a moment M. For safety, M_max is taken together with the farthest fibre from the neutral axis, v:",
+    "This gives the stress σ at a generic point at distance {y} of a section loaded by a moment M. For safety, {M}_max is taken together with the farthest fibre from the neutral axis, v:",
   "flx.s5.p7":
-    "J_x / v is called the section modulus W_x (cm³), and the formula becomes:",
+    "{J}_x / v is called the section modulus {W}_x (cm³), and the formula becomes:",
   "flx.s6.kicker":
     "06 — Use",
   "flx.s6.title":
@@ -827,9 +827,9 @@ const EN = {
   "flx.s6.siz":
     "Sizing",
   "flx.s6.p1":
-    "If the centroid of the section is not at mid-height there are two section moduli, W_1 = J_x / v_1 and W_2 = J_x / v_2, and for safety the smaller one is used.",
+    "If the centroid of the section is not at mid-height there are two section moduli, {W}_1 = {J}_x / v_1 and {W}_2 = {J}_x / v_2, and for safety the smaller one is used.",
   "flx.s6.p2":
-    "This is exactly the check the app’s results tab performs for a member with a section (σ = |N|/A + |M|·100/S_x ≤ σ_adm).",
+    "This is exactly the check the app’s results tab performs for a member with a section (σ = |N|/{A} + |M|·100/{S}_x ≤ σ_adm).",
   "flx.footer":
     "Transcribed and ordered from the course notes “Flexión AMS 2020”; the equation numbers are the notes’.",
 
@@ -838,13 +838,13 @@ const EN = {
   "tor.title":
     "Torsion of circular shafts",
   "tor.lead":
-    "Straight circular bars under a torque M_t: the shear strain γ, the stress τ = M_t·ρ / J_0, the angle of twist φ and how to verify or size a solid or hollow shaft. Based on Raffo, Estática y Resistencia de Materiales, ch. XXIII.",
+    "Straight circular bars under a torque {M}_t: the shear strain γ, the stress τ = {M}_t·ρ / {J}_0, the angle of twist φ and how to verify or size a solid or hollow shaft. Based on Raffo, Estática y Resistencia de Materiales, ch. XXIII.",
   "tor.s1.kicker":
     "01 — Definition",
   "tor.s1.title":
     "Simple torsion",
   "tor.s1.p1":
-    "A solid is in simple torsion when the forces on one side of a section reduce to a single couple lying in the plane of that section. Its moment M_t is the torque. The usual case is a straight piece loaded at its ends by couples of equal magnitude and opposite sense, each in the plane of an end section; or a piece clamped at one end and twisted by a couple at the other, the clamp providing the opposite reaction couple. Transmission shafts of machines are the typical example.",
+    "A solid is in simple torsion when the forces on one side of a section reduce to a single couple lying in the plane of that section. Its moment {M}_t is the torque. The usual case is a straight piece loaded at its ends by couples of equal magnitude and opposite sense, each in the plane of an end section; or a piece clamped at one end and twisted by a couple at the other, the clamp providing the opposite reaction couple. Transmission shafts of machines are the typical example.",
   "tor.s1.p2":
     "Here we study straight circular torsion: a prism of constant circular cross-section, solid or hollow.",
   "tor.s2.kicker":
@@ -852,7 +852,7 @@ const EN = {
   "tor.s2.title":
     "Hypotheses and deformation",
   "tor.s2.p1":
-    "Take a bar clamped at one end and twisted by M_t at the other. Experiments show that:",
+    "Take a bar clamped at one end and twisted by {M}_t at the other. Experiments show that:",
   "tor.s2.h1":
     "The geometric axis stays straight.",
   "tor.s2.h2":
@@ -860,23 +860,23 @@ const EN = {
   "tor.s2.h3":
     "Each cross-section stays plane and perpendicular to the axis: the whole section just rotates about its centre O.",
   "tor.s2.p2":
-    "So a point B of a section at distance l from the clamp moves to B′ along an arc, and the straight fibre BB_0 tilts by the shear strain γ. The section has turned an angle φ (radians) relative to the clamped one.",
+    "So a point B of a section at distance l from the clamp moves to {B}′ along an arc, and the straight fibre BB_0 tilts by the shear strain γ. The section has turned an angle φ (radians) relative to the clamped one.",
   "tor.s2.fig":
     "Section before and after twisting: the point at radius ρ moves along an arc of angle φ, and the fibre of length l tilts by γ.",
   "tor.s2.p3":
-    "From the geometry, the arc BB′ is ρ·φ and also γ·l, hence:",
+    "From the geometry, the arc BB′ is ρ·φ and also γ·{l}, hence:",
   "tor.s3.kicker":
     "03 — Stress",
   "tor.s3.title":
-    "From the strain to τ = M_t·ρ / J_0",
+    "From the strain to τ = {M}_t·ρ / {J}_0",
   "tor.s3.p1":
-    "Shear strain and shear stress are linked by Hooke’s law for shear, with the shear modulus G (kg/cm²), related to E by G = 0.385·E (about 0.4·E for steel, the value used in the examples):",
+    "Shear strain and shear stress are linked by Hooke’s law for shear, with the shear modulus G (kg/cm²), related to E by {G} = 0.385·{E} (about 0.4·{E} for steel, the value used in the examples):",
   "tor.s3.p2":
-    "Substituting γ = ρ·φ/l shows that τ is proportional to the distance ρ from the centre: zero at the centre, maximum on the outer fibres.",
+    "Substituting γ = ρ·φ/{l} shows that τ is proportional to the distance ρ from the centre: zero at the centre, maximum on the outer fibres.",
   "tor.s3.p3":
-    "To balance the torque, the elementary force τ·dA at distance ρ must have a moment about O equal to M_t when added over the whole section. Since G and φ/l are constants:",
+    "To balance the torque, the elementary force τ·{dA} at distance ρ must have a moment about O equal to {M}_t when added over the whole section. Since G and φ/{l} are constants:",
   "tor.s3.p4":
-    "where J_0 = ∫ρ² dA is the polar moment of inertia. So the unit twist is φ/l = M_t / (G·J_0). The product G·J_0 is the torsional rigidity of the bar. Eliminating φ/l gives the resistance equation, the analogue of σ = M·y / J_x in bending (valid for circular sections only):",
+    "where {J}_0 = ∫ρ² {dA} is the polar moment of inertia. So the unit twist is φ/{l} = {M}_t / ({G}·{J}_0). The product {G}·{J}_0 is the torsional rigidity of the bar. Eliminating φ/{l} gives the resistance equation, the analogue of σ = {M}·{y} / {J}_x in bending (valid for circular sections only):",
   "tor.s3.fig":
     "τ grows linearly with ρ: zero at the centre, τ_max at the surface.",
   "tor.s4.kicker":
@@ -884,25 +884,25 @@ const EN = {
   "tor.s4.title":
     "The formulas you use",
   "tor.s4.p1":
-    "For a solid circle J_0 = π·D⁴/32. With ρ = D/2 at the surface:",
+    "For a solid circle {J}_0 = π·{D}⁴/32. With ρ = {D}/2 at the surface:",
   "tor.s4.p2":
     "And the total angle of twist of a bar of length l, in radians (multiply by 180/π for degrees):",
   "tor.s4.p3":
-    "Units: M_t in kg·cm, l and D in cm, G in kg/cm², J_0 in cm⁴, φ in radians. Careful with kg·m: 1 kg·m = 100 kg·cm.",
+    "Units: {M}_t in kg·cm, l and D in cm, G in kg/cm², {J}_0 in cm⁴, φ in radians. Careful with kg·m: 1 kg·m = 100 kg·cm.",
   "tor.s5.kicker":
     "05 — Hollow section",
   "tor.s5.title":
     "Hollow circular shafts",
   "tor.s5.p1":
-    "The same procedure holds. With outer diameter D_e, inner D_i and n = D_i / D_e:",
+    "The same procedure holds. With outer diameter {D}_e, inner {D}_i and n = {D}_i / {D}_e:",
   "tor.s5.p2":
-    "The material near the centre carries almost no stress, so a hollow shaft weighs less for the same τ_max. Equal torque and equal τ_max give D = D_e·∛(1 − n⁴). For D_e = 40 cm and D_i = 20 cm (n = 1/2) that is D ≈ 39 cm for the solid shaft, and the hollow one weighs about 79 % of it (areas 40² − 20² against 39²): roughly 20 % cheaper.",
+    "The material near the centre carries almost no stress, so a hollow shaft weighs less for the same τ_max. Equal torque and equal τ_max give {D} = {D}_e·∛(1 − n⁴). For {D}_e = 40 cm and {D}_i = 20 cm (n = 1/2) that is D ≈ 39 cm for the solid shaft, and the hollow one weighs about 79 % of it (areas 40² − 20² against 39²): roughly 20 % cheaper.",
   "tor.s6.kicker":
     "06 — Transmission shafts",
   "tor.s6.title":
     "Sizing a shaft from the power",
   "tor.s6.p1":
-    "The torque comes from the power N (in CV) and the revolutions per minute n. With P = 7500·N kg·cm/s and ω = π·n/30:",
+    "The torque comes from the power N (in CV) and the revolutions per minute n. With {P} = 7500·{N} kg·cm/s and ω = π·n/30:",
   "tor.s6.p2":
     "and, replacing in the sizing formula, the minimum diameter of the shaft (ignoring bending from pulleys and self-weight):",
   "tor.s7.kicker":
@@ -912,15 +912,15 @@ const EN = {
   "tor.s7.e1.title":
     "Verify a bar",
   "tor.s7.e1.p":
-    "Steel round bar, D = 6 cm, l = 3 m, M_t = 200 kg·m. Find τ_max and φ. G = 0.4·2 100 000 = 840 000 kg/cm².",
+    "Steel round bar, {D} = 6 cm, {l} = 3 m, {M}_t = 200 kg·m. Find τ_max and φ. {G} = 0.4·2 100 000 = 840 000 kg/cm².",
   "tor.s7.e1.r":
-    "M_t = 20 000 kg·cm; J_0 = π·6⁴/32 = 127 cm⁴; τ_max = 16·20 000 / (π·6³) ≈ 472 kg/cm²; φ = 20 000·300 / (840 000·127) = 0.056 rad ≈ 3°12′.",
+    "{M}_t = 20 000 kg·cm; {J}_0 = π·6⁴/32 = 127 cm⁴; τ_max = 16·20 000 / (π·6³) ≈ 472 kg/cm²; φ = 20 000·300 / (840 000·127) = 0.056 rad ≈ 3°12′.",
   "tor.s7.e2.title":
     "Size a bar",
   "tor.s7.e2.p":
-    "Steel bar, l = 2 m, loaded by a 500 kg force with a 120 cm arm at the free end. τ_adm = 600 kg/cm², G = 800 000 kg/cm². Find D and φ.",
+    "Steel bar, {l} = 2 m, loaded by a 500 kg force with a 120 cm arm at the free end. τ_adm = 600 kg/cm², {G} = 800 000 kg/cm². Find D and φ.",
   "tor.s7.e2.r":
-    "M_t = 500·120 = 60 000 kg·cm; R = ∛(2·60 000 / (π·600)) ≈ 4 cm, so D = 8 cm; J_0 = π·8⁴/32 ≈ 402 cm⁴; φ = 60 000·200 / (800 000·402) ≈ 0.037 rad ≈ 2°7′.",
+    "{M}_t = 500·120 = 60 000 kg·cm; {R} = ∛(2·60 000 / (π·600)) ≈ 4 cm, so {D} = 8 cm; {J}_0 = π·8⁴/32 ≈ 402 cm⁴; φ = 60 000·200 / (800 000·402) ≈ 0.037 rad ≈ 2°7′.",
   "tor.note":
     "A note on the source: the book prints τ_max = 549 kg/cm² for the first exercise, but its own formula gives 472 kg/cm²; the value above is recomputed.",
   "tor.footer":
@@ -930,37 +930,37 @@ const EN = {
   "axl.title":
     "Axial load (tension and compression)",
   "axl.lead":
-    "Simple tension and compression: the hypotheses that make σ = N/A uniform, the sizing and verification formulas, the elongation Δl = N·l/(A·E), self-weight, and three worked exercises. From the course notes “Axil AMS”.",
+    "Simple tension and compression: the hypotheses that make σ = {N}/{A} uniform, the sizing and verification formulas, the elongation Δ{l} = {N}·{l}/({A}·{E}), self-weight, and three worked exercises. From the course notes “Axil AMS”.",
   "axl.s1.kicker":
     "01 — Definition",
   "axl.s1.title":
     "Simple axial load",
   "axl.s1.p1":
-    "A bar is in simple tension or compression when the load P is applied at the centroid and equals N over the whole section, with Q = M_f = M_t = 0. (The notes call the area F; here it is A, to avoid confusion with a force.)",
+    "A bar is in simple tension or compression when the load P is applied at the centroid and equals N over the whole section, with {Q} = {M}_f = {M}_t = 0. (The notes call the area F; here it is A, to avoid confusion with a force.)",
   "axl.s1.p2":
     "Equilibrium of the section gives six conditions. Only the first one is not zero:",
   "axl.s1.e1":
-    "N = ∫ σ dA",
+    "{N} = ∫ σ {dA}",
   "axl.s1.e2":
-    "0 = ∫ τ_xy dA        0 = ∫ τ_xz dA",
+    "0 = ∫ τ_xy {dA}        0 = ∫ τ_xz {dA}",
   "axl.s1.e3":
-    "0 = ∫ (τ_xz·y − τ_xy·z) dA",
+    "0 = ∫ (τ_xz·{y} − τ_xy·{z}) {dA}",
   "axl.s1.e4":
-    "0 = ∫ σ·z dA        0 = ∫ σ·y dA",
+    "0 = ∫ σ·{z} {dA}        0 = ∫ σ·{y} {dA}",
   "axl.s2.kicker":
     "02 — Hypotheses",
   "axl.s2.title":
     "Why σ is uniform",
   "axl.s2.h1":
-    "Hooke’s law: σ = E·ε, with E = tan α the slope of the σ–ε line.",
+    "Hooke’s law: σ = {E}·ε, with {E} = tan α the slope of the σ–ε line.",
   "axl.s2.h2":
     "Saint-Venant: the cross-section stays plane and parallel to itself after the deformation, if it is far from the ends; so there is no stress concentration.",
   "axl.s2.p1":
-    "The shear strains must then be zero or constant. If γ = 0 then τ = 0. If γ were a nonzero constant, τ would be constant and ∫τ dA = 0 could not hold. So τ_xy = τ_xz = 0 and conditions 2, 3 and 4 are identically satisfied.",
+    "The shear strains must then be zero or constant. If γ = 0 then τ = 0. If γ were a nonzero constant, τ would be constant and ∫τ {dA} = 0 could not hold. So τ_xy = τ_xz = 0 and conditions 2, 3 and 4 are identically satisfied.",
   "axl.s2.p2":
-    "Since the sections just translate parallel to themselves, ε = Δl/l is constant, hence σ = E·ε is constant. Then ∫σ·z dA = σ·∫z dA and ∫σ·y dA = σ·∫y dA are the static moments of the area about the centroidal axes y and z: zero, so conditions 5 and 6 hold. The first one gives σ·A = N.",
+    "Since the sections just translate parallel to themselves, ε = Δ{l}/{l} is constant, hence σ = {E}·ε is constant. Then ∫σ·{z} {dA} = σ·∫{z} {dA} and ∫σ·{y} {dA} = σ·∫{y} {dA} are the static moments of the area about the centroidal axes {y} and {z}: zero, so conditions 5 and 6 hold. The first one gives σ·{A} = {N}.",
   "axl.fig":
-    "A bar under N: every cross-section carries the same σ = N/A.",
+    "A bar under N: every cross-section carries the same σ = {N}/{A}.",
   "axl.s3.kicker":
     "03 — Formulas",
   "axl.s3.title":
@@ -970,7 +970,7 @@ const EN = {
   "axl.s3.ver":
     "Verification",
   "axl.s3.p1":
-    "The elongation comes from σ = E·ε with ε = Δl/l, so N/A = E·Δl/l:",
+    "The elongation comes from σ = {E}·ε with ε = Δ{l}/{l}, so {N}/{A} = {E}·Δ{l}/{l}:",
   "axl.s3.sign":
     "Sign: in compression N is negative, so sizing and verification use |N| and |σ|; the signed N is kept for the elongation (a shortening).",
   "axl.s3.p2":
@@ -996,15 +996,15 @@ const EN = {
   "axl.s4.th.adm":
     "σ_adm",
   "axl.s4.p1":
-    "E = 2 100 000 kg/cm² and γ = 7 800 kg/m³ for every steel. The safety factor is ν = 3: σ_adm is about the tensile strength divided by 3 (3 700 / 3 ≈ 1 233 → 1 200). The number in the name, St 37, is that strength in kg/mm².",
+    "{E} = 2 100 000 kg/cm² and γ = 7 800 kg/m³ for every steel. The safety factor is ν = 3: σ_adm is about the tensile strength divided by 3 (3 700 / 3 ≈ 1 233 → 1 200). The number in the name, St 37, is that strength in kg/mm².",
   "axl.s5.kicker":
     "05 — Self-weight",
   "axl.s5.title":
     "When the weight of the bar counts",
   "axl.s5.p1":
-    "If the bar’s own weight takes part, the weight per unit area at the top is γ·l (l the length of the hanging bar), and it adds to the stress:",
+    "If the bar’s own weight takes part, the weight per unit area at the top is γ·{l} ({l} the length of the hanging bar), and it adds to the stress:",
   "axl.s5.p2":
-    "Units: with γ in kg/m³ and l in m, γ·l comes out in kg/m². Divide by 10 000 to get kg/cm² before combining it with σ_adm.",
+    "Units: with γ in kg/m³ and l in m, γ·{l} comes out in kg/m². Divide by 10 000 to get kg/cm² before combining it with σ_adm.",
   "axl.s6.kicker":
     "06 — Worked exercises",
   "axl.s6.title":
@@ -1012,21 +1012,21 @@ const EN = {
   "axl.s6.e1.title":
     "Size a cable and its elongation",
   "axl.s6.e1.p":
-    "A steel cable passes over pulleys along 7 m + 10 m + 6 m + 2 m and holds 5 000 kg. σ_adm = 1 400 kg/cm², E = 2 100 000 kg/cm². Find the radius and the elongation. Then find the radius needed to keep the elongation to 10 % of that value.",
+    "A steel cable passes over pulleys along 7 m + 10 m + 6 m + 2 m and holds 5 000 kg. σ_adm = 1 400 kg/cm², {E} = 2 100 000 kg/cm². Find the radius and the elongation. Then find the radius needed to keep the elongation to 10 % of that value.",
   "axl.s6.e1.r":
-    "A_nec = 5 000 / 1 400 = 3.57 cm² = π·r² → r = 1.066 cm. Total length 700 + 1 000 + 600 + 200 = 2 500 cm. Δl = 5 000·2 500 / (3.57·2 100 000) = 1.67 cm. For Δl′ = 0.167 cm: A = 5 000·2 500 / (0.167·2 100 000) = 35.7 cm² → r = 3.37 cm.",
+    "{A}_nec = 5 000 / 1 400 = 3.57 cm² = π·r² → r = 1.066 cm. Total length 700 + 1 000 + 600 + 200 = 2 500 cm. Δ{l} = 5 000·2 500 / (3.57·2 100 000) = 1.67 cm. For Δ{l}′ = 0.167 cm: {A} = 5 000·2 500 / (0.167·2 100 000) = 35.7 cm² → r = 3.37 cm.",
   "axl.s6.e2.title":
     "Admissible load of a wire",
   "axl.s6.e2.p":
     "A hanging wire, 6 m long, radius 0.50 cm, σ_adm = 1 600 kg/cm². Find the admissible load.",
   "axl.s6.e2.r":
-    "A = π·0.5² = 0.7854 cm²; F_adm = σ_adm·A = 1 600·0.7854 = 1 256.6 kg.",
+    "{A} = π·0.5² = 0.7854 cm²; {F}_adm = σ_adm·{A} = 1 600·0.7854 = 1 256.6 kg.",
   "axl.s6.e3.title":
     "Imposed elongation",
   "axl.s6.e3.p":
-    "The same cable (A = 3.57 cm², l = 25 m) is forced to elongate 5 cm. What load does that imply, and is it admissible?",
+    "The same cable ({A} = 3.57 cm², {l} = 25 m) is forced to elongate 5 cm. What load does that imply, and is it admissible?",
   "axl.s6.e3.r":
-    "F = Δl·A·E / l = 5·3.57·2 100 000 / 2 500 ≈ 15 000 kg; σ = F/A ≈ 4 202 kg/cm² > σ_adm = 1 400: it does NOT verify.",
+    "{F} = Δ{l}·{A}·{E} / {l} = 5·3.57·2 100 000 / 2 500 ≈ 15 000 kg; σ = {F}/{A} ≈ 4 202 kg/cm² > σ_adm = 1 400: it does NOT verify.",
   "axl.footer":
     "Transcribed from the handwritten course notes “Axil AMS”; numbers in the exercises were recomputed and agree with the notes.",
   "fla.link":
@@ -1034,51 +1034,51 @@ const EN = {
   "fla.title":
     "Deflection of beams",
   "fla.lead":
-    "From the curvature 1/ρ = M/(E·J) to the elastic line and the deflection f = ∫M·x dx/(E·J), plus the seven usual cases and a calculator. From the course notes “Flecha AMS 2020”.",
+    "From the curvature 1/ρ = {M}/({E}·{J}) to the elastic line and the deflection f = ∫{M}·{x} {dx}/({E}·{J}), plus the seven usual cases and a calculator. From the course notes “Flecha AMS 2020”.",
   "fla.s1.kicker":
     "01 — Curvature",
   "fla.s1.title":
     "Deformation in normal pure bending",
   "fla.s1.p1":
-    "A section of the beam rotates about its neutral axis. By similar triangles, a fibre at distance y from the neutral axis has strain ε = y/ρ, where ρ is the radius of curvature of the beam’s axis (C is the centre of curvature):",
+    "A section of the beam rotates about its neutral axis. By similar triangles, a fibre at distance {y} from the neutral axis has strain ε = {y}/ρ, where ρ is the radius of curvature of the beam’s axis ({C} is the centre of curvature):",
   "fla.s1.e1":
-    "1/ρ = ε / y",
+    "1/ρ = ε / {y}",
   "fla.s1.p2":
-    "With Hooke’s law ε = σ/E and the bending stress σ = M·y/J_x:",
+    "With Hooke’s law ε = σ/{E} and the bending stress σ = {M}·{y}/{J}_x:",
   "fla.s1.e2":
-    "ε = σ/E = M·y / (J_x·E)",
+    "ε = σ/{E} = {M}·{y} / ({J}_x·{E})",
   "fla.s1.p3":
     "Substituting gives the curvature, and the radius, whose units check out: (kg/cm²)·cm⁴ / (kg·cm) = cm.",
   "fla.s1.fig":
-    "An element ds of the beam’s axis: ρ is the radius of curvature, dθ the angle between the two sections.",
+    "An element {ds} of the beam’s axis: ρ is the radius of curvature, dθ the angle between the two sections.",
   "fla.s2.kicker":
     "02 — Elastic line",
   "fla.s2.title":
     "The differential equation",
   "fla.s2.p1":
-    "For an element of the axis, ds = ρ·dθ, so 1/ρ = dθ/ds, and for small slopes ds ≈ dz. Also tan θ = dy/dz ≈ θ. Therefore:",
+    "For an element of the axis, {ds} = ρ·{d}θ, so 1/ρ = dθ/{ds}, and for small slopes {ds} ≈ {dz}. Also tan θ = {dy}/{dz} ≈ θ. Therefore:",
   "fla.s2.e1":
-    "1/ρ = dθ/dz = d²y/dz²",
+    "1/ρ = dθ/{dz} = {d}²{y}/{dz}²",
   "fla.s2.p2":
-    "With the axes the notes adopt (z grows while θ decreases) the sign is negative, 1/ρ = −d²y/dz², and equating with the curvature gives the differential equation of the elastic line:",
+    "With the axes the notes adopt ({z} grows while θ decreases) the sign is negative, 1/ρ = −{d}²{y}/{dz}², and equating with the curvature gives the differential equation of the elastic line:",
   "fla.s2.p3":
-    "Integrating it once gives the slope θ(z), and twice, the deflection y(z), with the integration constants fixed by the supports.",
+    "Integrating it once gives the slope θ({z}), and twice, the deflection {y}({z}), with the integration constants fixed by the supports.",
   "fla.s3.kicker":
     "03 — Deflection at a point",
   "fla.s3.title":
     "The deflection as an integral",
   "fla.s3.p1":
-    "Take an element CD of length dx at distance x from the end where we want the deflection. The two sections rotate a relative angle dα, with dx = ρ·dα, so dα = dx/ρ. The tangent at D deviates from that at C, at the end, by:",
+    "Take an element CD of length {dx} at distance {x} from the end where we want the deflection. The two sections rotate a relative angle dα, with {dx} = ρ·{d}α, so dα = {dx}/ρ. The tangent at D deviates from that at C, at the end, by:",
   "fla.s3.p2":
     "and adding over the whole length:",
   "fla.s3.p3":
-    "That is the moment of the M/(E·J) diagram about the end where the deflection is measured: the first moment-area theorem. For a cantilever, with x from the free end, it gives f directly.",
+    "That is the moment of the {M}/({E}·{J}) diagram about the end where the deflection is measured: the first moment-area theorem. For a cantilever, with {x} from the free end, it gives f directly.",
   "fla.s4.kicker":
     "04 — Usual cases",
   "fla.s4.title":
     "The seven cases",
   "fla.s4.p1":
-    "Maximum deflection of the most common beams. In every case l is the span, E the elastic modulus and J_x the moment of inertia; q, P and p are the load (p is the maximum ordinate of a triangular load).",
+    "Maximum deflection of the most common beams. In every case l is the span, E the elastic modulus and {J}_x the moment of inertia; q, P and p are the load ({p} is the maximum ordinate of a triangular load).",
   "fla.case.ss-udl":
     "Simply supported, uniform load",
   "fla.case.ss-point":
@@ -1096,7 +1096,7 @@ const EN = {
   "fla.case.ss-tri.z":
     "The maximum is at z = 0.519·l from the end where the load is zero.",
   "fla.s4.note":
-    "Each coefficient is checked in the app’s test suite against a numerical double integration of M/(E·J).",
+    "Each coefficient is checked in the app’s test suite against a numerical double integration of {M}/({E}·{J}).",
   "fla.calc.title":
     "Calculator",
   "fla.calc.case":
@@ -1122,7 +1122,7 @@ const EN = {
   "shr.title":
     "Shear stresses in bending",
   "shr.lead":
-    "From pure shear and Cauchy’s theorem to the Jourawski–Colignon formula τ = Q·S/(J·s), the parabolic distribution in a rectangle and the profile of a double-T. From the course notes “Tensiones de corte en la flexión”.",
+    "From pure shear and Cauchy’s theorem to the Jourawski–Colignon formula τ = {Q}·{S}/({J}·s), the parabolic distribution in a rectangle and the profile of a double-T. From the course notes “Tensiones de corte en la flexión”.",
   "shr.s1.kicker":
     "01 — Pure shear",
   "shr.s1.title":
@@ -1130,7 +1130,7 @@ const EN = {
   "shr.s1.p1":
     "Pure shear occurs, exactly or approximately, in shearing and in rivets or bolts joining plates under tensile forces: the stress is taken as uniform over the area A that resists,",
   "shr.s1.e1":
-    "τ = Q / A",
+    "τ = {Q} / {A}",
   "shr.s1.p2":
     "(The notes write the tangential stress with the same letter as the normal one; here τ is always tangential.)",
   "shr.s2.kicker":
@@ -1144,37 +1144,41 @@ const EN = {
   "shr.s2.p2":
     "In a beam under shear and moment, the horizontal stresses needed to keep equilibrium would produce sliding on horizontal planes: shear on vertical planes necessarily implies shear on horizontal planes, and vice versa. These are the sliding stresses τ_L, present in all fibres (stacked planks that slide against each other are the picture).",
   "shr.s2.p3":
-    "The shear Q at a section is the resultant of all the forces on its left; by equilibrium, the resultant of those on the right is equal and opposite, acting on an infinitely close section.",
+    "The shear Q at a section is the projection, perpendicular to the axis of the bar, of the resultant of all the forces on its left; by equilibrium, that of the forces on the right is equal and opposite, acting on an infinitely close section.",
+  "shr.s2.fig":
+    "Cauchy: on two perpendicular planes the shear stresses τ_xy and τ_yx are equal; both arrows point towards the common edge (here the top right) or both away from it.",
+  "shr.s3.fig":
+    "Slice {dx} of the beam: the normal stresses give N on section 1 and N + {dN} on section 2 over the hatched area Ω, at distance {y} from the neutral axis; the difference {dN} is balanced by the shear force {dT} on the cut.",
   "shr.s3.kicker":
     "03 — Jourawski",
   "shr.s3.title":
     "The Jourawski–Colignon formula",
   "shr.s3.p1":
-    "The existence of shear produces tangential stresses in the plane of the section. Take a beam of constant section and a slice of length dx between sections 1 and 2. Because of bending, at a distance y from the neutral axis the stress is σ = M·y/J_x on section 1 and σ + dσ = (M + dM)·y/J_x on section 2.",
+    "The existence of shear produces tangential stresses in the plane of the section. Take a beam of constant section and a slice of length {dx} between sections 1 and 2. Because of bending, at a distance {y} from the neutral axis the stress is σ = {M}·{y}/{J}_x on section 1 and σ + dσ = ({M} + {dM})·{y}/{J}_x on section 2.",
   "shr.s3.p2":
-    "Now cut off part of the slice by a cylindrical surface of width s. On the hatched part (area Ω) the normal stresses give a force N on section 1 and N + dN on section 2; both are coaxial and their resultant is",
+    "Now cut off part of the slice by a cylindrical surface of width s. On the hatched part (area Ω) the normal stresses give a force N on section 1 and N + {dN} on section 2; both are coaxial and their resultant is",
   "shr.s3.e1":
-    "dN = ∫Ω (dM/J_x)·y dΩ",
+    "{dN} = ∫Ω ({dM}/{J}_x)·{y} dΩ",
   "shr.s3.p3":
-    "That force tends to slide the part above the surface against the rest. Tangential stresses τ on the separating surface oppose it; they are parallel to the axis and vary continuously. With s the length of the curve where the surface meets the section, dT = dx·∫τ ds, and equilibrium requires dT = dN:",
+    "That force tends to slide the part above the surface against the rest. Tangential stresses τ on the separating surface oppose it; they are parallel to the axis and vary continuously. With s the length of the curve where the surface meets the section, {dT} = {dx}·∫τ {ds}, and equilibrium requires {dT} = {dN}:",
   "shr.s3.e2":
-    "(dM/J_x)·∫Ω y dΩ = dx·∫s τ ds",
+    "({dM}/{J}_x)·∫Ω {y} dΩ = {dx}·∫s τ {ds}",
   "shr.s3.p4":
-    "The integral on the left is the static moment S_x of the area Ω about the neutral axis, and the one on the right is τ_m·s, with τ_m the mean value of τ along s. As dM/dx = Q:",
+    "The integral on the left is the static moment {S}_x of the area Ω about the neutral axis, and the one on the right is τ_m·s, with τ_m the mean value of τ along s. As {dM}/{dx} = {Q}:",
   "shr.s3.p5":
-    "By Cauchy’s theorem these longitudinal sliding stresses give, in the plane of the section, tangential stresses normal to the curve s at every point; τ_m is their mean value. S_x is the static moment of the part of the section on one side of the cut, and s is the width of the cut.",
+    "By Cauchy’s theorem these longitudinal sliding stresses give, in the plane of the section, tangential stresses normal to the curve s at every point; τ_m is their mean value. {S}_x is the static moment of the part of the section on one side of the cut, and s is the width of the cut.",
   "shr.s4.kicker":
     "04 — Rectangle",
   "shr.s4.title":
     "Distribution in a rectangular section",
   "shr.s4.p1":
-    "For b × h, with the cut at a height y above the neutral axis, s = b, J_x = b·h³/12 and the static moment of the part above is S_x = b·(h/2 − y)·[(h/2 − y)/2 + y] = ½·b·(h²/4 − y²). Replacing:",
+    "For b × h, with the cut at a height {y} above the neutral axis, s = {b}, {J}_x = {b}·{h}³/12 and the static moment of the part above is {S}_x = {b}·({h}/2 − {y})·[({h}/2 − {y})/2 + {y}] = ½·{b}·({h}²/4 − {y}²). Replacing:",
   "shr.s4.p2":
-    "The distribution is a parabola, zero at the top and bottom fibres and largest at the neutral axis (y = 0):",
+    "The distribution is a parabola, zero at the top and bottom fibres and largest at the neutral axis ({y} = 0):",
   "shr.s4.p3":
-    "that is 50 % more than the mean shear Q/area.",
+    "that is 50 % more than the mean shear {Q}/area.",
   "shr.s4.ex":
-    "Example: b = 10 cm, h = 20 cm, Q = 1 000 kg → mean Q/A = 5 kg/cm², τ_max = 1.5·1 000 / 200 = 7.5 kg/cm².",
+    "Example: {b} = 10 cm, {h} = 20 cm, {Q} = 1 000 kg → mean {Q}/{A} = 5 kg/cm², τ_max = 1.5·1 000 / 200 = 7.5 kg/cm².",
   "shr.s4.fig":
     "Rectangle: τ is parabolic, with its maximum at the neutral axis.",
   "shr.s5.kicker":
@@ -1182,17 +1186,17 @@ const EN = {
   "shr.s5.title":
     "Double-T profile",
   "shr.s5.p1":
-    "With flange width b, overall depth h, clear depth h_0 between flanges (the web is δ_1 thick, each flange δ thick) and J_x of the whole profile, the same formula gives, for a cut through the flange and through the web:",
+    "With flange width b, overall depth h, clear depth {h}_0 between flanges (the web is δ_1 thick, each flange δ thick) and {J}_x of the whole profile, the same formula gives, for a cut through the flange and through the web:",
   "shr.s5.flange":
     "In the flange",
   "shr.s5.web":
     "In the web",
   "shr.s5.p2":
-    "At the junction of the web and the flange the width of the cut goes from b to δ_1, so τ jumps by the factor b/δ_1: the web carries almost all the shear, and in the flanges the stresses are small. This is why, in practice, the shear of an I-beam is checked as Q divided by the area of the web.",
+    "At the junction of the web and the flange the width of the cut goes from b to δ_1, so τ jumps by the factor {b}/δ_1: the web carries almost all the shear, and in the flanges the stresses are small. This is why, in practice, the shear of an I-beam is checked as Q divided by the area of the web.",
   "shr.s5.fig":
     "Double-T: τ is small in the flanges, jumps at the junction and is almost constant in the web.",
   "shr.footer":
-    "Transcribed from the handwritten course notes “Tensiones de corte en la flexión”; the formulas are checked in the test suite (the stresses add up to Q).",
+    "Transcribed from the handwritten course notes “Tensiones de corte en la flexión”; the formulas are checked in the test suite (the stresses add up to {Q}).",
 
   "pln.link":
     "Plane areas",
@@ -1205,13 +1209,13 @@ const EN = {
   "pln.s1.title":
     "Static moments",
   "pln.s1.p1":
-    "The static moment (first-order moment) of a plane area about an axis in its plane is the product of the area by the distance from its centroid to that axis. For a differential dA at coordinates x, y:",
+    "The static moment (first-order moment) of a plane area about an axis in its plane is the product of the area by the distance from its centroid to that axis. For a differential {dA} at coordinates {x}, {y}:",
   "pln.s1.e1":
-    "S_x = ∫ y dA        S_y = ∫ x dA",
+    "{S}_x = ∫ {y} {dA}        {S}_y = ∫ x {dA}",
   "pln.s1.p2":
     "Units: cm³ for areas (distance × area), kg·cm for masses.",
   "pln.s1.p3":
-    "Example, a rectangle b × h resting on the X axis: dA = b·dy, so S_x = b·∫₀^h y dy = b·h²/2. About a horizontal axis through its centroid the integral runs from −h/2 to +h/2 and gives zero: for every element above the axis there is another at the same distance below it. Hence:",
+    "Example, a rectangle b × h resting on the X axis: {dA} = {b}·{dy}, so {S}_x = {b}·∫₀^h {y} {dy} = {b}·{h}²/2. About a horizontal axis through its centroid the integral runs from −{h}/2 to +{h}/2 and gives zero: for every element above the axis there is another at the same distance below it. Hence:",
   "pln.s1.p4":
     "The static moment of an area about a centroidal axis is zero.",
   "pln.s2.kicker":
@@ -1221,25 +1225,25 @@ const EN = {
   "pln.s2.p1":
     "The centroid of an area is the point whose coordinates are the static moments divided by the area. It coincides with the centre of gravity (the point of application of the resultant of the weights) only when the body is homogeneous and of constant thickness, that is, with a uniform mass per unit area. For a system of masses the same formulas are used with the masses in place of the areas (as in the example with three weights):",
   "pln.s2.e1":
-    "x_g = Σ A_i·x_i / Σ A_i = S_y / A",
+    "{x}_g = Σ {A}_i·{x}_i / Σ {A}_i = {S}_y / {A}",
   "pln.s2.e2":
-    "y_g = Σ A_i·y_i / Σ A_i = S_x / A",
+    "{y}_g = Σ {A}_i·{y}_i / Σ {A}_i = {S}_x / {A}",
   "pln.s2.p2":
-    "For a continuous area the sums become integrals, x_g = ∫x dA / ∫dA and y_g = ∫y dA / ∫dA.",
+    "For a continuous area the sums become integrals, {x}_g = ∫{x} {dA} / ∫{dA} and {y}_g = ∫{y} {dA} / ∫{dA}.",
   "pln.s2.ex.title":
     "Worked examples from the notes",
   "pln.s2.ex1.t":
     "Rectangle 4 × 16 with its corners at (6, 4) and (10, 20)",
   "pln.s2.ex1.r":
-    "A = 64; S_x = 4·(20² − 4²)/2 = 768; S_y = 16·(10² − 6²)/2 = 512; y_g = 768/64 = 12; x_g = 512/64 = 8.",
+    "{A} = 64; {S}_x = 4·(20² − 4²)/2 = 768; {S}_y = 16·(10² − 6²)/2 = 512; {y}_g = 768/64 = 12; {x}_g = 512/64 = 8.",
   "pln.s2.ex2.t":
     "Three masses: 300 kg at (30, 70), 800 kg at (80, 100), 1 000 kg at (60, 40)",
   "pln.s2.ex2.r":
-    "M = 2 100 kg; S_y = 133 000 kg·cm; S_x = 141 000 kg·cm; x_g = 63.33 cm; y_g = 67.14 cm.",
+    "{M} = 2 100 kg; {S}_y = 133 000 kg·cm; {S}_x = 141 000 kg·cm; {x}_g = 63.33 cm; {y}_g = 67.14 cm.",
   "pln.s2.ex3.t":
     "Irregular plate split into three rectangles (26, 50 and 75 cm²)",
   "pln.s2.ex3.r":
-    "A = 151 cm²; S_y = 26·6.5 + 50·5 + 75·7.5 = 981.5; S_x = 26·11 + 50·7.5 + 75·2.5 = 848.5; x_g = 6.50 cm; y_g = 5.62 cm.",
+    "{A} = 151 cm²; {S}_y = 26·6.5 + 50·5 + 75·7.5 = 981.5; {S}_x = 26·11 + 50·7.5 + 75·2.5 = 848.5; {x}_g = 6.50 cm; {y}_g = 5.62 cm.",
   "pln.s3.kicker":
     "03 — Composite areas",
   "pln.s3.title":
@@ -1247,7 +1251,7 @@ const EN = {
   "pln.s3.p1":
     "An irregular figure is split into parts whose area and centroid are known. A part that is empty counts with a negative area. The notes’ door with a rectangular opening gives the same centroid both ways:",
   "pln.s3.add":
-    "By adding the four solid pieces: A = 19 687.5 cm², S_x = 1 775 390.63, S_y = 2 589 843.75 cm³ → y_g = 90.18 cm, x_g = 131.55 cm.",
+    "By adding the four solid pieces: {A} = 19 687.5 cm², {S}_x = 1 775 390.63, {S}_y = 2 589 843.75 cm³ → {y}_g = 90.18 cm, {x}_g = 131.55 cm.",
   "pln.s3.sub":
     "By subtracting the hole from the full door: (30 000·100 − 10 312.5·118.75) / 19 687.5 = 90.18 cm and (30 000·125 − 10 312.5·112.5) / 19 687.5 = 131.55 cm.",
   "pln.s4.kicker":
@@ -1255,23 +1259,23 @@ const EN = {
   "pln.s4.title":
     "Moments of inertia",
   "pln.s4.p1":
-    "The product of inertia (centrifugal moment) multiplies dA by both distances; it can be positive, negative or zero. The moment of inertia multiplies dA by the square of the distance to an axis, so it is always positive. The polar moment uses the distance to a point. All are in length⁴ (cm⁴):",
+    "The product of inertia (centrifugal moment) multiplies {dA} by both distances; it can be positive, negative or zero. The moment of inertia multiplies {dA} by the square of the distance to an axis, so it is always positive. The polar moment uses the distance to a point. All are in length⁴ (cm⁴):",
   "pln.s4.e1":
-    "J_xy = ∫ x·y dA",
+    "{J}_xy = ∫ {x}·{y} {dA}",
   "pln.s4.e2":
-    "J_x = ∫ y² dA        J_y = ∫ x² dA",
+    "{J}_x = ∫ {y}² {dA}        {J}_y = ∫ {x}² {dA}",
   "pln.s4.e3":
-    "J_p = ∫ ρ² dA = J_x + J_y",
+    "{J}_p = ∫ ρ² {dA} = {J}_x + {J}_y",
   "pln.s4.p2":
     "The radius of gyration is the distance i at which the whole area would have to be concentrated to give the same moment:",
   "pln.s4.e4":
-    "J = A·i²        i = √(J/A)        i_p² = i_x² + i_y²",
+    "{J} = {A}·i²        i = √({J}/{A})        i_p² = i_x² + i_y²",
   "pln.s4.p3":
-    "For a rectangle b × h about its horizontal centroidal axis, integrating y²·b·dy from −h/2 to +h/2:",
+    "For a rectangle b × h about its horizontal centroidal axis, integrating {y}²·{b}·{dy} from −{h}/2 to +{h}/2:",
   "pln.s4.p4":
-    "Position matters. A rectangle of 8 × 16 cm (128 cm²) with the long side parallel to Y has J_x = 8·16³/12 = 2 730.67 cm⁴; turned 90° (16 wide, 8 high) it has J_x = 16·8³/12 = 682.67 cm⁴: four times less with the same material. This is why the long side goes in the direction of the bending.",
+    "Position matters. A rectangle of 8 × 16 cm (128 cm²) with the long side parallel to Y has {J}_x = 8·16³/12 = 2 730.67 cm⁴; turned 90° (16 wide, 8 high) it has {J}_x = 16·8³/12 = 682.67 cm⁴: four times less with the same material. This is why the long side goes in the direction of the bending.",
   "pln.s4.p5":
-    "The moments are additive: if A is split into parts, J = J_1 + J_2 + …; and a hollow part is subtracted, J = J_total − J′ − J″.",
+    "The moments are additive: if A is split into parts, {J} = {J}_1 + {J}_2 + …; and a hollow part is subtracted, {J} = {J}_total − {J}′ − J″.",
   "pln.s5.kicker":
     "05 — Steiner",
   "pln.s5.title":
@@ -1279,19 +1283,19 @@ const EN = {
   "pln.s5.p1":
     "Statement: the moment of inertia of an area about any axis of its plane equals its moment of inertia about the parallel centroidal axis, plus the product of the area by the square of the distance between both axes.",
   "pln.s5.p2":
-    "Take axes X, Y displaced a and b from the centroidal ones, so x = a + x_g and y = b + y_g. In J_xy = ∫xy dA the product expands into four integrals; two of them are static moments about centroidal axes, hence zero:",
+    "Take axes X, Y displaced a and b from the centroidal ones, so {x} = {a} + {x}_g and {y} = {b} + {y}_g. In {J}_xy = ∫xy {dA} the product expands into four integrals; two of them are static moments about centroidal axes, hence zero:",
   "pln.s5.e1":
-    "J_xy = J_xgyg + A·a·b",
+    "{J}_xy = {J}_xgyg + {A}·a·{b}",
   "pln.s5.p3":
     "and for each axis:",
   "pln.s5.fig":
-    "Axes X, Y displaced from the centroidal axes X_g, Y_g by b and a.",
+    "Axes X, Y displaced from the centroidal axes {X}_g, {Y}_g by b and a.",
   "pln.s5.use.title":
     "What is it for? (exam question)",
   "pln.s5.use.p1":
     "Tables and manuals give the moments of regular figures about their centroidal axes. Steiner’s theorem moves them to any other parallel axis, without integrating again. It is how the inertia of a composite section is obtained (each part about the common axis of the whole) and how the inertia of a built-up profile or a section whose parts do not share a centroid is computed.",
   "pln.s5.use.p2":
-    "Since A·d² is never negative, the moment of inertia about a centroidal axis is the smallest among all the parallel axes.",
+    "Since {A}·{d}² is never negative, the moment of inertia about a centroidal axis is the smallest among all the parallel axes.",
   "pln.s5.calc.title":
     "Steiner calculator: rectangle",
   "pln.s5.calc.b":
@@ -1315,15 +1319,15 @@ const EN = {
   "pln.s6.title":
     "Axes rotated an angle α",
   "pln.s6.p1":
-    "With axes X′, Y′ rotated α about the same origin, x′ = x·cosα + y·sinα and y′ = y·cosα − x·sinα. Expanding J_x′ = ∫y′² dA and J_y′ = ∫x′² dA, and using 2·sinα·cosα = sin 2α:",
+    "With axes {X}′, {Y}′ rotated α about the same origin, {x}′ = {x}·cosα + {y}·sinα and {y}′ = {y}·cosα − {x}·sinα. Expanding {J}_x′ = ∫{y}′² {dA} and {J}_y′ = ∫{x}′² {dA}, and using 2·sinα·cosα = sin 2α:",
   "pln.s6.e1":
-    "J_x′ = J_x·cos²α + J_y·sin²α − J_xy·sin 2α",
+    "{J}_x′ = {J}_x·cos²α + {J}_y·sin²α − {J}_xy·sin 2α",
   "pln.s6.e2":
-    "J_y′ = J_x·sin²α + J_y·cos²α + J_xy·sin 2α",
+    "{J}_y′ = {J}_x·sin²α + {J}_y·cos²α + {J}_xy·sin 2α",
   "pln.s6.e3":
-    "J_x′y′ = J_xy·cos 2α + (J_x − J_y)/2·sin 2α",
+    "{J}_x′y′ = {J}_xy·cos 2α + ({J}_x − {J}_y)/2·sin 2α",
   "pln.s6.p2":
-    "Adding the first two shows that J_x + J_y does not depend on α (it is the polar moment).",
+    "Adding the first two shows that {J}_x + {J}_y does not depend on α (it is the polar moment).",
   "pln.s7.kicker":
     "07 — Principal axes",
   "pln.s7.title":
@@ -1331,17 +1335,813 @@ const EN = {
   "pln.s7.p1":
     "Everything above depends on α. The moments of inertia reach a maximum and a minimum about two perpendicular axes, the principal axes of inertia, and the product of inertia about them is zero; the corresponding moments are the principal moments of inertia. The product of inertia, instead, can be zero or negative.",
   "pln.s7.p2":
-    "Setting dJ_y′/dα = 0 gives (J_y − J_x)·sin 2α_1 − 2·J_xy·cos 2α_1 = 0, hence:",
+    "Setting dJ_y′/{d}α = 0 gives ({J}_y − {J}_x)·sin 2α_1 − 2·{J}_xy·cos 2α_1 = 0, hence:",
   "pln.s7.e1":
-    "tg 2α_1 = 2·J_xy / (J_y − J_x)",
+    "tg 2α_1 = 2·{J}_xy / ({J}_y − {J}_x)",
   "pln.s7.p3":
     "This holds for two values of 2α_1 that differ by 180°, so there are two values of α_1 that differ by 90°: the two principal axes.",
   "pln.s7.p4":
     "If the two principal moments are different that pair is unique; if they are equal (a circle, a square) every orthogonal pair through the centroid is principal. The notes call every maximum/minimum pair “conjugate” first and then the orthogonal one “principal”; the definition above is the one to keep.",
   "pln.s7.p5":
-    "Not in the notes, but a direct consequence: J_1,2 = (J_x + J_y)/2 ± √(((J_x − J_y)/2)² + J_xy²).",
+    "Not in the notes, but a direct consequence: {J}_1,2 = ({J}_x + {J}_y)/2 ± √((({J}_x − {J}_y)/2)² + {J}_xy²).",
   "pln.footer":
     "Transcribed from the course notes “Momentos de superficies planas”. The examples are checked in the test suite.",
+
+  "pnd.link":
+    "Buckling",
+  "pnd.title":
+    "Buckling (instability of equilibrium)",
+  "pnd.lead":
+    "When a compressed bar stops being safe because of its stress and starts being unsafe because of its shape: stable, indifferent and unstable equilibrium, Euler’s critical load, slenderness and the effect of the end conditions. From the course notes “Pandeo AMS”.",
+  "pnd.s1.kicker":
+    "01 — Equilibrium",
+  "pnd.s1.title":
+    "Stable, indifferent and unstable equilibrium",
+  "pnd.s1.p1":
+    "A straight bar under compression can be checked with σ = {F}/{A} ≤ σ_adm as long as it is short: the notes give the condition l < 30·{b}, with b the smallest width of the section. If l > 30·{b} the stress check is no longer enough and the buckling check is needed, because the bar can reach an unstable equilibrium, in which the smallest lateral force deviates it from its axis and breaks it as it deforms, before the stress reaches σ_adm. Whether it does depends on the load {F} compared with {F}_k (below).",
+  "pnd.s1.p2":
+    "For a piece of given section A and length l there is a load {F} = {F}_k, the critical buckling load, that corresponds to a state of indifferent equilibrium. Load the bar with F and apply a transverse load H; three cases appear:",
+  "pnd.s1.c1.t":
+    "F < {F}_k: stable",
+  "pnd.s1.c1.d":
+    "When H is removed the bar returns to its straight position.",
+  "pnd.s1.c2.t":
+    "{F} = {F}_k: indifferent",
+  "pnd.s1.c2.d":
+    "When H is removed the bar stays in the deviated position.",
+  "pnd.s1.c3.t":
+    "F > {F}_k: unstable",
+  "pnd.s1.c3.d":
+    "Even when H stops the bar keeps deforming until it breaks.",
+  "pnd.s1.p3":
+    "The same classification (stable, indifferent, unstable) applies to any equilibrium: after a small disturbance the body goes back, stays or moves away.",
+  "pnd.s2.kicker":
+    "02 — Hypotheses",
+  "pnd.s2.title":
+    "Conditions of the bar",
+  "pnd.s2.h1":
+    "Both ends are hinged, with no friction, one of them guided along the axis of the bar.",
+  "pnd.s2.h2":
+    "The compressive force acts exactly on the axis of the bar.",
+  "pnd.s2.h3":
+    "The material is elastic and homogeneous ({E} constant).",
+  "pnd.s2.h4":
+    "No lateral forces act on the bar.",
+  "pnd.s3.kicker":
+    "03 — Euler",
+  "pnd.s3.title":
+    "Critical load and slenderness",
+  "pnd.s3.p1":
+    "The force at which buckling starts is the critical load or buckling limit. With the bending moment {M} = {F}·s at a section where the bar has deflected s, Euler’s expression is, valid only for σ ≤ σ_EL (the elastic limit):",
+  "pnd.s3.p2":
+    "{J}_min is the smallest moment of inertia of the section (the bar buckles about the weak axis), c the end-condition coefficient and l the length. With {J}_min = i_min²·{A}, where i = √({J}/{A}) is the radius of gyration, and the slenderness λ = {l}_0 / i_min, with the equivalent length {l}_0 = c·{l} (the distance between two consecutive inflection points of the deformed bar):",
+  "pnd.s3.p3":
+    "Dividing by the area gives the critical stress. Its graph against λ is a hyperbola, Euler’s hyperbola: the more slender the bar, the lower the stress it can carry.",
+  "pnd.s3.p4":
+    "For the pinned bar c = 1, so {l}_0 = {l}; the cantilever buckles over twice its length and the fixed–fixed bar over half of it (next section).",
+  "pnd.s3.fig":
+    "Euler’s hyperbola σ_k(λ) for steel, {E} = 2 100 000 kg/cm²; only the branch with σ_k below the elastic limit is valid.",
+  "pnd.s3.fig.axis.x":
+    "λ",
+  "pnd.s3.fig.axis.y":
+    "σ_k",
+  "pnd.s4.kicker":
+    "04 — End conditions",
+  "pnd.s4.title":
+    "The coefficient c",
+  "pnd.s4.p1":
+    "c = {l}_0 / l compares the buckling length with the real length. The fixed-free cantilever buckles over twice its length; the fixed-fixed bar over half of it:",
+  "pnd.s4.fixedfree":
+    "fixed–free",
+  "pnd.s4.pinned":
+    "pinned–pinned",
+  "pnd.s4.fixedpinned":
+    "fixed–pinned",
+  "pnd.s4.fixedfixed":
+    "fixed–fixed",
+  "pnd.s4.p2":
+    "Since {F}_k is proportional to 1/c², fixing both ends multiplies the critical load by 4 with respect to the pinned bar, and the cantilever divides it by 4.",
+  "pnd.s5.kicker":
+    "05 — Worked exercises",
+  "pnd.s5.title":
+    "Exercises from the notes",
+  "pnd.s5.e1.t":
+    "IPN 10, {h} = 7 m ({J}_y = 12.20 cm⁴)",
+  "pnd.s5.e1.r":
+    "Pinned (c = 1): {F}_k = π²·2 100 000·12.20 / 700² = 516 kg. Fixed–fixed (c = 0.5): {F}_k = 2 064 kg.",
+  "pnd.s5.e2.t":
+    "IPN 23, {h} = 7 m ({J}_y = 189 cm⁴)",
+  "pnd.s5.e2.r":
+    "Pinned: {F}_k = π²·2 100 000·189 / 700² = 7 994 kg. Fixed–fixed (c = 0.5): {F}_k = 31 978 kg.",
+  "pnd.s5.e3.t":
+    "Bar 15 × 24 cm, 8 m long, pinned, with 350 t (σ_adm = 1 200 kg/cm²)",
+  "pnd.s5.e3.r":
+    "{A} = 360 cm², σ = 350 000/360 = 972.2 kg/cm² < 1 200: it passes the stress check. {J}_min = 24·15³/12 = 6 750 cm⁴ and {F}_k = π²·2 100 000·6 750 / 800² = 218 596 kg < 350 000 kg: it buckles. The load “admissible by stress”, 1 200·360 = 432 t, is not the real limit. The longest bar that carries 350 t is {l} = √(π²·{E}·{J}/{F}) = 632 cm.",
+  "pnd.s5.e4.t":
+    "Cantilever (c = 2) carrying 135 000 kg, with {J}_y = 14 435 cm⁴",
+  "pnd.s5.e4.r":
+    "{l}_max = √(π²·2 100 000·14 435 / (4·135 000)) = 744.34 cm = 7.44 m.",
+  "pnd.s5.note":
+    "Two details of the handwritten notes: the profile of the last exercise is written “IPB 60”, but {J}_y = 14 435 cm⁴ is that of an IPB 700 (the table has 14 440); and the result is written “7.44 cm” where it means 7.44 m.",
+  "pnd.calc.title":
+    "Euler calculator",
+  "pnd.calc.E":
+    "E (kg/cm²)",
+  "pnd.calc.J":
+    "J_min (cm⁴)",
+  "pnd.calc.A":
+    "A (cm²)",
+  "pnd.calc.l":
+    "l (cm)",
+  "pnd.calc.c":
+    "c",
+  "pnd.calc.F":
+    "F (kg)",
+  "pnd.calc.Fk":
+    "F_k",
+  "pnd.calc.lambda":
+    "λ",
+  "pnd.calc.sk":
+    "σ_k",
+  "pnd.calc.state":
+    "Equilibrium under F",
+  "pnd.calc.stable":
+    "stable",
+  "pnd.calc.indifferent":
+    "indifferent",
+  "pnd.calc.unstable":
+    "unstable: it buckles",
+  "pnd.calc.hint":
+    "Euler holds only while σ_k is below the stress at the elastic limit; for stockier bars the formula overestimates F_k.",
+  "pnd.footer":
+    "Transcribed from the handwritten course notes “Pandeo AMS”; the numbers in the exercises were recomputed and agree with the notes.",
+  "tns.link":
+    "Stress state",
+  "tns.title":
+    "State of stress at a point",
+  "tns.lead":
+    "The stress tensor, its invariants and classification, the stress vector on any plane, and the principal stresses, directions and planes. The worked exercise is the professor’s (“Estado de tensión EJ1”); the explanations around it are ours.",
+  "tns.s1.kicker":
+    "01 — The tensor",
+  "tns.s1.title":
+    "Writing the stress tensor",
+  "tns.s1.p1":
+    "The state of stress at a point B is the set of stresses on three perpendicular planes through it. Each plane gives one normal stress (σ_x, σ_y, σ_z) and two shear stresses; because of the reciprocity of shear stresses τ_xy = τ_yx, τ_yz = τ_zy and τ_xz = τ_zx, so the tensor is symmetric and has six independent components:",
+  "tns.s1.p2":
+    "In the exercise (MPa): σ_x = −20, σ_y = 30, σ_z = 0, τ_xy = 10, τ_yz = 0 and τ_xz = 5. Tension is positive, compression negative.",
+  "tns.f1":
+    "The state of stress at a point: on each of the three visible faces, one normal stress (red) and two shear stresses (teal), positive along the axes ({x} right, {y} up, {z} toward the viewer). The shear pairs τ_xy = τ_yx, τ_yz = τ_zy, τ_xz = τ_zx are equal.",
+  "tns.f2":
+    "A plane through B seen edge-on, with unit normal n: the stress vector ρ splits into the normal stress σ (along n) and the tangential stress τ (in the plane), |ρ|² = σ² + τ².",
+  "tns.f3":
+    "On the principal planes the shear stresses are zero: only σ_1, σ_2 and σ_3 remain, along the principal directions.",
+  "tns.f4":
+    "The three Mohr circles of the exercise, drawn to scale from its principal stresses (upper halves; not in the notes). The largest, between σ_3 and σ_1, gives τ_max = (σ_1 − σ_3)/2 ≈ 27.5 MPa.",
+  "tns.s2.kicker":
+    "02 — Invariants",
+  "tns.s2.title":
+    "Invariants and classification",
+  "tns.s2.p1":
+    "The three invariants do not change when the axes are rotated; they are also the symmetric functions of the principal stresses:",
+  "tns.s2.e1":
+    "{I}_1 = σ_x + σ_y + σ_z = σ_1 + σ_2 + σ_3",
+  "tns.s2.e2":
+    "{I}_2 = (σ_x·σ_y − τ_xy²) + (σ_y·σ_z − τ_yz²) + (σ_x·σ_z − τ_xz²) = σ_1·σ_2 + σ_2·σ_3 + σ_1·σ_3",
+  "tns.s2.e3":
+    "{I}_3 = det {T} = σ_x·σ_y·σ_z + 2·τ_xy·τ_yz·τ_xz − (σ_x·τ_yz² + σ_y·τ_xz² + σ_z·τ_xy²) = σ_1·σ_2·σ_3",
+  "tns.s2.p2":
+    "Classification: if {I}_3 ≠ 0 the state is triple or spatial (three nonzero principal stresses); if {I}_3 = 0 and {I}_2 ≠ 0 it is double or plane; if only {I}_1 ≠ 0 it is simple or uniaxial.",
+  "tns.s2.p3":
+    "In the exercise: {I}_1 = −20 + 30 + 0 = 10 MPa; {I}_2 = (−600 − 100) + (0 − 0) + (0 − 25) = −725 MPa²; {I}_3 = 0 + 0 − (0 + 30·25 + 0) = −750 MPa³. Since {I}_3 ≠ 0 the state at B is triple (spatial).",
+  "tns.s3.kicker":
+    "03 — Stress vector",
+  "tns.s3.title":
+    "Stress on a plane of normal n",
+  "tns.s3.p1":
+    "For a plane through B with unit normal n = ({l}, m, n), the stress vector ρ is the tensor applied to the normal. Its component along n is the normal stress σ, and what is left is the tangential stress τ:",
+  "tns.s3.e1":
+    "ρ = {T} · n",
+  "tns.s3.e2":
+    "σ = (ρ · n) n",
+  "tns.s3.e3":
+    "τ = ρ − σ        |ρ|² = |σ|² + |τ|²",
+  "tns.s3.p2":
+    "In the exercise, with n = (0.5; 0.5; 0.7071): ρ = (−1.4645; 20; 2.5) MPa, |ρ| = 20.21 MPa; σ = (5.5178; 5.5178; 7.8032) MPa, |σ| = 11.04 MPa; τ = (−6.9823; 14.4822; −5.3032) MPa, |τ| = 16.93 MPa.",
+  "tns.s4.kicker":
+    "04 — Principal stresses",
+  "tns.s4.title":
+    "Principal stresses, directions and planes",
+  "tns.s4.p1":
+    "There are three perpendicular planes on which the shear stress is zero: the principal planes. The normal stress on them is a principal stress. They are the roots of the characteristic equation:",
+  "tns.s4.e1":
+    "σ³ − {I}_1·σ² + {I}_2·σ − {I}_3 = 0",
+  "tns.s4.p2":
+    "The roots are real because the tensor is symmetric; ordered, σ_1 ≥ σ_2 ≥ σ_3. For each root the principal direction n = ({l}, m, n) solves",
+  "tns.s4.e2":
+    "(σ_x − σ)·{l} + τ_yx·m + τ_zx·n = 0\nτ_xy·{l} + (σ_y − σ)·m + τ_zy·n = 0\nτ_xz·{l} + τ_yz·m + (σ_z − σ)·n = 0",
+  "tns.s4.p3":
+    "The three equations are dependent, so one unknown is fixed ({a} = 1) and the other two solved; then the vector is normalised dividing by (a² + {b}² + c²)^½. The sign of the direction is arbitrary. The plane perpendicular to each direction is the corresponding principal plane.",
+  "tns.s4.p4":
+    "In the exercise: σ_1 = 31.9542 MPa, σ_2 = 1.02156 MPa, σ_3 = −22.97576 MPa. Their sum is {I}_1 = 10 and their product is {I}_3 = −750, as it has to be.",
+  "tns.s5.kicker":
+    "05 — The directions",
+  "tns.s5.title":
+    "Principal directions of the exercise",
+  "tns.s5.th.s":
+    "Principal stress",
+  "tns.s5.th.sys":
+    "System solved ({a} = 1)",
+  "tns.s5.th.n":
+    "Direction n",
+  "tns.s5.r1":
+    "σ_1 = 31.9542: −51.9542·a + 10·{b} + 5·c = 0, 10·a − 1.9542·{b} = 0 → {b} = 5.1172, c = 0.1565",
+  "tns.s5.r2":
+    "σ_2 = 1.02156: −21.02156·a + 10·{b} + 5·c = 0, 10·a + 28.97844·{b} = 0 → {b} = −0.3451, c = 4.8945",
+  "tns.s5.r3":
+    "σ_3 = −22.97576: 2.97576·a + 10·{b} + 5·c = 0, 10·a + 52.97576·{b} = 0 → {b} = −0.1888, c = −0.2176",
+  "tns.s5.n1":
+    "(0.1917 ; 0.981 ; 0.03)",
+  "tns.s5.n2":
+    "(0.1997 ; −0.0689 ; 0.97743)",
+  "tns.s5.n3":
+    "(0.961 ; −0.18139 ; −0.20912)",
+  "tns.s5.p1":
+    "The tests of the app recompute every number of the exercise from the tensor.",
+  "tns.calc.title":
+    "Calculator",
+  "tns.calc.n":
+    "normal n (it is normalised)",
+  "tns.calc.inv":
+    "Invariants",
+  "tns.calc.kind":
+    "State",
+  "tns.calc.triple":
+    "triple (spatial)",
+  "tns.calc.double":
+    "double (plane)",
+  "tns.calc.simple":
+    "simple (uniaxial)",
+  "tns.calc.null":
+    "no stress",
+  "tns.calc.plane":
+    "Stress on the plane",
+  "tns.calc.rho":
+    "ρ",
+  "tns.calc.sigma":
+    "σ (normal)",
+  "tns.calc.tau":
+    "τ (tangential)",
+  "tns.calc.princ":
+    "Principal stresses and directions",
+  "tns.calc.any":
+    "any direction (the three principal stresses are equal)",
+  "tns.calc.eigen":
+    "not unique: any direction perpendicular to the other principal one (repeated stress)",
+  "tns.footer":
+    "The worked exercise is the professor’s (“Estado de tensión EJ1”); the theory text around it was written for this page.",
+
+  "mat.link":
+    "Material properties",
+  "mat.title":
+    "Properties of materials",
+  "mat.lead":
+    "Forces and stresses, the states of stress, the tensile test and the σ–ε diagram, the limits and properties of a material, the types of material and the equations of equivalence. From the course notes “Propiedades de los materiales”.",
+  "mat.s1.kicker":
+    "01 — Forces",
+  "mat.s1.title":
+    "Forces on a solid",
+  "mat.s1.p1":
+    "A solid can be loaded by two kinds of force. Volume (or mass) forces act on every particle of the body: with the mean density γ = dm/dv, the force on an element is {P}·dm = {P}·γ·dv, where P is the unit force. They can be gravitational, of inertia or electromagnetic.",
+  "mat.s1.p2":
+    "Surface forces act on the surface of the body, as contact forces or pressure: {p}·{ds} = {F}, where p is the force per unit of surface (the pressure).",
+  "mat.s2.kicker":
+    "02 — Stress",
+  "mat.s2.title":
+    "Stress and state of stress",
+  "mat.s2.p1":
+    "Stresses are the mutual actions between the particles of a body, caused by the external forces. A stress is a unit effort: a force per unit of surface, in T/m², kg/cm² or kN/cm².",
+  "mat.s2.p2":
+    "The actions applied to one part of a structure are transmitted as stresses from point to point over the whole section. There are infinitely many states of stress, one for each point. If the body is cut by a plane, a stress appears — a vector — that depends on the position and on the orientation of the cutting plane:",
+  "mat.s2.e1":
+    "ρ = lim ΔP / ΔF   (ΔF → 0)",
+  "mat.s2.p3":
+    "ΔP is the part of the internal reaction of the left side that acts on the differential of surface ΔF. The vector ρ is not free: it is associated with a plane, and through a point pass infinitely many planes, so there are infinitely many ρ. The set of all of them is the state of stress at that point. Each material has a maximum state of stress.",
+  "mat.s2.p4":
+    "The stress ρ makes an angle with the plane, so it splits into a normal component σ and a tangential component τ:",
+  "mat.s2.e2":
+    "σ = {dN}/{dS}        τ = {dQ}/{dS}        ρ = √(σ² + τ²)",
+  "mat.s2.p5":
+    "Types of state of stress, according to how ρ behaves as the plane changes:",
+  "mat.s2.t1":
+    "Triple or spatial: intensity, direction and sense vary, and ρ can have any orientation in space.",
+  "mat.s2.t2":
+    "Double or plane: they vary, but ρ stays parallel to a given plane.",
+  "mat.s2.t3":
+    "Simple or linear: ρ stays parallel to a given direction.",
+  "mat.s2.p6":
+    "The stress tensor, its invariants and the principal stresses are worked in the page on the state of stress at a point.",
+  "mat.s3.kicker":
+    "03 — Tensile test",
+  "mat.s3.title":
+    "The tensile test",
+  "mat.s3.p1":
+    "To know the properties of a material it has to be tested. The testing machine (electric or hydraulic) has a base, a head and two or four columns much stiffer than the specimens, so that the machine does not deform instead of them, and a central piston that applies the load, in tension or in compression. Ductile materials are tested in tension; those that do not resist tension, like concrete, in compression.",
+  "mat.s3.p2":
+    "For metals, the simple tensile test loads a cylindrical specimen of standard dimensions with an axial force, which generates a simple state of stress. The load is applied quasi-statically, that is, very slowly, while the elongation is measured. With the pairs of values σ–ε the stress–strain diagram is drawn, from the start of the test to the rupture:",
+  "mat.s3.e1":
+    "σ = {F} / {A}_o        ε = Δl / {l}_o",
+  "mat.s3.p3":
+    "σ is the force divided by the original section {A}_o, and ε is the unit elongation, the ratio between the elongation Δl and the initial length {l}_o. They are plotted on the Y and X axes respectively.",
+  "mat.s4.kicker":
+    "04 — Deformation and limits",
+  "mat.s4.title":
+    "Elastic and plastic deformation; limits",
+  "mat.s4.d1":
+    "Elastic deformation: the body returns to its original shape when the effort ceases.",
+  "mat.s4.d2":
+    "Plastic deformation: it does not return; the body stays deformed.",
+  "mat.s4.l1":
+    "Proportionality limit σ_P: the stress up to which the diagram is a straight line. Above it the strains grow faster than the stress.",
+  "mat.s4.l2":
+    "Elasticity limit σ_E: the stress above which the deformations become permanent.",
+  "mat.s4.l3":
+    "Yield limit σ_Fl: where the material deforms with no appreciable increase of the load (the notes distinguish an upper and a lower yield stress).",
+  "mat.s4.l4":
+    "Rupture limit σ_Rot: the maximum stress the material can resist.",
+  "mat.s4.p1":
+    "Safety factor: the elasticity stress divided by a number ν gives the working or admissible stress:",
+  "mat.s4.e1":
+    "σ_adm = σ_E / ν        ν = 2 – 4",
+  "mat.s5.kicker":
+    "05 — The diagram",
+  "mat.s5.title":
+    "The σ–ε diagram of a ductile metal",
+  "mat.s5.fig":
+    "Stress–strain diagram of a ductile steel (schematic): elastic period up to σ_E (straight up to σ_P), yield, and the anelastic period up to σ_Rot and the rupture.",
+  "mat.s5.fig.sigma":
+    "σ = {F}/{A}_o",
+  "mat.s5.fig.eps":
+    "ε = Δ{l}/{l}_o",
+  "mat.s5.fig.p1":
+    "elastic",
+  "mat.s5.fig.p2":
+    "yield",
+  "mat.s5.fig.p3":
+    "anelastic",
+  "mat.s5.s1.t":
+    "1 — Elastic phase (0 to σ_E)",
+  "mat.s5.s1.d":
+    "A straight line up to σ_P and a curve up to σ_E. In the straight part the strains are proportional to the stresses: Hooke’s law. At any point of the elastic phase, if the force is removed the piece returns to its original length. The stiffer the material, the steeper the line.",
+  "mat.s5.s2.t":
+    "2 — Plastic phase (σ_E to σ_Fl)",
+  "mat.s5.s2.d":
+    "The strains continue but they are permanent: once the force is removed the specimen stays deformed.",
+  "mat.s5.s3.t":
+    "3 — Rupture phase",
+  "mat.s5.s3.d":
+    "From σ_Fl the molecules move with no appreciable increase of the load: the yield period, a rearrangement, followed by the phase of maximum load and rupture. The strains become visible to the naked eye, as elongation and as necking (a reduction of the diameter). Beyond yield comes the anelastic period of large deformations, in which the stress rises up to the maximum σ_Rot, the stress of rupture, after which it falls until the specimen breaks at the strain ε_R. Necking reduces the section, so the true stress {F}/{A}_real is higher than the apparent one.",
+  "mat.s5.hooke":
+    "In the first phase Hooke’s law holds: stress is proportional to strain, with {E} = tan β the Young’s modulus (the slope of the straight line):",
+  "mat.s6.kicker":
+    "06 — Other properties",
+  "mat.s6.title":
+    "Stiffness, ductility, resilience, toughness, hardness",
+  "mat.s6.p1":
+    "Stiffness (rigidez): the property of opposing deformation; it grows with Young’s modulus E.",
+  "mat.s6.p2":
+    "Ductility: deformability in the plastic or anelastic period.",
+  "mat.s6.p3":
+    "Resilience: the capacity to give back the energy stored by deformation in the elastic period. It is the area under the curve in that period; up to σ_e it is the triangle:",
+  "mat.s6.e1":
+    "{U} = ½ · σ_e² / {E}",
+  "mat.s6.p4":
+    "Toughness (tenacidad): the capacity to absorb energy in the anelastic period of large deformations; it is the area under the curve up to rupture.",
+  "mat.s6.p5":
+    "Hardness: the capacity to resist mechanical actions such as punching, abrasion and cutting.",
+  "mat.s6.fig":
+    "Resilience: the area under the elastic part of the curve.",
+  "mat.s7.kicker":
+    "07 — Types of material",
+  "mat.s7.title":
+    "Ductile, brittle and plastic materials",
+  "mat.s7.m1.t":
+    "Ductile",
+  "mat.s7.m1.d":
+    "They follow the diagram above and go through important deformations before breaking, which lets the ruin of the structure be foreseen. Steels, aluminium.",
+  "mat.s7.m2.t":
+    "Brittle",
+  "mat.s7.m2.d":
+    "They suffer small deformations before breaking: the proportionality stress is very close to the rupture stress. Glass, plain concrete, marble.",
+  "mat.s7.m3.t":
+    "Plastic",
+  "mat.s7.m3.d":
+    "They suffer large deformations for very small increases of load, with little elasticity and large permanent deformations. Some asphalts, clay, sealing wax, and plastics at certain temperatures.",
+  "mat.s8.kicker":
+    "08 — Equivalence",
+  "mat.s8.title":
+    "Equations of equivalence",
+  "mat.s8.p1":
+    "Reducing to the centroid G of a section the forces on one side of it gives four characteristic efforts: the normal force N, the shear Q, the bending moment {M}_F and the torque {M}_T. If only one of them exists the loading is simple; if several, combined. In every case the material is elastic, the stresses are in the elastic range and Hooke’s law σ = {E}·ε holds.",
+  "mat.s8.p2":
+    "The axes: x leaves the section, and y and z are the principal directions of inertia. {M}_T lies along x, and so does the normal force N ({N}_x). The shear Q lies in the plane of the section and splits into {Q}_y and {Q}_z; the bending moment generally acts in a plane that contains neither y nor z, so it splits into {M}_Fy and {M}_Fz.",
+  "mat.s8.p3":
+    "The stresses are what produce them: σ is normal to the section and τ lies in its plane. For each element {dF} there are three elementary forces:",
+  "mat.s8.e1":
+    "along x: {dN} = σ·{dF}        along y: dQ_y = τ_xy·{dF}        along z: dQ_z = τ_xz·{dF}",
+  "mat.s8.p4":
+    "Integrating over the whole area F gives the equations of equivalence ({z} and {y} are the coordinates of the element of area):",
+  "mat.s8.q1":
+    "{N} = ∫ σ {dF}",
+  "mat.s8.q2":
+    "{Q}_y = ∫ τ_xy {dF}        {Q}_z = ∫ τ_xz {dF}",
+  "mat.s8.q3":
+    "{M}_T = ∫ (τ_xz·{y} − τ_xy·{z}) {dF}",
+  "mat.s8.q4":
+    "{M}_y = ∫ σ·{z} {dF}        {M}_z = ∫ σ·{y} {dF}",
+  "mat.s8.note":
+    "Two details of the notes. The torque is written with a plus sign, (τ_xy·{z} + τ_xz·{y}); with {y} and {z} the coordinates of {dF}, the moment of the shear forces about x is a difference. And {M}_y and {M}_z are written with τ, but they are the moments of the normal stresses σ (the signs depend on the axis convention).",
+  "mat.footer":
+    "Transcribed and ordered from the course notes “Propiedades de los materiales”; the diagrams were redrawn.",
+  "rs.link":
+    "Course summary",
+  "rs.title":
+    "Course summary",
+  "rs.lead":
+    "One page to study from: every formula of the guides with its units and use, and the five theory questions with a model answer.",
+  "rs.footer":
+    "Summary of the guides of this site; the formulas are the ones of the course notes (kg and cm).",
+  "rs.print":
+    "Print",
+  "rs.s1.kicker":
+    "Formulas",
+  "rs.s1.title":
+    "Everything in one table",
+  "rs.s1.units":
+    "Units: kg and cm. J in cm⁴, W in cm³, σ and τ in kg/cm². J is ∫{y}²{dA}, so it is length⁴.",
+  "rs.th.topic":
+    "Topic",
+  "rs.th.formula":
+    "Formula",
+  "rs.th.use":
+    "Used for",
+  "rs.t.axil":
+    "Axial load",
+  "rs.u.axil":
+    "Stress and elongation of a bar",
+  "rs.t.hooke":
+    "Hooke",
+  "rs.u.hooke":
+    "Elastic zone of the tensile test; {E} = tg β",
+  "rs.t.safety":
+    "Safety factor",
+  "rs.u.safety":
+    "Admissible stress, ν ≈ 2–4",
+  "rs.t.torsion":
+    "Torsion (circular)",
+  "rs.u.torsion":
+    "Shafts: stress, twist angle, sizing",
+  "rs.t.flexion":
+    "Bending",
+  "rs.u.flexion":
+    "Check and size beams; {W} = {J}/{y}_max",
+  "rs.t.shear":
+    "Shear in bending",
+  "rs.u.shear":
+    "Shear stress at each fibre; {S} = static moment of the area on one side",
+  "rs.t.flecha":
+    "Deflection",
+  "rs.u.flecha":
+    "Curvature of the elastic line; 5/384 simply supported + UDL, 1/48 central load, 1/3 cantilever + end load, 1/8 cantilever + UDL; for a cantilever, f = ∫M·x dx/(E·J) with x from the free end",
+  "rs.t.pandeo":
+    "Buckling",
+  "rs.u.pandeo":
+    "Compressed slender bars; c = 2, 1, 0.7, 0.5; λ = {l}_0/i, i = √({J}/{A}), σ_k = π²E/λ²",
+  "rs.t.steiner":
+    "Steiner",
+  "rs.u.steiner":
+    "Inertia about an axis parallel to the centroidal one",
+  "rs.t.stress":
+    "Stress state",
+  "rs.u.stress":
+    "Stress on any plane; principal stresses are the roots of σ³ − {I}_1σ² + {I}_2σ − {I}_3 = 0",
+  "rs.s2.kicker":
+    "Theory",
+  "rs.s2.title":
+    "The five exam questions",
+  "rs.q1.t":
+    "Hypotheses of torsion (circular shaft)",
+  "rs.q1.a1":
+    "Plane sections stay plane and circular.",
+  "rs.q1.a2":
+    "Radii stay straight when they turn.",
+  "rs.q1.a3":
+    "The distance between sections does not change (no longitudinal strain).",
+  "rs.q1.a4":
+    "Elastic linear material (Hooke) and small deformations.",
+  "rs.q1.a5":
+    "Consequence: τ grows linearly with ρ, from 0 at the centre to the maximum at the edge.",
+  "rs.q2.t":
+    "Collignon–Jourawski",
+  "rs.q2.a1":
+    "It gives the shear stress that the shear force Q produces in bending: τ = {Q}·{S}/({J}·s).",
+  "rs.q2.a2":
+    "S is the static moment, about the neutral axis, of the area on one side of the fibre studied; s is the width of the section at that fibre.",
+  "rs.q2.a3":
+    "Rectangle: τ is parabolic, 0 at the edges and maximum at the neutral axis, τ_max = 3Q/(2A).",
+  "rs.q2.a4":
+    "Double T: almost all the shear is carried by the web.",
+  "rs.q3.t":
+    "Stable, unstable and indifferent equilibrium",
+  "rs.q3.a1":
+    "Stable, F < {F}_k: after a small push the bar goes back to its position.",
+  "rs.q3.a2":
+    "Indifferent, {F} = {F}_k: it stays in any nearby position.",
+  "rs.q3.a3":
+    "Unstable, F > {F}_k: it moves away from the position and buckles.",
+  "rs.q4.t":
+    "Hooke's law",
+  "rs.q4.a1":
+    "σ = {E}·ε: stress and strain are proportional up to the proportionality limit σ_P.",
+  "rs.q4.a2":
+    "E is the slope of the straight line ({E} = tg β) and measures the stiffness of the material.",
+  "rs.q4.a3":
+    "It holds only in the elastic zone.",
+  "rs.q5.t":
+    "Steiner's theorem",
+  "rs.q5.a1":
+    "{J} = {J}_g + {A}·{d}²: the inertia about an axis parallel to the centroidal one is the centroidal inertia plus the area times the distance squared.",
+  "rs.q5.a2":
+    "It is used for composite sections, where every part has its centroid away from the common axis.",
+  "rs.q5.a3":
+    "It follows that {J}_g is the smallest of all the parallel axes.",
+  "rs.f1":
+    "Circular shaft: τ grows linearly with ρ, from 0 at the centre to τ_max at the edge.",
+  "rs.f2":
+    "Rectangular section: τ is parabolic, 0 at the edges and τ_max = 3Q/(2A) at the neutral axis (E.N.). S is the shaded area above the fibre studied and s its width.",
+  "rs.f3":
+    "A ball in a valley, on a plane and on a hill: stable, indifferent and unstable equilibrium ({F} <, = and > {F}_k for a bar).",
+  "rs.f4":
+    "σ–ε diagram: a straight line up to σ_P, with slope {E} = tg β.",
+  "rs.f5":
+    "Steiner: the inertia about the axis x, at distance d from the centroidal axis {x}_g, is {J}_x = {J}_g + {A}·{d}².",
+  "rs.fig.stable":
+    "Stable",
+  "rs.fig.indiff":
+    "Indifferent",
+  "rs.fig.unstable":
+    "Unstable",
+  "def.link":
+    "Definitions",
+  "def.title":
+    "Definitions",
+  "def.lead":
+    "The definitions of every guide in one place, grouped by topic: open the ones you need, or all of them. The wording is shortened but keeps the meaning of the notes.",
+  "def.footer":
+    "Summarised from the guides of this site; each group links to the guide where the definition is explained and used.",
+  "def.expand":
+    "Open all",
+  "def.collapse":
+    "Close all",
+  "def.go":
+    "Open the guide →",
+  "def.g.pln":
+    "Plane areas",
+  "def.g.mat":
+    "Material properties",
+  "def.g.tns":
+    "State of stress",
+  "def.g.axl":
+    "Axial load",
+  "def.g.flx":
+    "Bending",
+  "def.g.shr":
+    "Shear in bending",
+  "def.g.tor":
+    "Torsion",
+  "def.g.fla":
+    "Deflection",
+  "def.g.pnd":
+    "Buckling",
+  "def.t.estatico":
+    "Static moment",
+  "def.d.estatico":
+    "Product of the area of a surface by the distance from its centroid to an axis: {S}_x = ∫ {y} {dA}. It is measured in cm³. About a centroidal axis it is zero.",
+  "def.t.baricentro":
+    "Centroid",
+  "def.d.baricentro":
+    "Point whose coordinates are the static moments divided by the area: {x}_g = {S}_y / {A}, {y}_g = {S}_x / {A}. It coincides with the centre of gravity only if the body is homogeneous and of constant thickness.",
+  "def.t.inercia":
+    "Moment of inertia",
+  "def.d.inercia":
+    "Integral of each element of area times the square of its distance to an axis: {J}_x = ∫ {y}² {dA}. It is always positive and measured in cm⁴.",
+  "def.t.centrifugo":
+    "Product of inertia",
+  "def.d.centrifugo":
+    "Integral of each element of area times its two distances to the axes: {J}_xy = ∫ {x}·{y} {dA}. It can be positive, negative or zero.",
+  "def.t.polar":
+    "Polar moment",
+  "def.d.polar":
+    "Integral of each element of area times the square of its distance to a point: {J}_p = ∫ ρ² {dA} = {J}_x + {J}_y.",
+  "def.t.giro":
+    "Radius of gyration",
+  "def.d.giro":
+    "Distance {i} at which the whole area would have to be concentrated to give the same moment of inertia: {J} = {A}·{i}², that is {i} = √({J}/{A}).",
+  "def.t.steiner":
+    "Steiner’s theorem (parallel axes)",
+  "def.d.steiner":
+    "The moment of inertia about any axis equals the moment about the parallel centroidal axis plus the area times the square of the distance between the axes: {J} = {J}_g + {A}·{d}². Hence the centroidal moment is the smallest of all the parallel axes.",
+  "def.t.ppales":
+    "Principal axes of inertia",
+  "def.d.ppales":
+    "Pair of perpendicular axes about which the moment of inertia is maximum and minimum; the product of inertia about them is zero. If the two principal moments are equal (circle, square), every orthogonal pair through the centroid is principal.",
+  "def.t.mppales":
+    "Principal moments of inertia",
+  "def.d.mppales":
+    "The maximum and minimum moments of inertia, computed about the principal axes.",
+  "def.t.fvol":
+    "Body (mass) forces",
+  "def.d.fvol":
+    "They act on every particle of the body. They can be gravitational, inertial or electromagnetic.",
+  "def.t.fsup":
+    "Surface forces",
+  "def.d.fsup":
+    "They act on the surface of the body, as contact or pressure forces. The pressure {p} is the force per unit of surface.",
+  "def.t.tension":
+    "Stress",
+  "def.d.tension":
+    "Unit stress: force per unit of surface, in kg/cm², kN/cm² or T/m². It is the mutual action between the particles of the body, caused by the external forces.",
+  "def.t.estado":
+    "State of stress",
+  "def.d.estado":
+    "The set of the stresses ρ on the infinitely many planes through a point. It is triple or spatial if ρ can have any orientation, double or plane if ρ stays parallel to a plane, and simple or linear if it stays parallel to a direction.",
+  "def.t.defesp":
+    "Strain",
+  "def.d.defesp":
+    "Unit elongation: the elongation divided by the initial length, ε = Δ{l} / {l}. It has no units.",
+  "def.t.defelas":
+    "Elastic and plastic deformation",
+  "def.d.defelas":
+    "Elastic: the body returns to its original shape when the load is removed. Plastic: it does not, and stays deformed.",
+  "def.t.hooke":
+    "Hooke’s law",
+  "def.d.hooke":
+    "In the straight part of the σ–ε diagram the stresses are proportional to the strains: σ = {E}·ε. Young’s modulus {E} is the slope of the line.",
+  "def.t.sp":
+    "Proportionality limit σ_P",
+  "def.d.sp":
+    "Stress up to which the σ–ε diagram is a straight line. Above it, the strains grow faster than the stress.",
+  "def.t.se":
+    "Elastic limit σ_E",
+  "def.d.se":
+    "Stress above which the deformations become permanent.",
+  "def.t.sfl":
+    "Yield limit σ_Fl",
+  "def.d.sfl":
+    "Stress at which the material deforms with no appreciable increase of the load.",
+  "def.t.srot":
+    "Ultimate limit σ_Rot",
+  "def.d.srot":
+    "Maximum stress the material can resist.",
+  "def.t.seguridad":
+    "Safety factor",
+  "def.d.seguridad":
+    "Number ν (2 to 4 in the notes) by which the elastic limit is divided to get the admissible stress: σ_adm = σ_E / ν.",
+  "def.t.rigidez":
+    "Stiffness",
+  "def.d.rigidez":
+    "Property of opposing deformation; it grows with Young’s modulus {E}.",
+  "def.t.ductilidad":
+    "Ductility",
+  "def.d.ductilidad":
+    "Ability to deform in the plastic or inelastic period.",
+  "def.t.resiliencia":
+    "Resilience",
+  "def.d.resiliencia":
+    "Capacity to give back the energy stored by deformation in the elastic period. It is the area under the σ–ε curve in that period: up to σ_e it is {U} = ½·σ_e² / {E}.",
+  "def.t.tenacidad":
+    "Toughness",
+  "def.d.tenacidad":
+    "Capacity to absorb energy in the inelastic or large-deformation period. It is the area under the σ–ε curve up to rupture.",
+  "def.t.dureza":
+    "Hardness",
+  "def.d.dureza":
+    "Capacity to resist mechanical actions such as punching, abrasion and cutting.",
+  "def.t.tipos":
+    "Ductile, brittle and plastic material",
+  "def.d.tipos":
+    "Ductile: it deforms a lot before breaking, so the failure can be foreseen (steels, aluminium). Brittle: it deforms little before breaking, with σ_P very close to σ_Rot (glass, plain concrete, marble). Plastic: large deformations for very small load increments, with little elasticity (some asphalts, clay).",
+  "def.t.tensor":
+    "Stress tensor",
+  "def.d.tensor":
+    "The stresses on three perpendicular planes through a point: each plane gives one normal and two shear stresses. It is symmetric (τ_xy = τ_yx, …) and has six independent components.",
+  "def.t.vector":
+    "Stress vector",
+  "def.d.vector":
+    "ρ = {T}·{n}: the tensor applied to the normal {n} of the plane. Its component along {n} is the normal stress σ and what is left is the shear stress τ, with |ρ|² = σ² + τ².",
+  "def.t.invariantes":
+    "Invariants",
+  "def.d.invariantes":
+    "{I}_1, {I}_2 and {I}_3: combinations of the tensor components that do not change when the axes are rotated. They are the symmetric functions of the principal stresses.",
+  "def.t.tppales":
+    "Principal stresses and planes",
+  "def.d.tppales":
+    "The principal planes are the three perpendicular planes on which the shear stress is zero; the normal stress on them is a principal stress. They are the roots of σ³ − {I}_1·σ² + {I}_2·σ − {I}_3 = 0.",
+  "def.t.clasif":
+    "Classification of the state",
+  "def.d.clasif":
+    "Triple or spatial if {I}_3 ≠ 0; double or plane if {I}_3 = 0 and {I}_2 ≠ 0; simple or uniaxial if only {I}_1 ≠ 0.",
+  "def.t.fsimple":
+    "Simple and pure bending",
+  "def.d.fsimple":
+    "Simple bending: the forces on both sides of the section reduce, at its centroid, to two couples normal to the plane of the section, with or without shear. Without shear it is pure bending; with shear, bending and shear.",
+  "def.t.plano":
+    "Bending plane and line of forces",
+  "def.d.plano":
+    "The bending plane is the plane in which the bending couples act. The line of forces is the trace of that plane with the plane of the section.",
+  "def.t.normal":
+    "Normal and oblique bending",
+  "def.d.normal":
+    "It is normal (straight) if the line of forces coincides with a principal axis of inertia of the section, and oblique if it forms an angle α with it.",
+  "def.t.en":
+    "Neutral axis (N.A.)",
+  "def.d.en":
+    "Fibre that does not change length in bending and therefore carries no stress (σ = 0). It is a centroidal axis of the section.",
+  "def.t.w":
+    "Section modulus {W}",
+  "def.d.w":
+    "{W} = {J} / {v}, with {v} the distance from the neutral axis to the farthest fibre. The maximum stress is σ_max = {M} / {W}. It is measured in cm³.",
+  "def.t.cpuro":
+    "Pure shear",
+  "def.d.cpuro":
+    "It occurs, exactly or approximately, in shearing and in rivets or bolts joining plates: the stress is taken as uniform over the resisting area {A}, τ = {Q} / {A}.",
+  "def.t.corte":
+    "Shear force {Q}",
+  "def.d.corte":
+    "Projection, perpendicular to the axis of the bar, of the resultant of all the forces on the left of the section. On the right it is equal and opposite.",
+  "def.t.cauchy":
+    "Cauchy’s theorem",
+  "def.d.cauchy":
+    "On two perpendicular planes, the components of the shear stresses normal to their common edge are equal, and both point towards the edge or both away from it: τ_xy = τ_yx.",
+  "def.t.resbal":
+    "Sliding stresses",
+  "def.d.resbal":
+    "Shear stresses on the horizontal planes of a beam under shear and moment: shear on vertical planes implies shear on horizontal planes, and vice versa. They are present in all fibres.",
+  "def.t.jour":
+    "Jourawski–Colignon formula",
+  "def.d.jour":
+    "τ_m = {Q}·{S}_x / ({J}_x·{s}): mean value of the shear stress along a cut of width {s}. {S}_x is the static moment, about the neutral axis, of the part of the section on one side of the cut.",
+  "def.t.tsimple":
+    "Simple torsion and torque",
+  "def.d.tsimple":
+    "A solid is in simple torsion if the forces on one side of the section reduce to a single couple in the plane of the section. Its moment {M}_t is the torque.",
+  "def.t.htor":
+    "Hypotheses of circular torsion",
+  "def.d.htor":
+    "The geometric axis stays straight, the other longitudinal fibres become helices, and each cross-section stays plane and perpendicular to the axis: it only rotates about its centre. So τ is proportional to the distance ρ from the centre, zero at the centre and maximum at the edge.",
+  "def.t.g":
+    "Shear modulus {G}",
+  "def.d.g":
+    "It links the distortion to the shear stress (Hooke’s law in shear). It is measured in kg/cm² and {G} = 0.385·{E}, close to 0.4·{E} for steel.",
+  "def.t.unitario":
+    "Twist per unit length",
+  "def.d.unitario":
+    "φ/{l} = {M}_t / ({G}·{J}_0): angle of twist per unit length. The product {G}·{J}_0 is the torsional rigidity.",
+  "def.t.axil":
+    "Simple tension or compression",
+  "def.d.axil":
+    "A bar works like this when the load is applied at the centroid and equals {N} over the whole section, with {Q} = {M}_f = {M}_t = 0. The stress is uniform: σ = {N} / {A}.",
+  "def.t.stvenant":
+    "Saint-Venant’s principle",
+  "def.d.stvenant":
+    "Far from the ends, the section normal to the axis stays plane and parallel to itself after the deformation, so there is no stress concentration.",
+  "def.t.equil":
+    "Stable, indifferent and unstable equilibrium",
+  "def.d.equil":
+    "With {F} < {F}_k, when the transverse load {H} stops the bar goes back to its straight position (stable). With {F} = {F}_k it stays in the deviated position (indifferent). With {F} > {F}_k it keeps deforming until it breaks (unstable).",
+  "def.t.fk":
+    "Critical buckling load {F}_k",
+  "def.d.fk":
+    "Value of the force at which buckling starts; it corresponds to indifferent equilibrium. According to Euler, {F}_k = π²·{E}·{J}_min / (c²·{l}²).",
+  "def.t.esbeltez":
+    "Slenderness λ",
+  "def.d.esbeltez":
+    "λ = {l}_0 / {i}_min. The larger the slenderness, the smaller the critical stress σ_k = π²·{E} / λ² (Euler hyperbola).",
+  "def.t.l0":
+    "Equivalent length and coefficient {c}",
+  "def.d.l0":
+    "{l}_0 = {c}·{l} is the distance between two consecutive inflection points of the deformed bar. {c} is 2, 1, 0.7 and 0.5 for cantilever, pinned, fixed–pinned and fixed–fixed.",
+  "def.t.hipotesis":
+    "Euler’s hypotheses",
+  "def.d.hipotesis":
+    "Both ends pinned, without friction, one of them guided along the axis of the bar; the compressive force acts exactly on the axis; the material is elastic and homogeneous ({E} constant); no lateral forces act.",
+  "def.t.curvatura":
+    "Curvature",
+  "def.d.curvatura":
+    "1/ρ = {M} / ({E}·{J}): inverse of the radius of curvature ρ of the axis of the beam.",
+  "def.t.flecha":
+    "Deflection and elastic line",
+  "def.d.flecha":
+    "The elastic line is the shape the axis of the beam takes when it bends. Integrating its equation once gives the slope θ({z}) and twice, the deflection {y}({z}), the displacement of the axis.",
 } as const;
 
 export type TranslationKey = keyof typeof EN;
@@ -2085,7 +2885,7 @@ const ES: Record<TranslationKey, string> = {
   "flx.title":
     "Flexión",
   "flx.lead":
-    "Flexión simple, recta y oblicua: de dónde sale la fórmula σ = M·y / J_x, qué es el eje neutro y cómo se usa para verificar y dimensionar una sección. Según el apunte de la cátedra (AMS 2020).",
+    "Flexión simple, recta y oblicua: de dónde sale la fórmula σ = {M}·{y} / {J}_x, qué es el eje neutro y cómo se usa para verificar y dimensionar una sección. Según el apunte de la cátedra (AMS 2020).",
   "flx.s1.kicker":
     "01 — Definición",
   "flx.s1.title":
@@ -2117,15 +2917,15 @@ const ES: Record<TranslationKey, string> = {
   "flx.s3.b":
     "La barra tiene un plano α de simetría vertical.",
   "flx.s3.c":
-    "Las cargas P_i actúan perpendicularmente al eje de la barra y se hallan en el plano α.",
+    "Las cargas {P}_i actúan perpendicularmente al eje de la barra y se hallan en el plano α.",
   "flx.s3.note":
-    "El plano α es el plano de fuerzas (de flexión) y el eje y–y es eje de simetría de la pieza, siendo eje principal de inercia: puede ser el que tiene el J_max o el J_min.",
+    "El plano α es el plano de fuerzas (de flexión) y el eje {y}–{y} es eje de simetría de la pieza, siendo eje principal de inercia: puede ser el que tiene el {J}_max o el {J}_min.",
   "flx.s4.kicker":
     "04 — Deformación",
   "flx.s4.title":
     "El eje neutro",
   "flx.s4.p1":
-    "El eje longitudinal de la pieza se curva bajo la acción del sistema de fuerzas P_i. Las secciones CD y EF, que originalmente formaban un rectángulo, luego de cargada la viga forman un trapecio: la distancia CE es menor que la original y la distancia DF ha aumentado. La parte superior se ha comprimido y la inferior se ha traccionado.",
+    "El eje longitudinal de la pieza se curva bajo la acción del sistema de fuerzas {P}_i. Las secciones CD y EF, que originalmente formaban un rectángulo, luego de cargada la viga forman un trapecio: la distancia CE es menor que la original y la distancia DF ha aumentado. La parte superior se ha comprimido y la inferior se ha traccionado.",
   "flx.s4.p2":
     "Entre ambas fibras extremas hay entonces una fibra media que no ha sufrido deformación y por lo tanto no tiene tensión: el eje neutro (E.N.) de la pieza.",
   "flx.s4.fig":
@@ -2139,21 +2939,21 @@ const ES: Record<TranslationKey, string> = {
   "flx.s5.kicker":
     "05 — La fórmula",
   "flx.s5.title":
-    "Del equilibrio a σ = M·y / J_x",
+    "Del equilibrio a σ = {M}·{y} / {J}_x",
   "flx.s5.p1":
-    "Un elemento de área dA situado a una distancia y del eje neutro está solicitado por un esfuerzo interior σ·dA, siendo σ la tensión en ese elemento: de tracción o de compresión según se halle abajo o arriba del E.N. Para que la sección esté en equilibrio, la suma de todos los esfuerzos interiores debe ser nula y la suma de sus momentos respecto al E.N. debe ser igual al momento M de las fuerzas exteriores en la sección:",
+    "Un elemento de área {dA} situado a una distancia {y} del eje neutro está solicitado por un esfuerzo interior σ·{dA}, siendo σ la tensión en ese elemento: de tracción o de compresión según se halle abajo o arriba del E.N. Para que la sección esté en equilibrio, la suma de todos los esfuerzos interiores debe ser nula y la suma de sus momentos respecto al E.N. debe ser igual al momento M de las fuerzas exteriores en la sección:",
   "flx.s5.p2":
-    "Una fibra a una distancia y del E.N. varía su longitud en proporción a esa distancia. Si σ_1 es la tensión sobre la unidad de área distante 1 del E.N. y σ la de la distante y:",
+    "Una fibra a una distancia {y} del E.N. varía su longitud en proporción a esa distancia. Si σ_1 es la tensión sobre la unidad de área distante 1 del E.N. y σ la de la distante {y}:",
   "flx.s5.p3":
-    "Reemplazando σ = σ_1·y en (1) y (2):",
+    "Reemplazando σ = σ_1·{y} en (1) y (2):",
   "flx.s5.p4":
-    "Como σ_1 ≠ 0, de (4) resulta ∫y dA = 0 (6): el momento estático del área es nulo, por lo tanto el eje neutro es un eje baricéntrico. El eje X–X está en la sección transversal y cruza el eje longitudinal de la barra en el baricentro.",
+    "Como σ_1 ≠ 0, de (4) resulta ∫{y} {dA} = 0 (6): el momento estático del área es nulo, por lo tanto el eje neutro es un eje baricéntrico. El eje {X}–{X} está en la sección transversal y cruza el eje longitudinal de la barra en el baricentro.",
   "flx.s5.p5":
-    "En (5) la integral ∫y² dA = J_x es el momento de inercia de la sección respecto al eje neutro X–X, de modo que M = σ_1·J_x y, de (3):",
+    "En (5) la integral ∫{y}² {dA} = {J}_x es el momento de inercia de la sección respecto al eje neutro {X}–{X}, de modo que {M} = σ_1·{J}_x y, de (3):",
   "flx.s5.p6":
-    "Esta fórmula da la tensión σ en un punto genérico a distancia y de una sección solicitada por un momento M. Por seguridad se toma M_max junto con la fibra más alejada del eje neutro, v:",
+    "Esta fórmula da la tensión σ en un punto genérico a distancia {y} de una sección solicitada por un momento M. Por seguridad se toma {M}_max junto con la fibra más alejada del eje neutro, v:",
   "flx.s5.p7":
-    "J_x / v se denomina momento resistente de la sección W_x (cm³), y la fórmula queda:",
+    "{J}_x / v se denomina momento resistente de la sección {W}_x (cm³), y la fórmula queda:",
   "flx.s6.kicker":
     "06 — Uso",
   "flx.s6.title":
@@ -2163,9 +2963,9 @@ const ES: Record<TranslationKey, string> = {
   "flx.s6.siz":
     "Dimensionado",
   "flx.s6.p1":
-    "Si el centro de gravedad de la sección no está a mitad de la altura del perfil habrá dos módulos resistentes, W_1 = J_x / v_1 y W_2 = J_x / v_2, y por seguridad se usa el menor.",
+    "Si el centro de gravedad de la sección no está a mitad de la altura del perfil habrá dos módulos resistentes, {W}_1 = {J}_x / v_1 y {W}_2 = {J}_x / v_2, y por seguridad se usa el menor.",
   "flx.s6.p2":
-    "Es exactamente la verificación que hace la pestaña de resultados de la app para una barra con sección (σ = |N|/A + |M|·100/S_x ≤ σ_adm).",
+    "Es exactamente la verificación que hace la pestaña de resultados de la app para una barra con sección (σ = |N|/{A} + |M|·100/{S}_x ≤ σ_adm).",
   "flx.footer":
     "Transcripto y ordenado del apunte “Flexión AMS 2020” de la cátedra; la numeración de las ecuaciones es la del apunte.",
 
@@ -2174,13 +2974,13 @@ const ES: Record<TranslationKey, string> = {
   "tor.title":
     "Torsión de ejes circulares",
   "tor.lead":
-    "Barras rectas de sección circular bajo un momento torsor M_t: la distorsión γ, la tensión τ = M_t·ρ / J_0, el ángulo de torsión φ y cómo verificar o dimensionar un eje macizo o hueco. Según Raffo, Estática y Resistencia de Materiales, cap. XXIII.",
+    "Barras rectas de sección circular bajo un momento torsor {M}_t: la distorsión γ, la tensión τ = {M}_t·ρ / {J}_0, el ángulo de torsión φ y cómo verificar o dimensionar un eje macizo o hueco. Según Raffo, Estática y Resistencia de Materiales, cap. XXIII.",
   "tor.s1.kicker":
     "01 — Definición",
   "tor.s1.title":
     "Torsión simple",
   "tor.s1.p1":
-    "Un sólido trabaja a torsión simple si las fuerzas de un lado de la sección se reducen a una única cupla situada en el plano de esa sección. Su momento M_t es el momento torsor. El caso más común es una pieza recta solicitada en sus extremos por cuplas de igual intensidad y sentido opuesto, cada una en el plano de una sección extrema; o una pieza empotrada en un extremo y torsionada por una cupla en el otro, donde el empotramiento aporta la cupla de reacción opuesta. Los árboles de transmisión de las máquinas son el ejemplo típico.",
+    "Un sólido trabaja a torsión simple si las fuerzas de un lado de la sección se reducen a una única cupla situada en el plano de esa sección. Su momento {M}_t es el momento torsor. El caso más común es una pieza recta solicitada en sus extremos por cuplas de igual intensidad y sentido opuesto, cada una en el plano de una sección extrema; o una pieza empotrada en un extremo y torsionada por una cupla en el otro, donde el empotramiento aporta la cupla de reacción opuesta. Los árboles de transmisión de las máquinas son el ejemplo típico.",
   "tor.s1.p2":
     "Aquí se estudia la torsión circular recta: un prisma de sección circular constante, maciza o hueca.",
   "tor.s2.kicker":
@@ -2188,7 +2988,7 @@ const ES: Record<TranslationKey, string> = {
   "tor.s2.title":
     "Hipótesis y deformación",
   "tor.s2.p1":
-    "Sea una barra empotrada en un extremo y torsionada por M_t en el otro. La experiencia muestra que:",
+    "Sea una barra empotrada en un extremo y torsionada por {M}_t en el otro. La experiencia muestra que:",
   "tor.s2.h1":
     "El eje geométrico sigue siendo recto.",
   "tor.s2.h2":
@@ -2196,23 +2996,23 @@ const ES: Record<TranslationKey, string> = {
   "tor.s2.h3":
     "Cada sección recta permanece plana y perpendicular al eje: toda la sección simplemente gira en torno a su centro O.",
   "tor.s2.p2":
-    "Así, un punto B de una sección a distancia l del empotramiento pasa a B′ siguiendo un arco, y la fibra recta BB_0 se inclina la distorsión γ. La sección ha girado un ángulo φ (radianes) respecto de la empotrada.",
+    "Así, un punto B de una sección a distancia l del empotramiento pasa a {B}′ siguiendo un arco, y la fibra recta BB_0 se inclina la distorsión γ. La sección ha girado un ángulo φ (radianes) respecto de la empotrada.",
   "tor.s2.fig":
     "Sección antes y después de torsionar: el punto a radio ρ se mueve sobre un arco de ángulo φ, y la fibra de longitud l se inclina γ.",
   "tor.s2.p3":
-    "Por geometría, el arco BB′ es ρ·φ y también γ·l, de donde:",
+    "Por geometría, el arco BB′ es ρ·φ y también γ·{l}, de donde:",
   "tor.s3.kicker":
     "03 — Tensión",
   "tor.s3.title":
-    "De la distorsión a τ = M_t·ρ / J_0",
+    "De la distorsión a τ = {M}_t·ρ / {J}_0",
   "tor.s3.p1":
-    "Distorsión y tensión tangencial se vinculan por la ley de Hooke al corte, con el módulo de elasticidad transversal G (kg/cm²), relacionado con E por G = 0,385·E (cerca de 0,4·E para el acero, valor que usan los ejemplos):",
+    "Distorsión y tensión tangencial se vinculan por la ley de Hooke al corte, con el módulo de elasticidad transversal G (kg/cm²), relacionado con E por {G} = 0,385·{E} (cerca de 0,4·{E} para el acero, valor que usan los ejemplos):",
   "tor.s3.p2":
-    "Al reemplazar γ = ρ·φ/l se ve que τ es proporcional a la distancia ρ al centro: nula en el centro, máxima en las fibras exteriores.",
+    "Al reemplazar γ = ρ·φ/{l} se ve que τ es proporcional a la distancia ρ al centro: nula en el centro, máxima en las fibras exteriores.",
   "tor.s3.p3":
-    "Para equilibrar el momento torsor, el momento de la fuerza elemental τ·dA a distancia ρ respecto de O, sumado en toda la sección, debe valer M_t. Como G y φ/l son constantes:",
+    "Para equilibrar el momento torsor, el momento de la fuerza elemental τ·{dA} a distancia ρ respecto de O, sumado en toda la sección, debe valer {M}_t. Como G y φ/{l} son constantes:",
   "tor.s3.p4":
-    "donde J_0 = ∫ρ² dA es el momento de inercia polar. Resulta φ/l = M_t / (G·J_0), el ángulo unitario de torsión; el producto G·J_0 es el módulo de rigidez a la torsión. Eliminando φ/l queda la ecuación de resistencia, análoga a σ = M·y / J_x de la flexión (vale solo para secciones circulares):",
+    "donde {J}_0 = ∫ρ² {dA} es el momento de inercia polar. Resulta φ/{l} = {M}_t / ({G}·{J}_0), el ángulo unitario de torsión; el producto {G}·{J}_0 es el módulo de rigidez a la torsión. Eliminando φ/{l} queda la ecuación de resistencia, análoga a σ = {M}·{y} / {J}_x de la flexión (vale solo para secciones circulares):",
   "tor.s3.fig":
     "τ crece linealmente con ρ: nula en el centro, τ_max en la superficie.",
   "tor.s4.kicker":
@@ -2220,25 +3020,25 @@ const ES: Record<TranslationKey, string> = {
   "tor.s4.title":
     "Las fórmulas de uso",
   "tor.s4.p1":
-    "Para un círculo macizo J_0 = π·D⁴/32. Con ρ = D/2 en la superficie:",
+    "Para un círculo macizo {J}_0 = π·{D}⁴/32. Con ρ = {D}/2 en la superficie:",
   "tor.s4.p2":
     "Y el ángulo total de torsión de una barra de longitud l, en radianes (multiplicar por 180/π para grados):",
   "tor.s4.p3":
-    "Unidades: M_t en kg·cm, l y D en cm, G en kg/cm², J_0 en cm⁴, φ en radianes. Ojo con los kg·m: 1 kg·m = 100 kg·cm.",
+    "Unidades: {M}_t en kg·cm, l y D en cm, G en kg/cm², {J}_0 en cm⁴, φ en radianes. Ojo con los kg·m: 1 kg·m = 100 kg·cm.",
   "tor.s5.kicker":
     "05 — Sección hueca",
   "tor.s5.title":
     "Ejes circulares huecos",
   "tor.s5.p1":
-    "Vale el mismo procedimiento. Con diámetro exterior D_e, interior D_i y n = D_i / D_e:",
+    "Vale el mismo procedimiento. Con diámetro exterior {D}_e, interior {D}_i y n = {D}_i / {D}_e:",
   "tor.s5.p2":
-    "El material cercano al centro casi no trabaja, así que un eje hueco pesa menos para la misma τ_max. A igual momento torsor e igual τ_max resulta D = D_e·∛(1 − n⁴). Para D_e = 40 cm y D_i = 20 cm (n = 1/2) el eje macizo es D ≈ 39 cm, y el hueco pesa alrededor del 79 % (áreas 40² − 20² contra 39²): unos 20 % más económico.",
+    "El material cercano al centro casi no trabaja, así que un eje hueco pesa menos para la misma τ_max. A igual momento torsor e igual τ_max resulta {D} = {D}_e·∛(1 − n⁴). Para {D}_e = 40 cm y {D}_i = 20 cm (n = 1/2) el eje macizo es D ≈ 39 cm, y el hueco pesa alrededor del 79 % (áreas 40² − 20² contra 39²): unos 20 % más económico.",
   "tor.s6.kicker":
     "06 — Árboles de transmisión",
   "tor.s6.title":
     "Dimensionar un eje a partir de la potencia",
   "tor.s6.p1":
-    "El momento torsor sale de la potencia N (en CV) y las revoluciones por minuto n. Con P = 7500·N kg·cm/s y ω = π·n/30:",
+    "El momento torsor sale de la potencia N (en CV) y las revoluciones por minuto n. Con {P} = 7500·{N} kg·cm/s y ω = π·n/30:",
   "tor.s6.p2":
     "y, reemplazando en la fórmula de dimensionado, el diámetro mínimo del árbol (sin considerar la flexión de las poleas ni el peso propio):",
   "tor.s7.kicker":
@@ -2248,15 +3048,15 @@ const ES: Record<TranslationKey, string> = {
   "tor.s7.e1.title":
     "Verificar una barra",
   "tor.s7.e1.p":
-    "Barra redonda de acero, D = 6 cm, l = 3 m, M_t = 200 kg·m. Hallar τ_max y φ. G = 0,4·2 100 000 = 840 000 kg/cm².",
+    "Barra redonda de acero, {D} = 6 cm, {l} = 3 m, {M}_t = 200 kg·m. Hallar τ_max y φ. {G} = 0,4·2 100 000 = 840 000 kg/cm².",
   "tor.s7.e1.r":
-    "M_t = 20 000 kg·cm; J_0 = π·6⁴/32 = 127 cm⁴; τ_max = 16·20 000 / (π·6³) ≈ 472 kg/cm²; φ = 20 000·300 / (840 000·127) = 0,056 rad ≈ 3°12′.",
+    "{M}_t = 20 000 kg·cm; {J}_0 = π·6⁴/32 = 127 cm⁴; τ_max = 16·20 000 / (π·6³) ≈ 472 kg/cm²; φ = 20 000·300 / (840 000·127) = 0,056 rad ≈ 3°12′.",
   "tor.s7.e2.title":
     "Dimensionar una barra",
   "tor.s7.e2.p":
-    "Barra de acero, l = 2 m, cargada por una fuerza de 500 kg con brazo de 120 cm en el extremo libre. τ_adm = 600 kg/cm², G = 800 000 kg/cm². Hallar D y φ.",
+    "Barra de acero, {l} = 2 m, cargada por una fuerza de 500 kg con brazo de 120 cm en el extremo libre. τ_adm = 600 kg/cm², {G} = 800 000 kg/cm². Hallar D y φ.",
   "tor.s7.e2.r":
-    "M_t = 500·120 = 60 000 kg·cm; R = ∛(2·60 000 / (π·600)) ≈ 4 cm, o sea D = 8 cm; J_0 = π·8⁴/32 ≈ 402 cm⁴; φ = 60 000·200 / (800 000·402) ≈ 0,037 rad ≈ 2°7′.",
+    "{M}_t = 500·120 = 60 000 kg·cm; {R} = ∛(2·60 000 / (π·600)) ≈ 4 cm, o sea {D} = 8 cm; {J}_0 = π·8⁴/32 ≈ 402 cm⁴; φ = 60 000·200 / (800 000·402) ≈ 0,037 rad ≈ 2°7′.",
   "tor.note":
     "Una aclaración sobre la fuente: el libro imprime τ_max = 549 kg/cm² en el primer ejercicio, pero con su propia fórmula da 472 kg/cm²; el valor de arriba está recalculado.",
   "tor.footer":
@@ -2266,37 +3066,37 @@ const ES: Record<TranslationKey, string> = {
   "axl.title":
     "Esfuerzo axil (tracción y compresión)",
   "axl.lead":
-    "Tracción y compresión simple: las hipótesis que hacen uniforme a σ = N/A, las fórmulas de dimensionado y verificación, el alargamiento Δl = N·l/(A·E), el peso propio y tres ejercicios resueltos. Según el apunte “Axil AMS” de la cátedra.",
+    "Tracción y compresión simple: las hipótesis que hacen uniforme a σ = {N}/{A}, las fórmulas de dimensionado y verificación, el alargamiento Δ{l} = {N}·{l}/({A}·{E}), el peso propio y tres ejercicios resueltos. Según el apunte “Axil AMS” de la cátedra.",
   "axl.s1.kicker":
     "01 — Definición",
   "axl.s1.title":
     "Solicitación axil simple",
   "axl.s1.p1":
-    "Una barra trabaja a tracción o compresión simple cuando la carga P se aplica en el baricentro y vale N en toda la sección, con Q = M_f = M_t = 0. (El apunte llama F al área; acá es A, para no confundirla con una fuerza.)",
+    "Una barra trabaja a tracción o compresión simple cuando la carga P se aplica en el baricentro y vale N en toda la sección, con {Q} = {M}_f = {M}_t = 0. (El apunte llama F al área; acá es A, para no confundirla con una fuerza.)",
   "axl.s1.p2":
     "El equilibrio de la sección da seis condiciones. Solo la primera no es nula:",
   "axl.s1.e1":
-    "N = ∫ σ dA",
+    "{N} = ∫ σ {dA}",
   "axl.s1.e2":
-    "0 = ∫ τ_xy dA        0 = ∫ τ_xz dA",
+    "0 = ∫ τ_xy {dA}        0 = ∫ τ_xz {dA}",
   "axl.s1.e3":
-    "0 = ∫ (τ_xz·y − τ_xy·z) dA",
+    "0 = ∫ (τ_xz·{y} − τ_xy·{z}) {dA}",
   "axl.s1.e4":
-    "0 = ∫ σ·z dA        0 = ∫ σ·y dA",
+    "0 = ∫ σ·{z} {dA}        0 = ∫ σ·{y} {dA}",
   "axl.s2.kicker":
     "02 — Hipótesis",
   "axl.s2.title":
     "Por qué σ es uniforme",
   "axl.s2.h1":
-    "Ley de Hooke: σ = E·ε, con E = tan α la pendiente de la recta σ–ε.",
+    "Ley de Hooke: σ = {E}·ε, con {E} = tan α la pendiente de la recta σ–ε.",
   "axl.s2.h2":
     "Saint-Venant: la sección normal al eje se mantiene plana y paralela a sí misma luego de la deformación, si está alejada de los extremos; por lo tanto no hay concentración de tensiones.",
   "axl.s2.p1":
-    "Las distorsiones deben ser entonces nulas o constantes. Si γ = 0 entonces τ = 0. Si γ fuera una constante no nula, τ sería constante y no podría cumplirse ∫τ dA = 0. Luego τ_xy = τ_xz = 0 y las condiciones 2, 3 y 4 se verifican idénticamente.",
+    "Las distorsiones deben ser entonces nulas o constantes. Si γ = 0 entonces τ = 0. Si γ fuera una constante no nula, τ sería constante y no podría cumplirse ∫τ {dA} = 0. Luego τ_xy = τ_xz = 0 y las condiciones 2, 3 y 4 se verifican idénticamente.",
   "axl.s2.p2":
-    "Como las secciones se desplazan paralelamente, ε = Δl/l es constante y por lo tanto σ = E·ε también. Entonces ∫σ·z dA = σ·∫z dA y ∫σ·y dA = σ·∫y dA son los momentos estáticos del área respecto de los ejes baricéntricos y y z: nulos, así que se verifican la 5 y la 6. La primera da σ·A = N.",
+    "Como las secciones se desplazan paralelamente, ε = Δ{l}/{l} es constante y por lo tanto σ = {E}·ε también. Entonces ∫σ·{z} {dA} = σ·∫{z} {dA} y ∫σ·{y} {dA} = σ·∫{y} {dA} son los momentos estáticos del área respecto de los ejes baricéntricos {y} y {z}: nulos, así que se verifican la 5 y la 6. La primera da σ·{A} = {N}.",
   "axl.fig":
-    "Una barra bajo N: toda sección recta soporta la misma σ = N/A.",
+    "Una barra bajo N: toda sección recta soporta la misma σ = {N}/{A}.",
   "axl.s3.kicker":
     "03 — Fórmulas",
   "axl.s3.title":
@@ -2306,7 +3106,7 @@ const ES: Record<TranslationKey, string> = {
   "axl.s3.ver":
     "Verificación",
   "axl.s3.p1":
-    "El alargamiento sale de σ = E·ε con ε = Δl/l, o sea N/A = E·Δl/l:",
+    "El alargamiento sale de σ = {E}·ε con ε = Δ{l}/{l}, o sea {N}/{A} = {E}·Δ{l}/{l}:",
   "axl.s3.sign":
     "Signo: en compresión N es negativo, así que el dimensionado y la verificación usan |N| y |σ|; el N con signo se conserva para el alargamiento (un acortamiento).",
   "axl.s3.p2":
@@ -2332,15 +3132,15 @@ const ES: Record<TranslationKey, string> = {
   "axl.s4.th.adm":
     "σ_adm",
   "axl.s4.p1":
-    "E = 2 100 000 kg/cm² y γ = 7 800 kg/m³ para todos los aceros. El coeficiente de seguridad es ν = 3: σ_adm es aproximadamente la tensión de rotura dividida por 3 (3 700 / 3 ≈ 1 233 → 1 200). El número del nombre, St 37, es esa resistencia en kg/mm².",
+    "{E} = 2 100 000 kg/cm² y γ = 7 800 kg/m³ para todos los aceros. El coeficiente de seguridad es ν = 3: σ_adm es aproximadamente la tensión de rotura dividida por 3 (3 700 / 3 ≈ 1 233 → 1 200). El número del nombre, St 37, es esa resistencia en kg/mm².",
   "axl.s5.kicker":
     "05 — Peso propio",
   "axl.s5.title":
     "Cuando el peso de la barra cuenta",
   "axl.s5.p1":
-    "Si interviene el peso propio, el peso por unidad de área en el extremo superior es γ·l (l, la longitud de la barra colgada), y se suma a la tensión:",
+    "Si interviene el peso propio, el peso por unidad de área en el extremo superior es γ·{l} ({l}, la longitud de la barra colgada), y se suma a la tensión:",
   "axl.s5.p2":
-    "Unidades: con γ en kg/m³ y l en m, γ·l sale en kg/m². Dividí por 10 000 para tener kg/cm² antes de combinarlo con σ_adm.",
+    "Unidades: con γ en kg/m³ y l en m, γ·{l} sale en kg/m². Dividí por 10 000 para tener kg/cm² antes de combinarlo con σ_adm.",
   "axl.s6.kicker":
     "06 — Ejercicios resueltos",
   "axl.s6.title":
@@ -2348,21 +3148,21 @@ const ES: Record<TranslationKey, string> = {
   "axl.s6.e1.title":
     "Dimensionar un cable y su alargamiento",
   "axl.s6.e1.p":
-    "Un cable de acero pasa por poleas a lo largo de 7 m + 10 m + 6 m + 2 m y sostiene 5 000 kg. σ_adm = 1 400 kg/cm², E = 2 100 000 kg/cm². Hallar el radio y el alargamiento. Luego, el radio necesario para que el alargamiento sea el 10 % de ese valor.",
+    "Un cable de acero pasa por poleas a lo largo de 7 m + 10 m + 6 m + 2 m y sostiene 5 000 kg. σ_adm = 1 400 kg/cm², {E} = 2 100 000 kg/cm². Hallar el radio y el alargamiento. Luego, el radio necesario para que el alargamiento sea el 10 % de ese valor.",
   "axl.s6.e1.r":
-    "A_nec = 5 000 / 1 400 = 3,57 cm² = π·r² → r = 1,066 cm. Longitud total 700 + 1 000 + 600 + 200 = 2 500 cm. Δl = 5 000·2 500 / (3,57·2 100 000) = 1,67 cm. Para Δl′ = 0,167 cm: A = 5 000·2 500 / (0,167·2 100 000) = 35,7 cm² → r = 3,37 cm.",
+    "{A}_nec = 5 000 / 1 400 = 3,57 cm² = π·r² → r = 1,066 cm. Longitud total 700 + 1 000 + 600 + 200 = 2 500 cm. Δ{l} = 5 000·2 500 / (3,57·2 100 000) = 1,67 cm. Para Δ{l}′ = 0,167 cm: {A} = 5 000·2 500 / (0,167·2 100 000) = 35,7 cm² → r = 3,37 cm.",
   "axl.s6.e2.title":
     "Carga admisible de un alambre",
   "axl.s6.e2.p":
     "Un alambre colgado de 6 m, radio 0,50 cm, σ_adm = 1 600 kg/cm². Hallar la carga admisible.",
   "axl.s6.e2.r":
-    "A = π·0,5² = 0,7854 cm²; F_adm = σ_adm·A = 1 600·0,7854 = 1 256,6 kg.",
+    "{A} = π·0,5² = 0,7854 cm²; {F}_adm = σ_adm·{A} = 1 600·0,7854 = 1 256,6 kg.",
   "axl.s6.e3.title":
     "Alargamiento impuesto",
   "axl.s6.e3.p":
-    "El mismo cable (A = 3,57 cm², l = 25 m) se fuerza a alargarse 5 cm. ¿Qué carga implica y es admisible?",
+    "El mismo cable ({A} = 3,57 cm², {l} = 25 m) se fuerza a alargarse 5 cm. ¿Qué carga implica y es admisible?",
   "axl.s6.e3.r":
-    "F = Δl·A·E / l = 5·3,57·2 100 000 / 2 500 ≈ 15 000 kg; σ = F/A ≈ 4 202 kg/cm² > σ_adm = 1 400: NO verifica.",
+    "{F} = Δ{l}·{A}·{E} / {l} = 5·3,57·2 100 000 / 2 500 ≈ 15 000 kg; σ = {F}/{A} ≈ 4 202 kg/cm² > σ_adm = 1 400: NO verifica.",
   "axl.footer":
     "Transcripto del apunte manuscrito “Axil AMS” de la cátedra; los números de los ejercicios se recalcularon y coinciden con el apunte.",
   "fla.link":
@@ -2370,51 +3170,51 @@ const ES: Record<TranslationKey, string> = {
   "fla.title":
     "Flecha de vigas",
   "fla.lead":
-    "De la curvatura 1/ρ = M/(E·J) a la elástica y a la flecha f = ∫M·x dx/(E·J), más los siete casos habituales y una calculadora. Según el apunte “Flecha AMS 2020” de la cátedra.",
+    "De la curvatura 1/ρ = {M}/({E}·{J}) a la elástica y a la flecha f = ∫{M}·{x} {dx}/({E}·{J}), más los siete casos habituales y una calculadora. Según el apunte “Flecha AMS 2020” de la cátedra.",
   "fla.s1.kicker":
     "01 — Curvatura",
   "fla.s1.title":
     "Deformaciones en la flexión pura normal",
   "fla.s1.p1":
-    "Una sección de la viga gira alrededor de su eje neutro. Por semejanza de triángulos, una fibra a distancia y del eje neutro tiene una deformación específica ε = y/ρ, donde ρ es el radio de curvatura del eje de la viga (C es el centro de curvatura):",
+    "Una sección de la viga gira alrededor de su eje neutro. Por semejanza de triángulos, una fibra a distancia {y} del eje neutro tiene una deformación específica ε = {y}/ρ, donde ρ es el radio de curvatura del eje de la viga ({C} es el centro de curvatura):",
   "fla.s1.e1":
-    "1/ρ = ε / y",
+    "1/ρ = ε / {y}",
   "fla.s1.p2":
-    "Con la ley de Hooke ε = σ/E y la tensión de flexión σ = M·y/J_x:",
+    "Con la ley de Hooke ε = σ/{E} y la tensión de flexión σ = {M}·{y}/{J}_x:",
   "fla.s1.e2":
-    "ε = σ/E = M·y / (J_x·E)",
+    "ε = σ/{E} = {M}·{y} / ({J}_x·{E})",
   "fla.s1.p3":
     "Reemplazando resulta la curvatura, y el radio, cuyas unidades cierran: (kg/cm²)·cm⁴ / (kg·cm) = cm.",
   "fla.s1.fig":
-    "Un elemento ds del eje de la viga: ρ es el radio de curvatura, dθ el ángulo entre las dos secciones.",
+    "Un elemento {ds} del eje de la viga: ρ es el radio de curvatura, dθ el ángulo entre las dos secciones.",
   "fla.s2.kicker":
     "02 — Elástica",
   "fla.s2.title":
     "La ecuación diferencial",
   "fla.s2.p1":
-    "Para un elemento del eje, ds = ρ·dθ, o sea 1/ρ = dθ/ds, y para pendientes chicas ds ≈ dz. Además tg θ = dy/dz ≈ θ. Entonces:",
+    "Para un elemento del eje, {ds} = ρ·{d}θ, o sea 1/ρ = dθ/{ds}, y para pendientes chicas {ds} ≈ {dz}. Además tg θ = {dy}/{dz} ≈ θ. Entonces:",
   "fla.s2.e1":
-    "1/ρ = dθ/dz = d²y/dz²",
+    "1/ρ = dθ/{dz} = {d}²{y}/{dz}²",
   "fla.s2.p2":
-    "Con los ejes que adopta el apunte (z crece mientras θ decrece) el signo es negativo, 1/ρ = −d²y/dz², e igualando con la curvatura queda la ecuación diferencial de la línea elástica:",
+    "Con los ejes que adopta el apunte ({z} crece mientras θ decrece) el signo es negativo, 1/ρ = −{d}²{y}/{dz}², e igualando con la curvatura queda la ecuación diferencial de la línea elástica:",
   "fla.s2.p3":
-    "Integrándola una vez se obtiene la pendiente θ(z), y dos veces, la flecha y(z), con las constantes de integración fijadas por los vínculos.",
+    "Integrándola una vez se obtiene la pendiente θ({z}), y dos veces, la flecha {y}({z}), con las constantes de integración fijadas por los vínculos.",
   "fla.s3.kicker":
     "03 — Flecha en un punto",
   "fla.s3.title":
     "La flecha como integral",
   "fla.s3.p1":
-    "Sea un elemento CD de longitud dx a distancia x del extremo donde se quiere la flecha. Las dos secciones giran un ángulo relativo dα, con dx = ρ·dα, o sea dα = dx/ρ. La tangente en D se aparta de la de C, en el extremo, en:",
+    "Sea un elemento CD de longitud {dx} a distancia {x} del extremo donde se quiere la flecha. Las dos secciones giran un ángulo relativo dα, con {dx} = ρ·{d}α, o sea dα = {dx}/ρ. La tangente en D se aparta de la de C, en el extremo, en:",
   "fla.s3.p2":
     "y sumando en toda la longitud:",
   "fla.s3.p3":
-    "Es el momento del diagrama M/(E·J) respecto del extremo donde se mide la flecha: el primer teorema del área de momentos. En una ménsula, con x desde el extremo libre, da f directamente.",
+    "Es el momento del diagrama {M}/({E}·{J}) respecto del extremo donde se mide la flecha: el primer teorema del área de momentos. En una ménsula, con {x} desde el extremo libre, da f directamente.",
   "fla.s4.kicker":
     "04 — Casos habituales",
   "fla.s4.title":
     "Los siete casos",
   "fla.s4.p1":
-    "Flecha máxima de las vigas más comunes. En todos l es la luz, E el módulo de elasticidad y J_x el momento de inercia; q, P y p son la carga (p es la ordenada máxima de una carga triangular).",
+    "Flecha máxima de las vigas más comunes. En todos l es la luz, E el módulo de elasticidad y {J}_x el momento de inercia; q, P y p son la carga ({p} es la ordenada máxima de una carga triangular).",
   "fla.case.ss-udl":
     "Simplemente apoyada con carga repartida",
   "fla.case.ss-point":
@@ -2432,7 +3232,7 @@ const ES: Record<TranslationKey, string> = {
   "fla.case.ss-tri.z":
     "El máximo está a z = 0,519·l del extremo donde la carga es nula.",
   "fla.s4.note":
-    "Cada coeficiente se verifica en los tests de la app contra una doble integración numérica de M/(E·J).",
+    "Cada coeficiente se verifica en los tests de la app contra una doble integración numérica de {M}/({E}·{J}).",
   "fla.calc.title":
     "Calculadora",
   "fla.calc.case":
@@ -2458,7 +3258,7 @@ const ES: Record<TranslationKey, string> = {
   "shr.title":
     "Tensiones de corte en la flexión",
   "shr.lead":
-    "Del corte puro y el teorema de Cauchy a la fórmula de Jourawski–Colignon τ = Q·S/(J·s), la distribución parabólica en un rectángulo y el perfil doble T. Según el apunte “Tensiones de corte en la flexión” de la cátedra.",
+    "Del corte puro y el teorema de Cauchy a la fórmula de Jourawski–Colignon τ = {Q}·{S}/({J}·s), la distribución parabólica en un rectángulo y el perfil doble T. Según el apunte “Tensiones de corte en la flexión” de la cátedra.",
   "shr.s1.kicker":
     "01 — Corte puro",
   "shr.s1.title":
@@ -2466,7 +3266,7 @@ const ES: Record<TranslationKey, string> = {
   "shr.s1.p1":
     "El corte puro se produce, exacta o aproximadamente, en la cizalladura y en remaches o tornillos que unen chapas sometidas a fuerzas de tracción: la tensión se toma uniforme en el área A que resiste,",
   "shr.s1.e1":
-    "τ = Q / A",
+    "τ = {Q} / {A}",
   "shr.s1.p2":
     "(El apunte escribe la tensión tangencial con la misma letra que la normal; acá τ es siempre tangencial.)",
   "shr.s2.kicker":
@@ -2480,37 +3280,41 @@ const ES: Record<TranslationKey, string> = {
   "shr.s2.p2":
     "En una viga sometida a corte y momento, las tensiones horizontales necesarias para mantener el equilibrio producirían un deslizamiento en planos horizontales: el corte en planos verticales implica necesariamente corte en planos horizontales, y viceversa. Son las tensiones de resbalamiento τ_L, presentes en todas las fibras (la imagen es la de tablones apilados que resbalan unos contra otros).",
   "shr.s2.p3":
-    "El corte Q en una sección es la resultante de todas las fuerzas que actúan a la izquierda de la sección considerada; por razones de equilibrio, la resultante de todas las de la derecha es igual y opuesta, y actúa sobre una sección infinitamente próxima.",
+    "El corte Q en una sección es la proyección, perpendicular al eje de la barra, de la resultante de todas las fuerzas que actúan a la izquierda de la sección considerada; por razones de equilibrio, la de las fuerzas de la derecha es igual y opuesta, y actúa sobre una sección infinitamente próxima.",
+  "shr.s2.fig":
+    "Cauchy: sobre dos planos perpendiculares las tensiones de corte τ_xy y τ_yx son iguales; las dos flechas van hacia la arista común (acá la de arriba a la derecha) o las dos se alejan de ella.",
+  "shr.s3.fig":
+    "Rebanada {dx} de la viga: las tensiones normales dan N en la sección 1 y N + {dN} en la 2 sobre el área rayada Ω, a distancia {y} del eje neutro; la diferencia {dN} la equilibra la fuerza de corte {dT} sobre el corte.",
   "shr.s3.kicker":
     "03 — Jourawski",
   "shr.s3.title":
     "La fórmula de Jourawski–Colignon",
   "shr.s3.p1":
-    "La existencia del corte origina tensiones tangenciales en el plano de la sección. Sea una viga de sección constante y una rebanada de largo dx entre las secciones 1 y 2. Por la flexión, a una distancia y del eje neutro la tensión es σ = M·y/J_x en la sección 1 y σ + dσ = (M + dM)·y/J_x en la 2.",
+    "La existencia del corte origina tensiones tangenciales en el plano de la sección. Sea una viga de sección constante y una rebanada de largo {dx} entre las secciones 1 y 2. Por la flexión, a una distancia {y} del eje neutro la tensión es σ = {M}·{y}/{J}_x en la sección 1 y σ + dσ = ({M} + {dM})·{y}/{J}_x en la 2.",
   "shr.s3.p2":
-    "Ahora separamos una parte de la rebanada por una superficie cilíndrica de ancho s. En la parte rayada (área Ω) las tensiones normales generan una fuerza N en la sección 1 y N + dN en la 2; ambas son coaxiales y su resultante es",
+    "Ahora separamos una parte de la rebanada por una superficie cilíndrica de ancho s. En la parte rayada (área Ω) las tensiones normales generan una fuerza N en la sección 1 y N + {dN} en la 2; ambas son coaxiales y su resultante es",
   "shr.s3.e1":
-    "dN = ∫Ω (dM/J_x)·y dΩ",
+    "{dN} = ∫Ω ({dM}/{J}_x)·{y} dΩ",
   "shr.s3.p3":
-    "Esa fuerza tiende a deslizar la parte superior respecto del resto. A esa acción se oponen tensiones tangenciales τ que actúan en la superficie de separación; son paralelas al eje de la pieza y varían en forma continua. Siendo s la longitud de la curva de intersección de la superficie con el plano de la sección, dT = dx·∫τ ds, y por equilibrio dT = dN:",
+    "Esa fuerza tiende a deslizar la parte superior respecto del resto. A esa acción se oponen tensiones tangenciales τ que actúan en la superficie de separación; son paralelas al eje de la pieza y varían en forma continua. Siendo s la longitud de la curva de intersección de la superficie con el plano de la sección, {dT} = {dx}·∫τ {ds}, y por equilibrio {dT} = {dN}:",
   "shr.s3.e2":
-    "(dM/J_x)·∫Ω y dΩ = dx·∫s τ ds",
+    "({dM}/{J}_x)·∫Ω {y} dΩ = {dx}·∫s τ {ds}",
   "shr.s3.p4":
-    "La integral de la izquierda es el momento estático S_x del área Ω respecto del eje neutro, y la de la derecha es τ_m·s, con τ_m el valor medio de τ a lo largo de s. Como dM/dx = Q:",
+    "La integral de la izquierda es el momento estático {S}_x del área Ω respecto del eje neutro, y la de la derecha es τ_m·s, con τ_m el valor medio de τ a lo largo de s. Como {dM}/{dx} = {Q}:",
   "shr.s3.p5":
-    "Por el teorema de Cauchy, estas tensiones de resbalamiento longitudinal dan origen, en el plano de la sección, a tensiones tangenciales normales a la curva s en cada punto; τ_m es su valor medio. S_x es el momento estático de la parte de la sección a un lado del corte, y s es el ancho del corte.",
+    "Por el teorema de Cauchy, estas tensiones de resbalamiento longitudinal dan origen, en el plano de la sección, a tensiones tangenciales normales a la curva s en cada punto; τ_m es su valor medio. {S}_x es el momento estático de la parte de la sección a un lado del corte, y s es el ancho del corte.",
   "shr.s4.kicker":
     "04 — Rectángulo",
   "shr.s4.title":
     "Distribución en una sección rectangular",
   "shr.s4.p1":
-    "Para b × h, con el corte a una altura y sobre el eje neutro, s = b, J_x = b·h³/12 y el momento estático de la parte superior es S_x = b·(h/2 − y)·[(h/2 − y)/2 + y] = ½·b·(h²/4 − y²). Reemplazando:",
+    "Para b × h, con el corte a una altura {y} sobre el eje neutro, s = {b}, {J}_x = {b}·{h}³/12 y el momento estático de la parte superior es {S}_x = {b}·({h}/2 − {y})·[({h}/2 − {y})/2 + {y}] = ½·{b}·({h}²/4 − {y}²). Reemplazando:",
   "shr.s4.p2":
-    "La distribución es una parábola, nula en las fibras extremas y máxima en el eje neutro (y = 0):",
+    "La distribución es una parábola, nula en las fibras extremas y máxima en el eje neutro ({y} = 0):",
   "shr.s4.p3":
-    "o sea un 50 % más que el corte medio Q/superficie.",
+    "o sea un 50 % más que el corte medio {Q}/superficie.",
   "shr.s4.ex":
-    "Ejemplo: b = 10 cm, h = 20 cm, Q = 1 000 kg → medio Q/A = 5 kg/cm², τ_max = 1,5·1 000 / 200 = 7,5 kg/cm².",
+    "Ejemplo: {b} = 10 cm, {h} = 20 cm, {Q} = 1 000 kg → medio {Q}/{A} = 5 kg/cm², τ_max = 1,5·1 000 / 200 = 7,5 kg/cm².",
   "shr.s4.fig":
     "Rectángulo: τ es parabólica, con máximo en el eje neutro.",
   "shr.s5.kicker":
@@ -2518,17 +3322,17 @@ const ES: Record<TranslationKey, string> = {
   "shr.s5.title":
     "Perfil doble T",
   "shr.s5.p1":
-    "Con ancho de ala b, altura total h, altura libre h_0 entre alas (el alma tiene espesor δ_1 y cada ala δ) y J_x de todo el perfil, la misma fórmula da, para un corte por el ala y por el alma:",
+    "Con ancho de ala b, altura total h, altura libre {h}_0 entre alas (el alma tiene espesor δ_1 y cada ala δ) y {J}_x de todo el perfil, la misma fórmula da, para un corte por el ala y por el alma:",
   "shr.s5.flange":
     "En el ala",
   "shr.s5.web":
     "En el alma",
   "shr.s5.p2":
-    "En la unión del alma con el ala el ancho del corte pasa de b a δ_1, así que τ salta en el factor b/δ_1: el alma absorbe casi todo el corte, y en las alas las tensiones son chicas. Por eso, en la práctica, el corte de una viga doble T se verifica como Q dividido el área del alma.",
+    "En la unión del alma con el ala el ancho del corte pasa de b a δ_1, así que τ salta en el factor {b}/δ_1: el alma absorbe casi todo el corte, y en las alas las tensiones son chicas. Por eso, en la práctica, el corte de una viga doble T se verifica como Q dividido el área del alma.",
   "shr.s5.fig":
     "Doble T: τ es chica en las alas, salta en la unión y es casi constante en el alma.",
   "shr.footer":
-    "Transcripto del apunte manuscrito “Tensiones de corte en la flexión” de la cátedra; las fórmulas se verifican en los tests (las tensiones suman Q).",
+    "Transcripto del apunte manuscrito “Tensiones de corte en la flexión” de la cátedra; las fórmulas se verifican en los tests (las tensiones suman {Q}).",
 
   "pln.link":
     "Superficies planas",
@@ -2541,13 +3345,13 @@ const ES: Record<TranslationKey, string> = {
   "pln.s1.title":
     "Momentos estáticos",
   "pln.s1.p1":
-    "El momento estático (o de primer orden) de una superficie plana respecto de un eje de su plano es el producto del valor de la superficie por la distancia desde su centro de gravedad al eje. Para un diferencial dA de coordenadas x, y:",
+    "El momento estático (o de primer orden) de una superficie plana respecto de un eje de su plano es el producto del valor de la superficie por la distancia desde su centro de gravedad al eje. Para un diferencial {dA} de coordenadas {x}, {y}:",
   "pln.s1.e1":
-    "S_x = ∫ y dA        S_y = ∫ x dA",
+    "{S}_x = ∫ {y} {dA}        {S}_y = ∫ x {dA}",
   "pln.s1.p2":
     "Unidades: cm³ para superficies (distancia × superficie), kg·cm para masas.",
   "pln.s1.p3":
-    "Ejemplo, un rectángulo b × h apoyado sobre el eje X: dA = b·dy, entonces S_x = b·∫₀^h y dy = b·h²/2. Respecto de un eje horizontal baricéntrico la integral va de −h/2 a +h/2 y da cero: por cada elemento por encima del eje hay otro a igual distancia por debajo. Por lo tanto:",
+    "Ejemplo, un rectángulo b × h apoyado sobre el eje X: {dA} = {b}·{dy}, entonces {S}_x = {b}·∫₀^h {y} {dy} = {b}·{h}²/2. Respecto de un eje horizontal baricéntrico la integral va de −{h}/2 a +{h}/2 y da cero: por cada elemento por encima del eje hay otro a igual distancia por debajo. Por lo tanto:",
   "pln.s1.p4":
     "El momento estático de una superficie respecto de un eje baricéntrico es nulo.",
   "pln.s2.kicker":
@@ -2557,25 +3361,25 @@ const ES: Record<TranslationKey, string> = {
   "pln.s2.p1":
     "El baricentro de una superficie es el punto cuyas coordenadas son los momentos estáticos divididos por el área. Coincide con el centro de gravedad (el punto de aplicación de la resultante de los pesos) solo cuando el cuerpo es homogéneo y de espesor constante, es decir, con masa por unidad de área uniforme. Para un sistema de masas se usan las mismas fórmulas con las masas en lugar de las áreas (como en el ejemplo de los tres pesos):",
   "pln.s2.e1":
-    "x_g = Σ A_i·x_i / Σ A_i = S_y / A",
+    "{x}_g = Σ {A}_i·{x}_i / Σ {A}_i = {S}_y / {A}",
   "pln.s2.e2":
-    "y_g = Σ A_i·y_i / Σ A_i = S_x / A",
+    "{y}_g = Σ {A}_i·{y}_i / Σ {A}_i = {S}_x / {A}",
   "pln.s2.p2":
-    "Para una superficie continua las sumas pasan a integrales, x_g = ∫x dA / ∫dA e y_g = ∫y dA / ∫dA.",
+    "Para una superficie continua las sumas pasan a integrales, {x}_g = ∫{x} {dA} / ∫{dA} e {y}_g = ∫{y} {dA} / ∫{dA}.",
   "pln.s2.ex.title":
     "Ejemplos resueltos del apunte",
   "pln.s2.ex1.t":
     "Rectángulo de 4 × 16 con esquinas en (6, 4) y (10, 20)",
   "pln.s2.ex1.r":
-    "A = 64; S_x = 4·(20² − 4²)/2 = 768; S_y = 16·(10² − 6²)/2 = 512; y_g = 768/64 = 12; x_g = 512/64 = 8.",
+    "{A} = 64; {S}_x = 4·(20² − 4²)/2 = 768; {S}_y = 16·(10² − 6²)/2 = 512; {y}_g = 768/64 = 12; {x}_g = 512/64 = 8.",
   "pln.s2.ex2.t":
     "Tres masas: 300 kg en (30, 70), 800 kg en (80, 100), 1 000 kg en (60, 40)",
   "pln.s2.ex2.r":
-    "M = 2 100 kg; S_y = 133 000 kg·cm; S_x = 141 000 kg·cm; x_g = 63,33 cm; y_g = 67,14 cm.",
+    "{M} = 2 100 kg; {S}_y = 133 000 kg·cm; {S}_x = 141 000 kg·cm; {x}_g = 63,33 cm; {y}_g = 67,14 cm.",
   "pln.s2.ex3.t":
     "Chapa irregular dividida en tres rectángulos (26, 50 y 75 cm²)",
   "pln.s2.ex3.r":
-    "A = 151 cm²; S_y = 26·6,5 + 50·5 + 75·7,5 = 981,5; S_x = 26·11 + 50·7,5 + 75·2,5 = 848,5; x_g = 6,50 cm; y_g = 5,62 cm.",
+    "{A} = 151 cm²; {S}_y = 26·6,5 + 50·5 + 75·7,5 = 981,5; {S}_x = 26·11 + 50·7,5 + 75·2,5 = 848,5; {x}_g = 6,50 cm; {y}_g = 5,62 cm.",
   "pln.s3.kicker":
     "03 — Superficies compuestas",
   "pln.s3.title":
@@ -2583,7 +3387,7 @@ const ES: Record<TranslationKey, string> = {
   "pln.s3.p1":
     "Una figura irregular se divide en partes de área y baricentro conocidos. Una parte vacía cuenta con área negativa. La puerta con vacío rectangular del apunte da el mismo baricentro de las dos maneras:",
   "pln.s3.add":
-    "Sumando las cuatro piezas llenas: A = 19 687,5 cm², S_x = 1 775 390,63, S_y = 2 589 843,75 cm³ → y_g = 90,18 cm, x_g = 131,55 cm.",
+    "Sumando las cuatro piezas llenas: {A} = 19 687,5 cm², {S}_x = 1 775 390,63, {S}_y = 2 589 843,75 cm³ → {y}_g = 90,18 cm, {x}_g = 131,55 cm.",
   "pln.s3.sub":
     "Restando el hueco a la puerta completa: (30 000·100 − 10 312,5·118,75) / 19 687,5 = 90,18 cm y (30 000·125 − 10 312,5·112,5) / 19 687,5 = 131,55 cm.",
   "pln.s4.kicker":
@@ -2591,23 +3395,23 @@ const ES: Record<TranslationKey, string> = {
   "pln.s4.title":
     "Momentos de inercia",
   "pln.s4.p1":
-    "El momento centrífugo multiplica dA por las dos distancias; puede ser positivo, negativo o nulo. El momento de inercia multiplica dA por el cuadrado de la distancia a un eje, así que es siempre positivo. El polar usa la distancia a un punto. Todos están en longitud⁴ (cm⁴):",
+    "El momento centrífugo multiplica {dA} por las dos distancias; puede ser positivo, negativo o nulo. El momento de inercia multiplica {dA} por el cuadrado de la distancia a un eje, así que es siempre positivo. El polar usa la distancia a un punto. Todos están en longitud⁴ (cm⁴):",
   "pln.s4.e1":
-    "J_xy = ∫ x·y dA",
+    "{J}_xy = ∫ {x}·{y} {dA}",
   "pln.s4.e2":
-    "J_x = ∫ y² dA        J_y = ∫ x² dA",
+    "{J}_x = ∫ {y}² {dA}        {J}_y = ∫ {x}² {dA}",
   "pln.s4.e3":
-    "J_p = ∫ ρ² dA = J_x + J_y",
+    "{J}_p = ∫ ρ² {dA} = {J}_x + {J}_y",
   "pln.s4.p2":
     "El radio de giro es la distancia i a la que habría que concentrar toda el área para obtener el mismo momento:",
   "pln.s4.e4":
-    "J = A·i²        i = √(J/A)        i_p² = i_x² + i_y²",
+    "{J} = {A}·i²        i = √({J}/{A})        i_p² = i_x² + i_y²",
   "pln.s4.p3":
-    "Para un rectángulo b × h respecto de su eje horizontal baricéntrico, integrando y²·b·dy de −h/2 a +h/2:",
+    "Para un rectángulo b × h respecto de su eje horizontal baricéntrico, integrando {y}²·{b}·{dy} de −{h}/2 a +{h}/2:",
   "pln.s4.p4":
-    "La posición importa. Un rectángulo de 8 × 16 cm (128 cm²) con el lado mayor paralelo a Y tiene J_x = 8·16³/12 = 2 730,67 cm⁴; girado 90° (16 de base, 8 de altura) tiene J_x = 16·8³/12 = 682,67 cm⁴: cuatro veces menos con el mismo material. Por eso el lado mayor va en la dirección de la flexión.",
+    "La posición importa. Un rectángulo de 8 × 16 cm (128 cm²) con el lado mayor paralelo a Y tiene {J}_x = 8·16³/12 = 2 730,67 cm⁴; girado 90° (16 de base, 8 de altura) tiene {J}_x = 16·8³/12 = 682,67 cm⁴: cuatro veces menos con el mismo material. Por eso el lado mayor va en la dirección de la flexión.",
   "pln.s4.p5":
-    "Los momentos son aditivos: si A se divide en partes, J = J_1 + J_2 + …; y una parte hueca se resta, J = J_total − J′ − J″.",
+    "Los momentos son aditivos: si A se divide en partes, {J} = {J}_1 + {J}_2 + …; y una parte hueca se resta, {J} = {J}_total − {J}′ − J″.",
   "pln.s5.kicker":
     "05 — Steiner",
   "pln.s5.title":
@@ -2615,19 +3419,19 @@ const ES: Record<TranslationKey, string> = {
   "pln.s5.p1":
     "Enunciado: el momento de inercia de una superficie respecto a un eje cualquiera de su plano es igual al momento de inercia de la misma respecto a un eje baricéntrico paralelo al anterior, más el producto del área de la superficie por el cuadrado de la distancia que separa ambos ejes.",
   "pln.s5.p2":
-    "Sean los ejes X, Y desplazados a y b de los baricéntricos, de modo que x = a + x_g e y = b + y_g. En J_xy = ∫xy dA el producto se expande en cuatro integrales; dos son momentos estáticos respecto de ejes baricéntricos, o sea nulos:",
+    "Sean los ejes X, Y desplazados {a} y {b} de los baricéntricos, de modo que {x} = {a} + {x}_g e {y} = {b} + {y}_g. En {J}_xy = ∫xy {dA} el producto se expande en cuatro integrales; dos son momentos estáticos respecto de ejes baricéntricos, o sea nulos:",
   "pln.s5.e1":
-    "J_xy = J_xgyg + A·a·b",
+    "{J}_xy = {J}_xgyg + {A}·a·{b}",
   "pln.s5.p3":
     "y para cada uno de los ejes:",
   "pln.s5.fig":
-    "Ejes X, Y desplazados de los baricéntricos X_g, Y_g en b y a.",
+    "Ejes X, Y desplazados de los baricéntricos {X}_g, {Y}_g en b y a.",
   "pln.s5.use.title":
     "¿Para qué se usa? (pregunta de parcial)",
   "pln.s5.use.p1":
     "Las tablas y manuales dan los momentos de las figuras regulares respecto de sus ejes baricéntricos. El teorema de Steiner los traslada a cualquier otro eje paralelo, sin volver a integrar. Así se obtiene la inercia de una sección compuesta (cada parte respecto del eje común del conjunto) y la de un perfil armado o una sección cuyas partes no comparten baricentro.",
   "pln.s5.use.p2":
-    "Como A·d² nunca es negativo, el momento de inercia respecto de un eje baricéntrico es el menor entre todos los ejes paralelos.",
+    "Como {A}·{d}² nunca es negativo, el momento de inercia respecto de un eje baricéntrico es el menor entre todos los ejes paralelos.",
   "pln.s5.calc.title":
     "Calculadora de Steiner: rectángulo",
   "pln.s5.calc.b":
@@ -2651,15 +3455,15 @@ const ES: Record<TranslationKey, string> = {
   "pln.s6.title":
     "Ejes girados un ángulo α",
   "pln.s6.p1":
-    "Con ejes X′, Y′ girados α alrededor del mismo origen, x′ = x·cosα + y·senα e y′ = y·cosα − x·senα. Desarrollando J_x′ = ∫y′² dA y J_y′ = ∫x′² dA, y usando 2·senα·cosα = sen 2α:",
+    "Con ejes {X}′, {Y}′ girados α alrededor del mismo origen, {x}′ = {x}·cosα + {y}·senα e {y}′ = {y}·cosα − {x}·senα. Desarrollando {J}_x′ = ∫{y}′² {dA} y {J}_y′ = ∫{x}′² {dA}, y usando 2·senα·cosα = sen 2α:",
   "pln.s6.e1":
-    "J_x′ = J_x·cos²α + J_y·sen²α − J_xy·sen 2α",
+    "{J}_x′ = {J}_x·cos²α + {J}_y·sen²α − {J}_xy·sen 2α",
   "pln.s6.e2":
-    "J_y′ = J_x·sen²α + J_y·cos²α + J_xy·sen 2α",
+    "{J}_y′ = {J}_x·sen²α + {J}_y·cos²α + {J}_xy·sen 2α",
   "pln.s6.e3":
-    "J_x′y′ = J_xy·cos 2α + (J_x − J_y)/2·sen 2α",
+    "{J}_x′y′ = {J}_xy·cos 2α + ({J}_x − {J}_y)/2·sen 2α",
   "pln.s6.p2":
-    "Sumando las dos primeras se ve que J_x + J_y no depende de α (es el momento polar).",
+    "Sumando las dos primeras se ve que {J}_x + {J}_y no depende de α (es el momento polar).",
   "pln.s7.kicker":
     "07 — Ejes principales",
   "pln.s7.title":
@@ -2667,17 +3471,813 @@ const ES: Record<TranslationKey, string> = {
   "pln.s7.p1":
     "Todo lo anterior depende de α. Los momentos de inercia alcanzan un máximo y un mínimo respecto de dos ejes perpendiculares entre sí, los ejes principales de inercia, y el momento centrífugo respecto de ellos es nulo; los momentos correspondientes son los momentos principales de inercia. El momento centrífugo, en cambio, puede anularse o ser negativo.",
   "pln.s7.p2":
-    "Imponiendo dJ_y′/dα = 0 queda (J_y − J_x)·sen 2α_1 − 2·J_xy·cos 2α_1 = 0, de donde:",
+    "Imponiendo dJ_y′/{d}α = 0 queda ({J}_y − {J}_x)·sen 2α_1 − 2·{J}_xy·cos 2α_1 = 0, de donde:",
   "pln.s7.e1":
-    "tg 2α_1 = 2·J_xy / (J_y − J_x)",
+    "tg 2α_1 = 2·{J}_xy / ({J}_y − {J}_x)",
   "pln.s7.p3":
     "Esta ecuación se cumple para dos valores de 2α_1 que difieren 180°, así que hay dos valores de α_1 que difieren 90°: los dos ejes principales.",
   "pln.s7.p4":
     "Si los dos momentos principales son distintos ese par es único; si son iguales (un círculo, un cuadrado) todo par ortogonal que pase por el baricentro es principal. El apunte llama primero “conjugados” a todos los pares de máximo y mínimo y luego “principales” al ortogonal; la definición de arriba es la que conviene retener.",
   "pln.s7.p5":
-    "No está en el apunte, pero es consecuencia directa: J_1,2 = (J_x + J_y)/2 ± √(((J_x − J_y)/2)² + J_xy²).",
+    "No está en el apunte, pero es consecuencia directa: {J}_1,2 = ({J}_x + {J}_y)/2 ± √((({J}_x − {J}_y)/2)² + {J}_xy²).",
   "pln.footer":
     "Transcripto del apunte “Momentos de superficies planas” de la cátedra. Los ejemplos se verifican en los tests.",
+
+  "pnd.link":
+    "Pandeo",
+  "pnd.title":
+    "Pandeo (inestabilidad del equilibrio)",
+  "pnd.lead":
+    "Cuando una barra comprimida deja de ser segura por su tensión y pasa a serlo por su forma: equilibrio estable, indiferente e inestable, carga crítica de Euler, esbeltez y efecto de los vínculos. Según el apunte “Pandeo AMS” de la cátedra.",
+  "pnd.s1.kicker":
+    "01 — Equilibrio",
+  "pnd.s1.title":
+    "Equilibrio estable, indiferente e inestable",
+  "pnd.s1.p1":
+    "Una barra de eje recto sometida a compresión puede calcularse con σ = {F}/{A} ≤ σ_adm mientras sea corta: el apunte da la condición l < 30·{b}, con b el ancho mínimo de la sección. Si l > 30·{b} ya no alcanza con la verificación por tensión y hay que verificar el pandeo, porque la barra puede llegar a un equilibrio inestable, en el que la menor fuerza lateral causa la desviación respecto del eje y la rotura al deformarse, antes de llegar a la tensión σ_adm. Que ocurra o no depende de la carga {F} comparada con {F}_k (más abajo).",
+  "pnd.s1.p2":
+    "Para una pieza de sección A y longitud l dadas existe un valor de carga {F} = {F}_k, denominada carga crítica de pandeo, que corresponde a un estado de equilibrio indiferente. Cargada la pieza con F y aplicada una carga transversal H, pueden presentarse tres casos:",
+  "pnd.s1.c1.t":
+    "F < {F}_k: estable",
+  "pnd.s1.c1.d":
+    "Al cesar H, la barra vuelve a su posición recta.",
+  "pnd.s1.c2.t":
+    "{F} = {F}_k: indiferente",
+  "pnd.s1.c2.d":
+    "Al cesar H, la barra queda en la posición desviada.",
+  "pnd.s1.c3.t":
+    "F > {F}_k: inestable",
+  "pnd.s1.c3.d":
+    "Aunque cese H, la barra continúa deformándose hasta la rotura.",
+  "pnd.s1.p3":
+    "La misma clasificación (estable, indiferente, inestable) vale para cualquier equilibrio: tras una perturbación chica el cuerpo vuelve, se queda o se aleja.",
+  "pnd.s2.kicker":
+    "02 — Hipótesis",
+  "pnd.s2.title":
+    "Condiciones de la barra",
+  "pnd.s2.h1":
+    "Ambos extremos articulados, sin rozamiento, uno de ellos guiado según la dirección del eje de la barra.",
+  "pnd.s2.h2":
+    "La fuerza de compresión actúa exactamente en el eje de la barra.",
+  "pnd.s2.h3":
+    "El material de la barra es elástico y homogéneo ({E} constante).",
+  "pnd.s2.h4":
+    "Sobre la barra no actúan fuerzas laterales.",
+  "pnd.s3.kicker":
+    "03 — Euler",
+  "pnd.s3.title":
+    "Carga crítica y esbeltez",
+  "pnd.s3.p1":
+    "El valor de la fuerza con la cual se inicia el pandeo se denomina carga crítica o límite de pandeo. Con el momento {M} = {F}·s en una sección donde la barra se desvió s, la expresión de Euler es, válida solo para σ ≤ σ_EL (límite elástico):",
+  "pnd.s3.p2":
+    "{J}_min es el menor momento de inercia de la sección (la barra pandea alrededor del eje débil), c el coeficiente de empotramiento y l la longitud. Con {J}_min = i_min²·{A}, donde i = √({J}/{A}) es el radio de giro, y la esbeltez λ = {l}_0 / i_min, con la longitud equivalente {l}_0 = c·{l} (la distancia entre dos puntos de inflexión consecutivos de la barra deformada):",
+  "pnd.s3.p3":
+    "Dividiendo por el área se obtiene la tensión crítica. Su gráfico contra λ es una hipérbola, la hipérbola de Euler: cuanto más esbelta la barra, menor la tensión que puede soportar.",
+  "pnd.s3.p4":
+    "Para la barra articulada c = 1 y {l}_0 = {l}; la ménsula pandea sobre el doble de su longitud y la empotrada–empotrada sobre la mitad (sección siguiente).",
+  "pnd.s3.fig":
+    "Hipérbola de Euler σ_k(λ) para acero, {E} = 2 100 000 kg/cm²; solo vale la rama con σ_k por debajo del límite elástico.",
+  "pnd.s3.fig.axis.x":
+    "λ",
+  "pnd.s3.fig.axis.y":
+    "σ_k",
+  "pnd.s4.kicker":
+    "04 — Vínculos",
+  "pnd.s4.title":
+    "El coeficiente c",
+  "pnd.s4.p1":
+    "c = {l}_0 / l compara la longitud de pandeo con la longitud real. La ménsula empotrada-libre pandea sobre el doble de su longitud; la empotrada-empotrada, sobre la mitad:",
+  "pnd.s4.fixedfree":
+    "empotrada–libre",
+  "pnd.s4.pinned":
+    "articulada–articulada",
+  "pnd.s4.fixedpinned":
+    "empotrada–articulada",
+  "pnd.s4.fixedfixed":
+    "empotrada–empotrada",
+  "pnd.s4.p2":
+    "Como {F}_k es proporcional a 1/c², empotrar ambos extremos multiplica por 4 la carga crítica respecto de la barra articulada, y la ménsula la divide por 4.",
+  "pnd.s5.kicker":
+    "05 — Ejercicios resueltos",
+  "pnd.s5.title":
+    "Ejercicios del apunte",
+  "pnd.s5.e1.t":
+    "IPN 10, {h} = 7 m ({J}_y = 12,20 cm⁴)",
+  "pnd.s5.e1.r":
+    "Articulada (c = 1): {F}_k = π²·2 100 000·12,20 / 700² = 516 kg. Empotrada–empotrada (c = 0,5): {F}_k = 2 064 kg.",
+  "pnd.s5.e2.t":
+    "IPN 23, {h} = 7 m ({J}_y = 189 cm⁴)",
+  "pnd.s5.e2.r":
+    "Articulada: {F}_k = π²·2 100 000·189 / 700² = 7 994 kg. Empotrada–empotrada (c = 0,5): {F}_k = 31 978 kg.",
+  "pnd.s5.e3.t":
+    "Barra de 15 × 24 cm, 8 m de largo, articulada, con 350 t (σ_adm = 1 200 kg/cm²)",
+  "pnd.s5.e3.r":
+    "{A} = 360 cm², σ = 350 000/360 = 972,2 kg/cm² < 1 200: verifica por tensión. {J}_min = 24·15³/12 = 6 750 cm⁴ y {F}_k = π²·2 100 000·6 750 / 800² = 218 596 kg < 350 000 kg: pandea. La carga “admisible por tensión”, 1 200·360 = 432 t, no es el límite real. La barra más larga que soporta 350 t es {l} = √(π²·{E}·{J}/{F}) = 632 cm.",
+  "pnd.s5.e4.t":
+    "Ménsula (c = 2) con 135 000 kg, con {J}_y = 14 435 cm⁴",
+  "pnd.s5.e4.r":
+    "{l}_max = √(π²·2 100 000·14 435 / (4·135 000)) = 744,34 cm = 7,44 m.",
+  "pnd.s5.note":
+    "Dos detalles del apunte manuscrito: el perfil del último ejercicio está escrito “IPB 60”, pero {J}_y = 14 435 cm⁴ es el de un IPB 700 (la tabla trae 14 440); y el resultado está escrito “7,44 cm” cuando es 7,44 m.",
+  "pnd.calc.title":
+    "Calculadora de Euler",
+  "pnd.calc.E":
+    "E (kg/cm²)",
+  "pnd.calc.J":
+    "J_min (cm⁴)",
+  "pnd.calc.A":
+    "A (cm²)",
+  "pnd.calc.l":
+    "l (cm)",
+  "pnd.calc.c":
+    "c",
+  "pnd.calc.F":
+    "F (kg)",
+  "pnd.calc.Fk":
+    "F_k",
+  "pnd.calc.lambda":
+    "λ",
+  "pnd.calc.sk":
+    "σ_k",
+  "pnd.calc.state":
+    "Equilibrio bajo F",
+  "pnd.calc.stable":
+    "estable",
+  "pnd.calc.indifferent":
+    "indiferente",
+  "pnd.calc.unstable":
+    "inestable: pandea",
+  "pnd.calc.hint":
+    "Euler vale solo mientras σ_k esté por debajo de la tensión del límite elástico; para barras más robustas la fórmula sobreestima F_k.",
+  "pnd.footer":
+    "Transcripto del apunte manuscrito “Pandeo AMS” de la cátedra; los números de los ejercicios se recalcularon y coinciden con el apunte.",
+  "tns.link":
+    "Estado de tensión",
+  "tns.title":
+    "Estado de tensión en un punto",
+  "tns.lead":
+    "El tensor de tensiones, sus invariantes y clasificación, el vector tensión sobre cualquier plano, y las tensiones, direcciones y planos principales. El ejercicio resuelto es del profesor (“Estado de tensión EJ1”); las explicaciones que lo rodean son nuestras.",
+  "tns.s1.kicker":
+    "01 — El tensor",
+  "tns.s1.title":
+    "Escribir el tensor de tensiones",
+  "tns.s1.p1":
+    "El estado de tensión en un punto B es el conjunto de tensiones sobre tres planos perpendiculares que pasan por él. Cada plano aporta una tensión normal (σ_x, σ_y, σ_z) y dos tangenciales; por la reciprocidad de las tangenciales τ_xy = τ_yx, τ_yz = τ_zy y τ_xz = τ_zx, así que el tensor es simétrico y tiene seis componentes independientes:",
+  "tns.s1.p2":
+    "En el ejercicio (MPa): σ_x = −20, σ_y = 30, σ_z = 0, τ_xy = 10, τ_yz = 0 y τ_xz = 5. La tracción es positiva y la compresión negativa.",
+  "tns.f1":
+    "El estado de tensión en un punto: sobre cada una de las tres caras visibles, una tensión normal (roja) y dos de corte (verde), positivas según los ejes ({x} a la derecha, {y} hacia arriba, {z} hacia el observador). Los pares τ_xy = τ_yx, τ_yz = τ_zy, τ_xz = τ_zx son iguales.",
+  "tns.f2":
+    "Un plano por B visto de canto, con normal unitaria n: el vector tensión ρ se descompone en la tensión normal σ (según n) y la tangencial τ (en el plano), |ρ|² = σ² + τ².",
+  "tns.f3":
+    "Sobre los planos principales las tensiones de corte son nulas: quedan solo σ_1, σ_2 y σ_3, según las direcciones principales.",
+  "tns.f4":
+    "Los tres círculos de Mohr del ejercicio, a escala, a partir de sus tensiones principales (mitades superiores; no están en los apuntes). El mayor, entre σ_3 y σ_1, da τ_max = (σ_1 − σ_3)/2 ≈ 27,5 MPa.",
+  "tns.s2.kicker":
+    "02 — Invariantes",
+  "tns.s2.title":
+    "Invariantes y clasificación",
+  "tns.s2.p1":
+    "Los tres invariantes no cambian al rotar los ejes; además son las funciones simétricas de las tensiones principales:",
+  "tns.s2.e1":
+    "{I}_1 = σ_x + σ_y + σ_z = σ_1 + σ_2 + σ_3",
+  "tns.s2.e2":
+    "{I}_2 = (σ_x·σ_y − τ_xy²) + (σ_y·σ_z − τ_yz²) + (σ_x·σ_z − τ_xz²) = σ_1·σ_2 + σ_2·σ_3 + σ_1·σ_3",
+  "tns.s2.e3":
+    "{I}_3 = det {T} = σ_x·σ_y·σ_z + 2·τ_xy·τ_yz·τ_xz − (σ_x·τ_yz² + σ_y·τ_xz² + σ_z·τ_xy²) = σ_1·σ_2·σ_3",
+  "tns.s2.p2":
+    "Clasificación: si {I}_3 ≠ 0 el estado es triple o espacial (tres tensiones principales no nulas); si {I}_3 = 0 e {I}_2 ≠ 0 es doble o plano; si solo {I}_1 ≠ 0 es simple o uniaxial.",
+  "tns.s2.p3":
+    "En el ejercicio: {I}_1 = −20 + 30 + 0 = 10 MPa; {I}_2 = (−600 − 100) + (0 − 0) + (0 − 25) = −725 MPa²; {I}_3 = 0 + 0 − (0 + 30·25 + 0) = −750 MPa³. Como {I}_3 ≠ 0 el estado en B es triple (espacial).",
+  "tns.s3.kicker":
+    "03 — Vector tensión",
+  "tns.s3.title":
+    "Tensión sobre un plano de normal n",
+  "tns.s3.p1":
+    "Para un plano por B de normal unitaria n = ({l}, m, n), el vector tensión ρ es el tensor aplicado a la normal. Su componente según n es la tensión normal σ, y lo que queda es la tangencial τ:",
+  "tns.s3.e1":
+    "ρ = {T} · n",
+  "tns.s3.e2":
+    "σ = (ρ · n) n",
+  "tns.s3.e3":
+    "τ = ρ − σ        |ρ|² = |σ|² + |τ|²",
+  "tns.s3.p2":
+    "En el ejercicio, con n = (0,5; 0,5; 0,7071): ρ = (−1,4645; 20; 2,5) MPa, |ρ| = 20,21 MPa; σ = (5,5178; 5,5178; 7,8032) MPa, |σ| = 11,04 MPa; τ = (−6,9823; 14,4822; −5,3032) MPa, |τ| = 16,93 MPa.",
+  "tns.s4.kicker":
+    "04 — Tensiones principales",
+  "tns.s4.title":
+    "Tensiones, direcciones y planos principales",
+  "tns.s4.p1":
+    "Hay tres planos perpendiculares entre sí sobre los que la tensión tangencial es nula: los planos principales. La tensión normal sobre ellos es una tensión principal. Son las raíces de la ecuación característica:",
+  "tns.s4.e1":
+    "σ³ − {I}_1·σ² + {I}_2·σ − {I}_3 = 0",
+  "tns.s4.p2":
+    "Las raíces son reales porque el tensor es simétrico; ordenadas, σ_1 ≥ σ_2 ≥ σ_3. Para cada raíz la dirección principal n = ({l}, m, n) resuelve",
+  "tns.s4.e2":
+    "(σ_x − σ)·{l} + τ_yx·m + τ_zx·n = 0\nτ_xy·{l} + (σ_y − σ)·m + τ_zy·n = 0\nτ_xz·{l} + τ_yz·m + (σ_z − σ)·n = 0",
+  "tns.s4.p3":
+    "Las tres ecuaciones son dependientes, así que se fija una incógnita ({a} = 1) y se resuelven las otras dos; luego se normaliza el vector dividiendo por (a² + {b}² + c²)^½. El sentido de la dirección es arbitrario. El plano perpendicular a cada dirección es el plano principal correspondiente.",
+  "tns.s4.p4":
+    "En el ejercicio: σ_1 = 31,9542 MPa, σ_2 = 1,02156 MPa, σ_3 = −22,97576 MPa. Su suma es {I}_1 = 10 y su producto es {I}_3 = −750, como debe ser.",
+  "tns.s5.kicker":
+    "05 — Las direcciones",
+  "tns.s5.title":
+    "Direcciones principales del ejercicio",
+  "tns.s5.th.s":
+    "Tensión principal",
+  "tns.s5.th.sys":
+    "Sistema resuelto ({a} = 1)",
+  "tns.s5.th.n":
+    "Dirección n",
+  "tns.s5.r1":
+    "σ_1 = 31,9542: −51,9542·a + 10·{b} + 5·c = 0, 10·a − 1,9542·{b} = 0 → {b} = 5,1172, c = 0,1565",
+  "tns.s5.r2":
+    "σ_2 = 1,02156: −21,02156·a + 10·{b} + 5·c = 0, 10·a + 28,97844·{b} = 0 → {b} = −0,3451, c = 4,8945",
+  "tns.s5.r3":
+    "σ_3 = −22,97576: 2,97576·a + 10·{b} + 5·c = 0, 10·a + 52,97576·{b} = 0 → {b} = −0,1888, c = −0,2176",
+  "tns.s5.n1":
+    "(0,1917 ; 0,981 ; 0,03)",
+  "tns.s5.n2":
+    "(0,1997 ; −0,0689 ; 0,97743)",
+  "tns.s5.n3":
+    "(0,961 ; −0,18139 ; −0,20912)",
+  "tns.s5.p1":
+    "Los tests de la app recalculan cada número del ejercicio a partir del tensor.",
+  "tns.calc.title":
+    "Calculadora",
+  "tns.calc.n":
+    "normal n (se normaliza)",
+  "tns.calc.inv":
+    "Invariantes",
+  "tns.calc.kind":
+    "Estado",
+  "tns.calc.triple":
+    "triple (espacial)",
+  "tns.calc.double":
+    "doble (plano)",
+  "tns.calc.simple":
+    "simple (uniaxial)",
+  "tns.calc.null":
+    "sin tensión",
+  "tns.calc.plane":
+    "Tensión sobre el plano",
+  "tns.calc.rho":
+    "ρ",
+  "tns.calc.sigma":
+    "σ (normal)",
+  "tns.calc.tau":
+    "τ (tangencial)",
+  "tns.calc.princ":
+    "Tensiones y direcciones principales",
+  "tns.calc.any":
+    "cualquier dirección (las tres tensiones principales son iguales)",
+  "tns.calc.eigen":
+    "no única: cualquier dirección perpendicular a la otra principal (tensión repetida)",
+  "tns.footer":
+    "El ejercicio resuelto es del profesor (“Estado de tensión EJ1”); el texto teórico que lo rodea se escribió para esta página.",
+
+  "mat.link":
+    "Propiedades de los materiales",
+  "mat.title":
+    "Propiedades de los materiales",
+  "mat.lead":
+    "Fuerzas y tensiones, los estados de tensión, el ensayo de tracción y el diagrama σ–ε, los límites y propiedades de un material, los tipos de material y las ecuaciones de equivalencia. Según el apunte “Propiedades de los materiales” de la cátedra.",
+  "mat.s1.kicker":
+    "01 — Fuerzas",
+  "mat.s1.title":
+    "Fuerzas sobre un sólido",
+  "mat.s1.p1":
+    "Un sólido puede estar sometido a dos tipos de fuerzas. Las fuerzas de masa o de volumen actúan sobre cada partícula del cuerpo: con la densidad media γ = dm/dv, la fuerza sobre un elemento es {P}·dm = {P}·γ·dv, donde P es la fuerza unitaria. Pueden ser gravitacionales, de inercia o electromagnéticas.",
+  "mat.s1.p2":
+    "Las fuerzas de superficie actúan sobre la superficie del cuerpo, como fuerzas de contacto o de presión: {p}·{ds} = {F}, donde p es la fuerza por unidad de superficie (la presión).",
+  "mat.s2.kicker":
+    "02 — Tensión",
+  "mat.s2.title":
+    "Tensión y estado de tensión",
+  "mat.s2.p1":
+    "Las tensiones son las acciones mutuas entre las partículas de un cuerpo, causadas por las fuerzas exteriores. Una tensión es un esfuerzo unitario: una fuerza por unidad de superficie, en T/m², kg/cm² o kN/cm².",
+  "mat.s2.p2":
+    "Las acciones aplicadas sobre una parte de la estructura se transmiten como tensiones de punto a punto sobre toda la sección. Existen infinitos estados de tensión, uno por cada punto. Si se corta el cuerpo con un plano aparece una tensión —un vector— que depende de la ubicación y de la orientación del plano de corte:",
+  "mat.s2.e1":
+    "ρ = lím ΔP / ΔF   (ΔF → 0)",
+  "mat.s2.p3":
+    "ΔP es la parte de la reacción interna izquierda que actúa sobre el diferencial de superficie ΔF. El vector ρ no es libre: está asociado a un plano, y por un punto pasan infinitos planos, así que hay infinitos ρ. El conjunto de todos ellos es el estado de tensión en ese punto. Cada material tiene un estado de tensión máximo.",
+  "mat.s2.p4":
+    "La tensión ρ forma un ángulo con el plano, así que se descompone en una componente normal σ y una tangencial τ:",
+  "mat.s2.e2":
+    "σ = {dN}/{dS}        τ = {dQ}/{dS}        ρ = √(σ² + τ²)",
+  "mat.s2.p5":
+    "Tipos de estado de tensión, según cómo se comporta ρ al variar el plano:",
+  "mat.s2.t1":
+    "Triple o espacial: varían la intensidad, la dirección y el sentido, y ρ puede tener cualquier orientación en el espacio.",
+  "mat.s2.t2":
+    "Doble o plano: varían, pero ρ se mantiene paralela a un plano determinado.",
+  "mat.s2.t3":
+    "Simple o lineal: ρ se mantiene paralela a una dirección determinada.",
+  "mat.s2.p6":
+    "El tensor de tensiones, sus invariantes y las tensiones principales se resuelven en la página de estado de tensión en un punto.",
+  "mat.s3.kicker":
+    "03 — Ensayo de tracción",
+  "mat.s3.title":
+    "El ensayo de tracción",
+  "mat.s3.p1":
+    "Para conocer las características de un material hay que ensayarlo. La máquina de ensayo (eléctrica o hidráulica) tiene una base, un cabezal y dos o cuatro columnas mucho más rígidas que las probetas, para que se deforme la probeta y no la máquina, y un pistón central que aplica la carga, a tracción o a compresión. Los materiales dúctiles se ensayan a tracción; los que no soportan tracción, como el hormigón, a compresión.",
+  "mat.s3.p2":
+    "Para los metales se usa el ensayo de tracción simple: una probeta cilíndrica de dimensiones normalizadas se somete a un esfuerzo axil, lo que genera un estado de tensión simple. La carga se aplica en forma cuasi estática, o sea muy lentamente, mientras se mide el alargamiento. Con los pares de valores σ–ε se traza el diagrama tensión–deformación, desde el comienzo del ensayo hasta la rotura:",
+  "mat.s3.e1":
+    "σ = {F} / {A}_o        ε = Δl / {l}_o",
+  "mat.s3.p3":
+    "σ es la fuerza dividida por la sección original {A}_o, y ε es el alargamiento unitario, la relación entre el alargamiento Δl y la longitud inicial {l}_o. Se grafican sobre los ejes Y y X respectivamente.",
+  "mat.s4.kicker":
+    "04 — Deformación y límites",
+  "mat.s4.title":
+    "Deformaciones elásticas y plásticas; límites",
+  "mat.s4.d1":
+    "Deformación elástica: el cuerpo retorna a su forma original al cesar el esfuerzo.",
+  "mat.s4.d2":
+    "Deformación plástica: no retorna; el cuerpo queda deformado.",
+  "mat.s4.l1":
+    "Límite de proporcionalidad σ_P: la tensión hasta la cual el diagrama es una recta. Por encima, las deformaciones crecen más que la tensión.",
+  "mat.s4.l2":
+    "Límite de elasticidad σ_E: la tensión por encima de la cual las deformaciones pasan a ser permanentes.",
+  "mat.s4.l3":
+    "Límite de fluencia σ_Fl: donde el material se deforma sin aumento apreciable de la carga (el apunte distingue una tensión de fluencia superior y una inferior).",
+  "mat.s4.l4":
+    "Límite de rotura σ_Rot: la máxima tensión que puede resistir el material.",
+  "mat.s4.p1":
+    "Coeficiente de seguridad: la tensión de elasticidad dividida por un número ν da la tensión de trabajo o admisible:",
+  "mat.s4.e1":
+    "σ_adm = σ_E / ν        ν = 2 – 4",
+  "mat.s5.kicker":
+    "05 — El diagrama",
+  "mat.s5.title":
+    "El diagrama σ–ε de un metal dúctil",
+  "mat.s5.fig":
+    "Diagrama tensión–deformación de un acero dúctil (esquemático): período elástico hasta σ_E (recta hasta σ_P), fluencia, y período anelástico hasta σ_Rot y la rotura.",
+  "mat.s5.fig.sigma":
+    "σ = {F}/{A}_o",
+  "mat.s5.fig.eps":
+    "ε = Δ{l}/{l}_o",
+  "mat.s5.fig.p1":
+    "elástico",
+  "mat.s5.fig.p2":
+    "fluencia",
+  "mat.s5.fig.p3":
+    "anelástico",
+  "mat.s5.s1.t":
+    "1 — Fase elástica (0 a σ_E)",
+  "mat.s5.s1.d":
+    "Una recta hasta σ_P y una curva hasta σ_E. En el tramo recto los alargamientos son proporcionales a las tensiones: ley de Hooke. En cualquier punto de la fase elástica, si se suprime la fuerza la pieza vuelve a su longitud original. Cuanto más rígido el material, más empinada la recta.",
+  "mat.s5.s2.t":
+    "2 — Fase plástica (σ_E a σ_Fl)",
+  "mat.s5.s2.d":
+    "Las deformaciones continúan pero son permanentes: suprimida la fuerza, la probeta queda deformada.",
+  "mat.s5.s3.t":
+    "3 — Fase de rotura",
+  "mat.s5.s3.d":
+    "A partir de σ_Fl las moléculas se movilizan sin aumento apreciable de la carga: el período de fluencia, un reacomodamiento, al que siguen la fase de carga máxima y la rotura. Las deformaciones se hacen visibles a simple vista, como alargamiento y como estricción (disminución del diámetro). Pasada la fluencia viene el período anelástico o de grandes deformaciones, en el que la tensión aumenta hasta el máximo σ_Rot, la tensión de rotura, a partir del cual disminuye hasta que la probeta se rompe con la deformación ε_R. La estricción reduce la sección, así que la tensión real {F}/{A}_real es mayor que la aparente.",
+  "mat.s5.hooke":
+    "En la primera fase se cumple la ley de Hooke: la tensión es proporcional a la deformación, con {E} = tg β el módulo de Young (la pendiente de la recta):",
+  "mat.s6.kicker":
+    "06 — Otras propiedades",
+  "mat.s6.title":
+    "Rigidez, ductilidad, resiliencia, tenacidad, dureza",
+  "mat.s6.p1":
+    "Rigidez: propiedad de oponerse a la deformación; aumenta al aumentar el módulo de Young E.",
+  "mat.s6.p2":
+    "Ductilidad: deformabilidad en el período plástico o anelástico.",
+  "mat.s6.p3":
+    "Resiliencia: capacidad de restituir la energía almacenada por deformación en el período elástico. Es el área bajo la curva en ese período; hasta σ_e es el triángulo:",
+  "mat.s6.e1":
+    "{U} = ½ · σ_e² / {E}",
+  "mat.s6.p4":
+    "Tenacidad: capacidad de absorber energía en el período anelástico o de grandes deformaciones; es el área bajo la curva hasta la rotura.",
+  "mat.s6.p5":
+    "Dureza: capacidad de resistir acciones mecánicas del tipo de punzonado, abrasión y corte.",
+  "mat.s6.fig":
+    "Resiliencia: el área bajo la parte elástica de la curva.",
+  "mat.s7.kicker":
+    "07 — Tipos de materiales",
+  "mat.s7.title":
+    "Materiales dúctiles, frágiles y plásticos",
+  "mat.s7.m1.t":
+    "Dúctiles",
+  "mat.s7.m1.d":
+    "Responden al diagrama de arriba y pasan por deformaciones importantes antes de la rotura, lo que permite prever la ruina de la estructura. Aceros, aluminio.",
+  "mat.s7.m2.t":
+    "Frágiles",
+  "mat.s7.m2.d":
+    "Sufren deformaciones menores antes de romperse: la tensión de proporcionalidad está muy cerca de la de rotura. Vidrio, hormigón simple, mármol.",
+  "mat.s7.m3.t":
+    "Plásticos",
+  "mat.s7.m3.d":
+    "Sufren grandes deformaciones para muy pequeños incrementos de carga, con poca elasticidad y grandes deformaciones permanentes. Algunos asfaltos, arcilla, lacre, y plásticos a determinadas temperaturas.",
+  "mat.s8.kicker":
+    "08 — Equivalencia",
+  "mat.s8.title":
+    "Ecuaciones de equivalencia",
+  "mat.s8.p1":
+    "Al reducir al baricentro G de una sección las fuerzas que actúan a un lado de ella se generan cuatro esfuerzos característicos: el normal N, el corte Q, el momento flexor {M}_F y el momento torsor {M}_T. Si existe uno solo la solicitación es simple; si hay varios, compuesta. En todos los casos el material es elástico, las tensiones están en el rango elástico y se cumple la ley de Hooke σ = {E}·ε.",
+  "mat.s8.p2":
+    "Los ejes: x es saliente de la sección, e {y} y {z} son las direcciones principales de inercia. {M}_T va según x, igual que la fuerza normal N ({N}_x). El corte Q está en el plano de la sección y se descompone en {Q}_y y {Q}_z; el momento flector actúa en general en un plano que no contiene a {y} ni a {z}, así que se descompone en {M}_Fy y {M}_Fz.",
+  "mat.s8.p3":
+    "Las tensiones son las que los producen: σ es normal a la sección y τ está contenida en su plano. Para cada elemento {dF} hay tres fuerzas elementales:",
+  "mat.s8.e1":
+    "sobre x: {dN} = σ·{dF}        sobre y: dQ_y = τ_xy·{dF}        sobre z: dQ_z = τ_xz·{dF}",
+  "mat.s8.p4":
+    "Integrando en toda la superficie F quedan las ecuaciones de equivalencia ({z} e {y} son las coordenadas del elemento de superficie):",
+  "mat.s8.q1":
+    "{N} = ∫ σ {dF}",
+  "mat.s8.q2":
+    "{Q}_y = ∫ τ_xy {dF}        {Q}_z = ∫ τ_xz {dF}",
+  "mat.s8.q3":
+    "{M}_T = ∫ (τ_xz·{y} − τ_xy·{z}) {dF}",
+  "mat.s8.q4":
+    "{M}_y = ∫ σ·{z} {dF}        {M}_z = ∫ σ·{y} {dF}",
+  "mat.s8.note":
+    "Dos detalles del apunte. El torsor está escrito con signo más, (τ_xy·{z} + τ_xz·{y}); con {y} y {z} las coordenadas de {dF}, el momento de las fuerzas de corte respecto de x es una diferencia. Y {M}_y y {M}_z están escritos con τ, pero son los momentos de las tensiones normales σ (los signos dependen de la convención de ejes).",
+  "mat.footer":
+    "Transcripto y ordenado del apunte “Propiedades de los materiales” de la cátedra; los diagramas se redibujaron.",
+  "rs.link":
+    "Resumen del curso",
+  "rs.title":
+    "Resumen del curso",
+  "rs.lead":
+    "Una hoja para estudiar: todas las fórmulas de las guías con sus unidades y para qué se usan, y las cinco preguntas de teoría con una respuesta modelo.",
+  "rs.footer":
+    "Resumen de las guías de este sitio; las fórmulas son las de los apuntes del curso (kg y cm).",
+  "rs.print":
+    "Imprimir",
+  "rs.s1.kicker":
+    "Fórmulas",
+  "rs.s1.title":
+    "Todo en una tabla",
+  "rs.s1.units":
+    "Unidades: kg y cm. J en cm⁴, W en cm³, σ y τ en kg/cm². J es ∫{y}²{dA}, por eso es longitud⁴.",
+  "rs.th.topic":
+    "Tema",
+  "rs.th.formula":
+    "Fórmula",
+  "rs.th.use":
+    "Se usa para",
+  "rs.t.axil":
+    "Axil",
+  "rs.u.axil":
+    "Tensión y alargamiento de una barra",
+  "rs.t.hooke":
+    "Hooke",
+  "rs.u.hooke":
+    "Zona elástica del ensayo; {E} = tg β",
+  "rs.t.safety":
+    "Coeficiente de seguridad",
+  "rs.u.safety":
+    "Tensión admisible, ν ≈ 2–4",
+  "rs.t.torsion":
+    "Torsión (circular)",
+  "rs.u.torsion":
+    "Ejes: tensión, ángulo de giro, dimensionado",
+  "rs.t.flexion":
+    "Flexión",
+  "rs.u.flexion":
+    "Verificar y dimensionar vigas; {W} = {J}/{y}_max",
+  "rs.t.shear":
+    "Corte en flexión",
+  "rs.u.shear":
+    "Tensión de corte en cada fibra; {S} = momento estático del área de un lado",
+  "rs.t.flecha":
+    "Flecha",
+  "rs.u.flecha":
+    "Curvatura de la elástica; 5/384 apoyada + uniforme, 1/48 carga central, 1/3 ménsula + carga en el extremo, 1/8 ménsula + uniforme; en una ménsula, f = ∫M·x dx/(E·J) con x desde el extremo libre",
+  "rs.t.pandeo":
+    "Pandeo",
+  "rs.u.pandeo":
+    "Barras comprimidas esbeltas; c = 2, 1, 0,7, 0,5; λ = {l}_0/i, i = √({J}/{A}), σ_k = π²E/λ²",
+  "rs.t.steiner":
+    "Steiner",
+  "rs.u.steiner":
+    "Inercia respecto de un eje paralelo al baricéntrico",
+  "rs.t.stress":
+    "Estado de tensión",
+  "rs.u.stress":
+    "Tensión sobre un plano cualquiera; las principales son las raíces de σ³ − {I}_1σ² + {I}_2σ − {I}_3 = 0",
+  "rs.s2.kicker":
+    "Teoría",
+  "rs.s2.title":
+    "Las cinco preguntas del parcial",
+  "rs.q1.t":
+    "Hipótesis de la torsión (eje circular)",
+  "rs.q1.a1":
+    "Las secciones planas siguen planas y circulares.",
+  "rs.q1.a2":
+    "Los radios siguen rectos al girar.",
+  "rs.q1.a3":
+    "La distancia entre secciones no cambia (no hay deformación longitudinal).",
+  "rs.q1.a4":
+    "Material elástico lineal (Hooke) y deformaciones pequeñas.",
+  "rs.q1.a5":
+    "Consecuencia: τ crece linealmente con ρ, de 0 en el centro al máximo en el borde.",
+  "rs.q2.t":
+    "Collignon–Jourawski",
+  "rs.q2.a1":
+    "Da la tensión de corte que produce el esfuerzo de corte Q en flexión: τ = {Q}·{S}/({J}·s).",
+  "rs.q2.a2":
+    "S es el momento estático, respecto del eje neutro, del área de un lado de la fibra estudiada; s es el ancho de la sección en esa fibra.",
+  "rs.q2.a3":
+    "Rectángulo: τ es parabólica, 0 en los bordes y máxima en el eje neutro, τ_max = 3Q/(2A).",
+  "rs.q2.a4":
+    "Doble T: casi todo el corte lo toma el alma.",
+  "rs.q3.t":
+    "Equilibrio estable, inestable e indiferente",
+  "rs.q3.a1":
+    "Estable, F < {F}_k: tras un pequeño empujón la barra vuelve a su posición.",
+  "rs.q3.a2":
+    "Indiferente, {F} = {F}_k: queda en cualquier posición cercana.",
+  "rs.q3.a3":
+    "Inestable, F > {F}_k: se aleja de la posición y pandea.",
+  "rs.q4.t":
+    "Ley de Hooke",
+  "rs.q4.a1":
+    "σ = {E}·ε: tensión y deformación son proporcionales hasta el límite de proporcionalidad σ_P.",
+  "rs.q4.a2":
+    "E es la pendiente de la recta ({E} = tg β) y mide la rigidez del material.",
+  "rs.q4.a3":
+    "Vale solo en la zona elástica.",
+  "rs.q5.t":
+    "Teorema de Steiner",
+  "rs.q5.a1":
+    "{J} = {J}_g + {A}·{d}²: la inercia respecto de un eje paralelo al baricéntrico es la baricéntrica más el área por la distancia al cuadrado.",
+  "rs.q5.a2":
+    "Sirve para secciones compuestas, donde cada parte tiene su baricentro lejos del eje común.",
+  "rs.q5.a3":
+    "De la fórmula sale que {J}_g es la mínima entre todos los ejes paralelos.",
+  "rs.f1":
+    "Eje circular: τ crece linealmente con ρ, de 0 en el centro a τ_max en el borde.",
+  "rs.f2":
+    "Sección rectangular: τ es parabólica, 0 en los bordes y τ_max = 3Q/(2A) en el eje neutro (E.N.). S es el área sombreada sobre la fibra estudiada y s su ancho.",
+  "rs.f3":
+    "Una bolita en un valle, sobre un plano y sobre una cima: equilibrio estable, indiferente e inestable ({F} <, = y > {F}_k en una barra).",
+  "rs.f4":
+    "Diagrama σ–ε: una recta hasta σ_P, de pendiente {E} = tg β.",
+  "rs.f5":
+    "Steiner: la inercia respecto del eje x, a distancia d del eje baricéntrico {x}_g, es {J}_x = {J}_g + {A}·{d}².",
+  "rs.fig.stable":
+    "Estable",
+  "rs.fig.indiff":
+    "Indiferente",
+  "rs.fig.unstable":
+    "Inestable",
+  "def.link":
+    "Definiciones",
+  "def.title":
+    "Definiciones",
+  "def.lead":
+    "Las definiciones de todas las guías juntas, agrupadas por tema: abrí las que necesites, o todas. La redacción está resumida pero conserva el sentido de los apuntes.",
+  "def.footer":
+    "Resumido de las guías de este sitio; cada grupo enlaza a la guía donde la definición se explica y se usa.",
+  "def.expand":
+    "Abrir todas",
+  "def.collapse":
+    "Cerrar todas",
+  "def.go":
+    "Ir a la guía →",
+  "def.g.pln":
+    "Superficies planas",
+  "def.g.mat":
+    "Propiedades de los materiales",
+  "def.g.tns":
+    "Estado de tensión",
+  "def.g.axl":
+    "Esfuerzo axil",
+  "def.g.flx":
+    "Flexión",
+  "def.g.shr":
+    "Corte en flexión",
+  "def.g.tor":
+    "Torsión",
+  "def.g.fla":
+    "Flecha",
+  "def.g.pnd":
+    "Pandeo",
+  "def.t.estatico":
+    "Momento estático",
+  "def.d.estatico":
+    "Producto del área de la superficie por la distancia de su baricentro a un eje: {S}_x = ∫ {y} {dA}. Se mide en cm³. Respecto de un eje baricéntrico vale cero.",
+  "def.t.baricentro":
+    "Baricentro",
+  "def.d.baricentro":
+    "Punto cuyas coordenadas son los momentos estáticos divididos por el área: {x}_g = {S}_y / {A}, {y}_g = {S}_x / {A}. Coincide con el centro de gravedad solo si el cuerpo es homogéneo y de espesor constante.",
+  "def.t.inercia":
+    "Momento de inercia",
+  "def.d.inercia":
+    "Integral de cada elemento de área por el cuadrado de su distancia a un eje: {J}_x = ∫ {y}² {dA}. Es siempre positivo y se mide en cm⁴.",
+  "def.t.centrifugo":
+    "Momento centrífugo",
+  "def.d.centrifugo":
+    "Integral de cada elemento de área por sus dos distancias a los ejes: {J}_xy = ∫ {x}·{y} {dA}. Puede ser positivo, negativo o nulo.",
+  "def.t.polar":
+    "Momento polar",
+  "def.d.polar":
+    "Integral de cada elemento de área por el cuadrado de su distancia a un punto: {J}_p = ∫ ρ² {dA} = {J}_x + {J}_y.",
+  "def.t.giro":
+    "Radio de giro",
+  "def.d.giro":
+    "Distancia {i} a la que habría que concentrar toda el área para obtener el mismo momento de inercia: {J} = {A}·{i}², o sea {i} = √({J}/{A}).",
+  "def.t.steiner":
+    "Teorema de Steiner (ejes paralelos)",
+  "def.d.steiner":
+    "El momento de inercia respecto de un eje cualquiera es el momento respecto del eje baricéntrico paralelo más el área por el cuadrado de la distancia entre los ejes: {J} = {J}_g + {A}·{d}². Por eso el momento baricéntrico es el menor de todos los ejes paralelos.",
+  "def.t.ppales":
+    "Ejes principales de inercia",
+  "def.d.ppales":
+    "Par de ejes perpendiculares respecto de los cuales el momento de inercia es máximo y mínimo; el momento centrífugo respecto de ellos es nulo. Si los dos momentos principales son iguales (círculo, cuadrado), todo par ortogonal por el baricentro es principal.",
+  "def.t.mppales":
+    "Momentos principales de inercia",
+  "def.d.mppales":
+    "Los momentos de inercia máximo y mínimo, calculados respecto de los ejes principales.",
+  "def.t.fvol":
+    "Fuerzas de volumen (de masa)",
+  "def.d.fvol":
+    "Actúan sobre cada partícula del cuerpo. Pueden ser gravitacionales, de inercia o electromagnéticas.",
+  "def.t.fsup":
+    "Fuerzas de superficie",
+  "def.d.fsup":
+    "Actúan sobre la superficie del cuerpo, como fuerzas de contacto o de presión. La presión {p} es la fuerza por unidad de superficie.",
+  "def.t.tension":
+    "Tensión",
+  "def.d.tension":
+    "Esfuerzo unitario: fuerza por unidad de superficie, en kg/cm², kN/cm² o T/m². Son las acciones mutuas entre las partículas del cuerpo, causadas por las fuerzas exteriores.",
+  "def.t.estado":
+    "Estado de tensión",
+  "def.d.estado":
+    "Conjunto de las tensiones ρ sobre los infinitos planos que pasan por un punto. Es triple o espacial si ρ tiene cualquier orientación, doble o plano si ρ se mantiene paralela a un plano, y simple o lineal si se mantiene paralela a una dirección.",
+  "def.t.defesp":
+    "Deformación específica",
+  "def.d.defesp":
+    "Alargamiento unitario: el alargamiento dividido por la longitud inicial, ε = Δ{l} / {l}. No tiene unidades.",
+  "def.t.defelas":
+    "Deformación elástica y plástica",
+  "def.d.defelas":
+    "Elástica: el cuerpo vuelve a su forma original al cesar el esfuerzo. Plástica: no vuelve, y queda deformado.",
+  "def.t.hooke":
+    "Ley de Hooke",
+  "def.d.hooke":
+    "En el tramo recto del diagrama σ–ε las tensiones son proporcionales a las deformaciones: σ = {E}·ε. El módulo de Young {E} es la pendiente de la recta.",
+  "def.t.sp":
+    "Límite de proporcionalidad σ_P",
+  "def.d.sp":
+    "Tensión hasta la cual el diagrama σ–ε es una recta. Por encima, las deformaciones crecen más que la tensión.",
+  "def.t.se":
+    "Límite de elasticidad σ_E",
+  "def.d.se":
+    "Tensión por encima de la cual las deformaciones pasan a ser permanentes.",
+  "def.t.sfl":
+    "Límite de fluencia σ_Fl",
+  "def.d.sfl":
+    "Tensión a la que el material se deforma sin aumento apreciable de la carga.",
+  "def.t.srot":
+    "Límite de rotura σ_Rot",
+  "def.d.srot":
+    "Máxima tensión que puede resistir el material.",
+  "def.t.seguridad":
+    "Coeficiente de seguridad",
+  "def.d.seguridad":
+    "Número ν (de 2 a 4 en el apunte) por el que se divide la tensión de elasticidad para obtener la tensión admisible: σ_adm = σ_E / ν.",
+  "def.t.rigidez":
+    "Rigidez",
+  "def.d.rigidez":
+    "Propiedad de oponerse a la deformación; aumenta con el módulo de Young {E}.",
+  "def.t.ductilidad":
+    "Ductilidad",
+  "def.d.ductilidad":
+    "Deformabilidad en el período plástico o anelástico.",
+  "def.t.resiliencia":
+    "Resiliencia",
+  "def.d.resiliencia":
+    "Capacidad de restituir la energía almacenada por deformación en el período elástico. Es el área bajo la curva σ–ε en ese período: hasta σ_e vale {U} = ½·σ_e² / {E}.",
+  "def.t.tenacidad":
+    "Tenacidad",
+  "def.d.tenacidad":
+    "Capacidad de absorber energía en el período anelástico o de grandes deformaciones. Es el área bajo la curva σ–ε hasta la rotura.",
+  "def.t.dureza":
+    "Dureza",
+  "def.d.dureza":
+    "Capacidad de resistir acciones mecánicas como el punzonado, la abrasión y el corte.",
+  "def.t.tipos":
+    "Material dúctil, frágil y plástico",
+  "def.d.tipos":
+    "Dúctil: tiene grandes deformaciones antes de romperse, lo que permite prever la ruina (aceros, aluminio). Frágil: se deforma poco antes de romperse, con σ_P muy cerca de σ_Rot (vidrio, hormigón simple, mármol). Plástico: grandes deformaciones para incrementos muy pequeños de carga, con poca elasticidad (algunos asfaltos, arcilla).",
+  "def.t.tensor":
+    "Tensor de tensiones",
+  "def.d.tensor":
+    "Conjunto de las tensiones sobre tres planos perpendiculares por un punto: cada plano aporta una tensión normal y dos tangenciales. Es simétrico (τ_xy = τ_yx, …) y tiene seis componentes independientes.",
+  "def.t.vector":
+    "Vector tensión",
+  "def.d.vector":
+    "ρ = {T}·{n}: el tensor aplicado a la normal {n} del plano. Su componente según {n} es la tensión normal σ y lo que queda es la tangencial τ, con |ρ|² = σ² + τ².",
+  "def.t.invariantes":
+    "Invariantes",
+  "def.d.invariantes":
+    "{I}_1, {I}_2 e {I}_3: combinaciones de las componentes del tensor que no cambian al rotar los ejes. Son las funciones simétricas de las tensiones principales.",
+  "def.t.tppales":
+    "Tensiones y planos principales",
+  "def.d.tppales":
+    "Los planos principales son los tres planos perpendiculares sobre los que la tensión tangencial es nula; la tensión normal sobre ellos es una tensión principal. Son las raíces de σ³ − {I}_1·σ² + {I}_2·σ − {I}_3 = 0.",
+  "def.t.clasif":
+    "Clasificación del estado",
+  "def.d.clasif":
+    "Triple o espacial si {I}_3 ≠ 0; doble o plano si {I}_3 = 0 e {I}_2 ≠ 0; simple o uniaxial si solo {I}_1 ≠ 0.",
+  "def.t.fsimple":
+    "Flexión simple y flexión pura",
+  "def.d.fsimple":
+    "Flexión simple: las fuerzas a ambos lados de la sección se reducen, en su baricentro, a dos pares normales al plano de la sección, con o sin esfuerzo de corte. Sin corte se llama flexión pura; con corte, flexión y corte.",
+  "def.t.plano":
+    "Plano de flexión y línea de fuerzas",
+  "def.d.plano":
+    "El plano de flexión es el plano en el que actúan los pares flexores. La línea de fuerzas es la traza de ese plano con el plano de la sección.",
+  "def.t.normal":
+    "Flexión normal y oblicua",
+  "def.d.normal":
+    "Es normal (recta) si la línea de fuerzas coincide con un eje principal de inercia de la sección, y oblicua si forma un ángulo α con él.",
+  "def.t.en":
+    "Eje neutro (E.N.)",
+  "def.d.en":
+    "Fibra que no cambia de longitud al flexar y por lo tanto no tiene tensión (σ = 0). Es un eje baricéntrico de la sección.",
+  "def.t.w":
+    "Módulo resistente {W}",
+  "def.d.w":
+    "{W} = {J} / {v}, con {v} la distancia del eje neutro a la fibra más alejada. La tensión máxima es σ_max = {M} / {W}. Se mide en cm³.",
+  "def.t.cpuro":
+    "Corte puro",
+  "def.d.cpuro":
+    "Se da, exacta o aproximadamente, en la cizalladura y en remaches o tornillos que unen chapas: la tensión se toma uniforme en el área {A} que resiste, τ = {Q} / {A}.",
+  "def.t.corte":
+    "Esfuerzo de corte {Q}",
+  "def.d.corte":
+    "Proyección, perpendicular al eje de la barra, de la resultante de todas las fuerzas que actúan a la izquierda de la sección. A la derecha es igual y opuesta.",
+  "def.t.cauchy":
+    "Teorema de Cauchy",
+  "def.d.cauchy":
+    "En dos planos perpendiculares, las componentes de las tensiones tangenciales normales a la arista común son iguales, y las dos se acercan a la arista o las dos se alejan de ella: τ_xy = τ_yx.",
+  "def.t.resbal":
+    "Tensiones de resbalamiento",
+  "def.d.resbal":
+    "Tensiones tangenciales en planos horizontales de una viga con corte y momento: el corte en planos verticales implica corte en planos horizontales, y viceversa. Están presentes en todas las fibras.",
+  "def.t.jour":
+    "Fórmula de Jourawski–Colignon",
+  "def.d.jour":
+    "τ_m = {Q}·{S}_x / ({J}_x·{s}): valor medio de la tensión tangencial a lo largo de un corte de ancho {s}. {S}_x es el momento estático, respecto del eje neutro, de la parte de la sección a un lado del corte.",
+  "def.t.tsimple":
+    "Torsión simple y momento torsor",
+  "def.d.tsimple":
+    "Un sólido trabaja a torsión simple si las fuerzas de un lado de la sección se reducen a una única cupla situada en el plano de la sección. Su momento {M}_t es el momento torsor.",
+  "def.t.htor":
+    "Hipótesis de la torsión circular",
+  "def.d.htor":
+    "El eje geométrico sigue recto, las demás fibras longitudinales se transforman en hélices, y cada sección recta permanece plana y perpendicular al eje: solo gira en torno a su centro. Por eso τ es proporcional a la distancia ρ al centro, nula en el centro y máxima en el borde.",
+  "def.t.g":
+    "Módulo de elasticidad transversal {G}",
+  "def.d.g":
+    "Vincula la distorsión con la tensión tangencial (ley de Hooke al corte). Se mide en kg/cm² y {G} = 0,385·{E}, cerca de 0,4·{E} para el acero.",
+  "def.t.unitario":
+    "Ángulo unitario de torsión",
+  "def.d.unitario":
+    "φ/{l} = {M}_t / ({G}·{J}_0): ángulo de giro por unidad de longitud. El producto {G}·{J}_0 es el módulo de rigidez a la torsión.",
+  "def.t.axil":
+    "Tracción o compresión simple",
+  "def.d.axil":
+    "Una barra trabaja así cuando la carga se aplica en el baricentro y vale {N} en toda la sección, con {Q} = {M}_f = {M}_t = 0. La tensión es uniforme: σ = {N} / {A}.",
+  "def.t.stvenant":
+    "Principio de Saint-Venant",
+  "def.d.stvenant":
+    "Lejos de los extremos, la sección normal al eje se mantiene plana y paralela a sí misma luego de la deformación, por lo tanto no hay concentración de tensiones.",
+  "def.t.equil":
+    "Equilibrio estable, indiferente e inestable",
+  "def.d.equil":
+    "Con {F} < {F}_k, al cesar la carga transversal {H} la barra vuelve a su posición recta (estable). Con {F} = {F}_k queda en la posición desviada (indiferente). Con {F} > {F}_k sigue deformándose hasta la rotura (inestable).",
+  "def.t.fk":
+    "Carga crítica de pandeo {F}_k",
+  "def.d.fk":
+    "Valor de la fuerza con el que se inicia el pandeo; corresponde al equilibrio indiferente. Según Euler, {F}_k = π²·{E}·{J}_min / (c²·{l}²).",
+  "def.t.esbeltez":
+    "Esbeltez λ",
+  "def.d.esbeltez":
+    "λ = {l}_0 / {i}_min. Cuanto mayor es la esbeltez, menor es la tensión crítica σ_k = π²·{E} / λ² (hipérbola de Euler).",
+  "def.t.l0":
+    "Longitud equivalente y coeficiente {c}",
+  "def.d.l0":
+    "{l}_0 = {c}·{l} es la distancia entre dos puntos de inflexión consecutivos de la barra deformada. {c} vale 2, 1, 0,7 y 0,5 para ménsula, articulada, empotrada–articulada y empotrada–empotrada.",
+  "def.t.hipotesis":
+    "Hipótesis de Euler",
+  "def.d.hipotesis":
+    "Ambos extremos articulados, sin rozamiento, uno de ellos guiado según el eje de la barra; la fuerza de compresión actúa exactamente en el eje; el material es elástico y homogéneo ({E} constante); no actúan fuerzas laterales.",
+  "def.t.curvatura":
+    "Curvatura",
+  "def.d.curvatura":
+    "1/ρ = {M} / ({E}·{J}): inversa del radio de curvatura ρ del eje de la viga.",
+  "def.t.flecha":
+    "Flecha y línea elástica",
+  "def.d.flecha":
+    "La línea elástica es la forma que toma el eje de la viga al flexar. Integrar una vez su ecuación da la pendiente θ({z}) y dos veces, la flecha {y}({z}), el desplazamiento del eje.",
 };
 
 const translations: Record<Language, Record<TranslationKey, string>> = {

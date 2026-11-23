@@ -19,8 +19,13 @@ const LINKS: { href: string; labelKey: TranslationKey }[] = [
   { href: "/torsion", labelKey: "tor.link" },
   { href: "/axil", labelKey: "axl.link" },
   { href: "/superficies-planas", labelKey: "pln.link" },
+  { href: "/propiedades-materiales", labelKey: "mat.link" },
+  { href: "/estado-de-tension", labelKey: "tns.link" },
+  { href: "/pandeo", labelKey: "pnd.link" },
   { href: "/flecha", labelKey: "fla.link" },
   { href: "/corte-en-flexion", labelKey: "shr.link" },
+  { href: "/resumen", labelKey: "rs.link" },
+  { href: "/definiciones", labelKey: "def.link" },
 ];
 
 export default function NavMenu() {
@@ -65,7 +70,7 @@ export default function NavMenu() {
       {open && (
         <div
           role="menu"
-          className="absolute top-full left-0 z-20 mt-1 min-w-[180px] overflow-hidden rounded border border-stone-200 bg-white shadow-lg dark:border-stone-700 dark:bg-stone-800"
+          className="absolute top-full left-0 z-20 mt-1 max-h-[calc(100dvh-4rem)] min-w-[180px] overflow-y-auto rounded border border-stone-200 bg-white shadow-lg dark:border-stone-700 dark:bg-stone-800"
         >
           {LINKS.map(({ href, labelKey }) => (
             <Link
