@@ -145,10 +145,12 @@ describe("/definiciones", () => {
     const hi = fl.querySelector('path[stroke="#0B8A8A"]')!;
     expect(hi.getAttribute("d")).toMatch(/^M 112 72 l 8,-4 l 8,5/);
     expect(fl.querySelector('line[stroke="#0B8A8A"]')).toBeNull();
-    // ductility is an interval of strain: a band over ε (a rect), no filled area under the curve
+    // ductility is the plastic period: the region under the curve from σE to the rupture (a filled path, no rect)
     const duct = screen.getByTestId("def-mat.ductilidad").querySelector("figure svg")!;
-    expect(duct.querySelectorAll("rect")).toHaveLength(1);
-    expect(duct.querySelectorAll("path[fill]:not([fill=none])")).toHaveLength(0);
+    expect(duct.querySelectorAll("rect")).toHaveLength(0);
+    const plastic = duct.querySelectorAll("path[fill]:not([fill=none])");
+    expect(plastic).toHaveLength(1);
+    expect(plastic[0].getAttribute("d")).toMatch(/^M 96 82 .* L 318 170 L 96 170 Z$/);
     // resilience and toughness are areas: a filled path under the curve
     const fills = (id: string) => screen.getByTestId(`def-mat.${id}`).querySelectorAll("figure svg path[fill]:not([fill=none])").length;
     expect(fills("resiliencia")).toBe(1);

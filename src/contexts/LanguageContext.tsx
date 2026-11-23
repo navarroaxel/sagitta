@@ -2075,7 +2075,7 @@ const EN = {
   "def.f.defelas":
     "In the elastic zone the strain is recovered; in the plastic one, unloading along a parallel to the straight line leaves a permanent strain.",
   "def.f.ductilidad":
-    "Ductility: how much strain the material has in the plastic period, up to rupture: the width of the shaded band on the ε axis (an interval of strain, not an area: the area is the toughness).",
+    "Ductility: the plastic period, from the elastic limit σ_E to the rupture: the shaded region under the curve (its width on the ε axis is the strain the material can take).",
   "def.f.resiliencia":
     "Resilience: the area under the curve in the elastic period, U = ½·σ_e² / E.",
   "def.f.tenacidad":
@@ -4303,7 +4303,7 @@ const ES: Record<TranslationKey, string> = {
   "def.f.defelas":
     "En la zona elástica la deformación se recupera; en la plástica, al descargar siguiendo una paralela a la recta queda una deformación permanente.",
   "def.f.ductilidad":
-    "Ductilidad: cuánta deformación tiene el material en el período plástico, hasta la rotura: el ancho de la banda sombreada sobre el eje ε (es un intervalo de deformación, no un área: el área es la tenacidad).",
+    "Ductilidad: el período plástico, desde el límite elástico σ_E hasta la rotura: la zona sombreada bajo la curva (su ancho sobre el eje ε es la deformación que aguanta el material).",
   "def.f.resiliencia":
     "Resiliencia: el área bajo la curva en el período elástico, U = ½·σ_e² / E.",
   "def.f.tenacidad":

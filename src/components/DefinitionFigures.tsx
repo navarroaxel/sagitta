@@ -119,8 +119,8 @@ export function StressStrainFigure({ focus, label }: { focus: StressStrainFocus;
       {/* highlighted areas first, under the curve */}
       {focus === "resilience" && <path d={ELASTIC_AREA} fill={TENSION} fillOpacity="0.3" />}
       {focus === "toughness" && <path d={`${CURVE} L 318 170 Z`} fill={TENSION} fillOpacity="0.25" />}
-      {/* ductility is a strain range, not an area under the curve (that is toughness): a band over the ε interval */}
-      {focus === "ductility" && <rect x={E[0]} y="14" width={Z[0] - E[0]} height="156" fill={TENSION} fillOpacity="0.12" />}
+      {/* ductility: the plastic period, the region under the curve from the elastic limit to the rupture */}
+      {focus === "ductility" && <path d={PLASTIC_AREA} fill={TENSION} fillOpacity="0.28" />}
       {focus === "elastic" && (
         <g>
           <path d={ELASTIC_AREA} fill={TENSION} fillOpacity="0.3" />
