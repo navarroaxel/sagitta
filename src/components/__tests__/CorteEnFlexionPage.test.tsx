@@ -73,6 +73,10 @@ describe("/corte-en-flexion", () => {
     const paths4 = Array.from(step(4).querySelectorAll("svg path[stroke='#C0392B']")).map((p) => p.getAttribute("d")!);
     expect(paths4[0]).toMatch(/^M 10 92 L 80 92$/); // the straight directrix
     expect(paths4[1]).toMatch(/ C /); // the curved one is a bezier, not a line
+    // dx is marked along the axis, from face 1 (front, with s) to face 2 (back), in both blocks
+    expect(text(4).match(/dx/g)).toHaveLength(2);
+    expect(text(4)).toMatch(/1.*2.*dx/);
+    expect(step(4).textContent).toMatch(/dx is measured along the axis, between face 1/);
     // a surface (dashed outline) per panel, and each one is pushed by the same vector along the axis (+48, −34)
     const surfaces = Array.from(step(4).querySelectorAll("svg path[stroke-dasharray='3 2']")).map((p) => p.getAttribute("d")!);
     expect(surfaces).toHaveLength(2);

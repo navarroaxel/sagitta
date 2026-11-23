@@ -1158,7 +1158,7 @@ const EN = {
   "shr.steps.3":
     "We cut the slice with a surface parallel to the axis, at a distance y from the neutral axis. From the side it is a line; on the cross-section it is the curve of width s. Above it stays the part Ω.",
   "shr.steps.4":
-    "The cut surface in perspective: the curve s of the cross-section pushed along dx, parallel to the axis. That is what “cylindrical” means here (any curve, not only a circle). If s is a straight line (rectangle, double T) the surface is a plane, a particular case; if it is any curve, the surface is curved. In both, the part Ω has the same shape on face 1 and on face 2.",
+    "The cut surface in perspective: the curve s of the cross-section pushed along dx, parallel to the axis. That is what “cylindrical” means here (any curve, not only a circle). If s is a straight line (rectangle, double T) the surface is a plane, a particular case; if it is any curve, the surface is curved. In both, the part Ω has the same shape on face 1 and on face 2. The distance dx is measured along the axis, between face 1 (the front one, where the curve s is drawn) and face 2 (the back one).",
   "shr.steps.side":
     "side view",
   "shr.steps.section":
@@ -3394,7 +3394,7 @@ const ES: Record<TranslationKey, string> = {
   "shr.steps.3":
     "Cortamos la rebanada con una superficie paralela al eje, a distancia y del eje neutro. De costado se ve como una línea; en la sección transversal es la curva de ancho s. Arriba queda la parte Ω.",
   "shr.steps.4":
-    "La superficie del corte en perspectiva: la curva s de la sección transversal desplazada a lo largo de dx, paralela al eje. Eso es lo que significa “cilíndrica” acá (una curva cualquiera, no solo un círculo). Si s es una recta (rectángulo, doble T) la superficie es un plano, un caso particular; si es una curva cualquiera, la superficie es curva. En los dos casos la parte Ω tiene la misma forma en la cara 1 y en la cara 2.",
+    "La superficie del corte en perspectiva: la curva s de la sección transversal desplazada a lo largo de dx, paralela al eje. Eso es lo que significa “cilíndrica” acá (una curva cualquiera, no solo un círculo). Si s es una recta (rectángulo, doble T) la superficie es un plano, un caso particular; si es una curva cualquiera, la superficie es curva. En los dos casos la parte Ω tiene la misma forma en la cara 1 y en la cara 2. La distancia dx se mide a lo largo del eje, entre la cara 1 (la de frente, donde está dibujada la curva s) y la cara 2 (la de atrás).",
   "shr.steps.side":
     "vista lateral",
   "shr.steps.section":

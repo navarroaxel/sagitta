@@ -156,6 +156,15 @@ function Step4({ label, plane, curved, axis }: { label: string; plane: string; c
         <circle cx={start[0]} cy={start[1]} r="2" fill={LOAD} />
         <Txt x={x0 + 35} y={top + 12} textAnchor="middle" fill={TENSION} fontWeight="600">Ω</Txt>
         <Txt x={x0 + 35} y={kind === "plane" ? 108 : 124} textAnchor="middle" fill={LOAD}>s</Txt>
+        {/* which face is which, and dx: the distance between face 1 (front, with the curve s) and face 2 (back) */}
+        <Txt x={x0 - 4} y={top + 2} textAnchor="end">1</Txt>
+        <Txt x={x1 + D[0] + 8} y={top + D[1] + 8}>2</Txt>
+        <g stroke={INK} strokeWidth="1.2">
+          <line x1={x1 + 8} y1={bot + 8} x2={x1 + 8 + D[0]} y2={bot + 8 + D[1]} />
+          <line x1={x1 + 3} y1={bot + 13} x2={x1 + 13} y2={bot + 3} />
+          <line x1={x1 + 3 + D[0]} y1={bot + 13 + D[1]} x2={x1 + 13 + D[0]} y2={bot + 3 + D[1]} />
+        </g>
+        <Txt x={x1 + 10 + D[0] / 2} y={bot + 14 + D[1] / 2 + 6} fontSize="11">dx</Txt>
         <Txt x={x0 - 6} y="166" fontSize="11">{kind === "plane" ? plane : curved}</Txt>
       </g>
     );
