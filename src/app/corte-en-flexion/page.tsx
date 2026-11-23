@@ -39,10 +39,14 @@ function CauchySVG() {
   );
 }
 
-// Jourawski: slice dx between sections 1 and 2; the force dN on the part Ω above the cut is balanced by dT.
+// Jourawski: slice dx between sections 1 and 2 in oblique (cabinet) perspective, x along the beam, y up, depth up-right.
+// The horizontal cut leaves the part Ω on top; its force dN is balanced by dT on the cut surface.
 function SliceSVG() {
   const { t } = useLanguage();
   const tick = (x: number) => <line x1={x} y1="164" x2={x} y2="176" stroke={INK} strokeWidth="1.5" />;
+  const force = (x1: number, y1: number, x2: number, y2: number) => (
+    <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={LOADC} strokeWidth="2.5" markerEnd="url(#shr-arr-b)" />
+  );
   return (
     <svg viewBox="0 0 360 195" className="h-auto w-full" role="img" aria-label={t("shr.s3.fig")}>
       <defs>
@@ -50,26 +54,45 @@ function SliceSVG() {
           <path d="M 0 0 L 10 5 L 0 10 z" fill={LOADC} />
         </marker>
       </defs>
-      <rect x="90" y="30" width="160" height="120" fill="none" stroke={INK} strokeWidth="1.5" />
-      <rect x="90" y="30" width="160" height="32" fill={TEAL} fillOpacity="0.25" />
-      <line x1="80" y1="92" x2="260" y2="92" stroke={INK} strokeWidth="1" strokeDasharray="5 3" />
-      <line x1="90" y1="62" x2="250" y2="62" stroke={INK} strokeWidth="1.5" strokeDasharray="2 2" />
-      <line x1="90" y1="46" x2="56" y2="46" stroke={LOADC} strokeWidth="2.5" markerEnd="url(#shr-arr-b)" />
-      <line x1="250" y1="46" x2="294" y2="46" stroke={LOADC} strokeWidth="2.5" markerEnd="url(#shr-arr-b)" />
-      <line x1="215" y1="72" x2="120" y2="72" stroke={LOADC} strokeWidth="2.5" markerEnd="url(#shr-arr-b)" />
-      <line x1="232" y1="62" x2="232" y2="92" stroke={INK} strokeWidth="1" />
-      <line x1="90" y1="164" x2="250" y2="164" stroke={INK} strokeWidth="1" />
-      {tick(90)}
-      {tick(250)}
-      <text x="90" y="22" fontSize="12" textAnchor="middle" fill={INK}>1</text>
-      <text x="250" y="22" fontSize="12" textAnchor="middle" fill={INK}>2</text>
-      <text x="170" y="52" fontSize="12" textAnchor="middle" fill={INK}>Ω</text>
-      <text x="52" y="40" fontSize="12" textAnchor="end" fill={INK}>N</text>
-      <text x="298" y="50" fontSize="12" fill={INK}>N + dN</text>
-      <text x="168" y="86" fontSize="11" textAnchor="middle" fill={LOADC}>dT</text>
-      <text x="238" y="80" fontSize="12" fill={INK}>y</text>
-      <text x="74" y="96" fontSize="11" textAnchor="end" fill={INK}>E.N.</text>
-      <text x="170" y="188" fontSize="12" textAnchor="middle" fill={INK}>dx</text>
+      {/* hidden edges */}
+      <g stroke={INK} strokeWidth="1" strokeDasharray="3 3" fill="none" opacity="0.5">
+        <line x1="106" y1="24" x2="106" y2="124" />
+        <line x1="106" y1="124" x2="246" y2="124" />
+        <line x1="70" y1="150" x2="106" y2="124" />
+      </g>
+      {/* part Ω: front, top and right strips above the cut */}
+      <polygon points="70,50 210,50 210,80 70,80" fill={TEAL} fillOpacity="0.2" />
+      <polygon points="210,50 246,24 246,54 210,80" fill={TEAL} fillOpacity="0.3" />
+      <polygon points="70,50 210,50 246,24 106,24" fill={TEAL} fillOpacity="0.1" />
+      {/* the cut surface, inside the block */}
+      <polygon points="70,80 210,80 246,54 106,54" fill={TEAL} fillOpacity="0.28" stroke={INK} strokeWidth="1" strokeDasharray="2 2" />
+      {/* visible faces */}
+      <rect x="70" y="50" width="140" height="100" fill="none" stroke={INK} strokeWidth="1.5" />
+      <polygon points="70,50 210,50 246,24 106,24" fill="none" stroke={INK} strokeWidth="1.5" />
+      <polygon points="210,50 246,24 246,124 210,150" fill="none" stroke={INK} strokeWidth="1.5" />
+      <line x1="70" y1="110" x2="210" y2="110" stroke={INK} strokeWidth="1" strokeDasharray="5 3" />
+      {/* N on section 1 (left, hidden face) and N + dN on section 2 (right face) over Ω */}
+      {force(81, 57, 47, 57)}
+      {force(95, 47, 61, 47)}
+      {force(221, 57, 265, 57)}
+      {force(235, 47, 279, 47)}
+      {/* dT on the cut surface, opposite to dN */}
+      {force(196, 67, 126, 67)}
+      <line x1="200" y1="80" x2="200" y2="110" stroke={INK} strokeWidth="1" />
+      <line x1="196" y1="80" x2="204" y2="80" stroke={INK} strokeWidth="1" />
+      <line x1="196" y1="110" x2="204" y2="110" stroke={INK} strokeWidth="1" />
+      <line x1="70" y1="164" x2="210" y2="164" stroke={INK} strokeWidth="1" />
+      {tick(70)}
+      {tick(210)}
+      <text x="106" y="14" fontSize="12" textAnchor="middle" fill={INK}>1</text>
+      <text x="246" y="14" fontSize="12" textAnchor="middle" fill={INK}>2</text>
+      <text x="100" y="74" fontSize="12" textAnchor="middle" fill={INK}>Ω</text>
+      <text x="40" y="52" fontSize="12" textAnchor="end" fill={INK}>N</text>
+      <text x="284" y="51" fontSize="12" fill={INK}>N + dN</text>
+      <text x="160" y="77" fontSize="11" textAnchor="middle" fill={LOADC}>dT</text>
+      <text x="208" y="99" fontSize="12" fill={INK}>y</text>
+      <text x="64" y="114" fontSize="11" textAnchor="end" fill={INK}>E.N.</text>
+      <text x="140" y="188" fontSize="12" textAnchor="middle" fill={INK}>dx</text>
     </svg>
   );
 }
