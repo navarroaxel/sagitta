@@ -1148,19 +1148,45 @@ const EN = {
   "shr.s2.fig":
     "Cauchy: on two perpendicular planes the shear stresses τ_xy and τ_yx are equal; both arrows point towards the common edge (here the top right) or both away from it.",
   "shr.s3.fig":
-    "Slice {dx} of the beam: the normal stresses give N on section 1 and N + {dN} on section 2 over the hatched area Ω, at distance {y} from the neutral axis; the difference {dN} is balanced by the shear force {dT} on the cut.",
+    "Slice {dx} of the beam: the normal stresses give {N}_Ω on section 1 and {N}_Ω + {dN}_Ω on section 2 over the hatched area Ω, at distance {y} from the neutral axis; the difference {dN}_Ω is balanced by the shear force {dT} on the cut.",
+  "shr.steps.title":
+    "Step by step: the cuts we make to the beam",
+  "shr.steps.1":
+    "We cut the beam with two sections, 1 and 2, a distance dx apart. The slice is in equilibrium with M and Q on face 1 and M + dM and Q on face 2: the shear hardly changes over dx, but the moment grows by dM = Q·dx.",
+  "shr.steps.2":
+    "The moments give linear normal stresses, zero at the neutral axis: σ = M·y/J_x on face 1 and σ + dσ = (M + dM)·y/J_x on face 2, a little larger.",
+  "shr.steps.3":
+    "We cut the slice with a surface parallel to the axis, at a distance y from the neutral axis. From the side it is a line; on the cross-section it is the curve of width s. Above it stays the part Ω.",
+  "shr.steps.4":
+    "The cut surface in perspective: the curve s of the cross-section pushed along dx, parallel to the axis. That is what “cylindrical” means here (any curve, not only a circle). If s is a straight line (rectangle, double T) the surface is a plane, a particular case; if it is any curve, the surface is curved. In both, the part Ω has the same shape on face 1 and on face 2. The distance dx is measured along the axis, between face 1 (the front one, where the curve s is drawn) and face 2 (the back one). The small τ are the shear stresses: on the cut surface they are parallel to the axis (they are what balances {dN}_Ω), and on the section they are perpendicular to the curve s, both pointing away from their common edge (Cauchy).",
+  "shr.steps.side":
+    "side view",
+  "shr.steps.section":
+    "cross-section",
+  "shr.steps.5":
+    "We isolate the part Ω: the normal stresses on it give {N}_Ω on face 1 and {N}_Ω + {dN}_Ω on face 2 (it is not the same force because the moment changed, dM = Q·dx), and the shear force dT on the cut balances the difference, dT = {dN}_Ω.",
+  "shr.steps.plane":
+    "straight s: a plane",
+  "shr.steps.curved":
+    "any curve s: curved surface",
+  "shr.steps.axis":
+    "axis",
   "shr.s3.kicker":
     "03 — Jourawski",
   "shr.s3.title":
     "The Jourawski–Colignon formula",
   "shr.s3.p1":
     "The existence of shear produces tangential stresses in the plane of the section. Take a beam of constant section and a slice of length {dx} between sections 1 and 2. Because of bending, at a distance {y} from the neutral axis the stress is σ = {M}·{y}/{J}_x on section 1 and σ + dσ = ({M} + {dM})·{y}/{J}_x on section 2.",
+  "shr.s3.why":
+    "Not in the notes, but it is what explains why there is shear at all: {N}_Ω (written N in the notes) is the force given by the normal stresses on the part Ω only (not the axial force of the bar, which is zero in bending), and {N}_Ω = ({M}/{J}_x)·{S}_x. Between faces 1 and 2 the moment goes from {M} to {M} + {dM}, and that change is the shear force: {dM} = {Q}·{dx}. So {dN}_Ω = ({dM}/{J}_x)·{S}_x = {Q}·{dx}·{S}_x/{J}_x is not zero because {Q} is not zero. In pure bending ({Q} = 0) the two forces are equal, {dN}_Ω = 0, no force {dT} is needed on the cut and there is no shear stress.",
+  "shr.s3.why.ex":
+    "Example: rectangle 10 × 20 cm, cut at y = 5 cm above the neutral axis: S_x = 10·5·7.5 = 375 cm³, J_x = 10·20³/12 = 6 667 cm⁴. With M = 100 000 kg·cm the part Ω carries {N}_Ω ≈ 5 625 kg; with M + dM = 101 000 kg·cm, {N}_Ω + {dN}_Ω ≈ 5 681 kg. The difference {dN}_Ω ≈ 56 kg is what dT must balance ({dN}_Ω = dM·S_x/J_x = 1 000·375/6 667).",
   "shr.s3.p2":
-    "Now cut off part of the slice by a cylindrical surface of width s. On the hatched part (area Ω) the normal stresses give a force N on section 1 and N + {dN} on section 2; both are coaxial and their resultant is",
+    "Now cut off part of the slice by a cylindrical surface of width s. On the hatched part (area Ω) the normal stresses give a force {N}_Ω on section 1 and {N}_Ω + {dN}_Ω on section 2; both are coaxial and their resultant is",
   "shr.s3.e1":
-    "{dN} = ∫Ω ({dM}/{J}_x)·{y} dΩ",
+    "{dN}_Ω = ∫Ω ({dM}/{J}_x)·{y} dΩ",
   "shr.s3.p3":
-    "That force tends to slide the part above the surface against the rest. Tangential stresses τ on the separating surface oppose it; they are parallel to the axis and vary continuously. With s the length of the curve where the surface meets the section, {dT} = {dx}·∫τ {ds}, and equilibrium requires {dT} = {dN}:",
+    "That force tends to slide the part above the surface against the rest. Tangential stresses τ on the separating surface oppose it; they are parallel to the axis and vary continuously. With s the length of the curve where the surface meets the section, {dT} = {dx}·∫τ {ds}, and equilibrium requires {dT} = {dN}_Ω:",
   "shr.s3.e2":
     "({dM}/{J}_x)·∫Ω {y} dΩ = {dx}·∫s τ {ds}",
   "shr.s3.p4":
@@ -1767,7 +1793,7 @@ const EN = {
   "rs.title":
     "Course summary",
   "rs.lead":
-    "One page to study from: every formula of the guides with its units and use, and the five theory questions with a model answer.",
+    "One page to study from: the formulas of every guide with their units and use, and the five theory questions with a model answer (the glossary's own text and figure). Each row and each question links to its guide and its definitions.",
   "rs.footer":
     "Summary of the guides of this site; the formulas are the ones of the course notes (kg and cm).",
   "rs.print":
@@ -1828,62 +1854,6 @@ const EN = {
     "Theory",
   "rs.s2.title":
     "The five exam questions",
-  "rs.q1.t":
-    "Hypotheses of torsion (circular shaft)",
-  "rs.q1.a1":
-    "Plane sections stay plane and circular.",
-  "rs.q1.a2":
-    "Radii stay straight when they turn.",
-  "rs.q1.a3":
-    "The distance between sections does not change (no longitudinal strain).",
-  "rs.q1.a4":
-    "Elastic linear material (Hooke) and small deformations.",
-  "rs.q1.a5":
-    "Consequence: τ grows linearly with ρ, from 0 at the centre to the maximum at the edge.",
-  "rs.q2.t":
-    "Collignon–Jourawski",
-  "rs.q2.a1":
-    "It gives the shear stress that the shear force Q produces in bending: τ = {Q}·{S}/({J}·s).",
-  "rs.q2.a2":
-    "S is the static moment, about the neutral axis, of the area on one side of the fibre studied; s is the width of the section at that fibre.",
-  "rs.q2.a3":
-    "Rectangle: τ is parabolic, 0 at the edges and maximum at the neutral axis, τ_max = 3Q/(2A).",
-  "rs.q2.a4":
-    "Double T: almost all the shear is carried by the web.",
-  "rs.q3.t":
-    "Stable, unstable and indifferent equilibrium",
-  "rs.q3.a1":
-    "Stable, F < {F}_k: after a small push the bar goes back to its position.",
-  "rs.q3.a2":
-    "Indifferent, {F} = {F}_k: it stays in any nearby position.",
-  "rs.q3.a3":
-    "Unstable, F > {F}_k: it moves away from the position and buckles.",
-  "rs.q4.t":
-    "Hooke's law",
-  "rs.q4.a1":
-    "σ = {E}·ε: stress and strain are proportional up to the proportionality limit σ_P.",
-  "rs.q4.a2":
-    "E is the slope of the straight line ({E} = tg β) and measures the stiffness of the material.",
-  "rs.q4.a3":
-    "It holds only in the elastic zone.",
-  "rs.q5.t":
-    "Steiner's theorem",
-  "rs.q5.a1":
-    "{J} = {J}_g + {A}·{d}²: the inertia about an axis parallel to the centroidal one is the centroidal inertia plus the area times the distance squared.",
-  "rs.q5.a2":
-    "It is used for composite sections, where every part has its centroid away from the common axis.",
-  "rs.q5.a3":
-    "It follows that {J}_g is the smallest of all the parallel axes.",
-  "rs.f1":
-    "Circular shaft: τ grows linearly with ρ, from 0 at the centre to τ_max at the edge.",
-  "rs.f2":
-    "Rectangular section: τ is parabolic, 0 at the edges and τ_max = 3Q/(2A) at the neutral axis (E.N.). S is the shaded area above the fibre studied and s its width.",
-  "rs.f3":
-    "A ball in a valley, on a plane and on a hill: stable, indifferent and unstable equilibrium ({F} <, = and > {F}_k for a bar).",
-  "rs.f4":
-    "σ–ε diagram: a straight line up to σ_P, with slope {E} = tg β.",
-  "rs.f5":
-    "Steiner: the inertia about the axis x, at distance d from the centroidal axis {x}_g, is {J}_x = {J}_g + {A}·{d}².",
   "rs.fig.stable":
     "Stable",
   "rs.fig.indiff":
@@ -1898,10 +1868,6 @@ const EN = {
     "The definitions of every guide in one place, grouped by topic: open the ones you need, or all of them. The wording is shortened but keeps the meaning of the notes.",
   "def.footer":
     "Summarised from the guides of this site; each group links to the guide where the definition is explained and used.",
-  "def.expand":
-    "Open all",
-  "def.collapse":
-    "Close all",
   "def.go":
     "Open the guide →",
   "def.g.pln":
@@ -1985,11 +1951,11 @@ const EN = {
   "def.t.hooke":
     "Hooke’s law",
   "def.d.hooke":
-    "In the straight part of the σ–ε diagram the stresses are proportional to the strains: σ = {E}·ε. Young’s modulus {E} is the slope of the line.",
+    "In the straight part of the stress–strain diagram the stresses are proportional to the strains: σ = {E}·ε. Young’s modulus {E} is the slope of the line.",
   "def.t.sp":
     "Proportionality limit σ_P",
   "def.d.sp":
-    "Stress up to which the σ–ε diagram is a straight line. Above it, the strains grow faster than the stress.",
+    "Stress up to which the stress–strain diagram is a straight line. Above it, the strains grow faster than the stress.",
   "def.t.se":
     "Elastic limit σ_E",
   "def.d.se":
@@ -2017,11 +1983,11 @@ const EN = {
   "def.t.resiliencia":
     "Resilience",
   "def.d.resiliencia":
-    "Capacity to give back the energy stored by deformation in the elastic period. It is the area under the σ–ε curve in that period: up to σ_e it is {U} = ½·σ_e² / {E}.",
+    "Capacity to give back the energy stored by deformation in the elastic period. It is the area under the stress–strain curve in that period: up to σ_e it is {U} = ½·σ_e² / {E}.",
   "def.t.tenacidad":
     "Toughness",
   "def.d.tenacidad":
-    "Capacity to absorb energy in the inelastic or large-deformation period. It is the area under the σ–ε curve up to rupture.",
+    "Capacity to absorb energy in the inelastic or large-deformation period. It is the area under the stress–strain curve up to rupture.",
   "def.t.dureza":
     "Hardness",
   "def.d.dureza":
@@ -2052,6 +2018,154 @@ const EN = {
     "Triple or spatial if {I}_3 ≠ 0; double or plane if {I}_3 = 0 and {I}_2 ≠ 0; simple or uniaxial if only {I}_1 ≠ 0.",
   "def.t.fsimple":
     "Simple and pure bending",
+  "def.f.fsimple":
+    "A segment of beam between two sections: the forces on each side reduce, at the centroid, to a bending couple. In pure bending it is the same M on both faces (equal and opposite); in bending and shear there is also the shear force Q, and the moment changes along the segment (M on one face, M + dM on the other, dM = Q·dx).",
+  "def.fig.pure":
+    "Pure bending",
+  "def.fig.shear":
+    "Bending and shear",
+  "def.f.hooke":
+    "Hooke’s zone: the straight part of the stress–strain diagram, with slope E = tg β.",
+  "def.f.rigidez":
+    "The steeper the line (the larger E), the stiffer the material.",
+  "def.f.sp":
+    "σ_P: where the straight part of the diagram ends.",
+  "def.f.se":
+    "σ_E: the end of the elastic period. The green line, up to σ_P, is the proportional part (Hooke); between σ_P and σ_E the curve bends away from it: proportionality is lost although the strain is still recovered.",
+  "def.f.sfl":
+    "σ_Fl: the yield stretch, where the strain grows with no appreciable increase of the load.",
+  "def.f.srot":
+    "σ_Rot: the highest stress of the curve.",
+  "def.f.seguridad":
+    "The admissible stress σ_adm = σ_E / ν stays below σ_E and also below σ_P (here ν = 2): the structure works on the straight, proportional part of the diagram, where Hooke’s law holds.",
+  "def.f.defelas":
+    "In the elastic zone the strain is recovered; in the plastic one, unloading along a parallel to the straight line leaves a permanent strain.",
+  "def.f.ductilidad":
+    "Ductility: the plastic period, from the elastic limit σ_E to the rupture. The shaded region under the curve marks that period; what measures ductility is its width on the ε axis, the strain the material can take (not the area, which is the energy).",
+  "def.f.resiliencia":
+    "Resilience: the area under the curve in the elastic period, U = ½·σ_e² / E.",
+  "def.f.tenacidad":
+    "Toughness: the area under the whole curve, up to rupture.",
+  "def.f.tipos":
+    "Ductile: a lot of strain before breaking. Brittle: it breaks with little strain, with σ_P very close to σ_Rot.",
+  "def.fig.elastic":
+    "elastic",
+  "def.fig.plastic":
+    "plastic",
+  "def.fig.permanent":
+    "permanent strain",
+  "def.fig.ductile":
+    "Ductile",
+  "def.fig.brittle":
+    "Brittle",
+  "def.f.plano":
+    "Left, the beam seen from the side: the bending plane (shaded, the plane of the drawing) contains the axis of the bar and the load. Right, the section A–A: the bending plane, seen edge-on, is the line of forces.",
+  "def.f.normal":
+    "Normal (straight) bending: the line of forces coincides with a principal axis of inertia of the section. Oblique bending: it forms an angle α with it.",
+  "def.fig.plane":
+    "Bending plane",
+  "def.fig.forceline":
+    "Line of forces",
+  "def.fig.straight":
+    "Normal (straight) bending",
+  "def.fig.oblique":
+    "Oblique bending",
+  "pnd.fig.back":
+    "goes back to straight",
+  "pnd.fig.stays":
+    "stays deviated",
+  "pnd.fig.grows":
+    "keeps deforming",
+  "pnd.fig.axis":
+    "axis of the bar",
+  "pnd.fig.pinned":
+    "pinned",
+  "pnd.fig.guided":
+    "guided along the axis",
+  "pnd.fig.nolateral":
+    "no lateral forces",
+  "def.f.equil":
+    "The bar loaded with F and pushed by a lateral load H: when H stops it goes back to straight (F < F_k), stays deviated (F = F_k) or keeps deforming (F > F_k).",
+  "def.f.fk":
+    "F against the lateral deflection δ: the straight position is stable below F_k and unstable above it; at F_k the bar can stay in any deviated position.",
+  "def.f.esbeltez":
+    "Euler’s hyperbola: the larger the slenderness λ, the lower the critical stress σ_k.",
+  "def.f.l0":
+    "The four end conditions with the buckled shape of the bar: l_0 = c·l is the distance between two inflection points (c = 2, 1, 0.7 and 0.5).",
+  "def.f.hipotesis":
+    "Euler’s ideal bar: pinned at one end, guided along the axis at the other, with the compressive force exactly on the axis and no lateral forces.",
+  "def.f.en":
+    "The neutral axis is the fibre that keeps its length when the beam bends: above it the fibres shorten (compression), below they lengthen (tension), and σ is zero on it.",
+  "def.fig.na":
+    "N.A.",
+  "def.fig.compression":
+    "Compression",
+  "def.fig.tension":
+    "Tension",
+  "def.fig.shortens":
+    "shortens",
+  "def.fig.lengthens":
+    "lengthens",
+  "def.fig.planedraw":
+    "(the plane of the drawing)",
+  "def.fig.section":
+    "Section A–A",
+  "def.f.estatico":
+    "The static moment adds up each element of area dA times its distance y to the axis: S_x = ∫ y dA.",
+  "def.f.baricentro":
+    "The centroid G: its coordinates x_g and y_g are the static moments divided by the area.",
+  "def.f.inercia":
+    "Each element adds dA·y²: one far from the axis weighs much more than one near it.",
+  "def.f.centrifugo":
+    "Each element adds dA·x·y, with its two distances; depending on the quadrant it can be positive or negative.",
+  "def.f.polar":
+    "The distance ρ to the point O satisfies ρ² = x² + y², so J_p = J_x + J_y.",
+  "def.f.giro":
+    "If the whole area A were concentrated at the distance i from the axis it would give the same moment: J = A·i².",
+  "def.f.steiner":
+    "Steiner: the inertia about the axis x, at distance d from the centroidal axis x_g, is J_x = J_g + A·d².",
+  "def.f.ppales":
+    "The principal axes 1 and 2 through the centroid, perpendicular and turned an angle α from x, y: the product of inertia about them is zero.",
+  "def.f.mppales":
+    "The principal moments J_1 and J_2 are the maximum and the minimum of the moments of inertia about axes through the centroid.",
+  "def.fig.far":
+    "far from the axis: much more",
+  "def.fig.near":
+    "near the axis: little",
+  "def.fig.conc":
+    "A concentrated",
+  "def.f.htor":
+    "Circular shaft: τ grows linearly with ρ, from 0 at the centre to τ_max at the edge.",
+  "def.f.jour":
+    "Rectangular section: τ is parabolic, 0 at the edges and τ_max = 3Q/(2A) at the neutral axis (E.N.). S is the shaded area above the fibre studied and s its width.",
+  "rs.th.see":
+    "Guide and definitions",
+  "rs.guide":
+    "Guide",
+  "rs.s2.see":
+    "See it in the glossary →",
+  "nav.tools":
+    "Tools",
+  "nav.study":
+    "Study",
+  "def.f.cpuro":
+    "Two plates joined by a rivet and pulled apart by P: the rivet is cut along the plane between the plates (Q = P) and the stress is taken as uniform over its cross-section A, τ = Q / A.",
+  "def.f.corte":
+    "In the cut A–A, the rest of the beam on the left pushes down on the left part with a force Q that balances the reaction R; on the right part, the same Q acts upwards (equal and opposite).",
+  "def.f.cauchy":
+    "Cauchy: on two perpendicular planes the shear stresses τ_xy and τ_yx are equal; both arrows point towards the common edge (here the top right) or both away from it.",
+  "def.f.resbal":
+    "Stacked planks that are not joined slide on each other when the beam bends (the ends are staggered); if they are joined, the sliding stresses τ_L on the horizontal planes hold them together. They exist at every fibre.",
+  "def.fig.rivet":
+    "rivet",
+  "def.fig.shearplane":
+    "shear plane",
+  "def.fig.areaA":
+    "area A of the rivet",
+  "def.fig.unbonded":
+    "not joined: they slide",
+  "def.fig.bonded":
+    "joined: τ_L holds them",
   "def.d.fsimple":
     "Simple bending: the forces on both sides of the section reduce, at its centroid, to two couples normal to the plane of the section, with or without shear. Without shear it is pure bending; with shear, bending and shear.",
   "def.t.plano":
@@ -3284,19 +3398,45 @@ const ES: Record<TranslationKey, string> = {
   "shr.s2.fig":
     "Cauchy: sobre dos planos perpendiculares las tensiones de corte τ_xy y τ_yx son iguales; las dos flechas van hacia la arista común (acá la de arriba a la derecha) o las dos se alejan de ella.",
   "shr.s3.fig":
-    "Rebanada {dx} de la viga: las tensiones normales dan N en la sección 1 y N + {dN} en la 2 sobre el área rayada Ω, a distancia {y} del eje neutro; la diferencia {dN} la equilibra la fuerza de corte {dT} sobre el corte.",
+    "Rebanada {dx} de la viga: las tensiones normales dan {N}_Ω en la sección 1 y {N}_Ω + {dN}_Ω en la 2 sobre el área rayada Ω, a distancia {y} del eje neutro; la diferencia {dN}_Ω la equilibra la fuerza de corte {dT} sobre el corte.",
+  "shr.steps.title":
+    "Paso a paso: los cortes que le hacemos a la viga",
+  "shr.steps.1":
+    "Cortamos la viga con dos secciones, 1 y 2, separadas dx. La rebanada queda en equilibrio con M y Q en la cara 1 y M + dM y Q en la cara 2: el corte casi no cambia en dx, pero el momento crece dM = Q·dx.",
+  "shr.steps.2":
+    "Los momentos producen tensiones normales lineales, nulas en el eje neutro: σ = M·y/J_x en la cara 1 y σ + dσ = (M + dM)·y/J_x en la cara 2, un poco mayor.",
+  "shr.steps.3":
+    "Cortamos la rebanada con una superficie paralela al eje, a distancia y del eje neutro. De costado se ve como una línea; en la sección transversal es la curva de ancho s. Arriba queda la parte Ω.",
+  "shr.steps.4":
+    "La superficie del corte en perspectiva: la curva s de la sección transversal desplazada a lo largo de dx, paralela al eje. Eso es lo que significa “cilíndrica” acá (una curva cualquiera, no solo un círculo). Si s es una recta (rectángulo, doble T) la superficie es un plano, un caso particular; si es una curva cualquiera, la superficie es curva. En los dos casos la parte Ω tiene la misma forma en la cara 1 y en la cara 2. La distancia dx se mide a lo largo del eje, entre la cara 1 (la de frente, donde está dibujada la curva s) y la cara 2 (la de atrás). Las τ chicas son las tensiones de corte: sobre la superficie del corte son paralelas al eje (son las que equilibran {dN}_Ω), y sobre la sección son perpendiculares a la curva s, las dos apuntando hacia afuera de su arista común (Cauchy).",
+  "shr.steps.side":
+    "vista lateral",
+  "shr.steps.section":
+    "sección transversal",
+  "shr.steps.5":
+    "Aislamos la parte Ω: las tensiones normales sobre ella dan {N}_Ω en la cara 1 y {N}_Ω + {dN}_Ω en la 2 (no es la misma fuerza porque el momento cambió, dM = Q·dx), y la fuerza de corte dT sobre el corte equilibra la diferencia, dT = {dN}_Ω.",
+  "shr.steps.plane":
+    "s recta: un plano",
+  "shr.steps.curved":
+    "s curva: superficie curva",
+  "shr.steps.axis":
+    "eje",
   "shr.s3.kicker":
     "03 — Jourawski",
   "shr.s3.title":
     "La fórmula de Jourawski–Colignon",
   "shr.s3.p1":
     "La existencia del corte origina tensiones tangenciales en el plano de la sección. Sea una viga de sección constante y una rebanada de largo {dx} entre las secciones 1 y 2. Por la flexión, a una distancia {y} del eje neutro la tensión es σ = {M}·{y}/{J}_x en la sección 1 y σ + dσ = ({M} + {dM})·{y}/{J}_x en la 2.",
+  "shr.s3.why":
+    "No está en el apunte, pero es lo que explica por qué hay corte: acá {N}_Ω (N en el apunte) es la fuerza que dan las tensiones normales sobre la parte Ω solamente (no la fuerza axial de la barra, que es nula en flexión), y {N}_Ω = ({M}/{J}_x)·{S}_x. Entre las caras 1 y 2 el momento pasa de {M} a {M} + {dM}, y ese cambio es el esfuerzo de corte: {dM} = {Q}·{dx}. Por eso {dN}_Ω = ({dM}/{J}_x)·{S}_x = {Q}·{dx}·{S}_x/{J}_x no es cero: porque {Q} no es cero. En flexión pura ({Q} = 0) las dos fuerzas son iguales, {dN}_Ω = 0, no hace falta ninguna fuerza {dT} sobre el corte y no hay tensión tangencial.",
+  "shr.s3.why.ex":
+    "Ejemplo: rectángulo de 10 × 20 cm, corte a y = 5 cm sobre el eje neutro: S_x = 10·5·7,5 = 375 cm³, J_x = 10·20³/12 = 6 667 cm⁴. Con M = 100 000 kg·cm la parte Ω soporta {N}_Ω ≈ 5 625 kg; con M + dM = 101 000 kg·cm, {N}_Ω + {dN}_Ω ≈ 5 681 kg. La diferencia {dN}_Ω ≈ 56 kg es la que tiene que equilibrar dT ({dN}_Ω = dM·S_x/J_x = 1 000·375/6 667).",
   "shr.s3.p2":
-    "Ahora separamos una parte de la rebanada por una superficie cilíndrica de ancho s. En la parte rayada (área Ω) las tensiones normales generan una fuerza N en la sección 1 y N + {dN} en la 2; ambas son coaxiales y su resultante es",
+    "Ahora separamos una parte de la rebanada por una superficie cilíndrica de ancho s. En la parte rayada (área Ω) las tensiones normales generan una fuerza {N}_Ω en la sección 1 y {N}_Ω + {dN}_Ω en la 2; ambas son coaxiales y su resultante es",
   "shr.s3.e1":
-    "{dN} = ∫Ω ({dM}/{J}_x)·{y} dΩ",
+    "{dN}_Ω = ∫Ω ({dM}/{J}_x)·{y} dΩ",
   "shr.s3.p3":
-    "Esa fuerza tiende a deslizar la parte superior respecto del resto. A esa acción se oponen tensiones tangenciales τ que actúan en la superficie de separación; son paralelas al eje de la pieza y varían en forma continua. Siendo s la longitud de la curva de intersección de la superficie con el plano de la sección, {dT} = {dx}·∫τ {ds}, y por equilibrio {dT} = {dN}:",
+    "Esa fuerza tiende a deslizar la parte superior respecto del resto. A esa acción se oponen tensiones tangenciales τ que actúan en la superficie de separación; son paralelas al eje de la pieza y varían en forma continua. Siendo s la longitud de la curva de intersección de la superficie con el plano de la sección, {dT} = {dx}·∫τ {ds}, y por equilibrio {dT} = {dN}_Ω:",
   "shr.s3.e2":
     "({dM}/{J}_x)·∫Ω {y} dΩ = {dx}·∫s τ {ds}",
   "shr.s3.p4":
@@ -3903,7 +4043,7 @@ const ES: Record<TranslationKey, string> = {
   "rs.title":
     "Resumen del curso",
   "rs.lead":
-    "Una hoja para estudiar: todas las fórmulas de las guías con sus unidades y para qué se usan, y las cinco preguntas de teoría con una respuesta modelo.",
+    "Una hoja para estudiar: las fórmulas de cada guía con sus unidades y para qué se usan, y las cinco preguntas de teoría con una respuesta modelo (el mismo texto y la misma figura del glosario). Cada fila y cada pregunta enlazan a su guía y a sus definiciones.",
   "rs.footer":
     "Resumen de las guías de este sitio; las fórmulas son las de los apuntes del curso (kg y cm).",
   "rs.print":
@@ -3964,62 +4104,6 @@ const ES: Record<TranslationKey, string> = {
     "Teoría",
   "rs.s2.title":
     "Las cinco preguntas del parcial",
-  "rs.q1.t":
-    "Hipótesis de la torsión (eje circular)",
-  "rs.q1.a1":
-    "Las secciones planas siguen planas y circulares.",
-  "rs.q1.a2":
-    "Los radios siguen rectos al girar.",
-  "rs.q1.a3":
-    "La distancia entre secciones no cambia (no hay deformación longitudinal).",
-  "rs.q1.a4":
-    "Material elástico lineal (Hooke) y deformaciones pequeñas.",
-  "rs.q1.a5":
-    "Consecuencia: τ crece linealmente con ρ, de 0 en el centro al máximo en el borde.",
-  "rs.q2.t":
-    "Collignon–Jourawski",
-  "rs.q2.a1":
-    "Da la tensión de corte que produce el esfuerzo de corte Q en flexión: τ = {Q}·{S}/({J}·s).",
-  "rs.q2.a2":
-    "S es el momento estático, respecto del eje neutro, del área de un lado de la fibra estudiada; s es el ancho de la sección en esa fibra.",
-  "rs.q2.a3":
-    "Rectángulo: τ es parabólica, 0 en los bordes y máxima en el eje neutro, τ_max = 3Q/(2A).",
-  "rs.q2.a4":
-    "Doble T: casi todo el corte lo toma el alma.",
-  "rs.q3.t":
-    "Equilibrio estable, inestable e indiferente",
-  "rs.q3.a1":
-    "Estable, F < {F}_k: tras un pequeño empujón la barra vuelve a su posición.",
-  "rs.q3.a2":
-    "Indiferente, {F} = {F}_k: queda en cualquier posición cercana.",
-  "rs.q3.a3":
-    "Inestable, F > {F}_k: se aleja de la posición y pandea.",
-  "rs.q4.t":
-    "Ley de Hooke",
-  "rs.q4.a1":
-    "σ = {E}·ε: tensión y deformación son proporcionales hasta el límite de proporcionalidad σ_P.",
-  "rs.q4.a2":
-    "E es la pendiente de la recta ({E} = tg β) y mide la rigidez del material.",
-  "rs.q4.a3":
-    "Vale solo en la zona elástica.",
-  "rs.q5.t":
-    "Teorema de Steiner",
-  "rs.q5.a1":
-    "{J} = {J}_g + {A}·{d}²: la inercia respecto de un eje paralelo al baricéntrico es la baricéntrica más el área por la distancia al cuadrado.",
-  "rs.q5.a2":
-    "Sirve para secciones compuestas, donde cada parte tiene su baricentro lejos del eje común.",
-  "rs.q5.a3":
-    "De la fórmula sale que {J}_g es la mínima entre todos los ejes paralelos.",
-  "rs.f1":
-    "Eje circular: τ crece linealmente con ρ, de 0 en el centro a τ_max en el borde.",
-  "rs.f2":
-    "Sección rectangular: τ es parabólica, 0 en los bordes y τ_max = 3Q/(2A) en el eje neutro (E.N.). S es el área sombreada sobre la fibra estudiada y s su ancho.",
-  "rs.f3":
-    "Una bolita en un valle, sobre un plano y sobre una cima: equilibrio estable, indiferente e inestable ({F} <, = y > {F}_k en una barra).",
-  "rs.f4":
-    "Diagrama σ–ε: una recta hasta σ_P, de pendiente {E} = tg β.",
-  "rs.f5":
-    "Steiner: la inercia respecto del eje x, a distancia d del eje baricéntrico {x}_g, es {J}_x = {J}_g + {A}·{d}².",
   "rs.fig.stable":
     "Estable",
   "rs.fig.indiff":
@@ -4034,10 +4118,6 @@ const ES: Record<TranslationKey, string> = {
     "Las definiciones de todas las guías juntas, agrupadas por tema: abrí las que necesites, o todas. La redacción está resumida pero conserva el sentido de los apuntes.",
   "def.footer":
     "Resumido de las guías de este sitio; cada grupo enlaza a la guía donde la definición se explica y se usa.",
-  "def.expand":
-    "Abrir todas",
-  "def.collapse":
-    "Cerrar todas",
   "def.go":
     "Ir a la guía →",
   "def.g.pln":
@@ -4121,11 +4201,11 @@ const ES: Record<TranslationKey, string> = {
   "def.t.hooke":
     "Ley de Hooke",
   "def.d.hooke":
-    "En el tramo recto del diagrama σ–ε las tensiones son proporcionales a las deformaciones: σ = {E}·ε. El módulo de Young {E} es la pendiente de la recta.",
+    "En el tramo recto del diagrama tensión–deformación las tensiones son proporcionales a las deformaciones: σ = {E}·ε. El módulo de Young {E} es la pendiente de la recta.",
   "def.t.sp":
     "Límite de proporcionalidad σ_P",
   "def.d.sp":
-    "Tensión hasta la cual el diagrama σ–ε es una recta. Por encima, las deformaciones crecen más que la tensión.",
+    "Tensión hasta la cual el diagrama tensión–deformación es una recta. Por encima, las deformaciones crecen más que la tensión.",
   "def.t.se":
     "Límite de elasticidad σ_E",
   "def.d.se":
@@ -4153,11 +4233,11 @@ const ES: Record<TranslationKey, string> = {
   "def.t.resiliencia":
     "Resiliencia",
   "def.d.resiliencia":
-    "Capacidad de restituir la energía almacenada por deformación en el período elástico. Es el área bajo la curva σ–ε en ese período: hasta σ_e vale {U} = ½·σ_e² / {E}.",
+    "Capacidad de restituir la energía almacenada por deformación en el período elástico. Es el área bajo la curva tensión–deformación en ese período: hasta σ_e vale {U} = ½·σ_e² / {E}.",
   "def.t.tenacidad":
     "Tenacidad",
   "def.d.tenacidad":
-    "Capacidad de absorber energía en el período anelástico o de grandes deformaciones. Es el área bajo la curva σ–ε hasta la rotura.",
+    "Capacidad de absorber energía en el período anelástico o de grandes deformaciones. Es el área bajo la curva tensión–deformación hasta la rotura.",
   "def.t.dureza":
     "Dureza",
   "def.d.dureza":
@@ -4188,6 +4268,154 @@ const ES: Record<TranslationKey, string> = {
     "Triple o espacial si {I}_3 ≠ 0; doble o plano si {I}_3 = 0 e {I}_2 ≠ 0; simple o uniaxial si solo {I}_1 ≠ 0.",
   "def.t.fsimple":
     "Flexión simple y flexión pura",
+  "def.f.fsimple":
+    "Un tramo de viga entre dos secciones: las fuerzas de cada lado se reducen, en el baricentro, a un par flector. En flexión pura es el mismo M en las dos caras (igual y opuesto); en flexión y corte hay además el esfuerzo de corte Q, y el momento cambia a lo largo del tramo (M en una cara, M + dM en la otra, dM = Q·dx).",
+  "def.fig.pure":
+    "Flexión pura",
+  "def.fig.shear":
+    "Flexión y corte",
+  "def.f.hooke":
+    "Zona de Hooke: la recta del diagrama tensión–deformación, de pendiente E = tg β.",
+  "def.f.rigidez":
+    "Cuanto más empinada la recta (mayor E), más rígido el material.",
+  "def.f.sp":
+    "σ_P: donde termina la recta del diagrama.",
+  "def.f.se":
+    "σ_E: el final del período elástico. La recta verde, hasta σ_P, es la parte proporcional (Hooke); entre σ_P y σ_E la curva se separa de ella: se pierde la proporcionalidad aunque la deformación todavía se recupera.",
+  "def.f.sfl":
+    "σ_Fl: el tramo de fluencia, donde la deformación crece sin aumento apreciable de la carga.",
+  "def.f.srot":
+    "σ_Rot: la máxima tensión de la curva.",
+  "def.f.seguridad":
+    "La tensión admisible σ_adm = σ_E / ν queda por debajo de σ_E y también de σ_P (acá ν = 2): la estructura trabaja en la parte recta y proporcional del diagrama, donde vale Hooke.",
+  "def.f.defelas":
+    "En la zona elástica la deformación se recupera; en la plástica, al descargar siguiendo una paralela a la recta queda una deformación permanente.",
+  "def.f.ductilidad":
+    "Ductilidad: el período plástico, desde el límite elástico σ_E hasta la rotura. La zona sombreada bajo la curva marca ese período; lo que mide la ductilidad es su ancho sobre el eje ε, la deformación que aguanta el material (no el área, que es la energía).",
+  "def.f.resiliencia":
+    "Resiliencia: el área bajo la curva en el período elástico, U = ½·σ_e² / E.",
+  "def.f.tenacidad":
+    "Tenacidad: el área bajo toda la curva, hasta la rotura.",
+  "def.f.tipos":
+    "Dúctil: mucha deformación antes de romper. Frágil: rompe con poca deformación, y σ_P está muy cerca de σ_Rot.",
+  "def.fig.elastic":
+    "elástica",
+  "def.fig.plastic":
+    "plástica",
+  "def.fig.permanent":
+    "deformación permanente",
+  "def.fig.ductile":
+    "Dúctil",
+  "def.fig.brittle":
+    "Frágil",
+  "def.f.plano":
+    "A la izquierda, la viga vista de costado: el plano de flexión (sombreado, el plano del dibujo) contiene el eje de la barra y la carga. A la derecha, la sección A–A: el plano de flexión, visto de canto, es la línea de fuerzas.",
+  "def.f.normal":
+    "Flexión normal (recta): la línea de fuerzas coincide con un eje principal de inercia de la sección. Flexión oblicua: forma un ángulo α con él.",
+  "def.fig.plane":
+    "Plano de flexión",
+  "def.fig.forceline":
+    "Línea de fuerzas",
+  "def.fig.straight":
+    "Flexión normal (recta)",
+  "def.fig.oblique":
+    "Flexión oblicua",
+  "pnd.fig.back":
+    "vuelve a la recta",
+  "pnd.fig.stays":
+    "queda desviada",
+  "pnd.fig.grows":
+    "sigue deformándose",
+  "pnd.fig.axis":
+    "eje de la barra",
+  "pnd.fig.pinned":
+    "articulada",
+  "pnd.fig.guided":
+    "guiada según el eje",
+  "pnd.fig.nolateral":
+    "sin fuerzas laterales",
+  "def.f.equil":
+    "La barra cargada con F y empujada por una carga lateral H: al cesar H vuelve a la recta (F < F_k), queda desviada (F = F_k) o sigue deformándose (F > F_k).",
+  "def.f.fk":
+    "F contra la deflexión lateral δ: la posición recta es estable por debajo de F_k e inestable por encima; en F_k la barra puede quedar en cualquier posición desviada.",
+  "def.f.esbeltez":
+    "Hipérbola de Euler: cuanto mayor es la esbeltez λ, menor es la tensión crítica σ_k.",
+  "def.f.l0":
+    "Los cuatro vínculos con la forma pandeada de la barra: l_0 = c·l es la distancia entre dos puntos de inflexión (c = 2, 1, 0,7 y 0,5).",
+  "def.f.hipotesis":
+    "La barra ideal de Euler: articulada en un extremo, guiada según el eje en el otro, con la fuerza de compresión exactamente en el eje y sin fuerzas laterales.",
+  "def.f.en":
+    "El eje neutro es la fibra que conserva su longitud al flexar la viga: por encima las fibras se acortan (compresión), por debajo se alargan (tracción), y sobre él σ es nula.",
+  "def.fig.na":
+    "E.N.",
+  "def.fig.compression":
+    "Compresión",
+  "def.fig.tension":
+    "Tracción",
+  "def.fig.shortens":
+    "se acorta",
+  "def.fig.lengthens":
+    "se alarga",
+  "def.fig.planedraw":
+    "(el plano del dibujo)",
+  "def.fig.section":
+    "Sección A–A",
+  "def.f.estatico":
+    "El momento estático suma cada elemento de área dA por su distancia y al eje: S_x = ∫ y dA.",
+  "def.f.baricentro":
+    "El baricentro G: sus coordenadas x_g e y_g son los momentos estáticos divididos por el área.",
+  "def.f.inercia":
+    "Cada elemento aporta dA·y²: uno lejos del eje pesa mucho más que uno cercano.",
+  "def.f.centrifugo":
+    "Cada elemento aporta dA·x·y, con sus dos distancias; según el cuadrante puede ser positivo o negativo.",
+  "def.f.polar":
+    "La distancia ρ al punto O cumple ρ² = x² + y², por eso J_p = J_x + J_y.",
+  "def.f.giro":
+    "Si toda el área A estuviera concentrada a la distancia i del eje daría el mismo momento: J = A·i².",
+  "def.f.steiner":
+    "Steiner: la inercia respecto del eje x, a distancia d del eje baricéntrico x_g, es J_x = J_g + A·d².",
+  "def.f.ppales":
+    "Los ejes principales 1 y 2 por el baricentro, perpendiculares y girados un ángulo α respecto de x, y: el momento centrífugo respecto de ellos es nulo.",
+  "def.f.mppales":
+    "Los momentos principales J_1 y J_2 son el máximo y el mínimo de los momentos de inercia respecto de ejes por el baricentro.",
+  "def.fig.far":
+    "lejos del eje: aporta mucho más",
+  "def.fig.near":
+    "cerca del eje: aporta poco",
+  "def.fig.conc":
+    "A concentrada",
+  "def.f.htor":
+    "Eje circular: τ crece linealmente con ρ, de 0 en el centro a τ_max en el borde.",
+  "def.f.jour":
+    "Sección rectangular: τ es parabólica, 0 en los bordes y τ_max = 3Q/(2A) en el eje neutro (E.N.). S es el área sombreada sobre la fibra estudiada y s su ancho.",
+  "rs.th.see":
+    "Guía y definiciones",
+  "rs.guide":
+    "Guía",
+  "rs.s2.see":
+    "Ver en el glosario →",
+  "nav.tools":
+    "Herramientas",
+  "nav.study":
+    "Estudio",
+  "def.f.cpuro":
+    "Dos chapas unidas por un remache y estiradas por P: el remache se corta por el plano entre las chapas (Q = P) y la tensión se toma uniforme sobre su sección A, τ = Q / A.",
+  "def.f.corte":
+    "En el corte A–A, el resto de la viga empuja hacia abajo a la parte izquierda con una fuerza Q que equilibra la reacción R; sobre la parte derecha, la misma Q actúa hacia arriba (igual y opuesta).",
+  "def.f.cauchy":
+    "Cauchy: sobre dos planos perpendiculares las tensiones de corte τ_xy y τ_yx son iguales; las dos flechas van hacia la arista común (acá la de arriba a la derecha) o las dos se alejan de ella.",
+  "def.f.resbal":
+    "Tablones apilados sin unión resbalan unos contra otros al flexar la viga (los extremos quedan escalonados); si están unidos, las tensiones de resbalamiento τ_L en los planos horizontales los mantienen juntos. Existen en todas las fibras.",
+  "def.fig.rivet":
+    "remache",
+  "def.fig.shearplane":
+    "plano de corte",
+  "def.fig.areaA":
+    "área A del remache",
+  "def.fig.unbonded":
+    "sin unión: resbalan",
+  "def.fig.bonded":
+    "unidos: τ_L los mantiene",
   "def.d.fsimple":
     "Flexión simple: las fuerzas a ambos lados de la sección se reducen, en su baricentro, a dos pares normales al plano de la sección, con o sin esfuerzo de corte. Sin corte se llama flexión pura; con corte, flexión y corte.",
   "def.t.plano":

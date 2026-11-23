@@ -1,6 +1,6 @@
 import React from "react";
 
-const SUBSCRIPT = "_([A-Za-zÁÉÍÓÚáéíóúñ0-9′]+(?:,[A-Za-zÁÉÍÓÚáéíóúñ0-9′]+)?)";
+const SUBSCRIPT = "_([A-Za-zÁÉÍÓÚáéíóúñΩ0-9′]+(?:,[A-Za-zÁÉÍÓÚáéíóúñΩ0-9′]+)?)";
 // {y} marks a math variable (italic, so a lone "y" is not read as the Spanish "y"); _x is a subscript.
 const TOKEN = new RegExp(`\\{([^{}]*)\\}|${SUBSCRIPT}`, "g");
 
@@ -26,9 +26,9 @@ export function eqLines(s: string): string[] {
   return s.split(/\s{4,}|\n/).filter((l) => l.length > 0);
 }
 
-// Removes the markup (for aria-labels and plain-text uses).
+// Removes the markup ({y} → y, σ_P → σP) for aria-labels and plain-text uses.
 export function plain(s: string): string {
-  return s.replace(/\{([^{}]*)\}/g, "$1");
+  return s.replace(/\{([^{}]*)\}/g, "$1").replace(new RegExp(SUBSCRIPT, "g"), "$1");
 }
 
 // Renders "P_z", "e_x", "P_z,max" in a translated string with real subscripts, and "{y}" as a serif italic (a slanted

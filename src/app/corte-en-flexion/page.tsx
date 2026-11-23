@@ -4,6 +4,8 @@ import React from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Sub, SvgSub, plain } from "@/components/Sub";
 import { Eq, Figure, GuidePage, Para, Section } from "@/components/guide/GuideBits";
+import JourawskiSteps from "@/components/JourawskiSteps";
+import { CauchyFigure } from "@/components/DefinitionFigures";
 import { tauIFlange, tauIWeb, tauRect, tauRectMax, type ISection } from "@/lib/shear";
 
 const INK = "#16232E";
@@ -12,35 +14,8 @@ const SHEAR = "#3A6B8C";
 const LOADC = "#C0392B";
 const TEAL = "#0B8A8A";
 
-// Cauchy: the four shear arrows of a small element; the pairs meet at the top-right edge.
-function CauchySVG() {
-  const { t } = useLanguage();
-  const arrow = (x1: number, y1: number, x2: number, y2: number) => (
-    <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={LOADC} strokeWidth="2.5" markerEnd="url(#shr-arr-a)" />
-  );
-  return (
-    <svg viewBox="0 0 240 180" className="h-auto w-full" role="img" aria-label={plain(t("shr.s2.fig"))}>
-      <defs>
-        <marker id="shr-arr-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-          <path d="M 0 0 L 10 5 L 0 10 z" fill={LOADC} />
-        </marker>
-      </defs>
-      <rect x="80" y="45" width="80" height="80" fill={TEAL} fillOpacity="0.12" stroke={INK} strokeWidth="1.5" />
-      {arrow(95, 38, 145, 38)}
-      {arrow(145, 132, 95, 132)}
-      {arrow(168, 110, 168, 60)}
-      {arrow(72, 60, 72, 110)}
-      <circle cx="160" cy="45" r="3" fill={INK} />
-      <text x="120" y="29" fontSize="12" textAnchor="middle" fill={INK}><SvgSub>τ_yx</SvgSub></text>
-      <text x="120" y="152" fontSize="12" textAnchor="middle" fill={INK}><SvgSub>τ_yx</SvgSub></text>
-      <text x="184" y="88" fontSize="12" fill={INK}><SvgSub>τ_xy</SvgSub></text>
-      <text x="58" y="88" fontSize="12" textAnchor="end" fill={INK}><SvgSub>τ_xy</SvgSub></text>
-    </svg>
-  );
-}
-
 // Jourawski: slice dx between sections 1 and 2 in oblique (cabinet) perspective, x along the beam, y up, depth up-right.
-// The horizontal cut leaves the part Ω on top; its force dN is balanced by dT on the cut surface.
+// The horizontal cut leaves the part Ω on top; its force dN_Ω is balanced by dT on the cut surface.
 function SliceSVG() {
   const { t } = useLanguage();
   const tick = (x: number) => <line x1={x} y1="164" x2={x} y2="176" stroke={INK} strokeWidth="1.5" />;
@@ -48,7 +23,7 @@ function SliceSVG() {
     <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={LOADC} strokeWidth="2.5" markerEnd="url(#shr-arr-b)" />
   );
   return (
-    <svg viewBox="0 0 360 195" className="h-auto w-full" role="img" aria-label={plain(t("shr.s3.fig"))}>
+    <svg viewBox="0 0 390 195" className="h-auto w-full" role="img" aria-label={plain(t("shr.s3.fig"))}>
       <defs>
         <marker id="shr-arr-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M 0 0 L 10 5 L 0 10 z" fill={LOADC} />
@@ -71,13 +46,13 @@ function SliceSVG() {
       <polygon points="70,50 210,50 246,24 106,24" fill="none" stroke={INK} strokeWidth="1.5" />
       <polygon points="210,50 246,24 246,124 210,150" fill="none" stroke={INK} strokeWidth="1.5" />
       <line x1="70" y1="110" x2="210" y2="110" stroke={INK} strokeWidth="1" strokeDasharray="5 3" />
-      {/* N on section 1 (left, hidden face) and N + dN on section 2 (right face) over Ω */}
-      {force(81, 57, 47, 57)}
-      {force(95, 47, 61, 47)}
-      {force(221, 57, 265, 57)}
-      {force(235, 47, 279, 47)}
-      {/* dT on the cut surface, opposite to dN */}
-      {force(196, 67, 126, 67)}
+      {/* N_Ω on section 1 (left, hidden face) and N_Ω + dN_Ω on section 2 (right face) over Ω */}
+      {force(47, 57, 81, 57)}
+      {force(61, 47, 95, 47)}
+      {force(265, 57, 221, 57)}
+      {force(279, 47, 235, 47)}
+      {/* dT on the cut surface, opposite to dN_Ω */}
+      {force(126, 67, 196, 67)}
       <line x1="200" y1="80" x2="200" y2="110" stroke={INK} strokeWidth="1" />
       <line x1="196" y1="80" x2="204" y2="80" stroke={INK} strokeWidth="1" />
       <line x1="196" y1="110" x2="204" y2="110" stroke={INK} strokeWidth="1" />
@@ -87,8 +62,8 @@ function SliceSVG() {
       <text x="106" y="14" fontSize="12" textAnchor="middle" fill={INK}>1</text>
       <text x="246" y="14" fontSize="12" textAnchor="middle" fill={INK}>2</text>
       <text x="100" y="74" fontSize="12" textAnchor="middle" fill={INK}>Ω</text>
-      <text x="40" y="52" fontSize="12" textAnchor="end" fill={INK}>N</text>
-      <text x="284" y="51" fontSize="12" fill={INK}>N + dN</text>
+      <text x="40" y="52" fontSize="12" textAnchor="end" fill={INK}><SvgSub>N_Ω</SvgSub></text>
+      <text x="284" y="51" fontSize="12" fill={INK}><SvgSub>N_Ω + dN_Ω</SvgSub></text>
       <text x="160" y="77" fontSize="11" textAnchor="middle" fill={LOADC}>dT</text>
       <text x="208" y="99" fontSize="12" fill={INK}>y</text>
       <text x="64" y="114" fontSize="11" textAnchor="end" fill={INK}>E.N.</text>
@@ -176,7 +151,7 @@ export default function CorteEnFlexionPage() {
         <Eq>{t("shr.s2.e1")}</Eq>
         <div className="mx-auto max-w-xs">
           <Figure caption={<Sub>{t("shr.s2.fig")}</Sub>}>
-            <CauchySVG />
+            <CauchyFigure label={plain(t("shr.s2.fig"))} />
           </Figure>
         </div>
         <Para k="shr.s2.p2" />
@@ -185,6 +160,7 @@ export default function CorteEnFlexionPage() {
 
       <Section kicker="shr.s3.kicker" title="shr.s3.title">
         <Para k="shr.s3.p1" />
+        <JourawskiSteps />
         <Para k="shr.s3.p2" />
         <div className="mx-auto max-w-md">
           <Figure caption={<Sub>{t("shr.s3.fig")}</Sub>}>
@@ -192,6 +168,10 @@ export default function CorteEnFlexionPage() {
           </Figure>
         </div>
         <Eq>{t("shr.s3.e1")}</Eq>
+        <Para k="shr.s3.why" />
+        <p data-testid="shr-why-example" className="mb-4 max-w-[66ch] rounded-md bg-stone-100 px-4 py-2 font-mono text-[14px] dark:bg-stone-900">
+          <Sub>{t("shr.s3.why.ex")}</Sub>
+        </p>
         <Para k="shr.s3.p3" />
         <Eq>{t("shr.s3.e2")}</Eq>
         <Para k="shr.s3.p4" />
