@@ -77,6 +77,23 @@ describe("/corte-en-flexion", () => {
     expect(text(4).match(/dx/g)).toHaveLength(2);
     expect(text(4)).toMatch(/1.*2.*dx/);
     expect(step(4).textContent).toMatch(/dx is measured along the axis, between face 1/);
+    // the shear stresses τ: three on the cut surface (along the axis) and three on the section (perpendicular to s), per block
+    const taus = Array.from(step(4).querySelectorAll('svg line[marker-end="url(#jr4-tau)"]')).map((l) => [
+      Number(l.getAttribute("x2")) - Number(l.getAttribute("x1")),
+      Number(l.getAttribute("y2")) - Number(l.getAttribute("y1")),
+    ]);
+    expect(taus).toHaveLength(12);
+    const along = taus.filter(([dx, dy]) => Math.abs(dy / dx + 34 / 48) < 1e-9); // parallel to the axis (+48, −34)
+    expect(along).toHaveLength(6);
+    const vertical = taus.slice(0, 2).concat(taus.slice(2).filter(([dx, dy]) => Math.abs(dy / dx + 34 / 48) >= 1e-9)); // the others
+    expect(taus.length - along.length).toBe(6);
+    expect(vertical.length).toBeGreaterThan(0);
+    // on the straight cut, the τ of the section is exactly perpendicular to s (vertical), pointing up towards Ω
+    const first = taus.filter(([dx, dy]) => Math.abs(dy / dx + 34 / 48) >= 1e-9)[0];
+    expect(first[0]).toBeCloseTo(0, 8);
+    expect(first[1]).toBeLessThan(0);
+    expect(text(4).match(/τ/g)!.length).toBeGreaterThanOrEqual(4);
+    expect(step(4).textContent).toMatch(/small τ are the shear stresses/);
     // a surface (dashed outline) per panel, and each one is pushed by the same vector along the axis (+48, −34)
     const surfaces = Array.from(step(4).querySelectorAll("svg path[stroke-dasharray='3 2']")).map((p) => p.getAttribute("d")!);
     expect(surfaces).toHaveLength(2);

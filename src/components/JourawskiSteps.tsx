@@ -9,6 +9,7 @@ const INK = "#16232E";
 const FAINT = "#C9D2D8";
 const TENSION = "#0B8A8A";
 const LOAD = "#C0392B";
+const TAU = "#7A2A9A";
 
 function Txt(props: React.SVGProps<SVGTextElement> & { children: string }) {
   const { children, ...rest } = props;
@@ -133,6 +134,15 @@ function Step4({ label, plane, curved, axis }: { label: string; plane: string; c
       kind === "plane"
         ? `M ${x0} 92 L ${x1} 92`
         : `M ${x0} 94 C ${x0 + 20} 72 ${x0 + 40} 116 ${x1} 86`;
+    // a point of the directrix s at u ∈ [0, 1] and its tangent (a line or the bezier of the curved cut)
+    const point = (u: number): [number, number, number, number] => {
+      if (kind === "plane") return [x0 + u * 70, 92, 70, 0];
+      const P = [[x0, 94], [x0 + 20, 72], [x0 + 40, 116], [x1, 86]];
+      const m = 1 - u;
+      const b = (i: number) => m ** 3 * P[0][i] + 3 * m * m * u * P[1][i] + 3 * m * u * u * P[2][i] + u ** 3 * P[3][i];
+      const d = (i: number) => 3 * m * m * (P[1][i] - P[0][i]) + 6 * m * u * (P[2][i] - P[1][i]) + 3 * u * u * (P[3][i] - P[2][i]);
+      return [b(0), b(1), d(0), d(1)];
+    };
     const end = kind === "plane" ? [x1, 92] : [x1, 86];
     const start = kind === "plane" ? [x0, 92] : [x0, 94];
     const shifted = (d: string) => d.replace(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g, (_m, a, b) => `${Number(a) + D[0]} ${Number(b) + D[1]}`);
@@ -154,6 +164,22 @@ function Step4({ label, plane, curved, axis }: { label: string; plane: string; c
         <path d={surface} fill={TENSION} fillOpacity="0.35" stroke={INK} strokeWidth="1" strokeDasharray="3 2" />
         <path d={cut} fill="none" stroke={LOAD} strokeWidth="3" />
         <circle cx={start[0]} cy={start[1]} r="2" fill={LOAD} />
+        {/* the shear stresses τ: on the cut surface parallel to the axis (they balance dN_Ω); on the section 1 perpendicular to
+            the curve s and away from the common edge (Cauchy) */}
+        {[0.25, 0.5, 0.75].map((u) => {
+          const [px, py, tx, ty] = point(u);
+          const L = Math.hypot(tx, ty);
+          const nx = ty / L; // unit normal to s, pointing up (towards Ω)
+          const ny = -tx / L;
+          return (
+            <g key={u}>
+              <line x1={px + 0.4 * D[0]} y1={py + 0.4 * D[1]} x2={px + 0.4 * D[0] + 0.3 * D[0]} y2={py + 0.4 * D[1] + 0.3 * D[1]} stroke={TAU} strokeWidth="2" markerEnd="url(#jr4-tau)" />
+              <line x1={px} y1={py} x2={px + 15 * nx} y2={py + 15 * ny} stroke={TAU} strokeWidth="2" markerEnd="url(#jr4-tau)" />
+            </g>
+          );
+        })}
+        <Txt x={x0 - 4} y={top + 24} textAnchor="end" fill={TAU} fontSize="13" fontWeight="600">τ</Txt>
+        <Txt x={x0 + 0.75 * 70 + 0.7 * D[0] + 6} y={(kind === "plane" ? 92 : 90) + 0.7 * D[1] + 3} fill={TAU} fontSize="13" fontWeight="600">τ</Txt>
         <Txt x={x0 + 35} y={top + 12} textAnchor="middle" fill={TENSION} fontWeight="600">Ω</Txt>
         <Txt x={x0 + 35} y={kind === "plane" ? 108 : 124} textAnchor="middle" fill={LOAD}>s</Txt>
         {/* which face is which, and dx: the distance between face 1 (front, with the curve s) and face 2 (back) */}
@@ -172,6 +198,9 @@ function Step4({ label, plane, curved, axis }: { label: string; plane: string; c
   return (
     <svg viewBox="0 0 400 178" className="h-auto w-full" role="img" aria-label={label}>
       <defs>
+        <marker id="jr4-tau" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill={TAU} />
+        </marker>
         <marker id="jr4-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
           <path d="M 0 0 L 10 5 L 0 10 z" fill={INK} />
         </marker>
