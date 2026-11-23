@@ -5,13 +5,15 @@ import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 import { Sub } from "@/components/Sub";
 import { GuidePage, Section } from "@/components/guide/GuideBits";
 import { ROWS } from "@/lib/summaryRows";
+import { EquilibriumFigure, HookeFigure, ShearFigure, SteinerFigure, TorsionFigure } from "@/components/ResumenFigures";
+import { Figure } from "@/components/guide/GuideBits";
 
-const QUESTIONS: { id: string; answers: number }[] = [
-  { id: "q1", answers: 5 },
-  { id: "q2", answers: 4 },
-  { id: "q3", answers: 3 },
-  { id: "q4", answers: 3 },
-  { id: "q5", answers: 3 },
+const QUESTIONS: { id: string; answers: number; fig: React.ReactNode; cap: TranslationKey }[] = [
+  { id: "q1", answers: 5, fig: <TorsionFigure />, cap: "rs.f1" },
+  { id: "q2", answers: 4, fig: <ShearFigure />, cap: "rs.f2" },
+  { id: "q3", answers: 3, fig: <EquilibriumFigure />, cap: "rs.f3" },
+  { id: "q4", answers: 3, fig: <HookeFigure />, cap: "rs.f4" },
+  { id: "q5", answers: 3, fig: <SteinerFigure />, cap: "rs.f5" },
 ];
 
 export default function ResumenPage() {
@@ -71,6 +73,9 @@ export default function ResumenPage() {
                   </li>
                 ))}
               </ul>
+              <div className="max-w-md">
+                <Figure caption={<Sub>{t(q.cap)}</Sub>}>{q.fig}</Figure>
+              </div>
             </div>
           ))}
         </div>

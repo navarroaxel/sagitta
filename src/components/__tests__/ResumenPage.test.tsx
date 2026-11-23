@@ -24,6 +24,16 @@ describe("/resumen", () => {
     expect(document.body.textContent).not.toMatch(/[A-Za-z]_[A-Za-z0-9]/);
   });
 
+  test("every answer carries its figure, with the labels of the notes", () => {
+    const { container } = renderPage();
+    expect(container.querySelectorAll("figure svg")).toHaveLength(5);
+    for (const q of ["q1", "q2", "q3", "q4", "q5"]) expect(screen.getByTestId(`rs-${q}`).querySelector("figure svg")).toBeTruthy();
+    expect(screen.getByTestId("rs-q3").textContent).toMatch(/Stable.*Indifferent.*Unstable/);
+    expect(screen.getByTestId("rs-q4").querySelector("svg")!.textContent).toMatch(/σ = E·ε.*E = tg β/);
+    expect(screen.getByTestId("rs-q5").querySelector("svg")!.textContent).toMatch(/Jx = Jg \+ A·d²/);
+    expect(document.body.textContent).not.toMatch(/[A-Za-z]_[A-Za-z0-9]/);
+  });
+
   test("the print button calls window.print", () => {
     const spy = vi.spyOn(window, "print").mockImplementation(() => {});
     renderPage();

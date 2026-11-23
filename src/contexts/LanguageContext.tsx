@@ -1860,6 +1860,22 @@ const EN = {
     "It is used for composite sections, where every part has its centroid away from the common axis.",
   "rs.q5.a3":
     "It follows that J_g is the smallest of all the parallel axes.",
+  "rs.f1":
+    "Circular shaft: τ grows linearly with ρ, from 0 at the centre to τ_max at the edge.",
+  "rs.f2":
+    "Rectangular section: τ is parabolic, 0 at the edges and τ_max = 3Q/(2A) at the neutral axis (E.N.). S is the shaded area above the fibre studied and s its width.",
+  "rs.f3":
+    "A ball in a valley, on a plane and on a hill: stable, indifferent and unstable equilibrium (F <, = and > F_k for a bar).",
+  "rs.f4":
+    "σ–ε diagram: a straight line up to σ_P, with slope E = tg β.",
+  "rs.f5":
+    "Steiner: the inertia about the axis x, at distance d from the centroidal axis x_g, is J_x = J_g + A·d².",
+  "rs.fig.stable":
+    "Stable",
+  "rs.fig.indiff":
+    "Indifferent",
+  "rs.fig.unstable":
+    "Unstable",
   "rs.s3.kicker":
     "Method",
   "rs.s3.title":
@@ -3726,6 +3742,22 @@ const ES: Record<TranslationKey, string> = {
     "Sirve para secciones compuestas, donde cada parte tiene su baricentro lejos del eje común.",
   "rs.q5.a3":
     "De la fórmula sale que J_g es la mínima entre todos los ejes paralelos.",
+  "rs.f1":
+    "Eje circular: τ crece linealmente con ρ, de 0 en el centro a τ_max en el borde.",
+  "rs.f2":
+    "Sección rectangular: τ es parabólica, 0 en los bordes y τ_max = 3Q/(2A) en el eje neutro (E.N.). S es el área sombreada sobre la fibra estudiada y s su ancho.",
+  "rs.f3":
+    "Una bolita en un valle, sobre un plano y sobre una cima: equilibrio estable, indiferente e inestable (F <, = y > F_k en una barra).",
+  "rs.f4":
+    "Diagrama σ–ε: una recta hasta σ_P, de pendiente E = tg β.",
+  "rs.f5":
+    "Steiner: la inercia respecto del eje x, a distancia d del eje baricéntrico x_g, es J_x = J_g + A·d².",
+  "rs.fig.stable":
+    "Estable",
+  "rs.fig.indiff":
+    "Indiferente",
+  "rs.fig.unstable":
+    "Inestable",
   "rs.s3.kicker":
     "Método",
   "rs.s3.title":
