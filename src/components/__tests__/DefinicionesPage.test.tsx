@@ -85,6 +85,8 @@ describe("/definiciones", () => {
     expect(text("sp")).toMatch(/σP/);
     expect(text("srot")).toMatch(/σRot/);
     expect(text("seguridad")).toMatch(/σadm = σE \/ ν/);
+    expect(text("seguridad")).toMatch(/σP/); // σP stays marked: the working stress sits on the proportional line
+    expect(screen.getByTestId("def-mat.seguridad").querySelectorAll('figure svg line[stroke="#0B8A8A"][stroke-width="4.5"]')).toHaveLength(1);
     expect(text("resiliencia")).toMatch(/U = ½·σe² \/ E/);
     expect(text("tipos")).toMatch(/Brittle.*Ductile|Ductile.*Brittle/);
     expect(text("defelas")).toMatch(/permanent strain/);
@@ -93,6 +95,15 @@ describe("/definiciones", () => {
     expect(se.textContent).toMatch(/σP.*σE|σE.*σP/);
     expect(se.querySelectorAll('line[stroke="#0B8A8A"][stroke-width="4.5"]')).toHaveLength(1);
     expect(screen.getByTestId("def-mat.se").textContent).toMatch(/proportionality is lost/);
+    // σFl highlights the yield stretch of the curve itself (a path with the same wiggles), not a straight line over it
+    const fl = screen.getByTestId("def-mat.sfl").querySelector("figure svg")!;
+    const hi = fl.querySelector('path[stroke="#0B8A8A"]')!;
+    expect(hi.getAttribute("d")).toMatch(/^M 112 72 l 8,-4 l 8,5/);
+    expect(fl.querySelector('line[stroke="#0B8A8A"]')).toBeNull();
+    // ductility is an interval of strain: a band over ε (a rect), no filled area under the curve
+    const duct = screen.getByTestId("def-mat.ductilidad").querySelector("figure svg")!;
+    expect(duct.querySelectorAll("rect")).toHaveLength(1);
+    expect(duct.querySelectorAll("path[fill]:not([fill=none])")).toHaveLength(0);
     // resilience and toughness are areas: a filled path under the curve
     const fills = (id: string) => screen.getByTestId(`def-mat.${id}`).querySelectorAll("figure svg path[fill]:not([fill=none])").length;
     expect(fills("resiliencia")).toBe(1);

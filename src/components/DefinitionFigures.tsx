@@ -88,6 +88,8 @@ const M = [250, 28];
 const Z = [318, 62];
 const CURVE =
   "M 40 170 L 80 100 Q 88 90 96 82 L 112 72 l 8,-4 l 8,5 l 8,-5 l 8,4 l 8,-3 L 168 72 C 195 70 215 30 250 28 C 285 24 310 34 318 62";
+// The yield stretch of the curve itself (same points as in CURVE), so the highlight follows the real function.
+const YIELD_STRETCH = "M 112 72 l 8,-4 l 8,5 l 8,-5 l 8,4 l 8,-3 L 168 72";
 const ELASTIC_AREA = "M 40 170 L 80 100 Q 88 90 96 82 L 96 170 Z";
 const PLASTIC_AREA = "M 96 82 L 112 72 l 8,-4 l 8,5 l 8,-5 l 8,4 l 8,-3 L 168 72 C 195 70 215 30 250 28 C 285 24 310 34 318 62 L 318 170 L 96 170 Z";
 const SLOPE = (P[1] - O[1]) / (P[0] - O[0]); // screen slope of the elastic line
@@ -117,6 +119,8 @@ export function StressStrainFigure({ focus, label }: { focus: StressStrainFocus;
       {/* highlighted areas first, under the curve */}
       {focus === "resilience" && <path d={ELASTIC_AREA} fill={TENSION} fillOpacity="0.3" />}
       {focus === "toughness" && <path d={`${CURVE} L 318 170 Z`} fill={TENSION} fillOpacity="0.25" />}
+      {/* ductility is a strain range, not an area under the curve (that is toughness): a band over the ε interval */}
+      {focus === "ductility" && <rect x={E[0]} y="14" width={Z[0] - E[0]} height="156" fill={TENSION} fillOpacity="0.12" />}
       {focus === "elastic" && (
         <g>
           <path d={ELASTIC_AREA} fill={TENSION} fillOpacity="0.3" />
@@ -172,7 +176,7 @@ export function StressStrainFigure({ focus, label }: { focus: StressStrainFocus;
       {focus === "Fl" && (
         <g>
           {guide(72, 112, "σ_Fl", LOAD)}
-          <line x1="112" y1="72" x2="168" y2="72" stroke={TENSION} strokeWidth="5" strokeLinecap="round" />
+          <path d={YIELD_STRETCH} fill="none" stroke={TENSION} strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" />
         </g>
       )}
       {focus === "Rot" && (
@@ -184,10 +188,16 @@ export function StressStrainFigure({ focus, label }: { focus: StressStrainFocus;
       )}
       {focus === "safety" && (
         <g>
+          {/* the working stress stays below σP and σE: in the proportional (Hooke) part */}
+          {guide(P[1], P[0], "σ_P", TENSION)}
+          <line x1={P[0]} y1={P[1]} x2={P[0]} y2="170" stroke={FAINT} strokeWidth="1" strokeDasharray="3 3" />
+          <line x1={O[0]} y1={O[1]} x2={P[0]} y2={P[1]} stroke={TENSION} strokeWidth="4.5" />
+          <circle cx={P[0]} cy={P[1]} r="3.5" fill={TENSION} stroke="#fff" strokeWidth="1" />
           {guide(E[1], E[0], "σ_E", LOAD)}
-          <line x1="40" y1="127" x2="150" y2="127" stroke={TENSION} strokeWidth="2.2" strokeDasharray="6 3" />
-          <text x="34" y="131" fontSize="11" textAnchor="end" fill={TENSION}><SvgSub>σ_adm</SvgSub></text>
-          <text x="156" y="131" fontSize="11" fill={TENSION}><SvgSub>σ_adm = σ_E / ν</SvgSub></text>
+          <circle cx={E[0]} cy={E[1]} r="3.5" fill={LOAD} stroke="#fff" strokeWidth="1" />
+          <line x1="40" y1="127" x2="150" y2="127" stroke={INK} strokeWidth="2.2" strokeDasharray="6 3" />
+          <text x="34" y="131" fontSize="11" textAnchor="end" fill={INK}><SvgSub>σ_adm</SvgSub></text>
+          <text x="156" y="131" fontSize="11" fill={INK}><SvgSub>σ_adm = σ_E / ν</SvgSub></text>
         </g>
       )}
       {focus === "elastic" && (

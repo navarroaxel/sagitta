@@ -2071,11 +2071,11 @@ const EN = {
   "def.f.srot":
     "σ_Rot: the highest stress of the curve.",
   "def.f.seguridad":
-    "The admissible stress σ_adm = σ_E / ν stays below the elastic limit (here ν = 2).",
+    "The admissible stress σ_adm = σ_E / ν stays below σ_E and also below σ_P (here ν = 2): the structure works on the straight, proportional part of the diagram, where Hooke’s law holds.",
   "def.f.defelas":
     "In the elastic zone the strain is recovered; in the plastic one, unloading along a parallel to the straight line leaves a permanent strain.",
   "def.f.ductilidad":
-    "Ductility: how much strain the material has in the plastic period, up to rupture (the length marked on the ε axis).",
+    "Ductility: how much strain the material has in the plastic period, up to rupture: the width of the shaded band on the ε axis (an interval of strain, not an area: the area is the toughness).",
   "def.f.resiliencia":
     "Resilience: the area under the curve in the elastic period, U = ½·σ_e² / E.",
   "def.f.tenacidad":
@@ -4247,11 +4247,11 @@ const ES: Record<TranslationKey, string> = {
   "def.f.srot":
     "σ_Rot: la máxima tensión de la curva.",
   "def.f.seguridad":
-    "La tensión admisible σ_adm = σ_E / ν queda por debajo del límite de elasticidad (acá ν = 2).",
+    "La tensión admisible σ_adm = σ_E / ν queda por debajo de σ_E y también de σ_P (acá ν = 2): la estructura trabaja en la parte recta y proporcional del diagrama, donde vale Hooke.",
   "def.f.defelas":
     "En la zona elástica la deformación se recupera; en la plástica, al descargar siguiendo una paralela a la recta queda una deformación permanente.",
   "def.f.ductilidad":
-    "Ductilidad: cuánta deformación tiene el material en el período plástico, hasta la rotura (la longitud marcada sobre el eje ε).",
+    "Ductilidad: cuánta deformación tiene el material en el período plástico, hasta la rotura: el ancho de la banda sombreada sobre el eje ε (es un intervalo de deformación, no un área: el área es la tenacidad).",
   "def.f.resiliencia":
     "Resiliencia: el área bajo la curva en el período elástico, U = ½·σ_e² / E.",
   "def.f.tenacidad":
