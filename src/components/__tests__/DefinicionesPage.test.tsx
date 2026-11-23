@@ -246,6 +246,14 @@ describe("/definiciones", () => {
     for (const id of ["tensor", "vector", "invariantes", "tppales", "clasif"]) expect(svg(id), id).toBeTruthy();
     // the tensor: the six components on the three visible faces; the principal element: only σ1, σ2, σ3, no τ
     for (const c of ["σx", "σy", "σz", "τxy", "τyx", "τyz", "τzy", "τxz", "τzx"]) expect(svg("tensor").textContent, c).toContain(c);
+    // on each face the normal stress and the two shear stresses start at the same point: the centre of the face
+    const starts = (sel: string) =>
+      Array.from(svg("tensor").querySelectorAll(sel)).map((l) => `${l.getAttribute("x1")},${l.getAttribute("y1")}`);
+    const normals = starts('line[marker-end="url(#tns-el-g-n)"]');
+    const shears = starts('line[marker-end="url(#tns-el-g-t)"]');
+    expect(normals).toHaveLength(3);
+    expect(shears).toHaveLength(6);
+    for (const c of normals) expect(shears.filter((s) => s === c), c).toHaveLength(2);
     expect(svg("tppales").textContent).toMatch(/σ1/);
     expect(svg("tppales").textContent).not.toMatch(/τ/);
     expect(svg("vector").textContent).toMatch(/ρ/);

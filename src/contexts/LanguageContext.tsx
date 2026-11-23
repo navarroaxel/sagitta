@@ -1516,7 +1516,7 @@ const EN = {
   "tns.s1.p2":
     "In the exercise (MPa): σ_x = −20, σ_y = 30, σ_z = 0, τ_xy = 10, τ_yz = 0 and τ_xz = 5. Tension is positive, compression negative.",
   "tns.f1":
-    "The state of stress at a point: on each of the three visible faces, one normal stress (red) and two shear stresses (teal), positive along the axes ({x} right, {y} up, {z} toward the viewer). The shear pairs τ_xy = τ_yx, τ_yz = τ_zy, τ_xz = τ_zx are equal.",
+    "The state of stress at a point: on each of the three visible faces, one normal stress (red) and two shear stresses (teal), all starting at the centre of the face, positive along the axes ({x} right, {y} up, {z} toward the viewer). The shear pairs τ_xy = τ_yx, τ_yz = τ_zy, τ_xz = τ_zx are equal.",
   "tns.f2":
     "A plane through B seen edge-on, with unit normal n: the stress vector ρ splits into the normal stress σ (along n) and the tangential stress τ (in the plane), |ρ|² = σ² + τ².",
   "tns.f3":
@@ -2167,7 +2167,7 @@ const EN = {
   "def.fig.bonded":
     "joined: τ_L holds them",
   "def.f.tensor":
-    "The tensor: on each of the three faces of an element at the point there is one normal stress (red) and two shear stresses (teal). By reciprocity τ_xy = τ_yx, τ_yz = τ_zy and τ_xz = τ_zx, so there are six independent components.",
+    "The tensor: on each of the three faces of an element at the point there is one normal stress (red) and two shear stresses (teal), all starting at the centre of the face. By reciprocity τ_xy = τ_yx, τ_yz = τ_zy and τ_xz = τ_zx, so there are six independent components.",
   "def.f.vector":
     "The stress vector ρ on a plane of normal n: it splits into the normal stress σ (along n) and the shear stress τ (in the plane), |ρ|² = σ² + τ².",
   "def.f.invariantes":
@@ -3788,7 +3788,7 @@ const ES: Record<TranslationKey, string> = {
   "tns.s1.p2":
     "En el ejercicio (MPa): σ_x = −20, σ_y = 30, σ_z = 0, τ_xy = 10, τ_yz = 0 y τ_xz = 5. La tracción es positiva y la compresión negativa.",
   "tns.f1":
-    "El estado de tensión en un punto: sobre cada una de las tres caras visibles, una tensión normal (roja) y dos de corte (verde), positivas según los ejes ({x} a la derecha, {y} hacia arriba, {z} hacia el observador). Los pares τ_xy = τ_yx, τ_yz = τ_zy, τ_xz = τ_zx son iguales.",
+    "El estado de tensión en un punto: sobre cada una de las tres caras visibles, una tensión normal (roja) y dos de corte (verde), todas saliendo del centro de la cara, positivas según los ejes ({x} a la derecha, {y} hacia arriba, {z} hacia el observador). Los pares τ_xy = τ_yx, τ_yz = τ_zy, τ_xz = τ_zx son iguales.",
   "tns.f2":
     "Un plano por B visto de canto, con normal unitaria n: el vector tensión ρ se descompone en la tensión normal σ (según n) y la tangencial τ (en el plano), |ρ|² = σ² + τ².",
   "tns.f3":
@@ -4439,7 +4439,7 @@ const ES: Record<TranslationKey, string> = {
   "def.fig.bonded":
     "unidos: τ_L los mantiene",
   "def.f.tensor":
-    "El tensor: sobre cada una de las tres caras de un elemento en el punto hay una tensión normal (roja) y dos de corte (verde). Por la reciprocidad τ_xy = τ_yx, τ_yz = τ_zy y τ_xz = τ_zx, así que quedan seis componentes independientes.",
+    "El tensor: sobre cada una de las tres caras de un elemento en el punto hay una tensión normal (roja) y dos de corte (verde), todas saliendo del centro de la cara. Por la reciprocidad τ_xy = τ_yx, τ_yz = τ_zy y τ_xz = τ_zx, así que quedan seis componentes independientes.",
   "def.f.vector":
     "El vector tensión ρ sobre un plano de normal n: se descompone en la tensión normal σ (según n) y la tangencial τ (en el plano), |ρ|² = σ² + τ².",
   "def.f.invariantes":
