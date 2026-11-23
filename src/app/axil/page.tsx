@@ -5,7 +5,7 @@ import React from "react";
 import Link from "next/link";
 import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 import { SettingsPanel } from "@/components/SettingsPanel";
-import { Sub, plain } from "@/components/Sub";
+import { Sub, eqLines, plain } from "@/components/Sub";
 
 const INK = "#16232E";
 const TENSION = "#0B8A8A";
@@ -41,7 +41,11 @@ function Eq({ children, boxed }: { children: string; boxed?: boolean }) {
           : "my-3 rounded-md bg-stone-100 px-4 py-2 text-center font-mono text-[15px] dark:bg-stone-900"
       }
     >
-      <Sub>{children}</Sub>
+      {eqLines(children).map((line, i) => (
+        <div key={i}>
+          <Sub>{line}</Sub>
+        </div>
+      ))}
     </div>
   );
 }

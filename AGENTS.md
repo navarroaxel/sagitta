@@ -17,7 +17,7 @@ A Next.js 16 + React 19 client-side app that renders structural internal force d
 ```bash
 npm install     # required: installs jsdom + testing-library for the component tests
 npm run dev     # dev server on localhost:3000
-npm test        # full Vitest suite (1028 checks, 2 projects — must stay green)
+npm test        # full Vitest suite (1032 checks, 2 projects — must stay green)
 npm run build   # production build (must stay clean)
 npm run lint    # ESLint
 npx tsc --noEmit  # TypeScript check
@@ -52,7 +52,7 @@ How diagrams are *drawn and labelled* is selected by the **sign-convention setti
 - **Results are derived, not stored.** `ResultsPanel.tsx` + `src/lib/results.ts` compute member-force peaks (`peak`), the equilibrium residual check (`equilibrium`, ✓/✗ via `EQ_TOL`), reactions, and nodal displacements straight from the `SolveOutput`. The editor's **results** tab surfaces them.
 - **World coords:** y-up, metres. SVG coords: y-down. The transform in `geometry.ts` handles the flip via `toSY(y) = oy − y·k`. The canvas supports zoom/pan.
 - **Reaction/load arrows:** drawn with the tip AT the node and the shaft trailing opposite the force. For the vertical reaction the arrowhead base offset and the shaft must share the same `sign` (`ReactionsLayer.tsx`) — a mismatch flips the head for one sign.
-- **Math variables in the guides: `{y}`.** In a translated string (and in `<Eq>`), wrap a Latin variable in braces — `σ = {M}·{y}/{J}_x`, `a distancia {y} del eje`, differentials `{dM}` — and `Sub`/`SvgSub` render it as a serif italic (a slanted sans `y` hardly differs from an upright one), so a Spanish reader does not take the `y` for the conjunction; `{y}_g` keeps the subscript. Greek letters stay as they are, and units are never marked (`kg·m`, `T/m²`). The `*.calc.*` keys (labels of the calculators, also used as `aria-label`s) are not marked. Inside JSX text write `<Eq>{"M·{y}"}</Eq>`, braces are an expression there. Strings with the mark must go through `Sub` (a caption or table header printed with plain `t()` shows the braces) and an `aria-label` through `plain()`; `MathItalic.test.tsx` renders every guide in Spanish and fails on a raw `{`/`}`. Never put a conjunction in braces.
+- **Math variables in the guides: `{y}`.** In a translated string (and in `<Eq>`), wrap a Latin variable in braces — `σ = {M}·{y}/{J}_x`, `a distancia {y} del eje`, differentials `{dM}` — and `Sub`/`SvgSub` render it as a serif italic (a slanted sans `y` hardly differs from an upright one), so a Spanish reader does not take the `y` for the conjunction; `{y}_g` keeps the subscript. Greek letters stay as they are, and units are never marked (`kg·m`, `T/m²`). The `*.calc.*` keys (labels of the calculators, also used as `aria-label`s) are not marked. Inside JSX text write `<Eq>{"M·{y}"}</Eq>`, braces are an expression there. Strings with the mark must go through `Sub` (a caption or table header printed with plain `t()` shows the braces) and an `aria-label` through `plain()`; `MathItalic.test.tsx` renders every guide in Spanish and fails on a raw `{`/`}`. Never put a conjunction in braces. **Several equations in one `<Eq>` box**: separate them with a run of 4+ spaces (or `\n`) and the box prints one per line (`eqLines` in `Sub.tsx`; the `Eq` of `GuideBits`, `/axil`, `/torsion` and `/flexion` all use it) — two formulas on one line read as one; a chain with `→` (3 spaces) stays together.
 - **i18n + theme.** All user-facing strings go through `LanguageContext.tsx` (`t(key)`, EN/ES); adding a string means adding the key to BOTH `EN` and `ES` (the `EN` object's keys define the `TranslationKey` union). Dark mode via `ThemeToggle.tsx`.
 - **Diagram scale:** `scale = (0.17 · diagLen_px · userSlider) / globalMax`. Three independent sliders (N, Q, M), default 1.
 - **Shear jump:** produced automatically by the `d ± 1e-6` station pair in `sampleMember`. No special rendering code needed.
@@ -128,7 +128,7 @@ How diagrams are *drawn and labelled* is selected by the **sign-convention setti
 - `sectionCut.test.ts`, `sectionLoads.test.ts`, `resultantDiagram.test.ts` — the cut's σ field (`stressAt`, `sectionRects`, `memberStressField`: equals the cut's field at its own z, varies along the member, same maximum as the stress check), the loads in the section's axes (free body only), and the resultant diagram's geometry (σ max / σ min where the parallels meet the baseline, σ = 0 on the E.N., baseline ⟂ E.N.).
 - Components: `SectionCut.test.tsx` (figures, loads on the prism, σ along z on the prism's sides and the plate moving with the slider, legend width, full screen + the Z slider inside it), `Frame3DPage.test.tsx` (collapsible editor panel, full screen on the frame canvas).
 
-Total 1028 checks (`npm test`). Component tests render with `@testing-library/react`; remember to add a test there when adding a canvas layer or fixing a rendering bug.
+Total 1032 checks (`npm test`). Component tests render with `@testing-library/react`; remember to add a test there when adding a canvas layer or fixing a rendering bug.
 
 ## 3D presets: numbering (do not "fix" this)
 

@@ -1747,7 +1747,7 @@ const EN = {
   "mat.s8.p3":
     "The stresses are what produce them: σ is normal to the section and τ lies in its plane. For each element {dF} there are three elementary forces:",
   "mat.s8.e1":
-    "along x: {dN} = σ·{dF}        along y: dQ_y = τ_xy·{dF}        along z: dQ_z = τ_xz·{dF}",
+    "along x: {dN} = σ·{dF}        along y: {dQ}_y = τ_xy·{dF}        along z: {dQ}_z = τ_xz·{dF}",
   "mat.s8.p4":
     "Integrating over the whole area F gives the equations of equivalence ({z} and {y} are the coordinates of the element of area):",
   "mat.s8.q1":
@@ -3883,7 +3883,7 @@ const ES: Record<TranslationKey, string> = {
   "mat.s8.p3":
     "Las tensiones son las que los producen: σ es normal a la sección y τ está contenida en su plano. Para cada elemento {dF} hay tres fuerzas elementales:",
   "mat.s8.e1":
-    "sobre x: {dN} = σ·{dF}        sobre y: dQ_y = τ_xy·{dF}        sobre z: dQ_z = τ_xz·{dF}",
+    "sobre x: {dN} = σ·{dF}        sobre y: {dQ}_y = τ_xy·{dF}        sobre z: {dQ}_z = τ_xz·{dF}",
   "mat.s8.p4":
     "Integrando en toda la superficie F quedan las ecuaciones de equivalencia ({z} e {y} son las coordenadas del elemento de superficie):",
   "mat.s8.q1":
