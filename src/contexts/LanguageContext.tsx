@@ -1880,18 +1880,6 @@ const EN = {
     "Indifferent",
   "rs.fig.unstable":
     "Unstable",
-  "rs.s3.kicker":
-    "Method",
-  "rs.s3.title":
-    "Before handing in",
-  "rs.s3.c1":
-    "Look at the unit of the result: it must be the one the exercise asks for.",
-  "rs.s3.c2":
-    "Check the order of magnitude against a known case.",
-  "rs.s3.c3":
-    "Write down the assumptions you used.",
-  "rs.s3.note":
-    "Two slips of the notes to keep in mind: the torque written with a plus sign is a difference, and in the buckling exercise the profile with J_y = 14 435 cm⁴ is an IPB 700, not an IPB 60.",
 } as const;
 
 export type TranslationKey = keyof typeof EN;
@@ -3766,18 +3754,6 @@ const ES: Record<TranslationKey, string> = {
     "Indiferente",
   "rs.fig.unstable":
     "Inestable",
-  "rs.s3.kicker":
-    "Método",
-  "rs.s3.title":
-    "Antes de entregar",
-  "rs.s3.c1":
-    "Mirá la unidad del resultado: tiene que ser la que pide el ejercicio.",
-  "rs.s3.c2":
-    "Chequeá el orden de magnitud contra un caso conocido.",
-  "rs.s3.c3":
-    "Anotá los supuestos que usaste.",
-  "rs.s3.note":
-    "Dos errores de los apuntes para tener presentes: el torsor escrito con signo más es una diferencia, y en el ejercicio de pandeo el perfil con J_y = 14 435 cm⁴ es un IPB 700, no un IPB 60.",
 };
 
 const translations: Record<Language, Record<TranslationKey, string>> = {

@@ -80,19 +80,6 @@ export default function ResumenPage() {
           ))}
         </div>
       </Section>
-
-      <Section kicker="rs.s3.kicker" title="rs.s3.title">
-        <ul className="mb-4 max-w-[66ch] list-disc space-y-1.5 pl-6 text-stone-700 dark:text-stone-300">
-          {["c1", "c2", "c3"].map((c) => (
-            <li key={c}>
-              <Sub>{k(`rs.s3.${c}`)}</Sub>
-            </li>
-          ))}
-        </ul>
-        <p className="max-w-[66ch] text-sm text-stone-600 dark:text-stone-400">
-          <Sub>{t("rs.s3.note")}</Sub>
-        </p>
-      </Section>
     </GuidePage>
   );
 }
