@@ -57,7 +57,7 @@ export function ElementFigure({ principal = false, label: given }: { principal?:
       <Arrow id={`${id}-n`} x1={120} y1={110} x2={88} y2={134} color={LOAD} w={2.8} />
       <Arrow id={`${id}-n`} x1={140} y1={55} x2={140} y2={24} color={LOAD} w={2.8} />
       <Arrow id={`${id}-n`} x1={180} y1={95} x2={212} y2={95} color={LOAD} w={2.8} />
-      <Txt x="82" y="138" textAnchor="end">{principal ? "σ_3" : "σ_z"}</Txt>
+      <Txt x="102" y="144">{principal ? "σ_3" : "σ_z"}</Txt>
       <Txt x="146" y="26">{principal ? "σ_2" : "σ_y"}</Txt>
       <Txt x="216" y="99">{principal ? "σ_1" : "σ_x"}</Txt>
       {!principal && (
@@ -70,12 +70,12 @@ export function ElementFigure({ principal = false, label: given }: { principal?:
           <Arrow id={`${id}-t`} x1={140} y1={55} x2={122.4} y2={68.2} color={TENSION} />
           <Arrow id={`${id}-t`} x1={180} y1={95} x2={180} y2={67} color={TENSION} />
           <Arrow id={`${id}-t`} x1={180} y1={95} x2={162.4} y2={108.2} color={TENSION} />
-          <Txt x="130" y="126" fill={TENSION}>τ_zx</Txt>
-          <Txt x="126" y="88" fill={TENSION}>τ_zy</Txt>
-          <Txt x="150" y="69" fill={TENSION}>τ_yx</Txt>
-          <Txt x="116" y="64" textAnchor="end" fill={TENSION}>τ_yz</Txt>
-          <Txt x="184" y="64" fill={TENSION}>τ_xy</Txt>
-          <Txt x="168" y="120" fill={TENSION}>τ_xz</Txt>
+          <Txt x="130" y="126">τ_zx</Txt>
+          <Txt x="126" y="88">τ_zy</Txt>
+          <Txt x="142" y="65">τ_yx</Txt>
+          <Txt x="116" y="64" textAnchor="end">τ_yz</Txt>
+          <Txt x="184" y="64">τ_xy</Txt>
+          <Txt x="168" y="120">τ_xz</Txt>
         </g>
       )}
       {/* triad */}
