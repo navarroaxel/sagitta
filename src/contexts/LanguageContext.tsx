@@ -2053,7 +2053,7 @@ const EN = {
   "def.t.fsimple":
     "Simple and pure bending",
   "def.d.fsimple":
-    "Simple bending: the forces on both sides of the section reduce, at its centroid, to two couples normal to the plane of the section, with or without shear. Without shear it is pure bending; with shear, bending and shear.",
+    "Loading in which each section carries only a bending moment, with or without shear. Without shear it is pure bending; with shear, bending and shear.",
   "def.t.plano":
     "Bending plane and line of forces",
   "def.d.plano":
@@ -4189,7 +4189,7 @@ const ES: Record<TranslationKey, string> = {
   "def.t.fsimple":
     "Flexión simple y flexión pura",
   "def.d.fsimple":
-    "Flexión simple: las fuerzas a ambos lados de la sección se reducen, en su baricentro, a dos pares normales al plano de la sección, con o sin esfuerzo de corte. Sin corte se llama flexión pura; con corte, flexión y corte.",
+    "Solicitación en la que cada sección soporta solo momento flector, con o sin esfuerzo de corte. Sin corte se llama flexión pura; con corte, flexión y corte.",
   "def.t.plano":
     "Plano de flexión y línea de fuerzas",
   "def.d.plano":
