@@ -41,7 +41,7 @@ function CauchySVG() {
 }
 
 // Jourawski: slice dx between sections 1 and 2 in oblique (cabinet) perspective, x along the beam, y up, depth up-right.
-// The horizontal cut leaves the part Ω on top; its force dN is balanced by dT on the cut surface.
+// The horizontal cut leaves the part Ω on top; its force dN_Ω is balanced by dT on the cut surface.
 function SliceSVG() {
   const { t } = useLanguage();
   const tick = (x: number) => <line x1={x} y1="164" x2={x} y2="176" stroke={INK} strokeWidth="1.5" />;
@@ -49,7 +49,7 @@ function SliceSVG() {
     <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={LOADC} strokeWidth="2.5" markerEnd="url(#shr-arr-b)" />
   );
   return (
-    <svg viewBox="0 0 360 195" className="h-auto w-full" role="img" aria-label={plain(t("shr.s3.fig"))}>
+    <svg viewBox="0 0 390 195" className="h-auto w-full" role="img" aria-label={plain(t("shr.s3.fig"))}>
       <defs>
         <marker id="shr-arr-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M 0 0 L 10 5 L 0 10 z" fill={LOADC} />
@@ -72,12 +72,12 @@ function SliceSVG() {
       <polygon points="70,50 210,50 246,24 106,24" fill="none" stroke={INK} strokeWidth="1.5" />
       <polygon points="210,50 246,24 246,124 210,150" fill="none" stroke={INK} strokeWidth="1.5" />
       <line x1="70" y1="110" x2="210" y2="110" stroke={INK} strokeWidth="1" strokeDasharray="5 3" />
-      {/* N on section 1 (left, hidden face) and N + dN on section 2 (right face) over Ω */}
+      {/* N_Ω on section 1 (left, hidden face) and N_Ω + dN_Ω on section 2 (right face) over Ω */}
       {force(47, 57, 81, 57)}
       {force(61, 47, 95, 47)}
       {force(265, 57, 221, 57)}
       {force(279, 47, 235, 47)}
-      {/* dT on the cut surface, opposite to dN */}
+      {/* dT on the cut surface, opposite to dN_Ω */}
       {force(126, 67, 196, 67)}
       <line x1="200" y1="80" x2="200" y2="110" stroke={INK} strokeWidth="1" />
       <line x1="196" y1="80" x2="204" y2="80" stroke={INK} strokeWidth="1" />
@@ -88,8 +88,8 @@ function SliceSVG() {
       <text x="106" y="14" fontSize="12" textAnchor="middle" fill={INK}>1</text>
       <text x="246" y="14" fontSize="12" textAnchor="middle" fill={INK}>2</text>
       <text x="100" y="74" fontSize="12" textAnchor="middle" fill={INK}>Ω</text>
-      <text x="40" y="52" fontSize="12" textAnchor="end" fill={INK}>N</text>
-      <text x="284" y="51" fontSize="12" fill={INK}>N + dN</text>
+      <text x="40" y="52" fontSize="12" textAnchor="end" fill={INK}><SvgSub>N_Ω</SvgSub></text>
+      <text x="284" y="51" fontSize="12" fill={INK}><SvgSub>N_Ω + dN_Ω</SvgSub></text>
       <text x="160" y="77" fontSize="11" textAnchor="middle" fill={LOADC}>dT</text>
       <text x="208" y="99" fontSize="12" fill={INK}>y</text>
       <text x="64" y="114" fontSize="11" textAnchor="end" fill={INK}>E.N.</text>

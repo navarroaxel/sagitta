@@ -1,6 +1,6 @@
 import React from "react";
 
-const SUBSCRIPT = "_([A-Za-zÁÉÍÓÚáéíóúñ0-9′]+(?:,[A-Za-zÁÉÍÓÚáéíóúñ0-9′]+)?)";
+const SUBSCRIPT = "_([A-Za-zÁÉÍÓÚáéíóúñΩ0-9′]+(?:,[A-Za-zÁÉÍÓÚáéíóúñΩ0-9′]+)?)";
 // {y} marks a math variable (italic, so a lone "y" is not read as the Spanish "y"); _x is a subscript.
 const TOKEN = new RegExp(`\\{([^{}]*)\\}|${SUBSCRIPT}`, "g");
 

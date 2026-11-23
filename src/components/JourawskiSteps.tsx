@@ -181,7 +181,7 @@ function Step5({ label }: { label: string }) {
   const top = 52;
   const bot = 92;
   return (
-    <svg viewBox="0 0 260 190" className="h-auto w-full" role="img" aria-label={label}>
+    <svg viewBox="0 0 300 190" className="h-auto w-full" role="img" aria-label={label}>
       <Defs id={id} />
       <rect x={X1} y={top} width={X2 - X1} height={bot - top} fill={TENSION} fillOpacity="0.25" stroke={INK} strokeWidth="1.5" />
       <Txt x={X1} y={top - 8} textAnchor="middle">1</Txt>
@@ -189,12 +189,12 @@ function Step5({ label }: { label: string }) {
       <Txt x={(X1 + X2) / 2} y={(top + bot) / 2 + 4} textAnchor="middle" fill={TENSION} fontWeight="600">Ω</Txt>
       <Arrow id={id} x1={X1 - 40} y1={(top + bot) / 2} x2={X1 - 2} y2={(top + bot) / 2} />
       <Arrow id={id} x1={X2 + 56} y1={(top + bot) / 2} x2={X2 + 2} y2={(top + bot) / 2} />
-      <Txt x={X1 - 40} y={(top + bot) / 2 - 8}>N</Txt>
-      <Txt x={X2 + 16} y={(top + bot) / 2 - 8}>N + dN</Txt>
+      <Txt x={X1 - 40} y={(top + bot) / 2 - 8}>N_Ω</Txt>
+      <Txt x={X2 + 16} y={(top + bot) / 2 - 8}>N_Ω + dN_Ω</Txt>
       <Arrow id={id} x1={X1 + 14} y1={bot + 14} x2={X2 - 14} y2={bot + 14} color="t" w={3} />
       <line x1={X1} y1={bot} x2={X2} y2={bot} stroke={LOAD} strokeWidth="3" />
       <Txt x={(X1 + X2) / 2} y={bot + 34} textAnchor="middle" fill={TENSION}>dT = τ·s·dx</Txt>
-      <Txt x={(X1 + X2) / 2} y={bot + 56} textAnchor="middle" fontSize="11">dT = dN</Txt>
+      <Txt x={(X1 + X2) / 2} y={bot + 56} textAnchor="middle" fontSize="11">dT = dN_Ω</Txt>
     </svg>
   );
 }

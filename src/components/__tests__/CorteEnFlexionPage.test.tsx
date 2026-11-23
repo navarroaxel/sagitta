@@ -79,9 +79,9 @@ describe("/corte-en-flexion", () => {
     expect(surfaces[0]).toMatch(/L 128 58 L 58 58 Z$/); // (80, 92) and (10, 92) shifted by (48, −34)
     expect(surfaces[1]).toMatch(/ C /);
     // 5: N, N + dN and dT = dN
-    expect(text(5)).toMatch(/N \+ dN/);
+    expect(text(5)).toMatch(/NΩ.*NΩ \+ dNΩ/);
     expect(text(5)).toMatch(/dT = τ·s·dx/);
-    expect(text(5)).toMatch(/dT = dN/);
+    expect(text(5)).toMatch(/dT = dNΩ/);
     // Ω is above the neutral axis: compression, so N pushes into the face (arrows point to the faces) and dT points the other way
     const arrows = Array.from(step(5).querySelectorAll("svg line[marker-end]")).map((l) => [Number(l.getAttribute("x1")), Number(l.getAttribute("x2"))]);
     expect(arrows[0][1]).toBeGreaterThan(arrows[0][0]); // N on face 1 pushes right, into the slice
@@ -90,7 +90,7 @@ describe("/corte-en-flexion", () => {
     expect(document.body.textContent).not.toMatch(/[{}]/);
   });
 
-  test("it says why dN is not zero: the moment changes by dM = Q·dx, so there is shear only if Q ≠ 0 — with a checked example", () => {
+  test("it says why dNΩ is not zero: the moment changes by dM = Q·dx, so there is shear only if Q ≠ 0 — with a checked example", () => {
     render(
       <LanguageProvider>
         <CorteEnFlexionPage />
@@ -99,8 +99,9 @@ describe("/corte-en-flexion", () => {
     const why = document.body.textContent!;
     expect(why).toMatch(/Not in the notes/);
     expect(why).toMatch(/dM = Q·dx/);
+    expect(why).toMatch(/NΩ \(written N in the notes\)/);
     expect(why).toMatch(/is not zero because Q is not zero/);
-    expect(why).toMatch(/pure bending \(Q = 0\).*dN = 0/);
+    expect(why).toMatch(/pure bending \(Q = 0\).*dNΩ = 0/);
     // the numbers of the example: S = 375, J = 6 667, N = 5 625, N + dN = 5 681, dN = 56
     const J = (10 * 20 ** 3) / 12;
     const S = 10 * 5 * 7.5;
@@ -112,6 +113,6 @@ describe("/corte-en-flexion", () => {
     expect(N2 - N).toBeCloseTo((1000 * S) / J, 8);
     expect(N2 - N).toBeCloseTo(56, 0);
     const ex = screen.getByTestId("shr-why-example").textContent!;
-    expect(ex).toMatch(/375 cm³.*6 667 cm⁴.*5 625 kg.*5 681 kg.*56 kg/);
+    expect(ex).toMatch(/375 cm³.*6 667 cm⁴.*NΩ ≈ 5 625 kg.*NΩ \+ dNΩ ≈ 5 681 kg.*dNΩ ≈ 56 kg/);
   });
 });

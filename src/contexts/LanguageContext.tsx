@@ -1148,7 +1148,7 @@ const EN = {
   "shr.s2.fig":
     "Cauchy: on two perpendicular planes the shear stresses τ_xy and τ_yx are equal; both arrows point towards the common edge (here the top right) or both away from it.",
   "shr.s3.fig":
-    "Slice {dx} of the beam: the normal stresses give N on section 1 and N + {dN} on section 2 over the hatched area Ω, at distance {y} from the neutral axis; the difference {dN} is balanced by the shear force {dT} on the cut.",
+    "Slice {dx} of the beam: the normal stresses give {N}_Ω on section 1 and {N}_Ω + {dN}_Ω on section 2 over the hatched area Ω, at distance {y} from the neutral axis; the difference {dN}_Ω is balanced by the shear force {dT} on the cut.",
   "shr.steps.title":
     "Step by step: the cuts we make to the beam",
   "shr.steps.1":
@@ -1164,7 +1164,7 @@ const EN = {
   "shr.steps.section":
     "cross-section",
   "shr.steps.5":
-    "We isolate the part Ω: the normal stresses on it give N on face 1 and N + dN on face 2 (it is not the same force because the moment changed, dM = Q·dx), and the shear force dT on the cut balances the difference, dT = dN.",
+    "We isolate the part Ω: the normal stresses on it give {N}_Ω on face 1 and {N}_Ω + {dN}_Ω on face 2 (it is not the same force because the moment changed, dM = Q·dx), and the shear force dT on the cut balances the difference, dT = {dN}_Ω.",
   "shr.steps.plane":
     "straight s: a plane",
   "shr.steps.curved":
@@ -1178,15 +1178,15 @@ const EN = {
   "shr.s3.p1":
     "The existence of shear produces tangential stresses in the plane of the section. Take a beam of constant section and a slice of length {dx} between sections 1 and 2. Because of bending, at a distance {y} from the neutral axis the stress is σ = {M}·{y}/{J}_x on section 1 and σ + dσ = ({M} + {dM})·{y}/{J}_x on section 2.",
   "shr.s3.why":
-    "Not in the notes, but it is what explains why there is shear at all: N here is the force given by the normal stresses on the part Ω only (not the axial force of the bar, which is zero in bending), and N = ({M}/{J}_x)·{S}_x. Between faces 1 and 2 the moment goes from {M} to {M} + {dM}, and that change is the shear force: {dM} = {Q}·{dx}. So {dN} = ({dM}/{J}_x)·{S}_x = {Q}·{dx}·{S}_x/{J}_x is not zero because {Q} is not zero. In pure bending ({Q} = 0) the two forces are equal, {dN} = 0, no force {dT} is needed on the cut and there is no shear stress.",
+    "Not in the notes, but it is what explains why there is shear at all: {N}_Ω (written N in the notes) is the force given by the normal stresses on the part Ω only (not the axial force of the bar, which is zero in bending), and {N}_Ω = ({M}/{J}_x)·{S}_x. Between faces 1 and 2 the moment goes from {M} to {M} + {dM}, and that change is the shear force: {dM} = {Q}·{dx}. So {dN}_Ω = ({dM}/{J}_x)·{S}_x = {Q}·{dx}·{S}_x/{J}_x is not zero because {Q} is not zero. In pure bending ({Q} = 0) the two forces are equal, {dN}_Ω = 0, no force {dT} is needed on the cut and there is no shear stress.",
   "shr.s3.why.ex":
-    "Example: rectangle 10 × 20 cm, cut at y = 5 cm above the neutral axis: S_x = 10·5·7.5 = 375 cm³, J_x = 10·20³/12 = 6 667 cm⁴. With M = 100 000 kg·cm the part Ω carries N ≈ 5 625 kg; with M + dM = 101 000 kg·cm, N + dN ≈ 5 681 kg. The difference dN ≈ 56 kg is what dT must balance (dN = dM·S_x/J_x = 1 000·375/6 667).",
+    "Example: rectangle 10 × 20 cm, cut at y = 5 cm above the neutral axis: S_x = 10·5·7.5 = 375 cm³, J_x = 10·20³/12 = 6 667 cm⁴. With M = 100 000 kg·cm the part Ω carries {N}_Ω ≈ 5 625 kg; with M + dM = 101 000 kg·cm, {N}_Ω + {dN}_Ω ≈ 5 681 kg. The difference {dN}_Ω ≈ 56 kg is what dT must balance ({dN}_Ω = dM·S_x/J_x = 1 000·375/6 667).",
   "shr.s3.p2":
-    "Now cut off part of the slice by a cylindrical surface of width s. On the hatched part (area Ω) the normal stresses give a force N on section 1 and N + {dN} on section 2; both are coaxial and their resultant is",
+    "Now cut off part of the slice by a cylindrical surface of width s. On the hatched part (area Ω) the normal stresses give a force {N}_Ω on section 1 and {N}_Ω + {dN}_Ω on section 2; both are coaxial and their resultant is",
   "shr.s3.e1":
-    "{dN} = ∫Ω ({dM}/{J}_x)·{y} dΩ",
+    "{dN}_Ω = ∫Ω ({dM}/{J}_x)·{y} dΩ",
   "shr.s3.p3":
-    "That force tends to slide the part above the surface against the rest. Tangential stresses τ on the separating surface oppose it; they are parallel to the axis and vary continuously. With s the length of the curve where the surface meets the section, {dT} = {dx}·∫τ {ds}, and equilibrium requires {dT} = {dN}:",
+    "That force tends to slide the part above the surface against the rest. Tangential stresses τ on the separating surface oppose it; they are parallel to the axis and vary continuously. With s the length of the curve where the surface meets the section, {dT} = {dx}·∫τ {ds}, and equilibrium requires {dT} = {dN}_Ω:",
   "shr.s3.e2":
     "({dM}/{J}_x)·∫Ω {y} dΩ = {dx}·∫s τ {ds}",
   "shr.s3.p4":
@@ -3384,7 +3384,7 @@ const ES: Record<TranslationKey, string> = {
   "shr.s2.fig":
     "Cauchy: sobre dos planos perpendiculares las tensiones de corte τ_xy y τ_yx son iguales; las dos flechas van hacia la arista común (acá la de arriba a la derecha) o las dos se alejan de ella.",
   "shr.s3.fig":
-    "Rebanada {dx} de la viga: las tensiones normales dan N en la sección 1 y N + {dN} en la 2 sobre el área rayada Ω, a distancia {y} del eje neutro; la diferencia {dN} la equilibra la fuerza de corte {dT} sobre el corte.",
+    "Rebanada {dx} de la viga: las tensiones normales dan {N}_Ω en la sección 1 y {N}_Ω + {dN}_Ω en la 2 sobre el área rayada Ω, a distancia {y} del eje neutro; la diferencia {dN}_Ω la equilibra la fuerza de corte {dT} sobre el corte.",
   "shr.steps.title":
     "Paso a paso: los cortes que le hacemos a la viga",
   "shr.steps.1":
@@ -3400,7 +3400,7 @@ const ES: Record<TranslationKey, string> = {
   "shr.steps.section":
     "sección transversal",
   "shr.steps.5":
-    "Aislamos la parte Ω: las tensiones normales sobre ella dan N en la cara 1 y N + dN en la 2 (no es la misma fuerza porque el momento cambió, dM = Q·dx), y la fuerza de corte dT sobre el corte equilibra la diferencia, dT = dN.",
+    "Aislamos la parte Ω: las tensiones normales sobre ella dan {N}_Ω en la cara 1 y {N}_Ω + {dN}_Ω en la 2 (no es la misma fuerza porque el momento cambió, dM = Q·dx), y la fuerza de corte dT sobre el corte equilibra la diferencia, dT = {dN}_Ω.",
   "shr.steps.plane":
     "s recta: un plano",
   "shr.steps.curved":
@@ -3414,15 +3414,15 @@ const ES: Record<TranslationKey, string> = {
   "shr.s3.p1":
     "La existencia del corte origina tensiones tangenciales en el plano de la sección. Sea una viga de sección constante y una rebanada de largo {dx} entre las secciones 1 y 2. Por la flexión, a una distancia {y} del eje neutro la tensión es σ = {M}·{y}/{J}_x en la sección 1 y σ + dσ = ({M} + {dM})·{y}/{J}_x en la 2.",
   "shr.s3.why":
-    "No está en el apunte, pero es lo que explica por qué hay corte: acá N es la fuerza que dan las tensiones normales sobre la parte Ω solamente (no la fuerza axial de la barra, que es nula en flexión), y N = ({M}/{J}_x)·{S}_x. Entre las caras 1 y 2 el momento pasa de {M} a {M} + {dM}, y ese cambio es el esfuerzo de corte: {dM} = {Q}·{dx}. Por eso {dN} = ({dM}/{J}_x)·{S}_x = {Q}·{dx}·{S}_x/{J}_x no es cero: porque {Q} no es cero. En flexión pura ({Q} = 0) las dos fuerzas son iguales, {dN} = 0, no hace falta ninguna fuerza {dT} sobre el corte y no hay tensión tangencial.",
+    "No está en el apunte, pero es lo que explica por qué hay corte: acá {N}_Ω (N en el apunte) es la fuerza que dan las tensiones normales sobre la parte Ω solamente (no la fuerza axial de la barra, que es nula en flexión), y {N}_Ω = ({M}/{J}_x)·{S}_x. Entre las caras 1 y 2 el momento pasa de {M} a {M} + {dM}, y ese cambio es el esfuerzo de corte: {dM} = {Q}·{dx}. Por eso {dN}_Ω = ({dM}/{J}_x)·{S}_x = {Q}·{dx}·{S}_x/{J}_x no es cero: porque {Q} no es cero. En flexión pura ({Q} = 0) las dos fuerzas son iguales, {dN}_Ω = 0, no hace falta ninguna fuerza {dT} sobre el corte y no hay tensión tangencial.",
   "shr.s3.why.ex":
-    "Ejemplo: rectángulo de 10 × 20 cm, corte a y = 5 cm sobre el eje neutro: S_x = 10·5·7,5 = 375 cm³, J_x = 10·20³/12 = 6 667 cm⁴. Con M = 100 000 kg·cm la parte Ω soporta N ≈ 5 625 kg; con M + dM = 101 000 kg·cm, N + dN ≈ 5 681 kg. La diferencia dN ≈ 56 kg es la que tiene que equilibrar dT (dN = dM·S_x/J_x = 1 000·375/6 667).",
+    "Ejemplo: rectángulo de 10 × 20 cm, corte a y = 5 cm sobre el eje neutro: S_x = 10·5·7,5 = 375 cm³, J_x = 10·20³/12 = 6 667 cm⁴. Con M = 100 000 kg·cm la parte Ω soporta {N}_Ω ≈ 5 625 kg; con M + dM = 101 000 kg·cm, {N}_Ω + {dN}_Ω ≈ 5 681 kg. La diferencia {dN}_Ω ≈ 56 kg es la que tiene que equilibrar dT ({dN}_Ω = dM·S_x/J_x = 1 000·375/6 667).",
   "shr.s3.p2":
-    "Ahora separamos una parte de la rebanada por una superficie cilíndrica de ancho s. En la parte rayada (área Ω) las tensiones normales generan una fuerza N en la sección 1 y N + {dN} en la 2; ambas son coaxiales y su resultante es",
+    "Ahora separamos una parte de la rebanada por una superficie cilíndrica de ancho s. En la parte rayada (área Ω) las tensiones normales generan una fuerza {N}_Ω en la sección 1 y {N}_Ω + {dN}_Ω en la 2; ambas son coaxiales y su resultante es",
   "shr.s3.e1":
-    "{dN} = ∫Ω ({dM}/{J}_x)·{y} dΩ",
+    "{dN}_Ω = ∫Ω ({dM}/{J}_x)·{y} dΩ",
   "shr.s3.p3":
-    "Esa fuerza tiende a deslizar la parte superior respecto del resto. A esa acción se oponen tensiones tangenciales τ que actúan en la superficie de separación; son paralelas al eje de la pieza y varían en forma continua. Siendo s la longitud de la curva de intersección de la superficie con el plano de la sección, {dT} = {dx}·∫τ {ds}, y por equilibrio {dT} = {dN}:",
+    "Esa fuerza tiende a deslizar la parte superior respecto del resto. A esa acción se oponen tensiones tangenciales τ que actúan en la superficie de separación; son paralelas al eje de la pieza y varían en forma continua. Siendo s la longitud de la curva de intersección de la superficie con el plano de la sección, {dT} = {dx}·∫τ {ds}, y por equilibrio {dT} = {dN}_Ω:",
   "shr.s3.e2":
     "({dM}/{J}_x)·∫Ω {y} dΩ = {dx}·∫s τ {ds}",
   "shr.s3.p4":

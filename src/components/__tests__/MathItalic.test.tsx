@@ -45,6 +45,9 @@ describe("math variables in italic", () => {
     expect(container.textContent).toBe("σ = M·y/Jx, a distancia y del eje");
     expect(plain("a {y} b")).toBe("a y b");
     expect(plain("σ_P y {J}_x,max")).toBe("σP y Jx,max");
+    expect(plain("{N}_Ω + {dN}_Ω")).toBe("NΩ + dNΩ"); // Ω is a valid subscript (the force on the part Ω)
+    const sub = render(<Sub>{"{N}_Ω"}</Sub>);
+    expect(sub.container.querySelector("sub")!.textContent).toBe("Ω");
   });
 
   test("SvgSub italicises the variable and lowers the text after a subscript", () => {
