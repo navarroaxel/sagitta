@@ -27,6 +27,8 @@ describe("/preguntas-teoria", () => {
     expect(text).toMatch(/SyG\(F1\) = −SyG\(F2\)/);
     expect(text).toMatch(/SyG\(F1\) \+ SyG\(F2\) = 0/);
     expect(text).toMatch(/gives no measurements, and none are needed/);
+    // the answer comes first, the example that justifies it after
+    expect(text.indexOf("equal in absolute value and of opposite sign")).toBeLessThan(text.indexOf("Rectangle of 10 cm"));
     expect(container.querySelectorAll("figure svg")).toHaveLength(1);
     const svg = container.querySelector("figure svg")!;
     expect(svg.textContent).toMatch(/G1.*G2.*yG.*xG.*F1.*F2.*d1.*d2/);

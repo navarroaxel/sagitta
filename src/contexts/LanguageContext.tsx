@@ -2304,14 +2304,16 @@ const EN = {
     "Equal in absolute value, opposite in sign",
   "qt.ans.p1":
     "The two static moments are equal in absolute value and of opposite sign, so they add up to zero:",
+  "qt.ans.reason":
+    "The reason in one line: {y}_G goes through the centroid of the whole figure, and the static moment of the whole figure about an axis through its centroid is zero, so {S}({F}_1) + {S}({F}_2) = 0.",
   "qt.ans.p2":
     "It holds however the figure is split into {F}_1 and {F}_2, and for any axis through the centroid, {x}_G included.",
   "qt.ans.p3":
     "The exam gives no measurements, and none are needed: it asks for a relation, not a number. The only fact used is that {y}_G goes through the centroid. The proportion {F}_1 = {F}_2 / 3 is read from the drawing; it is not data of the problem, and the answer would be the same for any other split. The numbers below only illustrate it.",
   "qt.why.kicker":
-    "Why",
+    "In general",
   "qt.why.title":
-    "Because the axis goes through the centroid",
+    "The derivation",
   "qt.why.p1":
     "The static moment of an area about an axis is {S} = ∫ {x} {dA}, with {x} measured from that axis. About an axis through the centroid the whole figure has {S} = 0: that is the definition of the centroid ({x}_g = {S} / {A}).",
   "qt.why.p2":
@@ -2323,9 +2325,9 @@ const EN = {
   "qt.why.p5":
     "The areas are not equal in general: the part with less area has its centroid farther from the axis. In the exam’s figure {F}_1 = {F}_2 / 3, so {d}_1 = 3·{d}_2.",
   "qt.ex.kicker":
-    "Check",
+    "Example",
   "qt.ex.title":
-    "An illustration with numbers",
+    "An example that shows it",
   "qt.ex.p1":
     "Rectangle of 10 cm × 4 cm. {F}_1 is its left quarter (2.5 cm wide) and {F}_2 the remaining 7.5 cm. {y}_G is the vertical line through the centroid of the whole rectangle, 5 cm from each side, so it crosses {F}_2.",
   "qt.ex.r":
@@ -4638,14 +4640,16 @@ const ES: Record<TranslationKey, string> = {
     "Iguales en módulo y de signo contrario",
   "qt.ans.p1":
     "Los dos momentos estáticos son iguales en módulo y de signo contrario, por lo tanto su suma es cero:",
+  "qt.ans.reason":
+    "El porqué en una línea: {y}_G pasa por el baricentro de la figura completa, y el momento estático de la figura completa respecto de un eje baricéntrico es cero, entonces {S}({F}_1) + {S}({F}_2) = 0.",
   "qt.ans.p2":
     "Vale cualquiera sea la forma de dividir la figura en {F}_1 y {F}_2, y para cualquier eje que pase por el baricentro, {x}_G incluido.",
   "qt.ans.p3":
     "El parcial no da medidas y no hacen falta: pide una relación, no un número. El único dato que se usa es que {y}_G pasa por el baricentro. La proporción {F}_1 = {F}_2 / 3 se lee del dibujo; no es dato del problema, y la respuesta sería la misma para cualquier otra división. Los números de abajo solo lo ilustran.",
   "qt.why.kicker":
-    "Por qué",
+    "En general",
   "qt.why.title":
-    "Porque el eje pasa por el baricentro",
+    "La deducción",
   "qt.why.p1":
     "El momento estático de un área respecto de un eje es {S} = ∫ {x} {dA}, con {x} medida desde ese eje. Respecto de un eje que pasa por el baricentro, la figura completa tiene {S} = 0: esa es la definición del baricentro ({x}_g = {S} / {A}).",
   "qt.why.p2":
@@ -4657,9 +4661,9 @@ const ES: Record<TranslationKey, string> = {
   "qt.why.p5":
     "Las áreas en general no son iguales: la parte de menor área tiene su baricentro más lejos del eje. En la figura del parcial {F}_1 = {F}_2 / 3, entonces {d}_1 = 3·{d}_2.",
   "qt.ex.kicker":
-    "Verificación",
+    "Ejemplo",
   "qt.ex.title":
-    "Una ilustración con números",
+    "Un ejemplo que lo justifica",
   "qt.ex.p1":
     "Rectángulo de 10 cm × 4 cm. {F}_1 es su cuarto izquierdo (2,5 cm de ancho) y {F}_2 los 7,5 cm restantes. {y}_G es la vertical por el baricentro del rectángulo completo, a 5 cm de cada lado, así que atraviesa a {F}_2.",
   "qt.ex.r":

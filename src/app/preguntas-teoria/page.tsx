@@ -81,20 +81,11 @@ export default function PreguntasTeoriaPage() {
       <Section kicker="qt.ans.kicker" title="qt.ans.title">
         <Para k="qt.ans.p1" />
         <Eq boxed>{"{S}_yG({F}_1) = −{S}_yG({F}_2)    {S}_yG({F}_1) + {S}_yG({F}_2) = 0"}</Eq>
-        <Para k="qt.ans.p2" />
-        <Para k="qt.ans.p3" />
-      </Section>
-
-      <Section kicker="qt.why.kicker" title="qt.why.title">
-        <Para k="qt.why.p1" />
-        <Para k="qt.why.p2" />
-        <Para k="qt.why.p3" />
-        <Para k="qt.why.p4" />
-        <Eq>{"{F}_1·{d}_1 = {F}_2·{d}_2"}</Eq>
-        <Para k="qt.why.p5" />
+        <Para k="qt.ans.reason" />
       </Section>
 
       <Section kicker="qt.ex.kicker" title="qt.ex.title">
+        <Para k="qt.ans.p3" />
         <Para k="qt.ex.p1" />
         <div className="mx-auto max-w-sm">
           <Figure caption={<Sub>{t("qt.fig")}</Sub>}>
@@ -111,6 +102,16 @@ export default function PreguntasTeoriaPage() {
             {t("qt.defs")}
           </Link>
         </p>
+      </Section>
+
+      <Section kicker="qt.why.kicker" title="qt.why.title">
+        <Para k="qt.why.p1" />
+        <Para k="qt.why.p2" />
+        <Para k="qt.why.p3" />
+        <Para k="qt.why.p4" />
+        <Eq>{"{F}_1·{d}_1 = {F}_2·{d}_2"}</Eq>
+        <Para k="qt.why.p5" />
+        <Para k="qt.ans.p2" />
       </Section>
 
       <Section kicker="qt.exam.kicker" title="qt.exam.title">
