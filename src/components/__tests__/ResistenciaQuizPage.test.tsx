@@ -41,4 +41,9 @@ describe("/resistencia-quiz", () => {
     expect(screen.getByText("Correct")).toBeInTheDocument();
     expect(screen.getByText(/1 correct/)).toBeInTheDocument();
   });
+
+  test("no question-type chip (every question is multiple choice)", () => {
+    setup();
+    expect(screen.queryByText("Multiple choice")).not.toBeInTheDocument();
+  });
 });

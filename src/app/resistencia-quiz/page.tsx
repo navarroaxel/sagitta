@@ -28,6 +28,7 @@ export default function ResistenciaQuizPage() {
         questions={MATERIALS_QUIZ_QUESTIONS}
         topics={TOPICS}
         storageKey="sagitta-materials-quiz-answers"
+        showType={false}
       />
     </div>
   );

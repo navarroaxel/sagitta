@@ -29,11 +29,6 @@ describe("materials quiz bank", () => {
     );
     expect(Math.min(...counts)).toBeGreaterThanOrEqual(4);
   });
-  test("the cantilever question matches the hand calculation", () => {
-    const q = MATERIALS_QUIZ_QUESTIONS.find((x) => x.id === "fx6")!;
-    expect(q.options.es[q.correct]).toBe("299 kg");
-    expect(Math.floor((1400 * 214) / 1000)).toBe(299);
-  });
   test("the right answer is not given away by its length or its letter", () => {
     const counts = [0, 1, 2, 3].map(
       (i) => MATERIALS_QUIZ_QUESTIONS.filter((q) => q.correct === i).length,

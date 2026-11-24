@@ -12,7 +12,10 @@ import {
   scoreClaudeQuiz,
   shuffle,
 } from "@/lib/claudeQuiz";
-import { CLAUDE_QUIZ_QUESTIONS, CLAUDE_QUIZ_TOPICS } from "@/lib/claudeQuizData";
+import {
+  CLAUDE_QUIZ_QUESTIONS,
+  CLAUDE_QUIZ_TOPICS,
+} from "@/lib/claudeQuizData";
 import { ClaudeQuestionCard } from "./ClaudeQuestionCard";
 
 const DEFAULT_ANSWERS_KEY = "sagitta-claude-quiz-answers";
@@ -42,12 +45,15 @@ export interface ClaudeQuizProps {
   topics?: ClaudeQuizTopic[];
   /** localStorage key of the remembered answers. */
   storageKey?: string;
+  /** Show each card's question-type chip (default true). */
+  showType?: boolean;
 }
 
 export function ClaudeQuiz({
   questions: QUESTIONS = CLAUDE_QUIZ_QUESTIONS,
   topics = CLAUDE_TOPICS,
   storageKey: ANSWERS_KEY = DEFAULT_ANSWERS_KEY,
+  showType = true,
 }: ClaudeQuizProps = {}) {
   const { t } = useLanguage();
   const TOPICS: (ClaudeQuizTopic | "all")[] = ["all", ...topics];
@@ -168,7 +174,9 @@ export function ClaudeQuiz({
             onClick={() => handleTopicChange(tp)}
             className={chipClass(topic === tp)}
           >
-            {tp === "all" ? t("claudeQuiz.filter.all") : t(`claudeQuiz.topic.${tp}`)}{" "}
+            {tp === "all"
+              ? t("claudeQuiz.filter.all")
+              : t(`claudeQuiz.topic.${tp}`)}{" "}
             <span className="opacity-60">({topicCount(tp)})</span>
           </button>
         ))}
@@ -227,6 +235,7 @@ export function ClaudeQuiz({
           key={question.id}
           question={question}
           index={i}
+          showType={showType}
           answer={answers[question.id] ?? null}
           onAnswer={(value) => handleAnswer(question.id, value)}
         />

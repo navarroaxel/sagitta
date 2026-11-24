@@ -347,19 +347,31 @@ export const MATERIALS_QUIZ_QUESTIONS: ClaudeQuizQuestion[] = [
     "fx6",
     "flexion",
     {
-      es: "Un voladizo de 0,5 m (IPN 200, W_x = 214 cm³) lleva en la punta 20·P. Con σ adm = 1400 kg/cm², ¿cuál es el mayor P entero (en kg)?",
-      en: "A 0.5 m cantilever (IPN 200, W_x = 214 cm³) carries 20·P at its tip. With σ adm = 1400 kg/cm², what is the largest whole P (in kg)?",
+      es: "En una viga de sección rectangular se duplica la altura h (con la misma base b y el mismo momento flector M). La tensión máxima σ = M/W:",
+      en: "In a rectangular beam the depth h is doubled (same width b and same bending moment M). The maximum stress σ = M/W:",
     },
-    { es: "299 kg", en: "299 kg" },
-    [
-      { es: "2 996 kg", en: "2 996 kg" },
-      { es: "150 kg", en: "150 kg" },
-      { es: "600 kg", en: "600 kg" },
-    ],
-    1,
     {
-      es: "M = 20P · 50 cm = 1000·P kg·cm; σ = M/W_x ≤ 1400 ⇒ P ≤ 1400·214/1000 = 299,6 ⇒ 299 kg.",
-      en: "M = 20P · 50 cm = 1000·P kg·cm; σ = M/W_x ≤ 1400 ⇒ P ≤ 1400·214/1000 = 299.6 ⇒ 299 kg.",
+      es: "Se reduce a la cuarta parte, porque W = b·h²/6 se multiplica por 4",
+      en: "Drops to a quarter, because W = b·h²/6 is multiplied by 4",
+    },
+    [
+      {
+        es: "Se reduce a la mitad, porque W = b·h²/6 se multiplica por 2",
+        en: "Is halved, because W = b·h²/6 is multiplied by 2",
+      },
+      {
+        es: "Se reduce a la octava parte, porque W = b·h²/6 se multiplica por 8",
+        en: "Drops to an eighth, because W = b·h²/6 is multiplied by 8",
+      },
+      {
+        es: "No cambia, porque el momento M y la base b siguen siendo los mismos",
+        en: "Does not change, because M and the width b stay the same",
+      },
+    ],
+    0,
+    {
+      es: 'W = J/y_máx = b·h²/6 crece con h²: con 2h, W × 4 y σ/4. Por eso conviene poner la sección "parada" (la altura en el plano de flexión).',
+      en: 'W = J/y_max = b·h²/6 grows with h²: with 2h, W × 4 and σ/4. That is why the section is best placed "on edge" (the depth in the bending plane).',
     },
   ),
 
