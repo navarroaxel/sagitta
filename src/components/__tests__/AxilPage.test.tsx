@@ -9,7 +9,9 @@ describe("/axil", () => {
         <AxilPage />
       </LanguageProvider>,
     );
-    expect(container.querySelectorAll("figure svg").length).toBe(1);
+    expect(container.querySelectorAll("figure svg").length).toBe(2);
+    const el = container.querySelectorAll("figure svg")[0];
+    expect(el.textContent).toMatch(/γ = 0.*τ = 0.*γ ≠ 0.*τ ≠ 0/);
     expect(document.body.textContent).toMatch(/Δl = N·l \/ \(A·E\)/);
     expect(container.querySelector('[data-testid="axl-e1"]')?.textContent).toMatch(/1\.066/);
     expect(container.querySelector('[data-testid="axl-e2"]')?.textContent).toMatch(/1 256\.6/);

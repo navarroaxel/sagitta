@@ -961,6 +961,8 @@ const EN = {
     "Since the sections just translate parallel to themselves, ε = Δ{l}/{l} is constant, hence σ = {E}·ε is constant. Then ∫σ·{z} {dA} = σ·∫{z} {dA} and ∫σ·{y} {dA} = σ·∫{y} {dA} are the static moments of the area about the centroidal axes {y} and {z}: zero, so conditions 5 and 6 hold. The first one gives σ·{A} = {N}.",
   "axl.fig":
     "A bar under N: every cross-section carries the same σ = {N}/{A}.",
+  "axl.fig2":
+    "An element of the bar. Under axial load its right angles stay right: the shear strain is γ = 0, hence τ = 0 and only σ acts on its faces (left). An element that were sheared (γ ≠ 0, right, not the case here) would carry τ.",
   "axl.s3.kicker":
     "03 — Formulas",
   "axl.s3.title":
@@ -3235,6 +3237,8 @@ const ES: Record<TranslationKey, string> = {
     "Como las secciones se desplazan paralelamente, ε = Δ{l}/{l} es constante y por lo tanto σ = {E}·ε también. Entonces ∫σ·{z} {dA} = σ·∫{z} {dA} y ∫σ·{y} {dA} = σ·∫{y} {dA} son los momentos estáticos del área respecto de los ejes baricéntricos {y} y {z}: nulos, así que se verifican la 5 y la 6. La primera da σ·{A} = {N}.",
   "axl.fig":
     "Una barra bajo N: toda sección recta soporta la misma σ = {N}/{A}.",
+  "axl.fig2":
+    "Un elemento de la barra. Bajo carga axil sus ángulos rectos siguen siendo rectos: la distorsión es γ = 0, por lo tanto τ = 0 y sobre sus caras solo actúa σ (izquierda). Un elemento distorsionado (γ ≠ 0, derecha, no es el caso) tendría τ.",
   "axl.s3.kicker":
     "03 — Fórmulas",
   "axl.s3.title":

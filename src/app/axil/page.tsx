@@ -5,11 +5,12 @@ import React from "react";
 import Link from "next/link";
 import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 import { SettingsPanel } from "@/components/SettingsPanel";
-import { Sub, eqLines, plain } from "@/components/Sub";
+import { Sub, SvgSub, eqLines, plain } from "@/components/Sub";
 
 const INK = "#16232E";
 const TENSION = "#0B8A8A";
 const LOAD = "#C0392B";
+const FAINT = "#C9D2D8";
 
 function Kicker({ children }: { children: React.ReactNode }) {
   return (
@@ -98,6 +99,39 @@ function BarSVG() {
   );
 }
 
+// An element of the bar: axial load keeps its right angles (γ = 0, so τ = 0); a sheared element (γ ≠ 0) would carry τ.
+function ElementSVG() {
+  const { t } = useLanguage();
+  const head = (x: number, y: number, dir: 1 | -1) => `${x},${y} ${x - 7 * dir},${y - 3.5} ${x - 7 * dir},${y + 3.5}`;
+  return (
+    <svg viewBox="0 0 330 160" className="h-auto w-full" role="img" aria-label={plain(t("axl.fig2"))}>
+      {/* axial: right angles stay right angles */}
+      <rect x="40" y="50" width="50" height="50" fill="none" stroke={FAINT} strokeWidth="1.5" strokeDasharray="4 3" />
+      <rect x="40" y="53" width="64" height="44" fill="#E7EEF2" stroke={INK} strokeWidth="2" />
+      <polyline points="40,63 50,63 50,53" fill="none" stroke={INK} strokeWidth="1" />
+      <line x1="104" y1="75" x2="132" y2="75" stroke={TENSION} strokeWidth="2.5" />
+      <polygon points={head(138, 75, 1)} fill={TENSION} />
+      <line x1="40" y1="75" x2="12" y2="75" stroke={TENSION} strokeWidth="2.5" />
+      <polygon points={head(6, 75, -1)} fill={TENSION} />
+      <text x="140" y="68" fontSize="12" fill={INK}><SvgSub>σ</SvgSub></text>
+      <text x="72" y="120" fontSize="12" fill={INK} textAnchor="middle"><SvgSub>γ = 0</SvgSub></text>
+      <text x="72" y="136" fontSize="12" fill={INK} textAnchor="middle"><SvgSub>τ = 0</SvgSub></text>
+      {/* not the case: sheared element */}
+      <rect x="200" y="50" width="50" height="50" fill="none" stroke={FAINT} strokeWidth="1.5" strokeDasharray="4 3" />
+      <polygon points="200,100 250,100 266,50 216,50" fill="#F7E9EE" stroke={LOAD} strokeWidth="2" />
+      <line x1="262" y1="50" x2="290" y2="50" stroke={LOAD} strokeWidth="2.5" />
+      <polygon points={head(296, 50, 1)} fill={LOAD} />
+      <line x1="204" y1="100" x2="176" y2="100" stroke={LOAD} strokeWidth="2.5" />
+      <polygon points={head(170, 100, -1)} fill={LOAD} />
+      <path d="M 200 82 A 18 18 0 0 1 206 83" fill="none" stroke={INK} strokeWidth="1.5" />
+      <text x="298" y="46" fontSize="12" fill={INK}><SvgSub>τ</SvgSub></text>
+      <text x="168" y="95" fontSize="12" fill={INK} textAnchor="end"><SvgSub>τ</SvgSub></text>
+      <text x="236" y="120" fontSize="12" fill={LOAD} textAnchor="middle"><SvgSub>γ ≠ 0</SvgSub></text>
+      <text x="236" y="136" fontSize="12" fill={LOAD} textAnchor="middle"><SvgSub>τ ≠ 0</SvgSub></text>
+    </svg>
+  );
+}
+
 export default function AxilPage() {
   const { t } = useLanguage();
   return (
@@ -139,6 +173,11 @@ export default function AxilPage() {
               <li>{t("axl.s2.h2")}</li>
             </ol>
             <Para k="axl.s2.p1" />
+            <div className="mx-auto max-w-md">
+              <Figure caption={<Sub>{t("axl.fig2")}</Sub>}>
+                <ElementSVG />
+              </Figure>
+            </div>
             <Para k="axl.s2.p2" />
             <div className="mx-auto max-w-md">
               <Figure caption={<Sub>{t("axl.fig")}</Sub>}>
