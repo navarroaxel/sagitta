@@ -5,6 +5,7 @@ import React from "react";
 import Link from "next/link";
 import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 import { SettingsPanel } from "@/components/SettingsPanel";
+import { SaintVenantFigure } from "@/components/DefinitionFigures";
 import { Sub, SvgSub, eqLines, plain } from "@/components/Sub";
 
 const INK = "#16232E";
@@ -132,6 +133,30 @@ function ElementSVG() {
   );
 }
 
+// Cross-section seen face on: only σ (out of the page) acts; both shear components τ_xy and τ_xz are zero.
+function SectionSVG() {
+  const { t } = useLanguage();
+  const cx = 110;
+  const cy = 80;
+  const ghost = (x2: number, y2: number, key: string) => (
+    <line key={key} x1={cx} y1={cy} x2={x2} y2={y2} stroke={FAINT} strokeWidth="3" strokeDasharray="5 4" />
+  );
+  return (
+    <svg viewBox="0 0 240 170" className="h-auto w-full" role="img" aria-label={plain(t("axl.fig3"))}>
+      <rect x="50" y="25" width="120" height="110" fill="#E7EEF2" stroke={INK} strokeWidth="2" />
+      {ghost(190, cy, "y")}
+      {ghost(cx, 150, "z")}
+      <circle cx={cx} cy={cy} r="9" fill="#fff" stroke={TENSION} strokeWidth="2.5" />
+      <circle cx={cx} cy={cy} r="3" fill={TENSION} />
+      <text x={cx + 14} y={cy - 12} fontSize="12" fill={INK}><SvgSub>σ_x</SvgSub></text>
+      <text x="194" y={cy + 4} fontSize="12" fill={INK}><SvgSub>τ_xy = 0</SvgSub></text>
+      <text x={cx + 8} y="160" fontSize="12" fill={INK}><SvgSub>τ_xz = 0</SvgSub></text>
+      <text x="228" y="22" fontSize="12" fontStyle="italic" fill={INK} textAnchor="end">y →</text>
+      <text x="40" y="22" fontSize="12" fontStyle="italic" fill={INK} textAnchor="end">z ↓</text>
+    </svg>
+  );
+}
+
 export default function AxilPage() {
   const { t } = useLanguage();
   return (
@@ -172,10 +197,20 @@ export default function AxilPage() {
               <li><Sub>{t("axl.s2.h1")}</Sub></li>
               <li>{t("axl.s2.h2")}</li>
             </ol>
+            <div className="mx-auto max-w-md">
+              <Figure caption={<Sub>{t("def.f.stvenant")}</Sub>}>
+                <SaintVenantFigure label={plain(t("def.f.stvenant"))} />
+              </Figure>
+            </div>
             <Para k="axl.s2.p1" />
             <div className="mx-auto max-w-md">
               <Figure caption={<Sub>{t("axl.fig2")}</Sub>}>
                 <ElementSVG />
+              </Figure>
+            </div>
+            <div className="mx-auto max-w-xs">
+              <Figure caption={<Sub>{t("axl.fig3")}</Sub>}>
+                <SectionSVG />
               </Figure>
             </div>
             <Para k="axl.s2.p2" />

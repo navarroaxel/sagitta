@@ -963,6 +963,8 @@ const EN = {
     "A bar under N: every cross-section carries the same σ = {N}/{A}.",
   "axl.fig2":
     "An element of the bar. Under axial load its right angles stay right: the shear strain is γ = 0, hence τ = 0 and only σ acts on its faces (left). An element that were sheared (γ ≠ 0, right, not the case here) would carry τ.",
+  "axl.fig3":
+    "The cross-section seen face on. Only σ_x acts on it (out of the page); both components of the shear stress, τ_xy (along y) and τ_xz (along z), are zero.",
   "axl.s3.kicker":
     "03 — Formulas",
   "axl.s3.title":
@@ -3239,6 +3241,8 @@ const ES: Record<TranslationKey, string> = {
     "Una barra bajo N: toda sección recta soporta la misma σ = {N}/{A}.",
   "axl.fig2":
     "Un elemento de la barra. Bajo carga axil sus ángulos rectos siguen siendo rectos: la distorsión es γ = 0, por lo tanto τ = 0 y sobre sus caras solo actúa σ (izquierda). Un elemento distorsionado (γ ≠ 0, derecha, no es el caso) tendría τ.",
+  "axl.fig3":
+    "La sección recta vista de frente. Sobre ella solo actúa σ_x (saliendo de la hoja); las dos componentes de la tensión de corte, τ_xy (según y) y τ_xz (según z), son nulas.",
   "axl.s3.kicker":
     "03 — Fórmulas",
   "axl.s3.title":
