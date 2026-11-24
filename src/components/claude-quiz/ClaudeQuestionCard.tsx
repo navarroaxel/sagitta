@@ -1,6 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/contexts/LanguageContext";
+import { plain, Sub } from "@/components/Sub";
 import {
   ClaudeQuizAnswer,
   ClaudeQuizQuestion,
@@ -79,14 +80,14 @@ export function ClaudeQuestionCard({
       </div>
 
       <p className="text-sm text-stone-800 dark:text-stone-100">
-        {question.statement[language]}
+        <Sub>{question.statement[language]}</Sub>
       </p>
 
       {question.image && (
         // eslint-disable-next-line @next/next/no-img-element -- static SVG served from /public
         <img
           src={question.image.src}
-          alt={question.image.alt[language]}
+          alt={plain(question.image.alt[language])}
           className="mt-3 w-full rounded border border-stone-200 bg-white dark:border-stone-700"
         />
       )}
@@ -101,7 +102,7 @@ export function ClaudeQuestionCard({
             onClick={() => onAnswer(i)}
             className={`${OPTION_BASE} ${OPTION_STYLES[stateFor(i)]}`}
           >
-            {label}
+            <Sub>{label}</Sub>
           </button>
         ))}
       </div>
@@ -120,7 +121,9 @@ export function ClaudeQuestionCard({
           >
             {correct ? t("claudeQuiz.verdict.ok") : t("claudeQuiz.verdict.no")}
           </p>
-          <p className="mt-1">{question.explanation[language]}</p>
+          <p className="mt-1">
+            <Sub>{question.explanation[language]}</Sub>
+          </p>
         </div>
       )}
     </div>

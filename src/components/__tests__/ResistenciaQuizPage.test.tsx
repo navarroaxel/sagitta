@@ -47,3 +47,19 @@ describe("/resistencia-quiz", () => {
     expect(screen.queryByText("Multiple choice")).not.toBeInTheDocument();
   });
 });
+
+describe("subscripts in the questions", () => {
+  test("J_x, σ_E, N_Ω… render as real subscripts, never as a literal underscore", () => {
+    const { container } = setup();
+    // answer every question so the explanations show too
+    for (const q of MATERIALS_QUIZ_QUESTIONS) {
+      fireEvent.click(
+        container.querySelector(
+          `[data-testid="claude-question-${q.id}"] button`,
+        )!,
+      );
+    }
+    expect(container.textContent).not.toMatch(/[A-Za-zσΩ]_[A-Za-zΩ0-9]/);
+    expect(container.querySelectorAll("sub").length).toBeGreaterThan(40);
+  });
+});
