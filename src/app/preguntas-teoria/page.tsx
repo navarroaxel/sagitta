@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useId } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Sub, SvgSub, plain } from "@/components/Sub";
@@ -18,6 +18,55 @@ const OY = 150;
 const px = (x: number) => OX + K * x;
 const py = (y: number) => OY - K * y;
 
+
+// The exam's figure: a rectangle (10 × 4 cm, 24 px per cm) cut by y_G into F1 (/ hatching) and F2 (\ hatching).
+function RectangleSVG() {
+  const { t } = useLanguage();
+  const id = useId();
+  const k = 24;
+  const x0 = 40;
+  const y0 = 36;
+  const w = 10 * k;
+  const h = 4 * k;
+  const xm = x0 + w / 2;
+  const ym = y0 + h / 2;
+  const d = 2.5 * k;
+  return (
+    <svg viewBox="0 0 330 180" className="h-auto w-full" role="img" aria-label={plain(t("qt.fig"))}>
+      <defs>
+        <pattern id={`${id}-a`} width="8" height="8" patternUnits="userSpaceOnUse">
+          <path d="M -2 10 L 10 -2" stroke={TENSION} strokeWidth="1.2" />
+        </pattern>
+        <pattern id={`${id}-b`} width="8" height="8" patternUnits="userSpaceOnUse">
+          <path d="M -2 -2 L 10 10" stroke={LOAD} strokeWidth="1.2" />
+        </pattern>
+      </defs>
+      <rect x={x0} y={y0} width={w / 2} height={h} fill={`url(#${id}-a)`} />
+      <rect x={xm} y={y0} width={w / 2} height={h} fill={`url(#${id}-b)`} />
+      <rect x={x0} y={y0} width={w} height={h} fill="none" stroke={INK} strokeWidth="2" />
+      <line x1={xm} y1={y0 - 18} x2={xm} y2={y0 + h + 18} stroke={MOMENT} strokeWidth="1.5" strokeDasharray="6 3" />
+      <line x1={x0 - 18} y1={ym} x2={x0 + w + 18} y2={ym} stroke={MOMENT} strokeWidth="1.5" strokeDasharray="6 3" />
+      <circle cx={xm} cy={ym} r="3.5" fill={INK} />
+      <rect x={xm + 4} y={ym - 22} width="18" height="16" fill="#fff" fillOpacity="0.85" />
+      <text x={xm + 7} y={ym - 9} fontSize="13" fontWeight="600" fill={INK}>G</text>
+      <text x={xm + 5} y={y0 - 20} fontSize="12" fill={MOMENT}><SvgSub>y_G</SvgSub></text>
+      <text x={x0 + w + 22} y={ym + 4} fontSize="12" fill={MOMENT}><SvgSub>x_G</SvgSub></text>
+      <rect x={x0 + 40} y={ym - 30} width="26" height="20" fill="#fff" fillOpacity="0.9" />
+      <text x={x0 + 44} y={ym - 15} fontSize="14" fontWeight="600" fill={TENSION}><SvgSub>F_1</SvgSub></text>
+      <rect x={xm + 70} y={ym + 12} width="26" height="20" fill="#fff" fillOpacity="0.9" />
+      <text x={xm + 74} y={ym + 27} fontSize="14" fontWeight="600" fill={LOAD}><SvgSub>F_2</SvgSub></text>
+      {/* distances from the centroid of each part to the axis */}
+      <line x1={xm - d} y1="160" x2={xm} y2="160" stroke={TENSION} strokeWidth="1.5" />
+      <line x1={xm} y1="160" x2={xm + d} y2="160" stroke={LOAD} strokeWidth="1.5" />
+      {[xm - d, xm, xm + d].map((x) => (
+        <line key={x} x1={x} y1="155" x2={x} y2="165" stroke={INK} strokeWidth="1.2" />
+      ))}
+      <text x={xm - d / 2} y="176" fontSize="12" fill={TENSION} textAnchor="middle"><SvgSub>d_1</SvgSub></text>
+      <text x={xm + d / 2} y="176" fontSize="12" fill={LOAD} textAnchor="middle"><SvgSub>d_2</SvgSub></text>
+    </svg>
+  );
+}
+
 function CentroidAxisSVG() {
   const { t } = useLanguage();
   const xg = 3;
@@ -26,7 +75,7 @@ function CentroidAxisSVG() {
   const d1 = 1.6;
   const d2 = 2;
   return (
-    <svg viewBox="0 0 290 195" className="h-auto w-full" role="img" aria-label={plain(t("qt.fig"))}>
+    <svg viewBox="0 0 290 195" className="h-auto w-full" role="img" aria-label={plain(t("qt.fig2"))}>
       <polygon points={`${px(0)},${py(0)} ${px(xg)},${py(0)} ${px(xg)},${py(yCut)} ${px(0)},${py(6)}`} fill={TENSION} fillOpacity="0.2" stroke={TENSION} strokeWidth="1.5" />
       <polygon points={`${px(xg)},${py(0)} ${px(9)},${py(0)} ${px(xg)},${py(yCut)}`} fill={LOAD} fillOpacity="0.2" stroke={LOAD} strokeWidth="1.5" />
       <polygon points={`${px(0)},${py(0)} ${px(9)},${py(0)} ${px(0)},${py(6)}`} fill="none" stroke={INK} strokeWidth="2" />
@@ -80,12 +129,24 @@ export default function PreguntasTeoriaPage() {
         <Para k="qt.ex.p1" />
         <div className="mx-auto max-w-sm">
           <Figure caption={<Sub>{t("qt.fig")}</Sub>}>
-            <CentroidAxisSVG />
+            <RectangleSVG />
           </Figure>
         </div>
         <div data-testid="qt-ex" className="mb-4 rounded-lg border border-stone-200 bg-white p-4 dark:border-stone-700 dark:bg-stone-900">
           <p className="whitespace-pre-line font-mono text-[14px] leading-relaxed">
             <Sub>{t("qt.ex.r")}</Sub>
+          </p>
+        </div>
+        <h4 className="mb-2 mt-6 font-semibold">{t("qt.ex2.title")}</h4>
+        <Para k="qt.ex2.p" />
+        <div className="mx-auto max-w-sm">
+          <Figure caption={<Sub>{t("qt.fig2")}</Sub>}>
+            <CentroidAxisSVG />
+          </Figure>
+        </div>
+        <div data-testid="qt-ex2" className="mb-4 rounded-lg border border-stone-200 bg-white p-4 dark:border-stone-700 dark:bg-stone-900">
+          <p className="whitespace-pre-line font-mono text-[14px] leading-relaxed">
+            <Sub>{t("qt.ex2.r")}</Sub>
           </p>
         </div>
         <p className="text-sm">

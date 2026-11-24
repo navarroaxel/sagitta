@@ -19,6 +19,14 @@ function moment(a: number, b: number) {
 }
 
 describe("/preguntas-teoria", () => {
+  test("the rectangle of the exam: halves of 20 cm², d = 2.5 cm, S = ∓50 cm³", () => {
+    // rectangle 10 × 4, axis at x = 5: S = ∫ (x − 5)·4 dx on each half
+    const half = (a: number, b: number) => 4 * ((b - 5) ** 2 - (a - 5) ** 2) / 2;
+    expect(half(0, 5)).toBeCloseTo(-50, 9);
+    expect(half(5, 10)).toBeCloseTo(50, 9);
+    expect(20 * 2.5).toBeCloseTo(50, 9);
+  });
+
   test("the example's numbers are right: S(F1) = −S(F2), F1·d1 = F2·d2", () => {
     const f1 = moment(0, 3);
     const f2 = moment(3, 9);
@@ -41,10 +49,14 @@ describe("/preguntas-teoria", () => {
     expect(text).toMatch(/static moments of the areas F1 and F2 about the axis yG/);
     expect(text).toMatch(/SyG\(F1\) = −SyG\(F2\)/);
     expect(text).toMatch(/SyG\(F1\) \+ SyG\(F2\) = 0/);
-    expect(container.querySelectorAll("figure svg")).toHaveLength(1);
-    const svg = container.querySelector("figure svg")!;
-    expect(svg.textContent).toMatch(/yG.*xG.*F1.*F2.*d1.*d2/);
-    expect(container.querySelector('[data-testid="qt-ex"]')!.textContent).toMatch(/15 cm²[\s\S]*−24 cm³[\s\S]*12 cm²[\s\S]*\+24 cm³[\s\S]*= 0/);
+    expect(container.querySelectorAll("figure svg")).toHaveLength(2);
+    for (const svg of Array.from(container.querySelectorAll("figure svg"))) expect(svg.textContent).toMatch(/yG.*xG.*F1.*F2.*d1.*d2/);
+    // the exam's figure: a rectangle, two hatched halves
+    const rect = container.querySelectorAll("figure svg")[0];
+    expect(rect.querySelectorAll("pattern")).toHaveLength(2);
+    expect(rect.querySelectorAll("polygon")).toHaveLength(0);
+    expect(container.querySelector('[data-testid="qt-ex"]')!.textContent).toMatch(/20 cm²[\s\S]*−50 cm³, S2 = \+50 cm³[\s\S]*= 0/);
+    expect(container.querySelector('[data-testid="qt-ex2"]')!.textContent).toMatch(/15 cm²[\s\S]*−24 cm³[\s\S]*12 cm²[\s\S]*\+24 cm³[\s\S]*= 0/);
     expect(container.querySelector('[data-testid="qt-answer"]')!.textContent).toMatch(/opposite sign/);
     expect(container.querySelector('a[href="/definiciones#pln.estatico"]')).toBeTruthy();
   });

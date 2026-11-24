@@ -2323,12 +2323,20 @@ const EN = {
   "qt.ex.kicker":
     "Check",
   "qt.ex.title":
-    "A numerical example",
+    "A numerical example: the rectangle of the exam",
   "qt.ex.p1":
-    "Right triangle with legs 9 cm and 6 cm. Its centroid is 3 cm from the vertical leg, so {y}_G is the vertical line at 3 cm; it splits the triangle into {F}_1 (left) and {F}_2 (right).",
+    "Rectangle of 10 cm × 4 cm. {y}_G is the vertical line through its centroid, 5 cm from each side, and splits it into {F}_1 (left) and {F}_2 (right), as in the exam’s figure.",
   "qt.ex.r":
-    "{F}_1 = 15 cm², {d}_1 = 1.6 cm → {S}_1 = −24 cm³\n{F}_2 = 12 cm², {d}_2 = 2 cm → {S}_2 = +24 cm³\n{S}_1 + {S}_2 = 0",
+    "{F}_1 = {F}_2 = 20 cm², {d}_1 = {d}_2 = 2.5 cm\n{S}_1 = −50 cm³, {S}_2 = +50 cm³\n{S}_1 + {S}_2 = 0",
   "qt.fig":
+    "The exam’s figure: a rectangle cut by the axis {y}_G through its centroid G. The two parts, {F}_1 (/ hatching) and {F}_2 (\\ hatching), have the same area and their centroids are at the same distance {d}, one on each side: {S} = ∓50 cm³.",
+  "qt.ex2.title":
+    "If the figure is not symmetric",
+  "qt.ex2.p":
+    "The areas need not be equal. Right triangle with legs 9 cm and 6 cm. Its centroid is 3 cm from the vertical leg, so {y}_G is the vertical line at 3 cm; it splits the triangle into {F}_1 (left) and {F}_2 (right).",
+  "qt.ex2.r":
+    "{F}_1 = 15 cm², {d}_1 = 1.6 cm → {S}_1 = −24 cm³\n{F}_2 = 12 cm², {d}_2 = 2 cm → {S}_2 = +24 cm³\n{S}_1 + {S}_2 = 0",
+  "qt.fig2":
     "A right triangle cut by the axis {y}_G through its centroid G. {F}_1 (left, 15 cm²) and {F}_2 (right, 12 cm²) have different areas, but {F}_1·{d}_1 = {F}_2·{d}_2 = 24 cm³.",
   "qt.defs":
     "See static moment and centroid in the glossary",
@@ -4655,12 +4663,20 @@ const ES: Record<TranslationKey, string> = {
   "qt.ex.kicker":
     "Verificación",
   "qt.ex.title":
-    "Un ejemplo numérico",
+    "Un ejemplo numérico: el rectángulo del parcial",
   "qt.ex.p1":
-    "Triángulo rectángulo de catetos 9 cm y 6 cm. Su baricentro está a 3 cm del cateto vertical, así que {y}_G es la vertical a 3 cm; divide al triángulo en {F}_1 (izquierda) y {F}_2 (derecha).",
+    "Rectángulo de 10 cm × 4 cm. {y}_G es la vertical por su baricentro, a 5 cm de cada lado, y lo divide en {F}_1 (izquierda) y {F}_2 (derecha), como en la figura del parcial.",
   "qt.ex.r":
-    "{F}_1 = 15 cm², {d}_1 = 1,6 cm → {S}_1 = −24 cm³\n{F}_2 = 12 cm², {d}_2 = 2 cm → {S}_2 = +24 cm³\n{S}_1 + {S}_2 = 0",
+    "{F}_1 = {F}_2 = 20 cm², {d}_1 = {d}_2 = 2,5 cm\n{S}_1 = −50 cm³, {S}_2 = +50 cm³\n{S}_1 + {S}_2 = 0",
   "qt.fig":
+    "La figura del parcial: un rectángulo cortado por el eje {y}_G que pasa por su baricentro G. Las dos partes, {F}_1 (rayado /) y {F}_2 (rayado \\), tienen la misma área y sus baricentros están a la misma distancia {d}, uno de cada lado: {S} = ∓50 cm³.",
+  "qt.ex2.title":
+    "Si la figura no es simétrica",
+  "qt.ex2.p":
+    "Las áreas no tienen por qué ser iguales. Triángulo rectángulo de catetos 9 cm y 6 cm. Su baricentro está a 3 cm del cateto vertical, así que {y}_G es la vertical a 3 cm; divide al triángulo en {F}_1 (izquierda) y {F}_2 (derecha).",
+  "qt.ex2.r":
+    "{F}_1 = 15 cm², {d}_1 = 1,6 cm → {S}_1 = −24 cm³\n{F}_2 = 12 cm², {d}_2 = 2 cm → {S}_2 = +24 cm³\n{S}_1 + {S}_2 = 0",
+  "qt.fig2":
     "Un triángulo rectángulo cortado por el eje {y}_G que pasa por su baricentro G. {F}_1 (izquierda, 15 cm²) y {F}_2 (derecha, 12 cm²) tienen áreas distintas, pero {F}_1·{d}_1 = {F}_2·{d}_2 = 24 cm³.",
   "qt.defs":
     "Ver momento estático y baricentro en el glosario",
