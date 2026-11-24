@@ -12,6 +12,7 @@ import TensionPage from "@/app/estado-de-tension/page";
 import MaterialesPage from "@/app/propiedades-materiales/page";
 import ResumenPage from "@/app/resumen/page";
 import DefinicionesPage from "@/app/definiciones/page";
+import PreguntasPage from "@/app/preguntas-teoria/page";
 import React from "react";
 
 const PAGES: [string, React.ComponentType][] = [
@@ -26,6 +27,7 @@ const PAGES: [string, React.ComponentType][] = [
   ["propiedades-materiales", MaterialesPage],
   ["resumen", ResumenPage],
   ["definiciones", DefinicionesPage],
+  ["preguntas-teoria", PreguntasPage],
 ];
 
 // Starts in English; one toggle switches to Spanish.

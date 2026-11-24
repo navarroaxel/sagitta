@@ -2284,6 +2284,60 @@ const EN = {
     "Deflection and elastic line",
   "def.d.flecha":
     "The elastic line is the shape the axis of the beam takes when it bends. Integrating its equation once gives the slope θ({z}) and twice, the deflection {y}({z}), the displacement of the axis.",
+  "qt.link":
+    "Theory questions",
+  "qt.title":
+    "Theory questions",
+  "qt.lead":
+    "Questions of the model exams, answered with the reason behind the answer. One at a time, as they come up.",
+  "qt.footer":
+    "The question is the professor’s; the explanation, the figure and the example are ours (the example is recomputed, it is not in the notes).",
+  "qt.stmt.kicker":
+    "Question",
+  "qt.stmt.title":
+    "Static moments about a centroidal axis",
+  "qt.stmt.q":
+    "What relation is there between the static moments of the areas {F}_1 and {F}_2 about the axis {y}_G that contains the centroid? ({F} is the area, as in the exam; the figure shows the two parts on each side of {y}_G.)",
+  "qt.ans.kicker":
+    "Answer",
+  "qt.ans.title":
+    "Equal in absolute value, opposite in sign",
+  "qt.ans.p1":
+    "The two static moments are equal in absolute value and of opposite sign, so they add up to zero:",
+  "qt.ans.p2":
+    "The same holds for the axis {x}_G: the parts above and below it cancel each other.",
+  "qt.why.kicker":
+    "Why",
+  "qt.why.title":
+    "Because the axis goes through the centroid",
+  "qt.why.p1":
+    "The static moment of an area about an axis is {S} = ∫ {x} {dA}, with {x} measured from that axis. About an axis through the centroid the whole figure has {S} = 0: that is the definition of the centroid ({x}_g = {S} / {A}).",
+  "qt.why.p2":
+    "The figure is {F}_1 plus {F}_2 and a moment is a sum over the area, so {S}({F}_1) + {S}({F}_2) = {S} of the whole figure = 0.",
+  "qt.why.p3":
+    "Signs: {F}_1 lies on one side of {y}_G ({x} < 0) and {F}_2 on the other ({x} > 0). One moment comes out negative and the other positive, so they can cancel.",
+  "qt.why.p4":
+    "As area times distance, {S} = {F}·{d}, with {d} the distance from the centroid of each part to the axis. Equal moments in absolute value mean:",
+  "qt.why.p5":
+    "The areas are not equal in general: the part with less area has its centroid farther from the axis.",
+  "qt.ex.kicker":
+    "Check",
+  "qt.ex.title":
+    "A numerical example",
+  "qt.ex.p1":
+    "Right triangle with legs 9 cm and 6 cm. Its centroid is 3 cm from the vertical leg, so {y}_G is the vertical line at 3 cm; it splits the triangle into {F}_1 (left) and {F}_2 (right).",
+  "qt.ex.r":
+    "{F}_1 = 15 cm², {d}_1 = 1.6 cm → {S}_1 = −24 cm³\n{F}_2 = 12 cm², {d}_2 = 2 cm → {S}_2 = +24 cm³\n{S}_1 + {S}_2 = 0",
+  "qt.fig":
+    "A right triangle cut by the axis {y}_G through its centroid G. {F}_1 (left, 15 cm²) and {F}_2 (right, 12 cm²) have different areas, but {F}_1·{d}_1 = {F}_2·{d}_2 = 24 cm³.",
+  "qt.defs":
+    "See static moment and centroid in the glossary",
+  "qt.exam.kicker":
+    "For the exam",
+  "qt.exam.title":
+    "How to write it",
+  "qt.exam.p":
+    "“Since {y}_G passes through the centroid, the static moment of the whole figure about it is zero. Therefore the static moments of {F}_1 and {F}_2 are equal in absolute value and of opposite sign: {S}({F}_1) = −{S}({F}_2).”",
 } as const;
 
 export type TranslationKey = keyof typeof EN;
@@ -4562,6 +4616,60 @@ const ES: Record<TranslationKey, string> = {
     "Flecha y línea elástica",
   "def.d.flecha":
     "La línea elástica es la forma que toma el eje de la viga al flexar. Integrar una vez su ecuación da la pendiente θ({z}) y dos veces, la flecha {y}({z}), el desplazamiento del eje.",
+  "qt.link":
+    "Preguntas de teoría",
+  "qt.title":
+    "Preguntas de teoría",
+  "qt.lead":
+    "Preguntas de los modelos de parcial, respondidas con el porqué de la respuesta. Una por vez, a medida que aparecen.",
+  "qt.footer":
+    "La pregunta es del profesor; la explicación, la figura y el ejemplo son nuestros (el ejemplo está recalculado, no figura en los apuntes).",
+  "qt.stmt.kicker":
+    "Pregunta",
+  "qt.stmt.title":
+    "Momentos estáticos respecto de un eje baricéntrico",
+  "qt.stmt.q":
+    "¿Qué relación hay entre los momentos estáticos de las áreas {F}_1 y {F}_2 respecto del eje {y}_G que contiene al baricentro? ({F} es el área, como en el parcial; la figura muestra las dos partes a cada lado de {y}_G.)",
+  "qt.ans.kicker":
+    "Respuesta",
+  "qt.ans.title":
+    "Iguales en módulo y de signo contrario",
+  "qt.ans.p1":
+    "Los dos momentos estáticos son iguales en módulo y de signo contrario, por lo tanto su suma es cero:",
+  "qt.ans.p2":
+    "Lo mismo vale para el eje {x}_G: las partes de arriba y de abajo se compensan.",
+  "qt.why.kicker":
+    "Por qué",
+  "qt.why.title":
+    "Porque el eje pasa por el baricentro",
+  "qt.why.p1":
+    "El momento estático de un área respecto de un eje es {S} = ∫ {x} {dA}, con {x} medida desde ese eje. Respecto de un eje que pasa por el baricentro, la figura completa tiene {S} = 0: esa es la definición del baricentro ({x}_g = {S} / {A}).",
+  "qt.why.p2":
+    "La figura es {F}_1 más {F}_2 y un momento es una suma sobre el área, entonces {S}({F}_1) + {S}({F}_2) = {S} de la figura completa = 0.",
+  "qt.why.p3":
+    "Signos: {F}_1 queda de un lado de {y}_G ({x} < 0) y {F}_2 del otro ({x} > 0). Un momento sale negativo y el otro positivo, así que se pueden compensar.",
+  "qt.why.p4":
+    "Como área por distancia, {S} = {F}·{d}, con {d} la distancia del baricentro de cada parte al eje. Que los momentos sean iguales en módulo significa:",
+  "qt.why.p5":
+    "Las áreas en general no son iguales: la parte de menor área tiene su baricentro más lejos del eje.",
+  "qt.ex.kicker":
+    "Verificación",
+  "qt.ex.title":
+    "Un ejemplo numérico",
+  "qt.ex.p1":
+    "Triángulo rectángulo de catetos 9 cm y 6 cm. Su baricentro está a 3 cm del cateto vertical, así que {y}_G es la vertical a 3 cm; divide al triángulo en {F}_1 (izquierda) y {F}_2 (derecha).",
+  "qt.ex.r":
+    "{F}_1 = 15 cm², {d}_1 = 1,6 cm → {S}_1 = −24 cm³\n{F}_2 = 12 cm², {d}_2 = 2 cm → {S}_2 = +24 cm³\n{S}_1 + {S}_2 = 0",
+  "qt.fig":
+    "Un triángulo rectángulo cortado por el eje {y}_G que pasa por su baricentro G. {F}_1 (izquierda, 15 cm²) y {F}_2 (derecha, 12 cm²) tienen áreas distintas, pero {F}_1·{d}_1 = {F}_2·{d}_2 = 24 cm³.",
+  "qt.defs":
+    "Ver momento estático y baricentro en el glosario",
+  "qt.exam.kicker":
+    "Para el parcial",
+  "qt.exam.title":
+    "Cómo escribirlo",
+  "qt.exam.p":
+    "“Como {y}_G pasa por el baricentro, el momento estático de la figura completa respecto de ese eje es nulo. Por lo tanto los momentos estáticos de {F}_1 y {F}_2 son iguales en módulo y de signo contrario: {S}({F}_1) = −{S}({F}_2).”",
 };
 
 const translations: Record<Language, Record<TranslationKey, string>> = {
