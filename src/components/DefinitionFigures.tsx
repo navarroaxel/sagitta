@@ -8,6 +8,7 @@ const INK = "#16232E";
 const FAINT = "#C9D2D8";
 const TENSION = "#0B8A8A";
 const LOAD = "#C0392B";
+const MOMENT_COLOR = "#7A2A9A";
 
 function Txt(props: React.SVGProps<SVGTextElement> & { children: string }) {
   const { children, ...rest } = props;
@@ -815,6 +816,44 @@ export function ClassificationFigure({ label }: { label: string }) {
       <Txt x="375" y="150" textAnchor="middle" fontWeight="600">{t("def.fig.simple")}</Txt>
       <Txt x="375" y="166" textAnchor="middle" fontSize="11">σ_1 ≠ 0</Txt>
       <Txt x="375" y="182" textAnchor="middle" fontSize="11">{t("def.fig.onlyI1")}</Txt>
+    </svg>
+  );
+}
+
+// Saint-Venant: a load applied at a point disturbs σ only near the end; farther than about the section's size σ is uniform.
+export function SaintVenantFigure({ label }: { label: string }) {
+  const rows = [57, 66, 75, 84, 93];
+  const near = [34, 22, 12, 22, 34]; // arrow lengths close to the end: peak under the load
+  const far = 20;
+  const arrow = (x: number, y: number, len: number, key: string) => (
+    <g key={key}>
+      <line x1={x} y1={y} x2={x + len} y2={y} stroke={TENSION} strokeWidth="2" />
+      <polygon points={`${x + len + 5},${y} ${x + len - 2},${y - 3.5} ${x + len - 2},${y + 3.5}`} fill={TENSION} />
+    </g>
+  );
+  return (
+    <svg viewBox="0 0 320 150" className="h-auto w-full" role="img" aria-label={label}>
+      <rect x="40" y="45" width="240" height="60" fill="#E7EEF2" stroke={INK} strokeWidth="1.5" />
+      {/* point loads at both ends */}
+      <line x1="8" y1="75" x2="38" y2="75" stroke={LOAD} strokeWidth="3" />
+      <polygon points="2,75 14,69 14,81" fill={LOAD} />
+      <line x1="282" y1="75" x2="312" y2="75" stroke={LOAD} strokeWidth="3" />
+      <polygon points="318,75 306,69 306,81" fill={LOAD} />
+      <Txt x="14" y="62" fill={LOAD}>N</Txt>
+      <Txt x="296" y="62" fill={LOAD}>N</Txt>
+      {/* near section and far section */}
+      <line x1="70" y1="40" x2="70" y2="110" stroke={INK} strokeWidth="1" strokeDasharray="4 3" />
+      <line x1="170" y1="40" x2="170" y2="110" stroke={INK} strokeWidth="1" strokeDasharray="4 3" />
+      {rows.map((y, i) => arrow(70, y, near[i], `n${i}`))}
+      {rows.map((y, i) => arrow(170, y, far, `f${i}`))}
+      <Txt x="70" y="124" textAnchor="middle">σ not uniform</Txt>
+      <Txt x="170" y="124" textAnchor="middle">σ = N / A</Txt>
+      {/* distance of the disturbed zone: about the size of the section */}
+      <line x1="40" y1="136" x2="100" y2="136" stroke={MOMENT_COLOR} strokeWidth="1.5" />
+      <line x1="40" y1="131" x2="40" y2="141" stroke={MOMENT_COLOR} strokeWidth="1.5" />
+      <line x1="100" y1="131" x2="100" y2="141" stroke={MOMENT_COLOR} strokeWidth="1.5" />
+      <Txt x="106" y="140" fill={MOMENT_COLOR}>≈ h</Txt>
+      <Txt x="270" y="38" textAnchor="end">h</Txt>
     </svg>
   );
 }

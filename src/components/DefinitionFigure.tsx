@@ -11,6 +11,7 @@ import {
   PLANE_FOCI,
   PlaneAreaFigure,
   PureShearFigure,
+  SaintVenantFigure,
   ShearFigure,
   ShearForceFigure,
   SlidingFigure,
@@ -46,6 +47,7 @@ type Spec =
   | "principalElement"
   | "classification"
   | "sliding"
+  | "saintVenant"
   | PlaneFocus
   | StressStrainFocus;
 
@@ -70,6 +72,7 @@ const FIGURES: Record<string, Spec> = {
   "pnd.l0": "ends",
   "pnd.hipotesis": "ideal",
   "tor.htor": "torsion",
+  "axl.stvenant": "saintVenant",
   "tns.tensor": "tensorElement",
   "tns.vector": "planeVector",
   "tns.invariantes": "invariants",
@@ -120,6 +123,7 @@ export function DefinitionFigure({ id, label }: { id: string; label: string }) {
   if (spec === "invariants") return <InvariantsFigure label={label} />;
   if (spec === "principalElement") return <ElementFigure principal label={label} />;
   if (spec === "classification") return <ClassificationFigure label={label} />;
+  if (spec === "saintVenant") return <SaintVenantFigure label={label} />;
   if (spec === "sliding") return <SlidingFigure label={label} />;
   if (isPlane(spec)) return <PlaneAreaFigure focus={spec} label={label} />;
   return <StressStrainFigure focus={spec} label={label} />;

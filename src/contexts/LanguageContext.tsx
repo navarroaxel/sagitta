@@ -2250,6 +2250,8 @@ const EN = {
     "Saint-Venant’s principle",
   "def.d.stvenant":
     "Far from the ends, the section normal to the axis stays plane and parallel to itself after the deformation, so there is no stress concentration.",
+  "def.f.stvenant":
+    "A bar pulled by loads applied at a point: close to each end (a distance of about the size h of the section) the stress σ is not uniform and peaks under the load; farther away it is uniform, σ = N / A. Only the resultant N matters there, not how the load was applied.",
   "def.t.equil":
     "Stable, indifferent and unstable equilibrium",
   "def.d.equil":
@@ -4522,6 +4524,8 @@ const ES: Record<TranslationKey, string> = {
     "Principio de Saint-Venant",
   "def.d.stvenant":
     "Lejos de los extremos, la sección normal al eje se mantiene plana y paralela a sí misma luego de la deformación, por lo tanto no hay concentración de tensiones.",
+  "def.f.stvenant":
+    "Una barra traccionada por cargas aplicadas en un punto: cerca de cada extremo (a una distancia del orden del tamaño h de la sección) la tensión σ no es uniforme y tiene un pico bajo la carga; más lejos es uniforme, σ = N / A. Allí solo importa la resultante N, no cómo se aplicó la carga.",
   "def.t.equil":
     "Equilibrio estable, indiferente e inestable",
   "def.d.equil":
