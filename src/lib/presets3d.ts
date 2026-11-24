@@ -216,13 +216,42 @@ const columnKg: FrameModel3D = {
   sigmaAdm: 1600, // kg/cm²
 };
 
+// examples/column-3d-fixed-overhang.svg — 6 m column fixed at A with a 0.5 m cantilever to the right at its
+// top (B–C). P_1 = 20P at the tip C along -Z and P_2 = 4P at the middle of the column (z = 3 m) along -Y
+// (away from the viewer). The cantilever is an IPN 200 and P is the largest load it can carry at
+// sigmaAdm = 1400 kg/cm²: M_x = 20P·0.5 m = 10P kg·m, so σ = 1000P / W_x ≤ 1400 with W_x = 214 cm³ gives
+// P ≤ 299.6 kg; P = 299 kg (σ = 99.8% of σ adm; P = 300 would fail). Then P_1 = 5 980 kg and P_2 = 1 196 kg.
+// Reactions at A: R_y = 4P = 1 196, R_z = 20P = 5 980 kg, M_x = −12P = −3 588, M_y = −10P = −2 990 kg·m.
+// The figure gives no column section: IPB 240 with the strong axis against the larger moment (σ max = 97%
+// of σ adm at the base; IPB 220 would not pass). The column is split at z = 3 m, where P_2 acts.
+const columnOverhang: FrameModel3D = {
+  nodes: [
+    { id: "A", x: 0, y: 0, z: 0, support: "fixed" },
+    { id: "M", x: 0, y: 0, z: 3, support: "free" },
+    { id: "B", x: 0, y: 0, z: 6, support: "free" },
+    { id: "C", x: 0.5, y: 0, z: 6, support: "free" },
+  ],
+  members: [
+    { id: "M1", n1: "A", n2: "M", profile: "IPB 240", rotated: true },
+    { id: "M2", n1: "M", n2: "B", profile: "IPB 240", rotated: true },
+    { id: "M3", n1: "B", n2: "C", profile: "IPN 200" },
+  ],
+  loads: [
+    { id: "L1", type: "nodal", node: "C", fx: 0, fy: 0, fz: -5980, mx: 0, my: 0, mz: 0 },
+    { id: "L2", type: "nodal", node: "M", fx: 0, fy: -1196, fz: 0, mx: 0, my: 0, mz: 0 },
+  ],
+  material: { ...material, E: 2.1e10, G: 8.1e9 },
+  unit: "kg",
+  sigmaAdm: 1400, // kg/cm²
+};
+
 export interface Preset3D {
-  key: "t_frame" | "t_frame_kg" | "l_torsion" | "eccentric_tension" | "cantilever_kg" | "t_frame_qy" | "frame_right_beam" | "frame_overhang" | "column_kg";
+  key: "t_frame" | "t_frame_kg" | "l_torsion" | "eccentric_tension" | "cantilever_kg" | "t_frame_qy" | "frame_right_beam" | "frame_overhang" | "column_kg" | "column_overhang";
   model: FrameModel3D;
 }
 
 // The "#N" in the label of each preset (LanguageContext, f3d.example.*) is its position in this list and
-// is PERMANENT: people say "preset #3". Never reorder or renumber; a new preset goes at the END (#9, #10…)
+// is PERMANENT: people say "preset #3". Never reorder or renumber; a new preset goes at the END (#11, #12…)
 // and a removed one leaves a gap.
 export const PRESETS_3D: Preset3D[] = [
   { key: "t_frame", model: tFrame },
@@ -235,4 +264,5 @@ export const PRESETS_3D: Preset3D[] = [
   { key: "eccentric_tension", model: eccentricTension },
   { key: "l_torsion", model: lTorsion },
   { key: "column_kg", model: columnKg },
+  { key: "column_overhang", model: columnOverhang },
 ];

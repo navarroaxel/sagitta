@@ -246,6 +246,7 @@ const EN = {
   "f3d.example.eccentric_tension": "#7 Eccentric tension on IPN 300 (P_z,max)",
   "f3d.example.cantilever_kg": "#6 Cantilever IPN 320 (max length)",
   "f3d.example.column_kg": "#9 3D column (fixed)",
+  "f3d.example.column_overhang": "#10 3D column with overhang on IPN 200 (P max)",
   "f3d.diagram": "Diagram:",
   "f3d.diagram_none": "None",
   "f3d.note":
@@ -2579,6 +2580,7 @@ const ES: Record<TranslationKey, string> = {
   "f3d.example.eccentric_tension": "#7 Tracción excéntrica en IPN 300 (P_z máx)",
   "f3d.example.cantilever_kg": "#6 Voladizo IPN 320 (longitud máx)",
   "f3d.example.column_kg": "#9 Columna 3D (empotrada)",
+  "f3d.example.column_overhang": "#10 Columna 3D con voladizo en IPN 200 (P máx)",
   "f3d.diagram": "Diagrama:",
   "f3d.diagram_none": "Ninguno",
   "f3d.note":
