@@ -72,7 +72,7 @@ describe("/definiciones", () => {
     expect(svg.querySelectorAll("path[marker-end]")).toHaveLength(4); // a couple at each face, twice
     expect(svg.querySelectorAll("line[marker-end]")).toHaveLength(2); // Q only in the second segment
     expect(item.querySelectorAll("figure svg")).toHaveLength(1);
-    expect(container.querySelectorAll("figure svg")).toHaveLength(41); // 4 bending + 12 stress–strain + 5 buckling + 9 plane areas + 6 shear + 5 state of stress
+    expect(container.querySelectorAll("figure svg")).toHaveLength(42); // 1 axial + 4 bending + 12 stress–strain + 5 buckling + 9 plane areas + 6 shear + 5 state of stress
   });
 
   test("the bending plane and the oblique bending have their diagrams", () => {
@@ -221,6 +221,14 @@ describe("/definiciones", () => {
     expect(svg("resbal").textContent).toMatch(/not joined: they slide.*τL.*joined: τL holds them/);
     expect(svg("resbal").querySelectorAll("path[fill-opacity]")).toHaveLength(6); // three planks, twice
     expect(svg("jour").textContent).toMatch(/E\.N\./);
+  });
+
+  test("Saint-Venant has a diagram: σ uneven near the loaded end, uniform farther away", () => {
+    renderPage();
+    openAll();
+    const svg = screen.getByTestId("def-axl.stvenant").querySelector("figure svg")!;
+    expect(svg.textContent).toMatch(/σ not uniform.*σ = N \/ A/);
+    expect(svg.querySelectorAll('line[stroke="#0B8A8A"]')).toHaveLength(10); // five arrows at each section
   });
 
   test("a #group.term in the URL opens that term (the links of /resumen)", () => {
