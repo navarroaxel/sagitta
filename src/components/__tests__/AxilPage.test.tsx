@@ -13,6 +13,10 @@ describe("/axil", () => {
     expect(container.querySelectorAll("figure svg")[0].textContent).toMatch(/σ not uniform.*σ = N \/ A/);
     const sec = container.querySelectorAll("figure svg")[2];
     expect(sec.textContent).toMatch(/τxy = 0.*τxz = 0/);
+    // every figure of the guide names its axes: x along the bar (or out of the page in the section view), y, z
+    for (const f of Array.from(container.querySelectorAll("figure svg"))) expect(f.querySelector('[data-testid="axes"]'), f.getAttribute("aria-label") ?? "").toBeTruthy();
+    expect(container.querySelectorAll("figure svg")[2].querySelector('[data-testid="axes"]')!.textContent).toBe("yzx");
+    expect(container.querySelectorAll("figure svg")[3].querySelector('[data-testid="axes"]')!.textContent).toBe("xzy");
     const el = container.querySelectorAll("figure svg")[1];
     expect(el.textContent).toMatch(/γ = 0.*τ = 0.*γ ≠ 0.*τ ≠ 0/);
     expect(document.body.textContent).toMatch(/Δl = N·l \/ \(A·E\)/);

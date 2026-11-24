@@ -832,7 +832,7 @@ export function SaintVenantFigure({ label }: { label: string }) {
     </g>
   );
   return (
-    <svg viewBox="0 0 320 150" className="h-auto w-full" role="img" aria-label={label}>
+    <svg viewBox="0 0 320 170" className="h-auto w-full" role="img" aria-label={label}>
       <rect x="40" y="45" width="240" height="60" fill="#E7EEF2" stroke={INK} strokeWidth="1.5" />
       {/* point loads at both ends */}
       <line x1="8" y1="75" x2="38" y2="75" stroke={LOAD} strokeWidth="3" />
@@ -854,6 +854,32 @@ export function SaintVenantFigure({ label }: { label: string }) {
       <line x1="100" y1="131" x2="100" y2="141" stroke={MOMENT_COLOR} strokeWidth="1.5" />
       <Txt x="106" y="140" fill={MOMENT_COLOR}>≈ h</Txt>
       <Txt x="270" y="38" textAnchor="end">h</Txt>
+      <AxesTriad ox={280} oy={156} view="side" />
     </svg>
+  );
+}
+
+// Right-handed axes of the axial guide, drawn at (ox, oy). "side": x along the bar (right), z up, y into the page;
+// "section": y right, z up, x out of the page.
+export function AxesTriad({ ox, oy, view }: { ox: number; oy: number; view: "side" | "section" }) {
+  const along = view === "side" ? "x" : "y";
+  const normal = view === "side" ? "y" : "x";
+  const L = 28;
+  return (
+    <g data-testid="axes">
+      <line x1={ox} y1={oy} x2={ox + L} y2={oy} stroke={INK} strokeWidth="1.5" />
+      <polygon points={`${ox + L + 6},${oy} ${ox + L - 1},${oy - 3} ${ox + L - 1},${oy + 3}`} fill={INK} />
+      <line x1={ox} y1={oy} x2={ox} y2={oy - L} stroke={INK} strokeWidth="1.5" />
+      <polygon points={`${ox},${oy - L - 6} ${ox - 3},${oy - L + 1} ${ox + 3},${oy - L + 1}`} fill={INK} />
+      <circle cx={ox} cy={oy} r="5" fill="#fff" stroke={INK} strokeWidth="1.5" />
+      {view === "section" ? (
+        <circle cx={ox} cy={oy} r="1.6" fill={INK} />
+      ) : (
+        <path d={`M ${ox - 3} ${oy - 3} L ${ox + 3} ${oy + 3} M ${ox + 3} ${oy - 3} L ${ox - 3} ${oy + 3}`} stroke={INK} strokeWidth="1.2" />
+      )}
+      <text x={ox + L + 9} y={oy + 4} fontSize="12" fontStyle="italic" fill={INK}>{along}</text>
+      <text x={ox + 6} y={oy - L - 2} fontSize="12" fontStyle="italic" fill={INK}>z</text>
+      <text x={ox - 14} y={oy + 16} fontSize="12" fontStyle="italic" fill={INK}>{normal}</text>
+    </g>
   );
 }
