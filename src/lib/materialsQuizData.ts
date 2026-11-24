@@ -343,6 +343,69 @@ export const MATERIALS_QUIZ_QUESTIONS: ClaudeQuizQuestion[] = [
       en: "What matters is where the line of forces lies with respect to the principal axes, not the beam's inclination or the presence of shear.",
     },
   ),
+  mc(
+    "lf1",
+    "flexion",
+    {
+      es: "En flexión simple, ¿qué es la línea de fuerzas?",
+      en: "In simple bending, what is the line of forces?",
+    },
+    {
+      es: "La traza del plano de flexión (donde actúan los pares flexores) sobre el plano de la sección",
+      en: "The trace of the bending plane (where the bending couples act) on the plane of the section",
+    },
+    [
+      {
+        es: "El eje neutro de la sección, la recta donde la tensión normal vale cero",
+        en: "The neutral axis of the section, the line where the normal stress is zero",
+      },
+      {
+        es: "La recta que une las fibras más traccionada y más comprimida de la sección",
+        en: "The line joining the most tensioned and the most compressed fibres of the section",
+      },
+      {
+        es: "La curva que forma el eje de la viga una vez deformada por las cargas",
+        en: "The curve the beam's axis takes once deformed by the loads",
+      },
+    ],
+    0,
+    {
+      es: "El plano de flexión es el de los pares flexores; cortado con el plano de la sección deja una recta, la línea de fuerzas. Su posición respecto de los ejes principales dice si la flexión es normal u oblicua.",
+      en: "The bending plane is the one of the bending couples; cut by the plane of the section it leaves a line, the line of forces. Its position with respect to the principal axes tells whether bending is normal or oblique.",
+    },
+  ),
+  mc(
+    "lf2",
+    "flexion",
+    {
+      es: "En una sección circular, ¿cómo es la flexión simple, sea cual sea la dirección de la carga?",
+      en: "In a circular section, what kind of simple bending occurs, whatever the direction of the load?",
+    },
+    {
+      es: "Siempre normal (recta): todo par ortogonal por G es de ejes principales",
+      en: "Always normal (straight): every orthogonal pair through G is principal",
+    },
+    [
+      {
+        es: "Siempre oblicua, porque la sección no tiene un eje fuerte y otro débil que la guíen",
+        en: "Always oblique, because the section has no strong and weak axis",
+      },
+      {
+        es: "Oblicua cuando la carga es inclinada y normal cuando la carga es vertical u horizontal",
+        en: "Oblique when the load is inclined and normal when the load is vertical",
+      },
+      {
+        es: "No hay flexión posible, porque los dos momentos principales de inercia son iguales",
+        en: "No bending is possible, because the principal moments of inertia are equal",
+      },
+    ],
+    0,
+    {
+      es: "Con J_x = J_y todo par ortogonal por G es principal (el momento centrífugo es nulo respecto de cualquiera). La línea de fuerzas coincide entonces con uno de ellos: α = 0, flexión normal.",
+      en: "With J_x = J_y every orthogonal pair through G is principal (the product of inertia is zero about any of them). The line of forces then coincides with one of them: α = 0, normal bending.",
+    },
+  ),
+
   // ── Corte ──────────────────────────────────────────────────────────────
   mc(
     "co1",
