@@ -5,7 +5,8 @@ import React from "react";
 import Link from "next/link";
 import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 import { SettingsPanel } from "@/components/SettingsPanel";
-import { Sub, SvgSub, eqLines } from "@/components/Sub";
+import { Sub, SvgSub, eqLines, plain } from "@/components/Sub";
+import { BendingPlaneFigure, ObliqueAngleFigure, PrincipalAxesFigure } from "@/components/DefinitionFigures";
 
 const INK = "#16232E";
 const FAINT = "#C9D2D8";
@@ -66,6 +67,60 @@ function Section({ kicker, title, children }: { kicker: TranslationKey; title: T
       <h3 className="mb-3 text-2xl font-semibold tracking-tight"><Sub>{t(title)}</Sub></h3>
       {children}
     </section>
+  );
+}
+
+// Straight bending as in the notes' sketch: a horizontal bar in oblique projection (depth u = (40, −25) px) with its vertical
+// plane of symmetry α (shaded: it holds the axis, the loads P_i and the symmetry axis y of the section) and the bending
+// couple M at the end section. The loads press on the top face, in the plane α.
+const STRAIGHT_LOADS_X = [112, 172, 232];
+function StraightBendingSVG() {
+  const { t } = useLanguage();
+  const id = React.useId();
+  const ux = 40;
+  const uy = -25;
+  const x0 = 50;
+  const x1 = 270;
+  const yt = 100; // top of the front face
+  const yb = 150; // bottom of the front face
+  const mx = ux / 2; // mid-depth shift
+  const my = uy / 2;
+  const gy = (yt + yb) / 2 + my; // height of the geometric axis at mid-depth
+  const ex = x1 + mx; // end section, centre
+  return (
+    <svg viewBox="0 0 520 215" className="h-auto w-full" role="img" aria-label={plain(t("flx.s3.fig"))}>
+      <defs>
+        <marker id={id} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill={COMPRESSION} />
+        </marker>
+      </defs>
+      {/* plane of symmetry α (through the middle of the depth) */}
+      <rect x={x0 + mx - 14} y="22" width={x1 - x0 + 28} height="162" fill={TENSION} fillOpacity="0.1" stroke={TENSION} strokeWidth="1.5" strokeDasharray="5 3" />
+      {/* the bar: front face, top face and end section */}
+      <rect x={x0} y={yt} width={x1 - x0} height={yb - yt} fill={FAINT} fillOpacity="0.55" stroke={INK} strokeWidth="1.5" />
+      <polygon points={`${x0},${yt} ${x1},${yt} ${x1 + ux},${yt + uy} ${x0 + ux},${yt + uy}`} fill={FAINT} fillOpacity="0.35" stroke={INK} strokeWidth="1.5" />
+      <polygon points={`${x1},${yt} ${x1 + ux},${yt + uy} ${x1 + ux},${yb + uy} ${x1},${yb}`} fill={FAINT} fillOpacity="0.8" stroke={INK} strokeWidth="1.5" />
+      {/* geometric axis of the bar (through the centroids) and the symmetry axis y of the end section */}
+      <line x1={x0 + mx - 22} y1={gy} x2={ex} y2={gy} stroke={INK} strokeWidth="1.2" strokeDasharray="8 3 2 3" />
+      <line x1={ex} y1={gy} x2={ex + 36} y2={gy} stroke={INK} strokeWidth="1.2" strokeDasharray="8 3 2 3" />
+      <line x1={ex} y1="30" x2={ex} y2="190" stroke={INK} strokeWidth="1.5" />
+      <circle cx={ex} cy={gy} r="3" fill={INK} />
+      {/* loads P_i on the top face, in the plane α */}
+      {STRAIGHT_LOADS_X.map((x, i) => (
+        <g key={x}>
+          <line x1={x} y1="40" x2={x} y2={yt + my - 2} stroke={COMPRESSION} strokeWidth="2.5" markerEnd={`url(#${id})`} />
+          <text x={x + 6} y="54" fontSize="12" fontWeight="600" fill={COMPRESSION}><SvgSub>{`P_${i + 1}`}</SvgSub></text>
+        </g>
+      ))}
+      {/* bending couple M at the end section */}
+      <path d={`M ${ex + 14} ${gy - 36} A 24 24 0 0 1 ${ex + 24} ${gy - 8}`} fill="none" stroke={COMPRESSION} strokeWidth="2.5" markerEnd={`url(#${id})`} />
+      <text x={ex + 30} y={gy - 28} fontSize="12" fontWeight="600" fill={COMPRESSION}>M</text>
+      <text x={ex + 6} y="24" fontSize="12" fontStyle="italic" fill={INK}>y</text>
+      <text x={ex + 8} y={gy + 16} fontSize="12" fontWeight="600" fill={INK}>G</text>
+      <text x={x0 + mx - 8} y="38" fontSize="12" fontWeight="600" fill={TENSION}>{t("flx.s3.fig.plane")}</text>
+      <text x={ex + 14} y="40" fontSize="11" fill={INK}>{t("flx.s3.fig.sym")}</text>
+      <text x={ex + 40} y={gy + 4} fontSize="11" fill={INK}>{t("flx.s3.fig.axis")}</text>
+    </svg>
   );
 }
 
@@ -163,14 +218,29 @@ export default function FlexionPage() {
           <Section kicker="flx.s1.kicker" title="flx.s1.title">
             <Para k="flx.s1.p1" />
             <Para k="flx.s1.p2" />
+            <div className="mx-auto max-w-lg">
+              <Figure caption={<Sub>{t("def.f.plano")}</Sub>}>
+                <BendingPlaneFigure label={plain(t("def.f.plano"))} />
+              </Figure>
+            </div>
             <ul className="mb-4 max-w-[66ch] list-disc space-y-2 pl-5 text-stone-700 dark:text-stone-300">
               <li>{t("flx.s1.normal")}</li>
               <li>{t("flx.s1.oblique")}</li>
             </ul>
+            <div className="mx-auto max-w-sm">
+              <Figure caption={<Sub>{t("flx.s1.figa")}</Sub>}>
+                <ObliqueAngleFigure label={plain(t("flx.s1.figa"))} />
+              </Figure>
+            </div>
           </Section>
 
           <Section kicker="flx.s2.kicker" title="flx.s2.title">
             <Para k="flx.s2.p1" />
+            <div className="mx-auto max-w-sm">
+              <Figure caption={<Sub>{t("flx.s2.fig")}</Sub>}>
+                <PrincipalAxesFigure label={plain(t("flx.s2.fig"))} />
+              </Figure>
+            </div>
             <Para k="flx.s2.p2" />
           </Section>
 
@@ -182,6 +252,11 @@ export default function FlexionPage() {
               <li><Sub>{t("flx.s3.c")}</Sub></li>
             </ol>
             <Para k="flx.s3.note" />
+            <div className="mx-auto max-w-xl">
+              <Figure caption={<Sub>{t("flx.s3.fig")}</Sub>}>
+                <StraightBendingSVG />
+              </Figure>
+            </div>
           </Section>
 
           <Section kicker="flx.s4.kicker" title="flx.s4.title">

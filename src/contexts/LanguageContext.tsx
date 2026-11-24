@@ -763,6 +763,8 @@ const EN = {
     "The line of forces coincides with one of the principal axes of inertia of the section: simple normal (straight) bending.",
   "flx.s1.oblique":
     "The line of forces makes an angle α with that axis: simple oblique bending.",
+  "flx.s1.figa":
+    "The section with its principal axes {x} and {y} and the line of forces (red). In normal bending the line of forces lies on a principal axis (α = 0); in oblique bending it is turned an angle α from it, as drawn here from the axis {y}.",
   "flx.s2.kicker":
     "02 — Review",
   "flx.s2.title":
@@ -771,6 +773,8 @@ const EN = {
     "Among all the pairs of axes through a point, the moments of inertia of a section reach their maximum and minimum about two perpendicular axes: the principal axes of inertia. The product of inertia about them is zero, and the corresponding moments are the principal moments of inertia.",
   "flx.s2.p2":
     "When the two principal moments are different, that orthogonal pair is unique. When they are equal (a circle, a square) every orthogonal pair through the centroid is principal.",
+  "flx.s2.fig":
+    "An IPB 200 as an example. Its two axes of symmetry, {x} and {y}, are principal axes of inertia ({J}_xy = 0). The moments are different, {J}_x = 5 700 cm⁴ (the strong axis, {J}_max) and {J}_y = 2 000 cm⁴ (the weak one, {J}_min), so this orthogonal pair is the only principal one.",
   "flx.s3.kicker":
     "03 — Straight bending",
   "flx.s3.title":
@@ -785,6 +789,14 @@ const EN = {
     "The loads {P}_i act perpendicular to the axis of the bar and lie in the plane α.",
   "flx.s3.note":
     "Plane α is the plane of forces (of bending) and the axis {y}–{y} is the axis of symmetry of the piece, hence a principal axis of inertia: it can be the one with {J}_max or the one with {J}_min.",
+  "flx.s3.fig":
+    "A bar in straight bending, as in the notes’ sketch: its vertical plane of symmetry α (shaded) contains the geometric axis of the bar, the symmetry axis {y} of the section and the loads {P}_i, which are perpendicular to the axis. The bending couple {M} acts in that plane.",
+  "flx.s3.fig.plane":
+    "plane α",
+  "flx.s3.fig.sym":
+    "symmetry axis of the section",
+  "flx.s3.fig.axis":
+    "geometric axis",
   "flx.s4.kicker":
     "04 — Deformation",
   "flx.s4.title":
@@ -3102,6 +3114,8 @@ const ES: Record<TranslationKey, string> = {
     "La línea de fuerzas coincide con uno de los ejes principales de inercia de la sección: flexión simple normal (recta).",
   "flx.s1.oblique":
     "La línea de fuerzas forma un ángulo α con ese eje: flexión simple oblicua.",
+  "flx.s1.figa":
+    "La sección con sus ejes principales {x} e {y} y la línea de fuerzas (en rojo). En flexión normal la línea de fuerzas está sobre un eje principal (α = 0); en flexión oblicua está girada un ángulo α respecto de él, como se dibuja acá desde el eje {y}.",
   "flx.s2.kicker":
     "02 — Repaso",
   "flx.s2.title":
@@ -3110,6 +3124,8 @@ const ES: Record<TranslationKey, string> = {
     "Entre todos los pares de ejes que pasan por un punto, los momentos de inercia de una sección alcanzan su máximo y su mínimo respecto de dos ejes perpendiculares entre sí: los ejes principales de inercia. El momento centrífugo respecto de ellos es nulo, y los momentos correspondientes son los momentos principales de inercia.",
   "flx.s2.p2":
     "Cuando los dos momentos principales son distintos, ese par ortogonal es único. Cuando son iguales (un círculo, un cuadrado) todo par ortogonal que pase por el baricentro es principal.",
+  "flx.s2.fig":
+    "Un IPB 200 como ejemplo. Sus dos ejes de simetría, {x} e {y}, son ejes principales de inercia ({J}_xy = 0). Los momentos son distintos, {J}_x = 5 700 cm⁴ (el eje fuerte, {J}_max) y {J}_y = 2 000 cm⁴ (el débil, {J}_min), así que este par ortogonal es el único principal.",
   "flx.s3.kicker":
     "03 — Flexión recta",
   "flx.s3.title":
@@ -3124,6 +3140,14 @@ const ES: Record<TranslationKey, string> = {
     "Las cargas {P}_i actúan perpendicularmente al eje de la barra y se hallan en el plano α.",
   "flx.s3.note":
     "El plano α es el plano de fuerzas (de flexión) y el eje {y}–{y} es eje de simetría de la pieza, siendo eje principal de inercia: puede ser el que tiene el {J}_max o el {J}_min.",
+  "flx.s3.fig":
+    "Una barra en flexión recta, como en el croquis del apunte: su plano de simetría vertical α (sombreado) contiene el eje geométrico de la barra, el eje de simetría {y} de la sección y las cargas {P}_i, perpendiculares al eje. El par flector {M} actúa en ese plano.",
+  "flx.s3.fig.plane":
+    "plano α",
+  "flx.s3.fig.sym":
+    "eje de simetría de la sección",
+  "flx.s3.fig.axis":
+    "eje geométrico",
   "flx.s4.kicker":
     "04 — Deformación",
   "flx.s4.title":
