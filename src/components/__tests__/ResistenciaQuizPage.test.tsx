@@ -14,10 +14,10 @@ function setup() {
 }
 
 describe("/resistencia-quiz", () => {
-  test("shows all 35 questions and the eight topic filters", () => {
+  test("shows all 37 questions and the eight topic filters", () => {
     setup();
-    expect(MATERIALS_QUIZ_QUESTIONS).toHaveLength(35);
-    expect(screen.getByText("35")).toBeInTheDocument();
+    expect(MATERIALS_QUIZ_QUESTIONS).toHaveLength(37);
+    expect(screen.getByText("37")).toBeInTheDocument();
     for (const name of [
       "Axial load",
       "Bending",

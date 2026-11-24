@@ -343,38 +343,6 @@ export const MATERIALS_QUIZ_QUESTIONS: ClaudeQuizQuestion[] = [
       en: "What matters is where the line of forces lies with respect to the principal axes, not the beam's inclination or the presence of shear.",
     },
   ),
-  mc(
-    "fx6",
-    "flexion",
-    {
-      es: "En una viga de sección rectangular se duplica la altura h (con la misma base b y el mismo momento flector M). La tensión máxima σ = M/W:",
-      en: "In a rectangular beam the depth h is doubled (same width b and same bending moment M). The maximum stress σ = M/W:",
-    },
-    {
-      es: "Se reduce a la cuarta parte, porque W = b·h²/6 se multiplica por 4",
-      en: "Drops to a quarter, because W = b·h²/6 is multiplied by 4",
-    },
-    [
-      {
-        es: "Se reduce a la mitad, porque W = b·h²/6 se multiplica por 2",
-        en: "Is halved, because W = b·h²/6 is multiplied by 2",
-      },
-      {
-        es: "Se reduce a la octava parte, porque W = b·h²/6 se multiplica por 8",
-        en: "Drops to an eighth, because W = b·h²/6 is multiplied by 8",
-      },
-      {
-        es: "No cambia, porque el momento M y la base b siguen siendo los mismos",
-        en: "Does not change, because M and the width b stay the same",
-      },
-    ],
-    0,
-    {
-      es: 'W = J/y_máx = b·h²/6 crece con h²: con 2h, W × 4 y σ/4. Por eso conviene poner la sección "parada" (la altura en el plano de flexión).',
-      en: 'W = J/y_max = b·h²/6 grows with h²: with 2h, W × 4 and σ/4. That is why the section is best placed "on edge" (the depth in the bending plane).',
-    },
-  ),
-
   // ── Corte ──────────────────────────────────────────────────────────────
   mc(
     "co1",
@@ -467,6 +435,69 @@ export const MATERIALS_QUIZ_QUESTIONS: ClaudeQuizQuestion[] = [
     {
       es: "τ sigue una parábola: nula en las fibras extremas (S = 0) y máxima en el eje neutro, 1,5 veces la media Q/A.",
       en: "τ follows a parabola: zero at the extreme fibres (S = 0) and largest at the neutral axis, 1.5 times the mean Q/A.",
+    },
+  ),
+
+  mc(
+    "co4",
+    "corte",
+    {
+      es: "En una viga en flexión pura (Q = 0), ¿qué tensión tangencial da la fórmula de Jourawski, τ = Q·S/(J·s)?",
+      en: "In a beam under pure bending (Q = 0), what shear stress does Jourawski's formula, τ = Q·S/(J·s), give?",
+    },
+    {
+      es: "Cero: como dM = Q·dx = 0, la fuerza N_Ω no cambia entre dos secciones y no hay nada que resista el deslizamiento",
+      en: "Zero: since dM = Q·dx = 0, the force N_Ω does not change between two sections and there is nothing for the sliding to resist",
+    },
+    [
+      {
+        es: "Máxima en el eje neutro: el momento flector la produce aunque no haya corte",
+        en: "Maximum at the neutral axis: the bending moment produces it even with no shear",
+      },
+      {
+        es: "Uniforme e igual a M/A en toda la sección, porque la fórmula no depende de Q",
+        en: "Uniform and equal to M/A over the whole section, because the formula does not depend on Q",
+      },
+      {
+        es: "Indeterminada: la fórmula solo vale cuando también hay momento torsor",
+        en: "Undetermined: the formula only holds when there is also a torsional moment",
+      },
+    ],
+    0,
+    {
+      es: "τ aparece porque el momento cambia a lo largo de la viga (dM = Q·dx): N_Ω pasa a N_Ω + dN_Ω y la diferencia la toma la tensión tangencial. Sin corte no hay dT.",
+      en: "τ appears because the moment changes along the beam (dM = Q·dx): N_Ω becomes N_Ω + dN_Ω and the difference is taken by the shear stress. With no shear there is no dT.",
+    },
+  ),
+  mc(
+    "co5",
+    "corte",
+    {
+      es: "En Jourawski, la tensión tangencial calculada en la sección transversal también actúa en la superficie de corte paralela al eje de la viga. ¿Qué lo justifica?",
+      en: "In Jourawski's derivation, the shear stress computed on the cross-section also acts on the cut surface parallel to the beam's axis. What justifies this?",
+    },
+    {
+      es: "El teorema de Cauchy: en planos perpendiculares las tangenciales (normales a la arista común) son iguales",
+      en: "Cauchy's theorem: on perpendicular planes the shear stresses (normal to the common edge) are equal",
+    },
+    [
+      {
+        es: "La hipótesis de Bernoulli: las secciones planas permanecen planas al flexar",
+        en: "Bernoulli's hypothesis: plane sections remain plane under bending",
+      },
+      {
+        es: "El principio de Saint-Venant: lejos de la carga solo importa la resultante",
+        en: "Saint-Venant's principle: far from the load only the resultant matters",
+      },
+      {
+        es: "La ley de Hooke: la tensión tangencial es proporcional a la distorsión γ",
+        en: "Hooke's law: shear stress is proportional to the distortion γ",
+      },
+    ],
+    0,
+    {
+      es: "Por Cauchy τ_xy = τ_yx: la τ de la sección es igual a la longitudinal sobre el corte paralelo al eje, y de esa igualdad sale dT = τ·s·dx = dN_Ω.",
+      en: "By Cauchy τ_xy = τ_yx: the τ on the section equals the longitudinal one on the cut parallel to the axis, and from that equality dT = τ·s·dx = dN_Ω.",
     },
   ),
 
@@ -588,6 +619,38 @@ export const MATERIALS_QUIZ_QUESTIONS: ClaudeQuizQuestion[] = [
     {
       es: "El producto del tensor por la normal da el vector tensión; su proyección sobre n es σ y lo que queda es τ (ρ² = σ² + τ²).",
       en: "The tensor times the normal gives the stress vector; its projection on n is σ and what remains is τ (ρ² = σ² + τ²).",
+    },
+  ),
+
+  mc(
+    "te5",
+    "tension",
+    {
+      es: "En el ejercicio de la guía, el tensor tiene σx = −20, σy = 30, σz = 0, τxy = 10, τxz = 5 y τyz = 0 (MPa). ¿Cuánto vale el primer invariante I1?",
+      en: "In the guide's exercise the tensor has σx = −20, σy = 30, σz = 0, τxy = 10, τxz = 5 and τyz = 0 (MPa). What is the first invariant I1?",
+    },
+    {
+      es: "10 MPa: la suma de la diagonal, −20 + 30 + 0",
+      en: "10 MPa: the sum of the diagonal, −20 + 30 + 0",
+    },
+    [
+      {
+        es: "50 MPa: la suma de los valores absolutos de la diagonal",
+        en: "50 MPa: the sum of the absolute values of the diagonal",
+      },
+      {
+        es: "15 MPa: la suma de las tangenciales, 10 + 5 + 0",
+        en: "15 MPa: the sum of the shear stresses, 10 + 5 + 0",
+      },
+      {
+        es: "−10 MPa: la misma suma pero con el signo cambiado",
+        en: "−10 MPa: the same sum with its sign flipped",
+      },
+    ],
+    0,
+    {
+      es: "I1 = σx + σy + σz es la traza del tensor y no cambia al girar los ejes; las tangenciales no entran. Acá: −20 + 30 + 0 = 10 MPa.",
+      en: "I1 = σx + σy + σz is the trace of the tensor and does not change when the axes are rotated; the shear stresses do not enter. Here: −20 + 30 + 0 = 10 MPa.",
     },
   ),
 

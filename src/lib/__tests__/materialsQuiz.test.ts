@@ -4,9 +4,9 @@ import {
 } from "../materialsQuizData";
 
 describe("materials quiz bank", () => {
-  test("has 35 multiple-choice questions with unique ids", () => {
-    expect(MATERIALS_QUIZ_QUESTIONS).toHaveLength(35);
-    expect(new Set(MATERIALS_QUIZ_QUESTIONS.map((q) => q.id)).size).toBe(35);
+  test("has 37 multiple-choice questions with unique ids", () => {
+    expect(MATERIALS_QUIZ_QUESTIONS).toHaveLength(37);
+    expect(new Set(MATERIALS_QUIZ_QUESTIONS.map((q) => q.id)).size).toBe(37);
     expect(MATERIALS_QUIZ_QUESTIONS.every((q) => q.type === "mc")).toBe(true);
   });
   test("each question has 4 distinct options per language and a valid answer", () => {
