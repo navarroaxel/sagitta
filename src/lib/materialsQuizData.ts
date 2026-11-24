@@ -295,15 +295,15 @@ export const MATERIALS_QUIZ_QUESTIONS: ClaudeQuizQuestion[] = [
     [
       {
         es: "Coincide con la línea de fuerzas",
-        en: "Coincides with the line of forces",
+        en: "Coincides with the line of forces, since both mark the same direction",
       },
       {
         es: "Está en la fibra más traccionada",
-        en: "Lies on the most tensioned fibre",
+        en: "Lies on the most tensioned fibre, where σ is largest",
       },
       {
         es: "Forma un ángulo α cualquiera con la línea de fuerzas",
-        en: "Forms any angle α with the line of forces",
+        en: "Forms any angle α with the line of forces, depending on the section",
       },
     ],
     2,
@@ -700,8 +700,8 @@ export const MATERIALS_QUIZ_QUESTIONS: ClaudeQuizQuestion[] = [
     ],
     3,
     {
-      es: "Dentro de la zona elástica σ = E·ε, así que E es la pendiente (tangente del ángulo β que forma la recta con el eje ε).",
-      en: "Within the elastic zone σ = E·ε, so E is the slope (tangent of the angle β the line makes with the ε axis).",
+      es: "En el tramo proporcional (hasta σ_P) vale σ = E·ε, así que E es la pendiente de esa recta (tangente del ángulo β que forma con el eje ε).",
+      en: "In the proportional range (up to σ_P) σ = E·ε holds, so E is the slope of that line (tangent of the angle β it makes with the ε axis).",
     },
   ),
 

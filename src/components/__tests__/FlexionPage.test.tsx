@@ -56,6 +56,10 @@ describe("/flexion figures", () => {
     expect(figs).toHaveLength(6); // line of forces, α, principal axes, straight bending, neutral axis, stress
     const ipb = figs[2];
     expect(ipb.textContent).toMatch(/xy.*Jmax.*Jmin.*G.*Jxy = 0/);
+    // the J_xy label (with its lowered subscript, ~4 units) stays inside the viewBox
+    const vbH = Number(ipb.getAttribute("viewBox")!.split(" ")[3]);
+    const jxy = [...ipb.querySelectorAll("text")].find((x) => x.textContent?.includes("= 0"))!;
+    expect(Number(jxy.getAttribute("y")) + 4).toBeLessThan(vbH);
     // drawn from the table: depth h, flange width bf (0.7 px/mm), centred on G; and the caption quotes its J_x, J_y
     const pr = getProfile("IPB 200")!;
     const pts = ipb.querySelector('[data-testid="ipb"]')!.getAttribute("points")!.split(" ").map((v) => v.split(",").map(Number));

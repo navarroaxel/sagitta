@@ -35,9 +35,11 @@ describe("materials quiz bank", () => {
     );
     expect(Math.max(...counts) - Math.min(...counts)).toBeLessThanOrEqual(2);
     for (const q of MATERIALS_QUIZ_QUESTIONS) {
-      const len = q.options.es.map((o) => o.length);
-      const others = len.filter((_, i) => i !== q.correct);
-      expect(len[q.correct] / Math.max(...others)).toBeLessThan(1.5);
+      for (const lang of ["es", "en"] as const) {
+        const len = q.options[lang].map((o) => o.length);
+        const others = len.filter((_, i) => i !== q.correct);
+        expect(len[q.correct] / Math.max(...others)).toBeLessThan(1.5);
+      }
     }
   });
 });

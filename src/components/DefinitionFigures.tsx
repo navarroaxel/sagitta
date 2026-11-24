@@ -388,7 +388,7 @@ export function PrincipalAxesFigure({ label }: { label: string }) {
       <Txt x={cx - 108} y={cy - 6} fill={TENSION} fontSize="11">{"{J}_max"}</Txt>
       <Txt x={cx + 8} y={cy + 98} fill={LOAD} fontSize="11">{"{J}_min"}</Txt>
       <Txt x={cx - 14} y={cy + 16}>G</Txt>
-      <Txt x="150" y="248" textAnchor="middle">{"{J}_xy = 0"}</Txt>
+      <Txt x="150" y="238" textAnchor="middle">{"{J}_xy = 0"}</Txt>
     </svg>
   );
 }

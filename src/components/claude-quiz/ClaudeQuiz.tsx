@@ -61,6 +61,14 @@ export function ClaudeQuiz({
   const prefs = usePrefs();
   const [order, setOrder] = useState<ClaudeQuizQuestion[]>(QUESTIONS);
   const [answers, setAnswers] = useState<AnswerMap>(EMPTY_ANSWERS);
+  // A different bank (a new `questions` prop) starts over: the cards shown and
+  // the score always come from the same bank.
+  const [bank, setBank] = useState(QUESTIONS);
+  if (bank !== QUESTIONS) {
+    setBank(QUESTIONS);
+    setOrder(QUESTIONS);
+    setAnswers(EMPTY_ANSWERS);
+  }
   const [topic, setTopic] = useState<ClaudeQuizTopic | "all">("all");
   const [unansweredOnly, setUnansweredOnly] = useState(false);
   // Snapshot of question ids to keep showing while unansweredOnly is on, so
