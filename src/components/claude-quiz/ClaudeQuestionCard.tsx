@@ -12,12 +12,15 @@ export interface ClaudeQuestionCardProps {
   index: number;
   answer: ClaudeQuizAnswer;
   onAnswer: (value: number) => void;
+  /** Show the "True / False" / "Multiple choice" chip (off when every question has the same type). */
+  showType?: boolean;
 }
 
 const OPTION_BASE =
   "w-full rounded px-3 py-2 text-left text-sm transition-colors motion-reduce:transition-none disabled:cursor-not-allowed border focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-500";
 
-type OptionState = "idle" | "selected-correct" | "selected-wrong" | "reveal-correct" | "muted";
+type OptionState =
+  "idle" | "selected-correct" | "selected-wrong" | "reveal-correct" | "muted";
 
 const OPTION_STYLES: Record<OptionState, string> = {
   idle: "border-stone-200 bg-white text-stone-700 hover:bg-stone-50 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-200 dark:hover:bg-stone-800",
@@ -36,6 +39,7 @@ export function ClaudeQuestionCard({
   index,
   answer,
   onAnswer,
+  showType = true,
 }: ClaudeQuestionCardProps) {
   const { t, language } = useLanguage();
   const graded = answer !== null;
@@ -67,9 +71,11 @@ export function ClaudeQuestionCard({
         <span className="rounded-full bg-stone-100 px-2 py-0.5 text-stone-500 dark:bg-stone-800 dark:text-stone-400">
           {t(`claudeQuiz.topic.${question.topic}`)}
         </span>
-        <span className="rounded-full bg-stone-100 px-2 py-0.5 text-stone-500 dark:bg-stone-800 dark:text-stone-400">
-          {t(`claudeQuiz.type.${question.type}`)}
-        </span>
+        {showType && (
+          <span className="rounded-full bg-stone-100 px-2 py-0.5 text-stone-500 dark:bg-stone-800 dark:text-stone-400">
+            {t(`claudeQuiz.type.${question.type}`)}
+          </span>
+        )}
       </div>
 
       <p className="text-sm text-stone-800 dark:text-stone-100">

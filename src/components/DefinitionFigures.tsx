@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getProfile } from "@/lib/profiles";
 import { SvgSub } from "@/components/Sub";
 
 const INK = "#16232E";
@@ -309,6 +310,85 @@ export function ObliqueBendingFigure({ label }: { label: string }) {
       {panel(100, 0, t("def.fig.straight"))}
       {panel(320, 25, t("def.fig.oblique"))}
       <Txt x="210" y="85" textAnchor="middle" fill={LOAD} fontWeight="600" fontSize="10">{" "}</Txt>
+    </svg>
+  );
+}
+
+// Oblique bending, the angle α: the section with its principal axes x, y and the line of forces turned α from the y axis
+// (α = 0 would be normal bending). The angle is measured from the principal axis y to the line of forces.
+export const OBLIQUE_ALPHA = 25; // degrees
+export function ObliqueAngleFigure({ label }: { label: string }) {
+  const { t } = useLanguage();
+  const cx = 150;
+  const cy = 115;
+  const a = (OBLIQUE_ALPHA * Math.PI) / 180;
+  const half = 118; // half-length of the line of forces
+  const r = 70; // radius of the angle arc
+  return (
+    <svg viewBox="0 0 300 235" className="h-auto w-full" role="img" aria-label={label}>
+      <rect x={cx - 40} y={cy - 70} width="80" height="140" fill={TENSION} fillOpacity="0.14" stroke={INK} strokeWidth="1.5" />
+      {/* principal axes */}
+      <line x1={cx - 100} y1={cy} x2={cx + 100} y2={cy} stroke={INK} strokeWidth="1" />
+      <line x1={cx} y1={cy - 100} x2={cx} y2={cy + 100} stroke={INK} strokeWidth="1" />
+      <Txt x={cx + 104} y={cy + 4}>{"{x}"}</Txt>
+      <Txt x={cx + 5} y={cy - 103}>{"{y}"}</Txt>
+      {/* line of forces, turned α from the y axis */}
+      <line
+        x1={cx - half * Math.sin(a)}
+        y1={cy + half * Math.cos(a)}
+        x2={cx + half * Math.sin(a)}
+        y2={cy - half * Math.cos(a)}
+        stroke={LOAD}
+        strokeWidth="3"
+      />
+      <Txt x={cx + half * Math.sin(a) + 6} y={cy - half * Math.cos(a) + 12} fill={LOAD} fontWeight="600">{t("def.fig.forceline")}</Txt>
+      {/* the angle α between the principal axis y and the line of forces */}
+      <path d={`M ${cx} ${cy - r} A ${r} ${r} 0 0 1 ${cx + r * Math.sin(a)} ${cy - r * Math.cos(a)}`} fill="none" stroke={INK} strokeWidth="1.5" />
+      <Txt x={cx + 12} y={cy - r - 4} fontSize="14">α</Txt>
+      <circle cx={cx} cy={cy} r="3" fill={INK} />
+      <Txt x={cx - 12} y={cy + 16}>G</Txt>
+    </svg>
+  );
+}
+
+// Principal axes of inertia on a real IPB (drawn from the profile table, 0.7 px/mm): the two axes of symmetry are principal
+// (J_xy = 0) and the moments differ, so that pair is the only one: x (strong, J_max) and y (weak, J_min).
+export const PRINCIPAL_PROFILE = "IPB 200";
+export function PrincipalAxesFigure({ label }: { label: string }) {
+  const p = getProfile(PRINCIPAL_PROFILE)!;
+  const k = 0.7;
+  const cx = 150;
+  const cy = 120;
+  const h = p.h * k;
+  const b = p.bf * k;
+  const tf = p.tf * k;
+  const tw = p.tw * k;
+  const pts = [
+    [cx - b / 2, cy - h / 2],
+    [cx + b / 2, cy - h / 2],
+    [cx + b / 2, cy - h / 2 + tf],
+    [cx + tw / 2, cy - h / 2 + tf],
+    [cx + tw / 2, cy + h / 2 - tf],
+    [cx + b / 2, cy + h / 2 - tf],
+    [cx + b / 2, cy + h / 2],
+    [cx - b / 2, cy + h / 2],
+    [cx - b / 2, cy + h / 2 - tf],
+    [cx - tw / 2, cy + h / 2 - tf],
+    [cx - tw / 2, cy - h / 2 + tf],
+    [cx - b / 2, cy - h / 2 + tf],
+  ];
+  return (
+    <svg viewBox="0 0 300 250" className="h-auto w-full" role="img" aria-label={label}>
+      <polygon data-testid="ipb" points={pts.map((q) => q.join(",")).join(" ")} fill={TENSION} fillOpacity="0.14" stroke={INK} strokeWidth="1.5" />
+      <line x1={cx - 110} y1={cy} x2={cx + 110} y2={cy} stroke={INK} strokeWidth="1.5" />
+      <line x1={cx} y1={cy - 108} x2={cx} y2={cy + 108} stroke={INK} strokeWidth="1.5" />
+      <circle cx={cx} cy={cy} r="3" fill={INK} />
+      <Txt x={cx + 114} y={cy + 4} fontWeight="600">{"{x}"}</Txt>
+      <Txt x={cx + 6} y={cy - 110} fontWeight="600">{"{y}"}</Txt>
+      <Txt x={cx - 108} y={cy - 6} fill={TENSION} fontSize="11">{"{J}_max"}</Txt>
+      <Txt x={cx + 8} y={cy + 98} fill={LOAD} fontSize="11">{"{J}_min"}</Txt>
+      <Txt x={cx - 14} y={cy + 16}>G</Txt>
+      <Txt x="150" y="238" textAnchor="middle">{"{J}_xy = 0"}</Txt>
     </svg>
   );
 }

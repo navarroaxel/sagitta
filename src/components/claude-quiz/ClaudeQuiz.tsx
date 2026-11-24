@@ -12,10 +12,13 @@ import {
   scoreClaudeQuiz,
   shuffle,
 } from "@/lib/claudeQuiz";
-import { CLAUDE_QUIZ_QUESTIONS, CLAUDE_QUIZ_TOPICS } from "@/lib/claudeQuizData";
+import {
+  CLAUDE_QUIZ_QUESTIONS,
+  CLAUDE_QUIZ_TOPICS,
+} from "@/lib/claudeQuizData";
 import { ClaudeQuestionCard } from "./ClaudeQuestionCard";
 
-const ANSWERS_KEY = "sagitta-claude-quiz-answers";
+const DEFAULT_ANSWERS_KEY = "sagitta-claude-quiz-answers";
 
 // useLayoutEffect warns during SSR; fall back to useEffect on the server.
 const useIsomorphicLayoutEffect =
@@ -23,14 +26,10 @@ const useIsomorphicLayoutEffect =
 
 type AnswerMap = Record<string, ClaudeQuizAnswer>;
 
-const EMPTY_ANSWERS: AnswerMap = Object.fromEntries(
-  CLAUDE_QUIZ_QUESTIONS.map((q) => [q.id, null]),
-);
+const emptyAnswers = (questions: ClaudeQuizQuestion[]): AnswerMap =>
+  Object.fromEntries(questions.map((q) => [q.id, null]));
 
-const TOPICS: (ClaudeQuizTopic | "all")[] = [
-  "all",
-  ...(Object.keys(CLAUDE_QUIZ_TOPICS) as ClaudeQuizTopic[]),
-];
+const CLAUDE_TOPICS = Object.keys(CLAUDE_QUIZ_TOPICS) as ClaudeQuizTopic[];
 
 const chipClass = (active: boolean) =>
   `rounded-full border px-3 py-1 text-xs font-medium transition-colors motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-500 ${
@@ -39,11 +38,37 @@ const chipClass = (active: boolean) =>
       : "border-stone-200 bg-white text-stone-600 hover:bg-stone-50 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-400 dark:hover:bg-stone-800"
   }`;
 
-export function ClaudeQuiz() {
+export interface ClaudeQuizProps {
+  /** Question bank; defaults to the Estabilidad theory quiz. */
+  questions?: ClaudeQuizQuestion[];
+  /** Topic filter chips, in order. */
+  topics?: ClaudeQuizTopic[];
+  /** localStorage key of the remembered answers. */
+  storageKey?: string;
+  /** Show each card's question-type chip (default true). */
+  showType?: boolean;
+}
+
+export function ClaudeQuiz({
+  questions: QUESTIONS = CLAUDE_QUIZ_QUESTIONS,
+  topics = CLAUDE_TOPICS,
+  storageKey: ANSWERS_KEY = DEFAULT_ANSWERS_KEY,
+  showType = true,
+}: ClaudeQuizProps = {}) {
   const { t } = useLanguage();
+  const TOPICS: (ClaudeQuizTopic | "all")[] = ["all", ...topics];
+  const EMPTY_ANSWERS = useMemo(() => emptyAnswers(QUESTIONS), [QUESTIONS]);
   const prefs = usePrefs();
-  const [order, setOrder] = useState<ClaudeQuizQuestion[]>(CLAUDE_QUIZ_QUESTIONS);
+  const [order, setOrder] = useState<ClaudeQuizQuestion[]>(QUESTIONS);
   const [answers, setAnswers] = useState<AnswerMap>(EMPTY_ANSWERS);
+  // A different bank (a new `questions` prop) starts over: the cards shown and
+  // the score always come from the same bank.
+  const [bank, setBank] = useState(QUESTIONS);
+  if (bank !== QUESTIONS) {
+    setBank(QUESTIONS);
+    setOrder(QUESTIONS);
+    setAnswers(EMPTY_ANSWERS);
+  }
   const [topic, setTopic] = useState<ClaudeQuizTopic | "all">("all");
   const [unansweredOnly, setUnansweredOnly] = useState(false);
   // Snapshot of question ids to keep showing while unansweredOnly is on, so
@@ -81,7 +106,7 @@ export function ClaudeQuiz() {
     } catch {
       /* storage unavailable */
     }
-  }, [answers, prefs.rememberWork, loaded]);
+  }, [answers, prefs.rememberWork, loaded, ANSWERS_KEY]);
 
   const visible = useMemo(() => {
     const byTopic = filterByTopic(order, topic);
@@ -90,12 +115,12 @@ export function ClaudeQuiz() {
       : byTopic;
   }, [order, topic, unansweredOnly, frozenIds]);
   const answerArray = useMemo(
-    () => CLAUDE_QUIZ_QUESTIONS.map((q) => answers[q.id] ?? null),
-    [answers],
+    () => QUESTIONS.map((q) => answers[q.id] ?? null),
+    [answers, QUESTIONS],
   );
   const score = useMemo(
-    () => scoreClaudeQuiz(CLAUDE_QUIZ_QUESTIONS, answerArray),
-    [answerArray],
+    () => scoreClaudeQuiz(QUESTIONS, answerArray),
+    [QUESTIONS, answerArray],
   );
   const allAnswered = score.total > 0 && score.answered === score.total;
   const percentage = score.total
@@ -113,7 +138,7 @@ export function ClaudeQuiz() {
   // "unanswered only" view so it doesn't shift while the user is answering.
   const snapshotUnanswered = (tp: ClaudeQuizTopic | "all") =>
     new Set(
-      filterByTopic(CLAUDE_QUIZ_QUESTIONS, tp)
+      filterByTopic(QUESTIONS, tp)
         .filter((q) => (answers[q.id] ?? null) === null)
         .map((q) => q.id),
     );
@@ -133,16 +158,16 @@ export function ClaudeQuiz() {
 
   const handleReset = () => {
     setAnswers(EMPTY_ANSWERS);
-    setOrder(CLAUDE_QUIZ_QUESTIONS);
+    setOrder(QUESTIONS);
     setTopic("all");
     setUnansweredOnly(false);
     setFrozenIds(null);
   };
 
   const topicCount = (tp: ClaudeQuizTopic | "all") =>
-    filterByTopic(CLAUDE_QUIZ_QUESTIONS, tp).length;
+    filterByTopic(QUESTIONS, tp).length;
 
-  const unansweredInTopic = filterByTopic(CLAUDE_QUIZ_QUESTIONS, topic).filter(
+  const unansweredInTopic = filterByTopic(QUESTIONS, topic).filter(
     (q) => (answers[q.id] ?? null) === null,
   ).length;
 
@@ -157,7 +182,9 @@ export function ClaudeQuiz() {
             onClick={() => handleTopicChange(tp)}
             className={chipClass(topic === tp)}
           >
-            {tp === "all" ? t("claudeQuiz.filter.all") : t(`claudeQuiz.topic.${tp}`)}{" "}
+            {tp === "all"
+              ? t("claudeQuiz.filter.all")
+              : t(`claudeQuiz.topic.${tp}`)}{" "}
             <span className="opacity-60">({topicCount(tp)})</span>
           </button>
         ))}
@@ -200,7 +227,7 @@ export function ClaudeQuiz() {
         <div
           className="h-full bg-stone-700 transition-[width] motion-reduce:transition-none dark:bg-stone-300"
           style={{
-            width: `${(score.answered / (CLAUDE_QUIZ_QUESTIONS.length || 1)) * 100}%`,
+            width: `${(score.answered / (QUESTIONS.length || 1)) * 100}%`,
           }}
         />
       </div>
@@ -216,6 +243,7 @@ export function ClaudeQuiz() {
           key={question.id}
           question={question}
           index={i}
+          showType={showType}
           answer={answers[question.id] ?? null}
           onAnswer={(value) => handleAnswer(question.id, value)}
         />

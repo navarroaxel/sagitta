@@ -125,6 +125,12 @@ export function QuizView() {
           {t("quiz.more.claude")}
         </Link>
         <Link
+          href="/resistencia-quiz"
+          className="mt-1 block text-sm text-stone-700 underline decoration-stone-300 underline-offset-2 transition-colors hover:text-stone-900 dark:text-stone-200 dark:decoration-stone-600 dark:hover:text-stone-50"
+        >
+          {t("quiz.more.materials")}
+        </Link>
+        <Link
           href="/parcial"
           className="mt-1 block text-sm text-stone-700 underline decoration-stone-300 underline-offset-2 transition-colors hover:text-stone-900 dark:text-stone-200 dark:decoration-stone-600 dark:hover:text-stone-50"
         >
