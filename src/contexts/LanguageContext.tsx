@@ -2297,7 +2297,7 @@ const EN = {
   "qt.stmt.title":
     "Static moments about a centroidal axis",
   "qt.stmt.q":
-    "What relation is there between the static moments of the areas {F}_1 and {F}_2 about the axis {y}_G that contains the centroid? ({F} is the area, as in the exam; the figure shows the two parts on each side of {y}_G.)",
+    "What relation is there between the static moments of the areas {F}_1 and {F}_2 about the axis {y}_G that contains the centroid? ({F} is the area, as in the exam. In the figure {F}_1 is a quarter of the rectangle and {F}_2 the rest, so {F}_1 = {F}_2 / 3; the axis {y}_G goes through the centroid of the whole rectangle.)",
   "qt.ans.kicker":
     "Answer",
   "qt.ans.title":
@@ -2305,7 +2305,9 @@ const EN = {
   "qt.ans.p1":
     "The two static moments are equal in absolute value and of opposite sign, so they add up to zero:",
   "qt.ans.p2":
-    "The same holds for the axis {x}_G: the parts above and below it cancel each other.",
+    "It holds however the figure is split into {F}_1 and {F}_2, and for any axis through the centroid, {x}_G included.",
+  "qt.ans.p3":
+    "The exam gives no measurements, and none are needed: it asks for a relation, not a number. The only fact used is that {y}_G goes through the centroid. The proportion {F}_1 = {F}_2 / 3 is read from the drawing; it is not data of the problem, and the answer would be the same for any other split. The numbers below only illustrate it.",
   "qt.why.kicker":
     "Why",
   "qt.why.title":
@@ -2315,29 +2317,21 @@ const EN = {
   "qt.why.p2":
     "The figure is {F}_1 plus {F}_2 and a moment is a sum over the area, so {S}({F}_1) + {S}({F}_2) = {S} of the whole figure = 0.",
   "qt.why.p3":
-    "Signs: {F}_1 lies on one side of {y}_G ({x} < 0) and {F}_2 on the other ({x} > 0). One moment comes out negative and the other positive, so they can cancel.",
+    "Signs: the sign of each moment is the side of the axis where the centroid of that part lies. The centroid of {F}_1 is to the left of {y}_G ({x} < 0, negative moment) and the centroid of {F}_2 to the right ({x} > 0, positive moment), so they can cancel. ({y}_G may cross a part, as it crosses {F}_2 in the figure.)",
   "qt.why.p4":
     "As area times distance, {S} = {F}·{d}, with {d} the distance from the centroid of each part to the axis. Equal moments in absolute value mean:",
   "qt.why.p5":
-    "The areas are not equal in general: the part with less area has its centroid farther from the axis.",
+    "The areas are not equal in general: the part with less area has its centroid farther from the axis. In the exam’s figure {F}_1 = {F}_2 / 3, so {d}_1 = 3·{d}_2.",
   "qt.ex.kicker":
     "Check",
   "qt.ex.title":
-    "A numerical example: the rectangle of the exam",
+    "An illustration with numbers",
   "qt.ex.p1":
-    "Rectangle of 10 cm × 4 cm. {y}_G is the vertical line through its centroid, 5 cm from each side, and splits it into {F}_1 (left) and {F}_2 (right), as in the exam’s figure.",
+    "Rectangle of 10 cm × 4 cm. {F}_1 is its left quarter (2.5 cm wide) and {F}_2 the remaining 7.5 cm. {y}_G is the vertical line through the centroid of the whole rectangle, 5 cm from each side, so it crosses {F}_2.",
   "qt.ex.r":
-    "{F}_1 = {F}_2 = 20 cm², {d}_1 = {d}_2 = 2.5 cm\n{S}_1 = −50 cm³, {S}_2 = +50 cm³\n{S}_1 + {S}_2 = 0",
+    "{F}_1 = 10 cm², {d}_1 = 3.75 cm → {S}_1 = −37.5 cm³\n{F}_2 = 30 cm² = 3·{F}_1, {d}_2 = 1.25 cm = {d}_1 / 3 → {S}_2 = +37.5 cm³\n{S}_1 + {S}_2 = 0",
   "qt.fig":
-    "The exam’s figure: a rectangle cut by the axis {y}_G through its centroid G. The two parts, {F}_1 (/ hatching) and {F}_2 (\\ hatching), have the same area and their centroids are at the same distance {d}, one on each side: {S} = ∓50 cm³.",
-  "qt.ex2.title":
-    "If the figure is not symmetric",
-  "qt.ex2.p":
-    "The areas need not be equal. Right triangle with legs 9 cm and 6 cm. Its centroid is 3 cm from the vertical leg, so {y}_G is the vertical line at 3 cm; it splits the triangle into {F}_1 (left) and {F}_2 (right).",
-  "qt.ex2.r":
-    "{F}_1 = 15 cm², {d}_1 = 1.6 cm → {S}_1 = −24 cm³\n{F}_2 = 12 cm², {d}_2 = 2 cm → {S}_2 = +24 cm³\n{S}_1 + {S}_2 = 0",
-  "qt.fig2":
-    "A right triangle cut by the axis {y}_G through its centroid G. {F}_1 (left, 15 cm²) and {F}_2 (right, 12 cm²) have different areas, but {F}_1·{d}_1 = {F}_2·{d}_2 = 24 cm³.",
+    "The exam’s figure: a rectangle with {F}_1 (/ hatching, its left quarter) and {F}_2 (\\ hatching, the other three quarters), and the axis {y}_G through the centroid G of the whole rectangle. {G}_1 and {G}_2 are the centroids of the parts and {d}_1, {d}_2 their distances to {y}_G: {F}_1·{d}_1 = {F}_2·{d}_2 = 37.5 cm³.",
   "qt.defs":
     "See static moment and centroid in the glossary",
   "qt.exam.kicker":
@@ -4637,7 +4631,7 @@ const ES: Record<TranslationKey, string> = {
   "qt.stmt.title":
     "Momentos estáticos respecto de un eje baricéntrico",
   "qt.stmt.q":
-    "¿Qué relación hay entre los momentos estáticos de las áreas {F}_1 y {F}_2 respecto del eje {y}_G que contiene al baricentro? ({F} es el área, como en el parcial; la figura muestra las dos partes a cada lado de {y}_G.)",
+    "¿Qué relación hay entre los momentos estáticos de las áreas {F}_1 y {F}_2 respecto del eje {y}_G que contiene al baricentro? ({F} es el área, como en el parcial. En la figura {F}_1 es un cuarto del rectángulo y {F}_2 el resto, o sea {F}_1 = {F}_2 / 3; el eje {y}_G pasa por el baricentro del rectángulo completo.)",
   "qt.ans.kicker":
     "Respuesta",
   "qt.ans.title":
@@ -4645,7 +4639,9 @@ const ES: Record<TranslationKey, string> = {
   "qt.ans.p1":
     "Los dos momentos estáticos son iguales en módulo y de signo contrario, por lo tanto su suma es cero:",
   "qt.ans.p2":
-    "Lo mismo vale para el eje {x}_G: las partes de arriba y de abajo se compensan.",
+    "Vale cualquiera sea la forma de dividir la figura en {F}_1 y {F}_2, y para cualquier eje que pase por el baricentro, {x}_G incluido.",
+  "qt.ans.p3":
+    "El parcial no da medidas y no hacen falta: pide una relación, no un número. El único dato que se usa es que {y}_G pasa por el baricentro. La proporción {F}_1 = {F}_2 / 3 se lee del dibujo; no es dato del problema, y la respuesta sería la misma para cualquier otra división. Los números de abajo solo lo ilustran.",
   "qt.why.kicker":
     "Por qué",
   "qt.why.title":
@@ -4655,29 +4651,21 @@ const ES: Record<TranslationKey, string> = {
   "qt.why.p2":
     "La figura es {F}_1 más {F}_2 y un momento es una suma sobre el área, entonces {S}({F}_1) + {S}({F}_2) = {S} de la figura completa = 0.",
   "qt.why.p3":
-    "Signos: {F}_1 queda de un lado de {y}_G ({x} < 0) y {F}_2 del otro ({x} > 0). Un momento sale negativo y el otro positivo, así que se pueden compensar.",
+    "Signos: el signo de cada momento lo da el lado del eje donde queda el baricentro de esa parte. El baricentro de {F}_1 queda a la izquierda de {y}_G ({x} < 0, momento negativo) y el de {F}_2 a la derecha ({x} > 0, momento positivo), así que se pueden compensar. ({y}_G puede atravesar una parte, como atraviesa a {F}_2 en la figura.)",
   "qt.why.p4":
     "Como área por distancia, {S} = {F}·{d}, con {d} la distancia del baricentro de cada parte al eje. Que los momentos sean iguales en módulo significa:",
   "qt.why.p5":
-    "Las áreas en general no son iguales: la parte de menor área tiene su baricentro más lejos del eje.",
+    "Las áreas en general no son iguales: la parte de menor área tiene su baricentro más lejos del eje. En la figura del parcial {F}_1 = {F}_2 / 3, entonces {d}_1 = 3·{d}_2.",
   "qt.ex.kicker":
     "Verificación",
   "qt.ex.title":
-    "Un ejemplo numérico: el rectángulo del parcial",
+    "Una ilustración con números",
   "qt.ex.p1":
-    "Rectángulo de 10 cm × 4 cm. {y}_G es la vertical por su baricentro, a 5 cm de cada lado, y lo divide en {F}_1 (izquierda) y {F}_2 (derecha), como en la figura del parcial.",
+    "Rectángulo de 10 cm × 4 cm. {F}_1 es su cuarto izquierdo (2,5 cm de ancho) y {F}_2 los 7,5 cm restantes. {y}_G es la vertical por el baricentro del rectángulo completo, a 5 cm de cada lado, así que atraviesa a {F}_2.",
   "qt.ex.r":
-    "{F}_1 = {F}_2 = 20 cm², {d}_1 = {d}_2 = 2,5 cm\n{S}_1 = −50 cm³, {S}_2 = +50 cm³\n{S}_1 + {S}_2 = 0",
+    "{F}_1 = 10 cm², {d}_1 = 3,75 cm → {S}_1 = −37,5 cm³\n{F}_2 = 30 cm² = 3·{F}_1, {d}_2 = 1,25 cm = {d}_1 / 3 → {S}_2 = +37,5 cm³\n{S}_1 + {S}_2 = 0",
   "qt.fig":
-    "La figura del parcial: un rectángulo cortado por el eje {y}_G que pasa por su baricentro G. Las dos partes, {F}_1 (rayado /) y {F}_2 (rayado \\), tienen la misma área y sus baricentros están a la misma distancia {d}, uno de cada lado: {S} = ∓50 cm³.",
-  "qt.ex2.title":
-    "Si la figura no es simétrica",
-  "qt.ex2.p":
-    "Las áreas no tienen por qué ser iguales. Triángulo rectángulo de catetos 9 cm y 6 cm. Su baricentro está a 3 cm del cateto vertical, así que {y}_G es la vertical a 3 cm; divide al triángulo en {F}_1 (izquierda) y {F}_2 (derecha).",
-  "qt.ex2.r":
-    "{F}_1 = 15 cm², {d}_1 = 1,6 cm → {S}_1 = −24 cm³\n{F}_2 = 12 cm², {d}_2 = 2 cm → {S}_2 = +24 cm³\n{S}_1 + {S}_2 = 0",
-  "qt.fig2":
-    "Un triángulo rectángulo cortado por el eje {y}_G que pasa por su baricentro G. {F}_1 (izquierda, 15 cm²) y {F}_2 (derecha, 12 cm²) tienen áreas distintas, pero {F}_1·{d}_1 = {F}_2·{d}_2 = 24 cm³.",
+    "La figura del parcial: un rectángulo con {F}_1 (rayado /, su cuarto izquierdo) y {F}_2 (rayado \\, los otros tres cuartos), y el eje {y}_G por el baricentro G del rectángulo completo. {G}_1 y {G}_2 son los baricentros de las partes y {d}_1, {d}_2 sus distancias a {y}_G: {F}_1·{d}_1 = {F}_2·{d}_2 = 37,5 cm³.",
   "qt.defs":
     "Ver momento estático y baricentro en el glosario",
   "qt.exam.kicker":
