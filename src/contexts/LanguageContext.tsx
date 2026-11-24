@@ -956,7 +956,7 @@ const EN = {
   "axl.s2.h2":
     "Saint-Venant: the cross-section stays plane and parallel to itself after the deformation, if it is far from the ends; so there is no stress concentration.",
   "axl.s2.p1":
-    "The shear strains must then be zero or constant. If γ = 0 then τ = 0. If γ were a nonzero constant, τ would be constant and ∫τ {dA} = 0 could not hold. So τ_xy = τ_xz = 0 and conditions 2, 3 and 4 are identically satisfied.",
+    "The shear strains must then be zero or constant. (γ is the shear strain: the change of a right angle of the element, in radians, with τ = G·γ; not to be confused with the specific weight γ of section 04.) If γ = 0 then τ = 0. If γ were a nonzero constant, τ would be constant and ∫τ {dA} = 0 could not hold. So τ_xy = τ_xz = 0 and conditions 2, 3 and 4 are identically satisfied.",
   "axl.s2.p2":
     "Since the sections just translate parallel to themselves, ε = Δ{l}/{l} is constant, hence σ = {E}·ε is constant. Then ∫σ·{z} {dA} = σ·∫{z} {dA} and ∫σ·{y} {dA} = σ·∫{y} {dA} are the static moments of the area about the centroidal axes {y} and {z}: zero, so conditions 5 and 6 hold. The first one gives σ·{A} = {N}.",
   "axl.fig":
@@ -1000,7 +1000,7 @@ const EN = {
   "axl.s4.th.adm":
     "σ_adm",
   "axl.s4.p1":
-    "{E} = 2 100 000 kg/cm² and γ = 7 800 kg/m³ for every steel. The safety factor is ν = 3: σ_adm is about the tensile strength divided by 3 (3 700 / 3 ≈ 1 233 → 1 200). The number in the name, St 37, is that strength in kg/mm².",
+    "{E} = 2 100 000 kg/cm² and γ = 7 800 kg/m³ (here γ is the specific weight, weight per volume, not the shear strain) for every steel. The safety factor is ν = 3: σ_adm is about the tensile strength divided by 3 (3 700 / 3 ≈ 1 233 → 1 200). The number in the name, St 37, is that strength in kg/mm².",
   "axl.s5.kicker":
     "05 — Self-weight",
   "axl.s5.title":
@@ -3234,7 +3234,7 @@ const ES: Record<TranslationKey, string> = {
   "axl.s2.h2":
     "Saint-Venant: la sección normal al eje se mantiene plana y paralela a sí misma luego de la deformación, si está alejada de los extremos; por lo tanto no hay concentración de tensiones.",
   "axl.s2.p1":
-    "Las distorsiones deben ser entonces nulas o constantes. Si γ = 0 entonces τ = 0. Si γ fuera una constante no nula, τ sería constante y no podría cumplirse ∫τ {dA} = 0. Luego τ_xy = τ_xz = 0 y las condiciones 2, 3 y 4 se verifican idénticamente.",
+    "Las distorsiones deben ser entonces nulas o constantes. (γ es la distorsión angular: el cambio de un ángulo recto del elemento, en radianes, con τ = G·γ; no confundir con el peso específico γ de la sección 04.) Si γ = 0 entonces τ = 0. Si γ fuera una constante no nula, τ sería constante y no podría cumplirse ∫τ {dA} = 0. Luego τ_xy = τ_xz = 0 y las condiciones 2, 3 y 4 se verifican idénticamente.",
   "axl.s2.p2":
     "Como las secciones se desplazan paralelamente, ε = Δ{l}/{l} es constante y por lo tanto σ = {E}·ε también. Entonces ∫σ·{z} {dA} = σ·∫{z} {dA} y ∫σ·{y} {dA} = σ·∫{y} {dA} son los momentos estáticos del área respecto de los ejes baricéntricos {y} y {z}: nulos, así que se verifican la 5 y la 6. La primera da σ·{A} = {N}.",
   "axl.fig":
@@ -3278,7 +3278,7 @@ const ES: Record<TranslationKey, string> = {
   "axl.s4.th.adm":
     "σ_adm",
   "axl.s4.p1":
-    "{E} = 2 100 000 kg/cm² y γ = 7 800 kg/m³ para todos los aceros. El coeficiente de seguridad es ν = 3: σ_adm es aproximadamente la tensión de rotura dividida por 3 (3 700 / 3 ≈ 1 233 → 1 200). El número del nombre, St 37, es esa resistencia en kg/mm².",
+    "{E} = 2 100 000 kg/cm² y γ = 7 800 kg/m³ (acá γ es el peso específico, peso por volumen, no la distorsión) para todos los aceros. El coeficiente de seguridad es ν = 3: σ_adm es aproximadamente la tensión de rotura dividida por 3 (3 700 / 3 ≈ 1 233 → 1 200). El número del nombre, St 37, es esa resistencia en kg/mm².",
   "axl.s5.kicker":
     "05 — Peso propio",
   "axl.s5.title":
