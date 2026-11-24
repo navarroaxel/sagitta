@@ -40,6 +40,7 @@ const GROUPS: { headingKey: TranslationKey; links: NavLink[] }[] = [
     links: [
       { href: "/resumen", labelKey: "rs.link" },
       { href: "/definiciones", labelKey: "def.link" },
+      { href: "/preguntas-teoria", labelKey: "qt.link" },
     ],
   },
 ];

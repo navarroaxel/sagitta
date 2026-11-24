@@ -5,11 +5,13 @@ import React from "react";
 import Link from "next/link";
 import { useLanguage, type TranslationKey } from "@/contexts/LanguageContext";
 import { SettingsPanel } from "@/components/SettingsPanel";
-import { Sub, eqLines, plain } from "@/components/Sub";
+import { AxesTriad, SaintVenantFigure } from "@/components/DefinitionFigures";
+import { Sub, SvgSub, eqLines, plain } from "@/components/Sub";
 
 const INK = "#16232E";
 const TENSION = "#0B8A8A";
 const LOAD = "#C0392B";
+const FAINT = "#C9D2D8";
 
 function Kicker({ children }: { children: React.ReactNode }) {
   return (
@@ -76,7 +78,7 @@ function Section({ kicker, title, children }: { kicker: TranslationKey; title: T
 function BarSVG() {
   const { t } = useLanguage();
   return (
-    <svg viewBox="0 0 360 140" className="h-auto w-full" role="img" aria-label={plain(t("axl.fig"))}>
+    <svg viewBox="0 0 360 160" className="h-auto w-full" role="img" aria-label={plain(t("axl.fig"))}>
       <rect x="70" y="50" width="220" height="40" fill="#E7EEF2" stroke={INK} strokeWidth="2" />
       <line x1="180" y1="46" x2="180" y2="94" stroke={INK} strokeWidth="1.5" strokeDasharray="3 3" />
       <line x1="20" y1="70" x2="68" y2="70" stroke={LOAD} strokeWidth="3" />
@@ -94,6 +96,64 @@ function BarSVG() {
       <text x="186" y="116" fontSize="13" fill={INK} textAnchor="middle">σ = N / A</text>
       <text x="180" y="30" fontSize="12" fill={INK} textAnchor="middle">l</text>
       <line x1="70" y1="36" x2="290" y2="36" stroke={INK} strokeWidth="1" />
+      <AxesTriad ox={30} oy={126} view="side" />
+    </svg>
+  );
+}
+
+// An element of the bar: axial load keeps its right angles (γ = 0, so τ = 0); a sheared element (γ ≠ 0) would carry τ.
+function ElementSVG() {
+  const { t } = useLanguage();
+  const head = (x: number, y: number, dir: 1 | -1) => `${x},${y} ${x - 7 * dir},${y - 3.5} ${x - 7 * dir},${y + 3.5}`;
+  return (
+    <svg viewBox="0 0 330 160" className="h-auto w-full" role="img" aria-label={plain(t("axl.fig2"))}>
+      {/* axial: right angles stay right angles */}
+      <rect x="40" y="50" width="50" height="50" fill="none" stroke={FAINT} strokeWidth="1.5" strokeDasharray="4 3" />
+      <rect x="40" y="53" width="64" height="44" fill="#E7EEF2" stroke={INK} strokeWidth="2" />
+      <polyline points="40,63 50,63 50,53" fill="none" stroke={INK} strokeWidth="1" />
+      <line x1="104" y1="75" x2="132" y2="75" stroke={TENSION} strokeWidth="2.5" />
+      <polygon points={head(138, 75, 1)} fill={TENSION} />
+      <line x1="40" y1="75" x2="12" y2="75" stroke={TENSION} strokeWidth="2.5" />
+      <polygon points={head(6, 75, -1)} fill={TENSION} />
+      <text x="140" y="68" fontSize="12" fill={INK}><SvgSub>σ</SvgSub></text>
+      <text x="72" y="120" fontSize="12" fill={INK} textAnchor="middle"><SvgSub>γ = 0</SvgSub></text>
+      <text x="72" y="136" fontSize="12" fill={INK} textAnchor="middle"><SvgSub>τ = 0</SvgSub></text>
+      {/* not the case: sheared element */}
+      <rect x="200" y="50" width="50" height="50" fill="none" stroke={FAINT} strokeWidth="1.5" strokeDasharray="4 3" />
+      <polygon points="200,100 250,100 266,50 216,50" fill="#F7E9EE" stroke={LOAD} strokeWidth="2" />
+      <line x1="262" y1="50" x2="290" y2="50" stroke={LOAD} strokeWidth="2.5" />
+      <polygon points={head(296, 50, 1)} fill={LOAD} />
+      <line x1="204" y1="100" x2="176" y2="100" stroke={LOAD} strokeWidth="2.5" />
+      <polygon points={head(170, 100, -1)} fill={LOAD} />
+      <path d="M 200 82 A 18 18 0 0 1 206 83" fill="none" stroke={INK} strokeWidth="1.5" />
+      <text x="298" y="46" fontSize="12" fill={INK}><SvgSub>τ</SvgSub></text>
+      <text x="168" y="95" fontSize="12" fill={INK} textAnchor="end"><SvgSub>τ</SvgSub></text>
+      <text x="236" y="120" fontSize="12" fill={LOAD} textAnchor="middle"><SvgSub>γ ≠ 0</SvgSub></text>
+      <text x="236" y="136" fontSize="12" fill={LOAD} textAnchor="middle"><SvgSub>τ ≠ 0</SvgSub></text>
+      <AxesTriad ox={22} oy={46} view="side" />
+    </svg>
+  );
+}
+
+// Cross-section seen face on: only σ (out of the page) acts; both shear components τ_xy and τ_xz are zero.
+function SectionSVG() {
+  const { t } = useLanguage();
+  const cx = 110;
+  const cy = 83;
+  const ghost = (x2: number, y2: number, key: string) => (
+    <line key={key} x1={cx} y1={cy} x2={x2} y2={y2} stroke={FAINT} strokeWidth="3" strokeDasharray="5 4" />
+  );
+  return (
+    <svg viewBox="0 0 240 180" className="h-auto w-full" role="img" aria-label={plain(t("axl.fig3"))}>
+      <rect x="50" y="28" width="120" height="110" fill="#E7EEF2" stroke={INK} strokeWidth="2" />
+      {ghost(190, cy, "y")}
+      {ghost(cx, 12, "z")}
+      <circle cx={cx} cy={cy} r="9" fill="#fff" stroke={TENSION} strokeWidth="2.5" />
+      <circle cx={cx} cy={cy} r="3" fill={TENSION} />
+      <text x={cx + 14} y={cy - 12} fontSize="12" fill={INK}><SvgSub>σ_x</SvgSub></text>
+      <text x="194" y={cy + 4} fontSize="12" fill={INK}><SvgSub>τ_xy = 0</SvgSub></text>
+      <text x={cx + 8} y="18" fontSize="12" fill={INK}><SvgSub>τ_xz = 0</SvgSub></text>
+      <AxesTriad ox={24} oy={158} view="section" />
     </svg>
   );
 }
@@ -138,7 +198,22 @@ export default function AxilPage() {
               <li><Sub>{t("axl.s2.h1")}</Sub></li>
               <li>{t("axl.s2.h2")}</li>
             </ol>
+            <div className="mx-auto max-w-md">
+              <Figure caption={<Sub>{t("def.f.stvenant")}</Sub>}>
+                <SaintVenantFigure label={plain(t("def.f.stvenant"))} />
+              </Figure>
+            </div>
             <Para k="axl.s2.p1" />
+            <div className="mx-auto max-w-md">
+              <Figure caption={<Sub>{t("axl.fig2")}</Sub>}>
+                <ElementSVG />
+              </Figure>
+            </div>
+            <div className="mx-auto max-w-xs">
+              <Figure caption={<Sub>{t("axl.fig3")}</Sub>}>
+                <SectionSVG />
+              </Figure>
+            </div>
             <Para k="axl.s2.p2" />
             <div className="mx-auto max-w-md">
               <Figure caption={<Sub>{t("axl.fig")}</Sub>}>

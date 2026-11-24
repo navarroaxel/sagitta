@@ -92,6 +92,36 @@ describe("3D presets", () => {
     near(base.My, 2500); // tension on the back (−Y) face
   });
 
+  test("column with overhang (kg, preset #10): P is the largest load of the IPN 200 cantilever; reactions follow from statics", () => {
+    const model = PRESETS_3D.find((p) => p.key === "column_overhang")!.model;
+    expect(PRESETS_3D[9].key).toBe("column_overhang"); // the "#10" is permanent
+    const solved = solveModel3D(model)!;
+    const r = solved.result.reactions[solved.nodeIndex.get("A")!];
+    const P = 299;
+    near(r.fx, 0);
+    near(r.fy, 4 * P); // P_2 = 4P along −Y
+    near(r.fz, 20 * P); // P_1 = 20P down
+    near(r.mx, -12 * P); // 4P · 3 m
+    near(r.my, -10 * P); // 20P · 0.5 m
+    near(r.mz, 0);
+    const st = computeStress(model, solved);
+    const beam = st[2]!; // the IPN 200 cantilever
+    expect(beam.ok).toBe(true);
+    expect(beam.ratio).toBeGreaterThan(0.99); // P = 299 kg is 99.8% of the limit (P max = 1400·214/1000 = 299.6)
+    near(beam.max.sigma, 1397.2, 1e-4); // 299 000 kg·cm · 10 cm / 2 140 cm⁴
+    // the next whole kilogram does not pass
+    const over = JSON.parse(JSON.stringify(model)) as FrameModel3D;
+    (over.loads[0] as { fz: number }).fz = -20 * 300;
+    expect(computeStress(over, solveModel3D(over)!)[2]!.ok).toBe(false);
+    // the column: IPB 240 rotated passes, IPB 220 rotated does not
+    expect(st[0]!.ok).toBe(true);
+    const thin = JSON.parse(JSON.stringify(model)) as FrameModel3D;
+    thin.members[0].profile = "IPB 220";
+    thin.members[1].profile = "IPB 220";
+    const ts = computeStress(thin, solveModel3D(thin)!);
+    expect(ts[0]!.ok && ts[1]!.ok).toBe(false);
+  });
+
   test("T-frame with q_y1 (kg): reactions follow from statics", () => {
     const model = PRESETS_3D.find((p) => p.key === "t_frame_qy")!.model;
     const solved = solveModel3D(model)!;

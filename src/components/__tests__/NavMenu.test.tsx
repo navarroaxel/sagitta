@@ -55,7 +55,7 @@ describe("NavMenu", () => {
     expect(groups["Guides"]).toHaveLength(13);
     expect(groups["Guides"]).toEqual(expect.arrayContaining(["/learn", "/flexion", "/pandeo", "/corte-en-flexion"]));
     expect(groups["Tools"]).toEqual(["/quiz", "/frame3d", "/perfiles"]);
-    expect(groups["Study"]).toEqual(["/resumen", "/definiciones"]);
+    expect(groups["Study"]).toEqual(["/resumen", "/definiciones", "/preguntas-teoria"]);
     // the first heading has no divider above it, the others do
     expect(screen.getAllByRole("separator")[0].className).not.toMatch(/border-t/);
     expect(screen.getAllByRole("separator")[1].className).toMatch(/border-t/);

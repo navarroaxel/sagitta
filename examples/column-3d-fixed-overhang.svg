@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="50 115 620 475" font-family="system-ui, sans-serif">
+  <!--
+    Structure: 3D frame (Figura) — a vertical column (6 m) fixed (built-in) to the ground at its base A,
+      with a short horizontal cantilever (0.5 m) at its top, to the right. Solid web, rigid joint at B.
+      Drawn in oblique projection.
+      Global triad (course): X to the right, Z up, Y toward the viewer (drawn down-left); the local
+      triads of the members are drawn next to them.
+    World in metres. Transform: sx = 250 + x*50 ; sy = 500 - z*50   (x/z in the plane of the frame at
+      50 px/m; Y is only drawn as the direction u = (-21,15) px per metre, no dimension is read along it)
+    Nodes:
+      A  (0,0,0)    fixed / built-in base                  -> (250,500)
+      B  (0,0,6)    top of the column, joint with the cantilever -> (250,200)
+      C  (0.5,0,6)  right tip of the cantilever, free end  -> (275,200)
+    Members:
+      A-B  column (6 m)
+      B-C  cantilever (0.5 m), section IPN 200 (P is its largest load at sigma_adm = 1400 kg/cm2: P = 299 kg)
+    Supports: A fixed in 3D (restrains all 3 forces and 3 moments).
+    Loads (P is the unit of force; the figure gives no number):
+      P1 = 20P downward (-Z) at the tip C of the cantilever
+      P2 = 4P along -Y (away from the viewer, drawn up-right) at the middle of the column (z = 3 m)
+    Support reactions (computed, drawn in blue):
+      A: R_y = 4P (along +Y, toward the viewer) ; R_z = 20P (up) ; R_x = 0 ;
+         M_x = -12P.m (vector along -X) ; M_y = -10P.m (vector along -Y) ; M_z = 0 (not drawn)
+    Equilibrium:
+      SumFx = 0 ; SumFy = Ry - 4P = 0 ; SumFz = Rz - 20P = 0
+      SumMx = Mx + 4P*3 = 0 ; SumMy = My + 20P*0.5 = 0 ; SumMz = 0
+  -->
+
+  <rect x="50" y="115" width="620" height="475" fill="#ffffff"/>
+
+  <!-- ===== Dimensions ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <!-- column (left): 3.00 | 3.00 -->
+    <line x1="90" y1="200" x2="90" y2="500"/>
+    <line x1="85" y1="200" x2="95" y2="200"/>
+    <line x1="85" y1="350" x2="95" y2="350"/>
+    <line x1="85" y1="500" x2="95" y2="500"/>
+    <text x="82" y="275" text-anchor="middle" stroke="none" transform="rotate(-90 82 275)">3.00</text>
+    <text x="82" y="425" text-anchor="middle" stroke="none" transform="rotate(-90 82 425)">3.00</text>
+    <!-- cantilever: 0.50 (above the P1 arrow) -->
+    <line x1="250" y1="140" x2="275" y2="140"/>
+    <line x1="250" y1="135" x2="250" y2="145"/>
+    <line x1="275" y1="135" x2="275" y2="145"/>
+    <text x="262.5" y="130" text-anchor="middle" stroke="none">0.50</text>
+  </g>
+
+  <!-- ===== Supports: fixed base at A (ground plate in the xy plane + hatch) ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff" fill-opacity="0.85">
+    <polygon points="196,510 276,510 304,490 224,490"/>
+  </g>
+  <g stroke="#1a1a1a" stroke-width="2" fill="none">
+    <line x1="204" y1="510" x2="196" y2="518"/>
+    <line x1="214" y1="510" x2="206" y2="518"/>
+    <line x1="224" y1="510" x2="216" y2="518"/>
+    <line x1="234" y1="510" x2="226" y2="518"/>
+    <line x1="244" y1="510" x2="236" y2="518"/>
+    <line x1="254" y1="510" x2="246" y2="518"/>
+    <line x1="264" y1="510" x2="256" y2="518"/>
+    <line x1="274" y1="510" x2="266" y2="518"/>
+  </g>
+
+  <!-- ===== Solid-web frame (rigid joint) ===== -->
+  <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <polyline points="250,500 250,200 275,200"/> <!-- column A-B and cantilever B-C -->
+  </g>
+
+  <!-- ===== Nodes ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="250" cy="500" r="4"/> <!-- A base -->
+    <circle cx="250" cy="200" r="4"/> <!-- B top of the column -->
+    <circle cx="275" cy="200" r="4"/> <!-- C cantilever tip -->
+  </g>
+
+  <!-- ===== Node labels ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <text x="236" y="470" text-anchor="end">A</text>
+    <text x="236" y="196" text-anchor="end">B</text>
+    <text x="287" y="220" text-anchor="start">C</text>
+  </g>
+
+  <!-- ===== Section of the cantilever ===== -->
+  <text x="285" y="203" font-size="13" font-weight="600" fill="#1a1a1a">IPN 200</text>
+
+  <!-- ===== Local triads of the members (course triad) ===== -->
+  <g stroke="#5f6368" fill="#5f6368" font-size="12" font-style="italic" font-weight="600">
+    <!-- cantilever: z along the member (to the left), x out of the plane (toward the viewer), y down -->
+    <line x1="380" y1="240" x2="357" y2="240" stroke-width="2"/>
+    <polygon points="350,240 358,236.5 358,243.5" stroke="none"/>
+    <text x="334" y="237" stroke="none">z</text>
+    <line x1="380" y1="240" x2="361.3" y2="253.4" stroke-width="2"/>
+    <polygon points="355.6,257.4 360.1,249.9 364.1,255.6" stroke="none"/>
+    <text x="336" y="268" stroke="none">x</text>
+    <line x1="380" y1="240" x2="380" y2="263" stroke-width="2"/>
+    <polygon points="380,270 376.5,262 383.5,262" stroke="none"/>
+    <text x="374" y="284" stroke="none">y</text>
+    <!-- column: z along the member (down), x out of the plane (toward the viewer), y to the right -->
+    <line x1="350" y1="400" x2="350" y2="423" stroke-width="2"/>
+    <polygon points="350,430 346.5,422 353.5,422" stroke="none"/>
+    <text x="344" y="444" stroke="none">z</text>
+    <line x1="350" y1="400" x2="331.3" y2="413.4" stroke-width="2"/>
+    <polygon points="325.6,417.4 330.1,409.9 334.1,415.6" stroke="none"/>
+    <text x="322" y="430" stroke="none">x</text>
+    <line x1="350" y1="400" x2="373" y2="400" stroke-width="2"/>
+    <polygon points="380,400 372,403.5 372,396.5" stroke="none"/>
+    <text x="386" y="404" stroke="none">y</text>
+  </g>
+
+  <!-- ===== Loads (red) ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+    <!-- P1 = 20P downward (-Z) at the cantilever tip C (tip at the node, shaft trailing up) -->
+    <line x1="275" y1="154" x2="275" y2="188" stroke-width="2.5"/>
+    <polygon points="275,200 269,188 281,188" stroke="none"/>
+    <text x="289" y="172" text-anchor="start" stroke="none">P<tspan font-size="10" dy="4">1</tspan><tspan dx="2" dy="-4"> = 20P</tspan></text>
+
+    <!-- P2 = 4P along -Y (away from the viewer, up-right) at the middle of the column, z = 3 m (tip at the node, shaft trailing down-left) -->
+    <line x1="217.4" y1="373.2" x2="243.5" y2="354.6" stroke-width="2.5"/>
+    <polygon points="250,350 244.8,359.9 239,351.7" stroke="none"/>
+    <text x="262" y="344" text-anchor="start" stroke="none" style="paint-order:stroke;stroke:#ffffff;stroke-width:3px">P<tspan font-size="10" dy="4">2</tspan><tspan dx="2" dy="-4"> = 4P</tspan></text>
+  </g>
+
+  <!-- ===== Support reactions (blue) ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+    <!-- R_z = 20P upward at A (tip at the node, shaft trailing below) -->
+    <line x1="250" y1="538" x2="250" y2="514" stroke-width="2.5"/>
+    <polygon points="250,502 244,514 256,514" stroke="none"/>
+    <text x="260" y="532" text-anchor="start" stroke="none" style="paint-order:stroke;stroke:#ffffff;stroke-width:3px">R<tspan font-size="10" dy="4">z</tspan><tspan dx="2" dy="-4"> = 20P</tspan></text>
+
+    <!-- R_y = 4P along +Y (toward the viewer, down-left); collinear with M_y, so drawn just outside the node pointing in the force direction -->
+    <line x1="238.6" y1="508.1" x2="220.7" y2="520.9" stroke-width="2.5"/>
+    <polygon points="210.9,527.9 223.6,525 217.8,516.8" stroke="none"/>
+    <text x="198" y="528" text-anchor="end" stroke="none" style="paint-order:stroke;stroke:#ffffff;stroke-width:3px">R<tspan font-size="10" dy="4">y</tspan><tspan dx="2" dy="-4"> = 4P</tspan></text>
+
+    <!-- M_x = -12P.m: moment vector along -X (double arrow to the left), line of action through A -->
+    <line x1="250" y1="500" x2="178" y2="500" stroke-width="2.5"/>
+    <polygon points="160,500 170,505 170,495" stroke="none"/>
+    <polygon points="170,500 180,505 180,495" stroke="none"/>
+    <text x="206" y="488" text-anchor="end" stroke="none" style="paint-order:stroke;stroke:#ffffff;stroke-width:3px">M<tspan font-size="10" dy="4">x</tspan><tspan dx="2" dy="-4"> = 12P·m</tspan></text>
+
+    <!-- M_y = -10P.m: moment vector along -Y (away from the viewer, up-right; double arrow), collinear with R_y -->
+    <line x1="262.3" y1="491.2" x2="293.3" y2="469.1" stroke-width="2.5"/>
+    <polygon points="308,458.7 303.4,469.4 296.4,459.6" stroke="none"/>
+    <polygon points="299.9,464.5 295.3,475.2 288.3,465.4" stroke="none"/>
+    <text x="316" y="456" text-anchor="start" stroke="none" style="paint-order:stroke;stroke:#ffffff;stroke-width:3px">M<tspan font-size="10" dy="4">y</tspan><tspan dx="2" dy="-4"> = 10P·m</tspan></text>
+  </g>
+
+  <!-- ===== Axes triad (global system; Y toward the viewer, as in the figure) ===== -->
+  <g stroke="#5f6368" fill="#5f6368" font-size="13" font-weight="600">
+    <line x1="590" y1="430" x2="622" y2="430" stroke-width="2"/>
+    <polygon points="630,430 621,434 621,426" stroke="none"/>
+    <text x="636" y="434" stroke="none">x</text>
+    <line x1="590" y1="430" x2="590" y2="398" stroke-width="2"/>
+    <polygon points="590,390 594,399 586,399" stroke="none"/>
+    <text x="586" y="382" stroke="none" text-anchor="middle">z</text>
+    <line x1="590" y1="430" x2="554.5" y2="455.4" stroke-width="2"/>
+    <polygon points="548,460 553,451.5 557.6,458" stroke="none"/>
+    <text x="530" y="468" stroke="none">y</text>
+  </g>
+
+  <text x="360" y="584" text-anchor="middle" fill="#5f6368" font-size="13">
+    3D frame, fixed at A. Loads red, reactions blue; double arrow = moment vector.
+  </text>
+</svg>

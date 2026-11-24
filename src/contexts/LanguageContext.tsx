@@ -246,6 +246,7 @@ const EN = {
   "f3d.example.eccentric_tension": "#7 Eccentric tension on IPN 300 (P_z,max)",
   "f3d.example.cantilever_kg": "#6 Cantilever IPN 320 (max length)",
   "f3d.example.column_kg": "#9 3D column (fixed)",
+  "f3d.example.column_overhang": "#10 3D column with overhang on IPN 200 (P max)",
   "f3d.diagram": "Diagram:",
   "f3d.diagram_none": "None",
   "f3d.note":
@@ -956,11 +957,15 @@ const EN = {
   "axl.s2.h2":
     "Saint-Venant: the cross-section stays plane and parallel to itself after the deformation, if it is far from the ends; so there is no stress concentration.",
   "axl.s2.p1":
-    "The shear strains must then be zero or constant. If γ = 0 then τ = 0. If γ were a nonzero constant, τ would be constant and ∫τ {dA} = 0 could not hold. So τ_xy = τ_xz = 0 and conditions 2, 3 and 4 are identically satisfied.",
+    "The shear strains must then be zero or constant. (γ is the shear strain: the change of a right angle of the element, in radians, with τ = G·γ; not to be confused with the specific weight γ of section 04.) If γ = 0 then τ = 0. If γ were a nonzero constant, τ would be constant and ∫τ {dA} = 0 could not hold. So τ_xy = τ_xz = 0 and conditions 2, 3 and 4 are identically satisfied.",
   "axl.s2.p2":
     "Since the sections just translate parallel to themselves, ε = Δ{l}/{l} is constant, hence σ = {E}·ε is constant. Then ∫σ·{z} {dA} = σ·∫{z} {dA} and ∫σ·{y} {dA} = σ·∫{y} {dA} are the static moments of the area about the centroidal axes {y} and {z}: zero, so conditions 5 and 6 hold. The first one gives σ·{A} = {N}.",
   "axl.fig":
     "A bar under N: every cross-section carries the same σ = {N}/{A}.",
+  "axl.fig2":
+    "An element of the bar. Under axial load its right angles stay right: the shear strain is γ = 0, hence τ = 0 and only σ acts on its faces (left). An element that were sheared (γ ≠ 0, right, not the case here) would carry τ.",
+  "axl.fig3":
+    "The cross-section seen face on. Only σ_x acts on it (the x axis comes out of the page); both components of the shear stress, τ_xy (along y) and τ_xz (along z), are zero.",
   "axl.s3.kicker":
     "03 — Formulas",
   "axl.s3.title":
@@ -996,7 +1001,7 @@ const EN = {
   "axl.s4.th.adm":
     "σ_adm",
   "axl.s4.p1":
-    "{E} = 2 100 000 kg/cm² and γ = 7 800 kg/m³ for every steel. The safety factor is ν = 3: σ_adm is about the tensile strength divided by 3 (3 700 / 3 ≈ 1 233 → 1 200). The number in the name, St 37, is that strength in kg/mm².",
+    "{E} = 2 100 000 kg/cm² and γ = 7 800 kg/m³ (here γ is the specific weight, weight per volume, not the shear strain) for every steel. The safety factor is ν = 3: σ_adm is about the tensile strength divided by 3 (3 700 / 3 ≈ 1 233 → 1 200). The number in the name, St 37, is that strength in kg/mm².",
   "axl.s5.kicker":
     "05 — Self-weight",
   "axl.s5.title":
@@ -2020,6 +2025,8 @@ const EN = {
     "Simple and pure bending",
   "def.f.fsimple":
     "A segment of beam between two sections: the forces on each side reduce, at the centroid, to a bending couple. In pure bending it is the same M on both faces (equal and opposite); in bending and shear there is also the shear force Q, and the moment changes along the segment (M on one face, M + dM on the other, dM = Q·dx).",
+  "def.fig.nonuniform":
+    "σ not uniform",
   "def.fig.pure":
     "Pure bending",
   "def.fig.shear":
@@ -2250,6 +2257,8 @@ const EN = {
     "Saint-Venant’s principle",
   "def.d.stvenant":
     "Far from the ends, the section normal to the axis stays plane and parallel to itself after the deformation, so there is no stress concentration.",
+  "def.f.stvenant":
+    "A bar pulled by loads applied at a point: close to each end (a distance of about the size {h} of the section) the stress σ is not uniform and peaks under the load; farther away it is uniform, σ = {N} / {A}. Only the resultant {N} matters there, not how the load was applied.",
   "def.t.equil":
     "Stable, indifferent and unstable equilibrium",
   "def.d.equil":
@@ -2278,6 +2287,64 @@ const EN = {
     "Deflection and elastic line",
   "def.d.flecha":
     "The elastic line is the shape the axis of the beam takes when it bends. Integrating its equation once gives the slope θ({z}) and twice, the deflection {y}({z}), the displacement of the axis.",
+  "qt.link":
+    "Theory questions",
+  "qt.title":
+    "Theory questions",
+  "qt.lead":
+    "Questions of the model exams, answered with the reason behind the answer. One at a time, as they come up.",
+  "qt.footer":
+    "The question is the professor’s; the explanation, the figure and the example are ours (the example is recomputed, it is not in the notes).",
+  "qt.stmt.kicker":
+    "Question",
+  "qt.stmt.title":
+    "Static moments about a centroidal axis",
+  "qt.stmt.q":
+    "What relation is there between the static moments of the areas {F}_1 and {F}_2 about the axis {y}_G that contains the centroid? ({F} is the area, as in the exam. In the figure {F}_1 is a quarter of the rectangle and {F}_2 the rest, so {F}_1 = {F}_2 / 3; the axis {y}_G goes through the centroid of the whole rectangle.)",
+  "qt.ans.kicker":
+    "Answer",
+  "qt.ans.title":
+    "Equal in absolute value, opposite in sign",
+  "qt.ans.p1":
+    "The two static moments are equal in absolute value and of opposite sign, so they add up to zero:",
+  "qt.ans.reason":
+    "The reason in one line: {y}_G goes through the centroid of the whole figure, and the static moment of the whole figure about an axis through its centroid is zero, so {S}({F}_1) + {S}({F}_2) = 0.",
+  "qt.ans.p2":
+    "It holds however the figure is split into {F}_1 and {F}_2, and for any axis through the centroid, {x}_G included.",
+  "qt.ans.p3":
+    "The exam gives no measurements, and none are needed: it asks for a relation, not a number. The only fact used is that {y}_G goes through the centroid. The proportion {F}_1 = {F}_2 / 3 is read from the drawing; it is not data of the problem, and the answer would be the same for any other split. The numbers below only illustrate it.",
+  "qt.why.kicker":
+    "In general",
+  "qt.why.title":
+    "The derivation",
+  "qt.why.p1":
+    "The static moment of an area about an axis is {S} = ∫ {x} {dA}, with {x} measured from that axis. About an axis through the centroid the whole figure has {S} = 0: that is the definition of the centroid ({x}_g = {S} / {A}).",
+  "qt.why.p2":
+    "The figure is {F}_1 plus {F}_2 and a moment is a sum over the area, so {S}({F}_1) + {S}({F}_2) = {S} of the whole figure = 0.",
+  "qt.why.p3":
+    "Signs: the sign of each moment is the side of the axis where the centroid of that part lies. The centroid of {F}_1 is to the left of {y}_G ({x} < 0, negative moment) and the centroid of {F}_2 to the right ({x} > 0, positive moment), so they can cancel. ({y}_G may cross a part, as it crosses {F}_2 in the figure.)",
+  "qt.why.p4":
+    "As area times distance, {S} = {F}·{d}, with {d} the distance from the centroid of each part to the axis. Equal moments in absolute value mean:",
+  "qt.why.p5":
+    "The areas are not equal in general: the part with less area has its centroid farther from the axis. In the exam’s figure {F}_1 = {F}_2 / 3, so {d}_1 = 3·{d}_2.",
+  "qt.ex.kicker":
+    "Example",
+  "qt.ex.title":
+    "An example that shows it",
+  "qt.ex.p1":
+    "Rectangle of 10 cm × 4 cm. {F}_1 is its left quarter (2.5 cm wide) and {F}_2 the remaining 7.5 cm. {y}_G is the vertical line through the centroid of the whole rectangle, 5 cm from each side, so it crosses {F}_2.",
+  "qt.ex.r":
+    "{F}_1 = 10 cm², {d}_1 = 3.75 cm → {S}_1 = −37.5 cm³\n{F}_2 = 30 cm² = 3·{F}_1, {d}_2 = 1.25 cm = {d}_1 / 3 → {S}_2 = +37.5 cm³\n{S}_1 + {S}_2 = 0",
+  "qt.fig":
+    "The exam’s figure: a rectangle with {F}_1 (/ hatching, its left quarter) and {F}_2 (\\ hatching, the other three quarters), and the axis {y}_G through the centroid G of the whole rectangle. {G}_1 and {G}_2 are the centroids of the parts and {d}_1, {d}_2 their distances to {y}_G: {F}_1·{d}_1 = {F}_2·{d}_2 = 37.5 cm³.",
+  "qt.defs":
+    "See static moment and centroid in the glossary",
+  "qt.exam.kicker":
+    "For the exam",
+  "qt.exam.title":
+    "How to write it",
+  "qt.exam.p":
+    "“Since {y}_G passes through the centroid, the static moment of the whole figure about it is zero. Therefore the static moments of {F}_1 and {F}_2 are equal in absolute value and of opposite sign: {S}({F}_1) = −{S}({F}_2).”",
 } as const;
 
 export type TranslationKey = keyof typeof EN;
@@ -2515,6 +2582,7 @@ const ES: Record<TranslationKey, string> = {
   "f3d.example.eccentric_tension": "#7 Tracción excéntrica en IPN 300 (P_z máx)",
   "f3d.example.cantilever_kg": "#6 Voladizo IPN 320 (longitud máx)",
   "f3d.example.column_kg": "#9 Columna 3D (empotrada)",
+  "f3d.example.column_overhang": "#10 Columna 3D con voladizo en IPN 200 (P máx)",
   "f3d.diagram": "Diagrama:",
   "f3d.diagram_none": "Ninguno",
   "f3d.note":
@@ -3228,11 +3296,15 @@ const ES: Record<TranslationKey, string> = {
   "axl.s2.h2":
     "Saint-Venant: la sección normal al eje se mantiene plana y paralela a sí misma luego de la deformación, si está alejada de los extremos; por lo tanto no hay concentración de tensiones.",
   "axl.s2.p1":
-    "Las distorsiones deben ser entonces nulas o constantes. Si γ = 0 entonces τ = 0. Si γ fuera una constante no nula, τ sería constante y no podría cumplirse ∫τ {dA} = 0. Luego τ_xy = τ_xz = 0 y las condiciones 2, 3 y 4 se verifican idénticamente.",
+    "Las distorsiones deben ser entonces nulas o constantes. (γ es la distorsión angular: el cambio de un ángulo recto del elemento, en radianes, con τ = G·γ; no confundir con el peso específico γ de la sección 04.) Si γ = 0 entonces τ = 0. Si γ fuera una constante no nula, τ sería constante y no podría cumplirse ∫τ {dA} = 0. Luego τ_xy = τ_xz = 0 y las condiciones 2, 3 y 4 se verifican idénticamente.",
   "axl.s2.p2":
     "Como las secciones se desplazan paralelamente, ε = Δ{l}/{l} es constante y por lo tanto σ = {E}·ε también. Entonces ∫σ·{z} {dA} = σ·∫{z} {dA} y ∫σ·{y} {dA} = σ·∫{y} {dA} son los momentos estáticos del área respecto de los ejes baricéntricos {y} y {z}: nulos, así que se verifican la 5 y la 6. La primera da σ·{A} = {N}.",
   "axl.fig":
     "Una barra bajo N: toda sección recta soporta la misma σ = {N}/{A}.",
+  "axl.fig2":
+    "Un elemento de la barra. Bajo carga axil sus ángulos rectos siguen siendo rectos: la distorsión es γ = 0, por lo tanto τ = 0 y sobre sus caras solo actúa σ (izquierda). Un elemento distorsionado (γ ≠ 0, derecha, no es el caso) tendría τ.",
+  "axl.fig3":
+    "La sección recta vista de frente. Sobre ella solo actúa σ_x (el eje x sale de la hoja); las dos componentes de la tensión de corte, τ_xy (según y) y τ_xz (según z), son nulas.",
   "axl.s3.kicker":
     "03 — Fórmulas",
   "axl.s3.title":
@@ -3268,7 +3340,7 @@ const ES: Record<TranslationKey, string> = {
   "axl.s4.th.adm":
     "σ_adm",
   "axl.s4.p1":
-    "{E} = 2 100 000 kg/cm² y γ = 7 800 kg/m³ para todos los aceros. El coeficiente de seguridad es ν = 3: σ_adm es aproximadamente la tensión de rotura dividida por 3 (3 700 / 3 ≈ 1 233 → 1 200). El número del nombre, St 37, es esa resistencia en kg/mm².",
+    "{E} = 2 100 000 kg/cm² y γ = 7 800 kg/m³ (acá γ es el peso específico, peso por volumen, no la distorsión) para todos los aceros. El coeficiente de seguridad es ν = 3: σ_adm es aproximadamente la tensión de rotura dividida por 3 (3 700 / 3 ≈ 1 233 → 1 200). El número del nombre, St 37, es esa resistencia en kg/mm².",
   "axl.s5.kicker":
     "05 — Peso propio",
   "axl.s5.title":
@@ -4292,6 +4364,8 @@ const ES: Record<TranslationKey, string> = {
     "Flexión simple y flexión pura",
   "def.f.fsimple":
     "Un tramo de viga entre dos secciones: las fuerzas de cada lado se reducen, en el baricentro, a un par flector. En flexión pura es el mismo M en las dos caras (igual y opuesto); en flexión y corte hay además el esfuerzo de corte Q, y el momento cambia a lo largo del tramo (M en una cara, M + dM en la otra, dM = Q·dx).",
+  "def.fig.nonuniform":
+    "σ no uniforme",
   "def.fig.pure":
     "Flexión pura",
   "def.fig.shear":
@@ -4522,6 +4596,8 @@ const ES: Record<TranslationKey, string> = {
     "Principio de Saint-Venant",
   "def.d.stvenant":
     "Lejos de los extremos, la sección normal al eje se mantiene plana y paralela a sí misma luego de la deformación, por lo tanto no hay concentración de tensiones.",
+  "def.f.stvenant":
+    "Una barra traccionada por cargas aplicadas en un punto: cerca de cada extremo (a una distancia del orden del tamaño {h} de la sección) la tensión σ no es uniforme y tiene un pico bajo la carga; más lejos es uniforme, σ = {N} / {A}. Allí solo importa la resultante {N}, no cómo se aplicó la carga.",
   "def.t.equil":
     "Equilibrio estable, indiferente e inestable",
   "def.d.equil":
@@ -4550,6 +4626,64 @@ const ES: Record<TranslationKey, string> = {
     "Flecha y línea elástica",
   "def.d.flecha":
     "La línea elástica es la forma que toma el eje de la viga al flexar. Integrar una vez su ecuación da la pendiente θ({z}) y dos veces, la flecha {y}({z}), el desplazamiento del eje.",
+  "qt.link":
+    "Preguntas de teoría",
+  "qt.title":
+    "Preguntas de teoría",
+  "qt.lead":
+    "Preguntas de los modelos de parcial, respondidas con el porqué de la respuesta. Una por vez, a medida que aparecen.",
+  "qt.footer":
+    "La pregunta es del profesor; la explicación, la figura y el ejemplo son nuestros (el ejemplo está recalculado, no figura en los apuntes).",
+  "qt.stmt.kicker":
+    "Pregunta",
+  "qt.stmt.title":
+    "Momentos estáticos respecto de un eje baricéntrico",
+  "qt.stmt.q":
+    "¿Qué relación hay entre los momentos estáticos de las áreas {F}_1 y {F}_2 respecto del eje {y}_G que contiene al baricentro? ({F} es el área, como en el parcial. En la figura {F}_1 es un cuarto del rectángulo y {F}_2 el resto, o sea {F}_1 = {F}_2 / 3; el eje {y}_G pasa por el baricentro del rectángulo completo.)",
+  "qt.ans.kicker":
+    "Respuesta",
+  "qt.ans.title":
+    "Iguales en módulo y de signo contrario",
+  "qt.ans.p1":
+    "Los dos momentos estáticos son iguales en módulo y de signo contrario, por lo tanto su suma es cero:",
+  "qt.ans.reason":
+    "El porqué en una línea: {y}_G pasa por el baricentro de la figura completa, y el momento estático de la figura completa respecto de un eje baricéntrico es cero, entonces {S}({F}_1) + {S}({F}_2) = 0.",
+  "qt.ans.p2":
+    "Vale cualquiera sea la forma de dividir la figura en {F}_1 y {F}_2, y para cualquier eje que pase por el baricentro, {x}_G incluido.",
+  "qt.ans.p3":
+    "El parcial no da medidas y no hacen falta: pide una relación, no un número. El único dato que se usa es que {y}_G pasa por el baricentro. La proporción {F}_1 = {F}_2 / 3 se lee del dibujo; no es dato del problema, y la respuesta sería la misma para cualquier otra división. Los números de abajo solo lo ilustran.",
+  "qt.why.kicker":
+    "En general",
+  "qt.why.title":
+    "La deducción",
+  "qt.why.p1":
+    "El momento estático de un área respecto de un eje es {S} = ∫ {x} {dA}, con {x} medida desde ese eje. Respecto de un eje que pasa por el baricentro, la figura completa tiene {S} = 0: esa es la definición del baricentro ({x}_g = {S} / {A}).",
+  "qt.why.p2":
+    "La figura es {F}_1 más {F}_2 y un momento es una suma sobre el área, entonces {S}({F}_1) + {S}({F}_2) = {S} de la figura completa = 0.",
+  "qt.why.p3":
+    "Signos: el signo de cada momento lo da el lado del eje donde queda el baricentro de esa parte. El baricentro de {F}_1 queda a la izquierda de {y}_G ({x} < 0, momento negativo) y el de {F}_2 a la derecha ({x} > 0, momento positivo), así que se pueden compensar. ({y}_G puede atravesar una parte, como atraviesa a {F}_2 en la figura.)",
+  "qt.why.p4":
+    "Como área por distancia, {S} = {F}·{d}, con {d} la distancia del baricentro de cada parte al eje. Que los momentos sean iguales en módulo significa:",
+  "qt.why.p5":
+    "Las áreas en general no son iguales: la parte de menor área tiene su baricentro más lejos del eje. En la figura del parcial {F}_1 = {F}_2 / 3, entonces {d}_1 = 3·{d}_2.",
+  "qt.ex.kicker":
+    "Ejemplo",
+  "qt.ex.title":
+    "Un ejemplo que lo justifica",
+  "qt.ex.p1":
+    "Rectángulo de 10 cm × 4 cm. {F}_1 es su cuarto izquierdo (2,5 cm de ancho) y {F}_2 los 7,5 cm restantes. {y}_G es la vertical por el baricentro del rectángulo completo, a 5 cm de cada lado, así que atraviesa a {F}_2.",
+  "qt.ex.r":
+    "{F}_1 = 10 cm², {d}_1 = 3,75 cm → {S}_1 = −37,5 cm³\n{F}_2 = 30 cm² = 3·{F}_1, {d}_2 = 1,25 cm = {d}_1 / 3 → {S}_2 = +37,5 cm³\n{S}_1 + {S}_2 = 0",
+  "qt.fig":
+    "La figura del parcial: un rectángulo con {F}_1 (rayado /, su cuarto izquierdo) y {F}_2 (rayado \\, los otros tres cuartos), y el eje {y}_G por el baricentro G del rectángulo completo. {G}_1 y {G}_2 son los baricentros de las partes y {d}_1, {d}_2 sus distancias a {y}_G: {F}_1·{d}_1 = {F}_2·{d}_2 = 37,5 cm³.",
+  "qt.defs":
+    "Ver momento estático y baricentro en el glosario",
+  "qt.exam.kicker":
+    "Para el parcial",
+  "qt.exam.title":
+    "Cómo escribirlo",
+  "qt.exam.p":
+    "“Como {y}_G pasa por el baricentro, el momento estático de la figura completa respecto de ese eje es nulo. Por lo tanto los momentos estáticos de {F}_1 y {F}_2 son iguales en módulo y de signo contrario: {S}({F}_1) = −{S}({F}_2).”",
 };
 
 const translations: Record<Language, Record<TranslationKey, string>> = {
