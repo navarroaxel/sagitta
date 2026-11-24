@@ -6,7 +6,7 @@ import { ClaudeQuizQuestion, ClaudeQuizTopic } from "./claudeQuiz";
 // Display labels per topic, in Spanish. Fallback only — the UI resolves
 // topic labels via t("claudeQuiz.topic.*") so they follow the selected
 // language; kept in sync with those i18n keys.
-export const CLAUDE_QUIZ_TOPICS: Record<ClaudeQuizTopic, string> = {
+export const CLAUDE_QUIZ_TOPICS: Partial<Record<ClaudeQuizTopic, string>> = {
   fuerzas: "Sistemas de fuerzas",
   vinculos: "Vínculos y GDL",
   cadenas: "Cadenas cinemáticas",

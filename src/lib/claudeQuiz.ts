@@ -1,7 +1,20 @@
 // Pure logic for the "Estabilidad" theory quiz (True/False + multiple choice).
 // Kept free of React so it can be unit-tested in isolation.
 
-export type ClaudeQuizTopic = "fuerzas" | "vinculos" | "cadenas" | "reticulados";
+export type ClaudeQuizTopic =
+  | "fuerzas"
+  | "vinculos"
+  | "cadenas"
+  | "reticulados"
+  // strength-of-materials quiz (materialsQuizData.ts)
+  | "axil"
+  | "flexion"
+  | "corte"
+  | "tension"
+  | "materiales"
+  | "superficies"
+  | "flecha"
+  | "pandeo";
 
 export type ClaudeQuizType = "vf" | "mc";
 
