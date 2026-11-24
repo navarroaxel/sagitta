@@ -17,6 +17,17 @@ describe("/axil", () => {
     for (const f of Array.from(container.querySelectorAll("figure svg"))) expect(f.querySelector('[data-testid="axes"]'), f.getAttribute("aria-label") ?? "").toBeTruthy();
     expect(container.querySelectorAll("figure svg")[2].querySelector('[data-testid="axes"]')!.textContent).toBe("yzx");
     expect(container.querySelectorAll("figure svg")[3].querySelector('[data-testid="axes"]')!.textContent).toBe("xzy");
+    // …and the triad is not clipped by the viewBox (arrow tips, letters)
+    for (const f of Array.from(container.querySelectorAll("figure svg"))) {
+      const [, , W, H] = f.getAttribute("viewBox")!.split(" ").map(Number);
+      const c = f.querySelector('[data-testid="axes"] circle')!;
+      const ox = Number(c.getAttribute("cx"));
+      const oy = Number(c.getAttribute("cy"));
+      expect(ox - 16, "left").toBeGreaterThanOrEqual(0);
+      expect(ox + 28 + 18, "right").toBeLessThanOrEqual(W);
+      expect(oy - 28 - 8, "top").toBeGreaterThanOrEqual(0);
+      expect(oy + 20, "bottom").toBeLessThanOrEqual(H);
+    }
     const el = container.querySelectorAll("figure svg")[1];
     expect(el.textContent).toMatch(/γ = 0.*τ = 0.*γ ≠ 0.*τ ≠ 0/);
     expect(document.body.textContent).toMatch(/Δl = N·l \/ \(A·E\)/);

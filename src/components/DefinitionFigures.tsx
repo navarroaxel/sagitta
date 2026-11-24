@@ -832,7 +832,7 @@ export function SaintVenantFigure({ label }: { label: string }) {
     </g>
   );
   return (
-    <svg viewBox="0 0 320 170" className="h-auto w-full" role="img" aria-label={label}>
+    <svg viewBox="0 0 320 175" className="h-auto w-full" role="img" aria-label={label}>
       <rect x="40" y="45" width="240" height="60" fill="#E7EEF2" stroke={INK} strokeWidth="1.5" />
       {/* point loads at both ends */}
       <line x1="8" y1="75" x2="38" y2="75" stroke={LOAD} strokeWidth="3" />
@@ -854,7 +854,7 @@ export function SaintVenantFigure({ label }: { label: string }) {
       <line x1="100" y1="131" x2="100" y2="141" stroke={MOMENT_COLOR} strokeWidth="1.5" />
       <Txt x="106" y="140" fill={MOMENT_COLOR}>≈ h</Txt>
       <Txt x="270" y="38" textAnchor="end">h</Txt>
-      <AxesTriad ox={280} oy={156} view="side" />
+      <AxesTriad ox={268} oy={152} view="side" />
     </svg>
   );
 }

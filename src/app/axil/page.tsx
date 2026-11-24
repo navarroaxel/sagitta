@@ -78,7 +78,7 @@ function Section({ kicker, title, children }: { kicker: TranslationKey; title: T
 function BarSVG() {
   const { t } = useLanguage();
   return (
-    <svg viewBox="0 0 360 140" className="h-auto w-full" role="img" aria-label={plain(t("axl.fig"))}>
+    <svg viewBox="0 0 360 160" className="h-auto w-full" role="img" aria-label={plain(t("axl.fig"))}>
       <rect x="70" y="50" width="220" height="40" fill="#E7EEF2" stroke={INK} strokeWidth="2" />
       <line x1="180" y1="46" x2="180" y2="94" stroke={INK} strokeWidth="1.5" strokeDasharray="3 3" />
       <line x1="20" y1="70" x2="68" y2="70" stroke={LOAD} strokeWidth="3" />
@@ -130,7 +130,7 @@ function ElementSVG() {
       <text x="168" y="95" fontSize="12" fill={INK} textAnchor="end"><SvgSub>τ</SvgSub></text>
       <text x="236" y="120" fontSize="12" fill={LOAD} textAnchor="middle"><SvgSub>γ ≠ 0</SvgSub></text>
       <text x="236" y="136" fontSize="12" fill={LOAD} textAnchor="middle"><SvgSub>τ ≠ 0</SvgSub></text>
-      <AxesTriad ox={20} oy={34} view="side" />
+      <AxesTriad ox={22} oy={46} view="side" />
     </svg>
   );
 }
