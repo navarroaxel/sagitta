@@ -229,6 +229,12 @@ describe("/definiciones", () => {
     const svg = screen.getByTestId("def-axl.stvenant").querySelector("figure svg")!;
     expect(svg.textContent).toMatch(/σ not uniform.*σ = N \/ A/);
     expect(svg.querySelectorAll('line[stroke="#0B8A8A"]')).toHaveLength(10); // five arrows at each section
+    // the near-section arrows peak at the middle row, where the load acts (and are not longer at the edges)
+    const near = Array.from(svg.querySelectorAll('line[stroke="#0B8A8A"][x1="70"]')).map((l) => Number(l.getAttribute("x2")) - 70);
+    expect(near).toHaveLength(5);
+    expect(near[2]).toBe(Math.max(...near));
+    expect(near[0]).toBeLessThan(near[2]);
+    expect(near[4]).toBeLessThan(near[2]);
   });
 
   test("a #group.term in the URL opens that term (the links of /resumen)", () => {

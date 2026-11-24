@@ -822,8 +822,9 @@ export function ClassificationFigure({ label }: { label: string }) {
 
 // Saint-Venant: a load applied at a point disturbs σ only near the end; farther than about the section's size σ is uniform.
 export function SaintVenantFigure({ label }: { label: string }) {
+  const { t } = useLanguage();
   const rows = [57, 66, 75, 84, 93];
-  const near = [34, 22, 12, 22, 34]; // arrow lengths close to the end: peak under the load
+  const near = [12, 22, 34, 22, 12]; // arrow lengths close to the end: the peak is under the load (the middle row)
   const far = 20;
   const arrow = (x: number, y: number, len: number, key: string) => (
     <g key={key}>
@@ -846,14 +847,14 @@ export function SaintVenantFigure({ label }: { label: string }) {
       <line x1="170" y1="40" x2="170" y2="110" stroke={INK} strokeWidth="1" strokeDasharray="4 3" />
       {rows.map((y, i) => arrow(70, y, near[i], `n${i}`))}
       {rows.map((y, i) => arrow(170, y, far, `f${i}`))}
-      <Txt x="70" y="124" textAnchor="middle">σ not uniform</Txt>
-      <Txt x="170" y="124" textAnchor="middle">σ = N / A</Txt>
+      <Txt x="70" y="124" textAnchor="middle">{t("def.fig.nonuniform")}</Txt>
+      <Txt x="170" y="124" textAnchor="middle">{"σ = {N} / {A}"}</Txt>
       {/* distance of the disturbed zone: about the size of the section */}
       <line x1="40" y1="136" x2="100" y2="136" stroke={MOMENT_COLOR} strokeWidth="1.5" />
       <line x1="40" y1="131" x2="40" y2="141" stroke={MOMENT_COLOR} strokeWidth="1.5" />
       <line x1="100" y1="131" x2="100" y2="141" stroke={MOMENT_COLOR} strokeWidth="1.5" />
-      <Txt x="106" y="140" fill={MOMENT_COLOR}>≈ h</Txt>
-      <Txt x="270" y="38" textAnchor="end">h</Txt>
+      <Txt x="106" y="140" fill={MOMENT_COLOR}>{"≈ {h}"}</Txt>
+      <Txt x="270" y="38" textAnchor="end">{"{h}"}</Txt>
       <AxesTriad ox={268} oy={152} view="side" />
     </svg>
   );

@@ -2025,6 +2025,8 @@ const EN = {
     "Simple and pure bending",
   "def.f.fsimple":
     "A segment of beam between two sections: the forces on each side reduce, at the centroid, to a bending couple. In pure bending it is the same M on both faces (equal and opposite); in bending and shear there is also the shear force Q, and the moment changes along the segment (M on one face, M + dM on the other, dM = Q·dx).",
+  "def.fig.nonuniform":
+    "σ not uniform",
   "def.fig.pure":
     "Pure bending",
   "def.fig.shear":
@@ -2256,7 +2258,7 @@ const EN = {
   "def.d.stvenant":
     "Far from the ends, the section normal to the axis stays plane and parallel to itself after the deformation, so there is no stress concentration.",
   "def.f.stvenant":
-    "A bar pulled by loads applied at a point: close to each end (a distance of about the size h of the section) the stress σ is not uniform and peaks under the load; farther away it is uniform, σ = N / A. Only the resultant N matters there, not how the load was applied.",
+    "A bar pulled by loads applied at a point: close to each end (a distance of about the size {h} of the section) the stress σ is not uniform and peaks under the load; farther away it is uniform, σ = {N} / {A}. Only the resultant {N} matters there, not how the load was applied.",
   "def.t.equil":
     "Stable, indifferent and unstable equilibrium",
   "def.d.equil":
@@ -4362,6 +4364,8 @@ const ES: Record<TranslationKey, string> = {
     "Flexión simple y flexión pura",
   "def.f.fsimple":
     "Un tramo de viga entre dos secciones: las fuerzas de cada lado se reducen, en el baricentro, a un par flector. En flexión pura es el mismo M en las dos caras (igual y opuesto); en flexión y corte hay además el esfuerzo de corte Q, y el momento cambia a lo largo del tramo (M en una cara, M + dM en la otra, dM = Q·dx).",
+  "def.fig.nonuniform":
+    "σ no uniforme",
   "def.fig.pure":
     "Flexión pura",
   "def.fig.shear":
@@ -4593,7 +4597,7 @@ const ES: Record<TranslationKey, string> = {
   "def.d.stvenant":
     "Lejos de los extremos, la sección normal al eje se mantiene plana y paralela a sí misma luego de la deformación, por lo tanto no hay concentración de tensiones.",
   "def.f.stvenant":
-    "Una barra traccionada por cargas aplicadas en un punto: cerca de cada extremo (a una distancia del orden del tamaño h de la sección) la tensión σ no es uniforme y tiene un pico bajo la carga; más lejos es uniforme, σ = N / A. Allí solo importa la resultante N, no cómo se aplicó la carga.",
+    "Una barra traccionada por cargas aplicadas en un punto: cerca de cada extremo (a una distancia del orden del tamaño {h} de la sección) la tensión σ no es uniforme y tiene un pico bajo la carga; más lejos es uniforme, σ = {N} / {A}. Allí solo importa la resultante {N}, no cómo se aplicó la carga.",
   "def.t.equil":
     "Equilibrio estable, indiferente e inestable",
   "def.d.equil":
