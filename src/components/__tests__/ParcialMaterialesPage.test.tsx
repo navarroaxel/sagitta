@@ -1,12 +1,12 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { LanguageProvider } from "@/contexts/LanguageContext";
-import ParcialTeoriaPage from "@/app/parcial-teoria/page";
+import ParcialMaterialesPage from "@/app/parcial-materiales/page";
 import { PARCIAL_TEORIA_QUESTIONS as Q } from "@/lib/parcialTeoriaData";
 
 function setup() {
   return render(
     <LanguageProvider>
-      <ParcialTeoriaPage />
+      <ParcialMaterialesPage />
     </LanguageProvider>,
   );
 }
@@ -16,7 +16,7 @@ const buttons = (c: HTMLElement, n: number) =>
     `[data-testid="pt-question-${n}"] button`,
   );
 
-describe("/parcial-teoria", () => {
+describe("/parcial-materiales", () => {
   test("has the 25 questions, 4 options each, a valid key and a reason", () => {
     expect(Q).toHaveLength(25);
     for (const q of Q) {
