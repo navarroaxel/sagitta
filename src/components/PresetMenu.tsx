@@ -43,6 +43,7 @@ const PRESET_META: { key: TranslationKey; cat: Category }[] = [
   { key: "preset.beam_ipb300_check", cat: "beams" },
   { key: "preset.truss_cable_beam", cat: "trusses" },
   { key: "preset.truss_cable_beam_ipb260", cat: "trusses" },
+  { key: "preset.truss_two_triangles", cat: "trusses" },
 ];
 
 const CATEGORY_ORDER: { cat: Category; titleKey: TranslationKey }[] = [

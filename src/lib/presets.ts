@@ -936,6 +936,39 @@ trussCableBeamIpb260.members.push(
   },
 );
 
+// examples/truss-two-triangles-apex-kg.svg — 5-bar truss of two right triangles sharing the post b4 (B-D).
+// A roller (V only), B pinned; D carries 8 000 kg to the right and 6 000 kg down, C 9 000 kg down.
+// Reactions: V_A = -29 444 (29 444 kg down), V_B = 44 444, H_B = -8 000. To do: size the bars (IPB).
+const trussTwoTrianglesApex: FrameModel = {
+  nodes: [
+    { id: "A", x: 0, y: 0, support: "roller-v" },
+    { id: "B", x: 5, y: 0, support: "pinned" },
+    { id: "C", x: 13.66, y: 0, support: "free" },
+    { id: "D", x: 5, y: 8.66, support: "free" },
+  ],
+  members: [
+    ["b1", "A", "B"],
+    ["b2", "B", "C"],
+    ["b3", "A", "D"],
+    ["b4", "B", "D"],
+    ["b5", "D", "C"],
+  ].map(([id, n1, n2]) => ({
+    id,
+    n1,
+    n2,
+    relI: true,
+    relJ: true,
+    section: { kind: "size" as const, series: ["IPB" as const] },
+  })),
+  loads: [
+    { id: "pD", type: "nodal", node: "D", fx: 8000, fy: -6000, m: 0 },
+    { id: "pC", type: "nodal", node: "C", fx: 0, fy: -9000, m: 0 },
+  ],
+  material: steelKg,
+  unit: "kg",
+  sigmaAdm: 1600,
+};
+
 export const PRESETS: Preset[] = [
   { name: "Simply Supported Beam", model: simplySupported },
   { name: "Cantilever", model: cantilever },
@@ -966,4 +999,5 @@ export const PRESETS: Preset[] = [
   { name: "Beam IPB 300 (check)", model: beamIpb300Check },
   { name: "Truss + Cable + Beam (sizing)", model: trussCableBeam },
   { name: "Truss + Cable + Beam IPB 260", model: trussCableBeamIpb260 },
+  { name: "Truss two triangles (sizing IPB)", model: trussTwoTrianglesApex },
 ];

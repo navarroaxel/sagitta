@@ -68,6 +68,7 @@ const EN = {
   "preset.beam_ipb300_check": "Beam IPB 300 (check)",
   "preset.truss_cable_beam": "Truss + cable + beam (sizing)",
   "preset.truss_cable_beam_ipb260": "Truss + cable + beam IPB 260 (check and sizing)",
+  "preset.truss_two_triangles": "Truss with roller + pin (sizing IPB)",
 
   "forces.member": "Member",
   "forces.state": "State",
@@ -247,6 +248,7 @@ const EN = {
   "f3d.example.cantilever_kg": "#6 Cantilever IPN 320 (max length)",
   "f3d.example.column_kg": "#9 3D column (fixed)",
   "f3d.example.column_overhang": "#10 3D column with overhang on IPN 200 (P max)",
+  "f3d.example.column_q_p": "#11 3D column fixed, q + P (kN)",
   "f3d.diagram": "Diagram:",
   "f3d.diagram_none": "None",
   "f3d.note":
@@ -2404,6 +2406,7 @@ const ES: Record<TranslationKey, string> = {
   "preset.beam_ipb300_check": "Viga IPB 300 (verificación)",
   "preset.truss_cable_beam": "Reticulado + cable + viga (dimensionado)",
   "preset.truss_cable_beam_ipb260": "Reticulado + cable + viga IPB 260 (verificación y dimensionado)",
+  "preset.truss_two_triangles": "Reticulado con apoyo móvil + fijo (dimensionado IPB)",
 
   "forces.member": "Barra",
   "forces.state": "Estado",
@@ -2583,6 +2586,7 @@ const ES: Record<TranslationKey, string> = {
   "f3d.example.cantilever_kg": "#6 Voladizo IPN 320 (longitud máx)",
   "f3d.example.column_kg": "#9 Columna 3D (empotrada)",
   "f3d.example.column_overhang": "#10 Columna 3D con voladizo en IPN 200 (P máx)",
+  "f3d.example.column_q_p": "#11 Columna 3D empotrada, q + P (kN)",
   "f3d.diagram": "Diagrama:",
   "f3d.diagram_none": "Ninguno",
   "f3d.note":
