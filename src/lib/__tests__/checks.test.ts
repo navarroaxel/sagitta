@@ -635,3 +635,25 @@ describe("a profile section feeds the solver (A, Ix) but not the forces", () => 
     expect(b.rm).toBeCloseTo(a.rm, 6);
   });
 });
+
+describe("truss with two triangles (kg, sizing IPB)", () => {
+  const { solved, checks } = checksOf("Truss two triangles (sizing IPB)");
+  const at = (id: string) => solved.result.reactions[solved.nodeIndex.get(id)!];
+  test("reactions as in the SVG and global equilibrium", () => {
+    expect(at("A").ry).toBeCloseTo(-29444, 0);
+    expect(at("B").ry).toBeCloseTo(44444.4, 0);
+    expect(at("B").rx).toBeCloseTo(-8000, 4);
+    expect(at("A").rx).toBeCloseTo(0, 4);
+    const sum = (k: "rx" | "ry") => at("A")[k] + at("B")[k];
+    expect(sum("rx") + 8000).toBeCloseTo(0, 4);
+    expect(sum("ry") - 15000).toBeCloseTo(0, 4);
+  });
+  test("every bar gets a sizing result", () => {
+    expect(checks).toHaveLength(5);
+    for (const id of ["b1", "b2", "b3", "b4", "b5"]) {
+      const c = byMember<SizeCheck>(checks, id);
+      expect(c).toBeDefined();
+      expect(c.kind).toBe("size");
+    }
+  });
+});

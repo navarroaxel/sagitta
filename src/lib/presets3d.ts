@@ -245,8 +245,28 @@ const columnOverhang: FrameModel3D = {
   sigmaAdm: 1400, // kg/cm²
 };
 
+// examples/column-3d-fixed-kn-q-p.svg — 5 m column fixed at A, free at B. q = 3 kN/m along +X over the
+// whole column (Q = 15 kN) and P = 2 kN along +Y at B. The exercise gives no section: IPB 200 is the
+// lightest IPB that passes the normal-stress check at 14 kN/cm², strong axis against the larger moment
+// (M_y = 37.5 kN·m at the base vs M_x = 10 kN·m): unrotated, σ max ≈ 11.58 kN/cm² at the base (IPB 180 gives
+// 15.43, which fails; rotated it would need an IPB 240, σ 12.55). Shear is not checked.
+const columnQP: FrameModel3D = {
+  nodes: [
+    { id: "A", x: 0, y: 0, z: 0, support: "fixed" },
+    { id: "B", x: 0, y: 0, z: 5, support: "free" },
+  ],
+  members: [{ id: "M1", n1: "A", n2: "B", profile: "IPB 200", rotated: false }],
+  loads: [
+    { id: "L1", type: "mudl", member: "M1", gx: 3, gy: 0, gz: 0 },
+    { id: "L2", type: "nodal", node: "B", fx: 0, fy: 2, fz: 0, mx: 0, my: 0, mz: 0 },
+  ],
+  material,
+  unit: "kN",
+  sigmaAdm: 14, // kN/cm² (= 140 MPa)
+};
+
 export interface Preset3D {
-  key: "t_frame" | "t_frame_kg" | "l_torsion" | "eccentric_tension" | "cantilever_kg" | "t_frame_qy" | "frame_right_beam" | "frame_overhang" | "column_kg" | "column_overhang";
+  key: "t_frame" | "t_frame_kg" | "l_torsion" | "eccentric_tension" | "cantilever_kg" | "t_frame_qy" | "frame_right_beam" | "frame_overhang" | "column_kg" | "column_overhang" | "column_q_p";
   model: FrameModel3D;
 }
 
@@ -265,4 +285,5 @@ export const PRESETS_3D: Preset3D[] = [
   { key: "l_torsion", model: lTorsion },
   { key: "column_kg", model: columnKg },
   { key: "column_overhang", model: columnOverhang },
+  { key: "column_q_p", model: columnQP },
 ];

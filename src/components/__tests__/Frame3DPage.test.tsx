@@ -49,7 +49,7 @@ describe("/frame3d presets", () => {
     const labels = Array.from(select().options)
       .filter((o) => o.value)
       .map((o) => o.textContent!);
-    expect(labels.map((l) => l.match(/^#(\d+)/)?.[1])).toEqual(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]);
+    expect(labels.map((l) => l.match(/^#(\d+)/)?.[1])).toEqual(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"]);
     labels.forEach((l) => expect(l).not.toMatch(/kg\/m|\d+ kg/)); // the loads live in the model, not in the name
   });
 

@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="40 30 600 490" font-family="system-ui, sans-serif">
+  <!--
+    Structure: 3D column, 5 m, vertical (along z), fixed (built-in) to the ground at its base A,
+      free at the top B. Solid web. Drawn in oblique projection (Ejercicio N°2 of the course).
+      Axes as drawn in this app (the course's left-handed triad): x to the right, y horizontal, out of
+      the plane of the drawing (toward the viewer, drawn down-left), z vertical (up).
+      The exercise sheet draws its own triad (y right, z down along the column, x toward the viewer);
+      the loads below are read from the drawing, not from the sheet's letters.
+    World in metres. Transform: sx = 300 + (x*60 - y*21) ; sy = 420 - (z*60 - y*15)
+      (x/z at 60 px/m; the y axis is only drawn as direction u = (-21,15) px per metre)
+    Nodes:
+      A  (0,0,0)  fixed / built-in base           -> (300,420)
+      B  (0,0,5)  free top of the column (loaded) -> (300,120)
+    Members:
+      A-B  column (5 m)
+    Supports: A fixed in 3D (restrains all 3 forces and 3 moments).
+    Loads (units: kN and kN.m):
+      q = 3 kN/m over the whole column (z = 0..5 m), horizontal, drawn on the left of the column so it
+        PUSHES it toward +x (to the right; direction read from the drawing)
+        -> resultant Q = 3 x 5 = 15 kN along +x at z = 2.5 m
+      B : P = 2 kN along +y (toward the viewer, drawn down-left; the sheet's arrow points at the node)
+    Support reactions (computed):
+      A: F_x = 15 kN (along -x) ; F_y = 2 kN (along -y) ; F_z = 0 ;
+         M_x = 10 kN.m (vector along +x) ; M_y = 37.5 kN.m (vector along -y) ; M_z = 0
+    Equilibrium (moments as r x F, same arithmetic as column-3d-fixed-kg.svg):
+      SumFx = -15 + 15 = 0 ; SumFy = -2 + 2 = 0 ; SumFz = 0
+      SumMx_A = M_x - 5 * 2 = 10 - 10 = 0
+      SumMy_A = M_y + 2.5 * 15 = -37.5 + 37.5 = 0
+      SumMz_A = 0
+    The given reactions satisfy global equilibrium.
+  -->
+
+  <rect x="40" y="30" width="600" height="490" fill="#ffffff"/>
+
+  <!-- ===== Dimensions ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <!-- column (left): 5.00 m -->
+    <line x1="75" y1="120" x2="75" y2="420"/>
+    <line x1="70" y1="120" x2="80" y2="120"/>
+    <line x1="70" y1="420" x2="80" y2="420"/>
+    <text x="63" y="270" text-anchor="middle" stroke="none" transform="rotate(-90 63 270)">5.00 m</text>
+  </g>
+
+  <!-- ===== Fixed / built-in base at A (ground plate in the xy plane + hatch) ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff" fill-opacity="0.85">
+    <polygon points="246,430 326,430 354,410 274,410"/>
+  </g>
+  <g stroke="#1a1a1a" stroke-width="2" fill="none">
+    <line x1="254" y1="430" x2="246" y2="438"/><line x1="264" y1="430" x2="256" y2="438"/><line x1="274" y1="430" x2="266" y2="438"/><line x1="284" y1="430" x2="276" y2="438"/><line x1="294" y1="430" x2="286" y2="438"/><line x1="304" y1="430" x2="296" y2="438"/><line x1="314" y1="430" x2="306" y2="438"/><line x1="324" y1="430" x2="316" y2="438"/>
+  </g>
+
+  <!-- ===== Column ===== -->
+  <g stroke="#1a1a1a" stroke-width="5" stroke-linecap="round">
+    <line x1="300" y1="420" x2="300" y2="120"/>
+  </g>
+
+  <!-- ===== Nodes ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="300" cy="420" r="4"/>
+    <circle cx="300" cy="120" r="4"/>
+  </g>
+
+  <!-- ===== Node labels ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <text x="314" y="404" text-anchor="start">A</text>
+    <text x="312" y="144" text-anchor="start">B</text>
+  </g>
+
+  <!-- ===== Axes triad (global system) ===== -->
+  <g stroke="#5f6368" fill="#5f6368" font-size="13" font-weight="600">
+    <line x1="560" y1="300" x2="592" y2="300" stroke-width="2"/>
+    <polygon points="600,300 591,304 591,296" stroke="none"/>
+    <text x="606" y="304" stroke="none">x</text>
+    <line x1="560" y1="300" x2="560" y2="268" stroke-width="2"/>
+    <polygon points="560,260 564,269 556,269" stroke="none"/>
+    <text x="556" y="252" stroke="none" text-anchor="middle">z</text>
+    <line x1="560" y1="300" x2="524.5" y2="325.4" stroke-width="2"/>
+    <polygon points="518,330 523,321.5 527.6,328" stroke="none"/>
+    <text x="506" y="342" stroke="none">y</text>
+  </g>
+
+  <!-- ===== Loads (red) ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+    <!-- q = 3 kN/m along +x over the whole column: arrows on the left, tips at the column; thin rail through the tails -->
+    <line x1="232" y1="390" x2="289" y2="390" stroke-width="2"/>
+    <polygon points="300,390 288,384 288,396" stroke="none"/>
+    <line x1="232" y1="330" x2="289" y2="330" stroke-width="2"/>
+    <polygon points="300,330 288,324 288,336" stroke="none"/>
+    <line x1="232" y1="270" x2="289" y2="270" stroke-width="2"/>
+    <polygon points="300,270 288,264 288,276" stroke="none"/>
+    <line x1="232" y1="210" x2="289" y2="210" stroke-width="2"/>
+    <polygon points="300,210 288,204 288,216" stroke="none"/>
+    <line x1="232" y1="150" x2="289" y2="150" stroke-width="2"/>
+    <polygon points="300,150 288,144 288,156" stroke="none"/>
+    <line x1="232" y1="390" x2="232" y2="150" stroke-width="1.5"/>
+    <text x="220" y="270" text-anchor="middle" transform="rotate(-90 220 270)" stroke="none">q = 3 kN/m</text>
+
+    <!-- P = 2 kN along +y at B (toward the viewer, down-left; tip at the node, shaft trailing up-right) -->
+    <line x1="344" y1="89" x2="308.5" y2="114.5" stroke-width="2.5"/>
+    <polygon points="300,120 313.3,117.9 306.3,108.1" stroke="none"/>
+    <text x="352" y="86" text-anchor="start" stroke="none">P<tspan font-size="10" dy="4">y</tspan><tspan dx="2" dy="-4">= 2 kN</tspan></text>
+  </g>
+
+  <!-- ===== Support reactions (blue) ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+    <!-- F_x = 15 kN along -x (to the left); drawn just left of the plate pointing in the force
+         direction: a shaft trailing right would run along the M_x vector -->
+    <line x1="250" y1="420" x2="218" y2="420" stroke-width="2.5"/>
+    <polygon points="206,420 218,414 218,426" stroke="none"/>
+    <text x="200" y="424" text-anchor="end" stroke="none">F<tspan font-size="10" dy="4">x</tspan><tspan dx="2" dy="-4">= 15 kN</tspan></text>
+
+    <!-- F_y = 2 kN along -y (away from the viewer, up-right); line of action through A, drawn on
+         the near side with the tip pulled back ~32 px to keep the support clear -->
+    <line x1="238.2" y1="464.2" x2="265.9" y2="444.4" stroke-width="2.5"/>
+    <polygon points="274,438.6 267.7,450.5 260.7,440.7" stroke="none"/>
+    <text x="222" y="468" text-anchor="end" stroke="none">F<tspan font-size="10" dy="4">y</tspan><tspan dx="2" dy="-4">= 2 kN</tspan></text>
+
+    <!-- M_x = 10 kN.m: moment vector along +x (double arrow), line of action through A -->
+    <line x1="300" y1="420" x2="372" y2="420" stroke-width="2.5"/>
+    <polygon points="390,420 380,425 380,415" stroke="none"/>
+    <polygon points="380,420 370,425 370,415" stroke="none"/>
+    <text x="400" y="424" text-anchor="start" stroke="none">M<tspan font-size="10" dy="4">x</tspan><tspan dx="2" dy="-4">= 10 kN&#183;m</tspan></text>
+
+    <!-- M_y = 37.5 kN.m: moment vector along -y (away from the viewer, up-right; double arrow), collinear with F_y -->
+    <line x1="329.3" y1="399.1" x2="350.4" y2="384" stroke-width="2.5"/>
+    <polygon points="365.1,373.5 360.5,384.2 353.5,374.4" stroke="none"/>
+    <polygon points="357,379.3 352.3,390 345.3,380.2" stroke="none"/>
+    <text x="372" y="370" text-anchor="start" stroke="none">M<tspan font-size="10" dy="4">y</tspan><tspan dx="2" dy="-4">= 37.5 kN&#183;m</tspan></text>
+  </g>
+
+  <text x="340" y="505" text-anchor="middle" fill="#5f6368" font-size="13">
+    3D column, fixed at A. Loads red, reactions blue; double arrow = moment.
+  </text>
+</svg>

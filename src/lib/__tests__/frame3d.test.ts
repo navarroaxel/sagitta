@@ -122,6 +122,25 @@ describe("3D presets", () => {
     expect(ts[0]!.ok && ts[1]!.ok).toBe(false);
   });
 
+  test("column fixed, q + P (kN, preset #11): reactions follow from statics; IPB 200 is the lightest IPB that passes", () => {
+    expect(PRESETS_3D[10].key).toBe("column_q_p"); // the "#11" is permanent
+    const model = PRESETS_3D[10].model;
+    const solved = solveModel3D(model)!;
+    const r = solved.result.reactions[solved.nodeIndex.get("A")!];
+    near(r.fx, -15); // Q = 3 · 5 along +x -> reaction along -x
+    near(r.fy, -2); // P = 2 along +y -> reaction along -y
+    near(r.fz, 0);
+    near(r.mx, 10); // vector along +x: 2 kN · 5 m
+    near(r.my, -37.5); // vector along -y: 15 kN · 2.5 m
+    near(r.mz, 0);
+    const st = computeStress(model, solved)[0]!;
+    expect(st.ok).toBe(true);
+    near(st.max.sigma, 11.579, 1e-3);
+    const thin = JSON.parse(JSON.stringify(model)) as FrameModel3D;
+    thin.members[0].profile = "IPB 180";
+    expect(computeStress(thin, solveModel3D(thin)!)[0]!.ok).toBe(false);
+  });
+
   test("T-frame with q_y1 (kg): reactions follow from statics", () => {
     const model = PRESETS_3D.find((p) => p.key === "t_frame_qy")!.model;
     const solved = solveModel3D(model)!;

@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-30 0 990 620" font-family="system-ui, sans-serif">
+  <!--
+    Structure: 5-bar truss made of two right triangles sharing the vertical post b4.
+    Floor bars b1 (A-B, 5 m) and b2 (B-C, 8.66 m) on one line; post b4 (B-D, 8.66 m)
+    rises from B; b3 (A-D) and b5 (D-C) close the triangles. Angles are not drawn:
+    the geometry is given by the dimensions (5 / 8.66 / 8.66 m).
+    Loads and reactions in kg. sigma adm = 1600 kg/cm2.
+
+    Transform: sx = 120 + x*48 ; sy = 500 - y*48   (k = 48 px/m, y-up -> y-down)
+
+    Nodes (4):
+      A (0, 0)        -> (120, 500)  ROLLER support (vertical reaction only)
+      B (5, 0)        -> (360, 500)  PINNED support (H and V)
+      C (13.66, 0)    -> (776, 500)  free node, floor right end
+      D (5, 8.66)     -> (360,  84)  apex, above B
+
+    Members (5):
+      b1 A-B, b2 B-C, b3 A-D, b4 B-D, b5 D-C
+
+    Supports:
+      A: roller — vertical reaction only
+      B: pinned — H and V reactions
+
+    Loads (kg, red #c0392b):
+      D: 6 000 kg downward  and  8 000 kg to the right
+      C: 9 000 kg downward
+
+    Reactions (kg, blue #1a73e8) — equilibrium verified:
+      SFx = 0 : H_B + 8 000 = 0  ->  H_B = 8 000 kg to the LEFT
+      SM_B = 0 (CCW+, moment of (Fx,Fy) at (x,y) about B: (x-5)*Fy - y*Fx):
+          D : 0*(-6000) - 8.66*8000   = -69 280
+          C : 8.66*(-9000)            = -77 940
+          A : (-5)*V_A
+          -147 220 - 5*V_A = 0  ->  V_A = -29 444  ->  29 444 kg DOWNWARD
+      SFy = 0 : V_A + V_B - 6 000 - 9 000 = 0  ->  V_B = 44 444 kg UPWARD
+      Check SM_A = 0 : 5*44 444 - 5*6 000 - 8.66*8 000 - 13.66*9 000 = 2 (rounding) OK
+  -->
+
+  <rect x="-30" y="0" width="990" height="620" fill="#ffffff"/>
+
+  <!-- ===== Dimensions ===== -->
+  <g stroke="#9aa0a6" stroke-width="1" fill="#5f6368" font-size="12">
+    <line x1="120" y1="590" x2="776" y2="590"/>
+    <line x1="120" y1="585" x2="120" y2="595"/>
+    <line x1="360" y1="585" x2="360" y2="595"/>
+    <line x1="776" y1="585" x2="776" y2="595"/>
+    <text x="240" y="582" text-anchor="middle" stroke="none">5.00</text>
+    <text x="568" y="582" text-anchor="middle" stroke="none">8.66</text>
+    <!-- height 8.66 m, left of the post, clear of b3 -->
+    <line x1="900" y1="84" x2="900" y2="500"/>
+    <line x1="895" y1="84" x2="905" y2="84"/>
+    <line x1="895" y1="500" x2="905" y2="500"/>
+    <text x="888" y="292" text-anchor="middle" stroke="none" transform="rotate(-90 888 292)">8.66 m</text>
+  </g>
+
+  <!-- ===== Truss bars b1..b5 (two-force members) ===== -->
+  <g stroke="#1a1a1a" stroke-width="3" stroke-linecap="round">
+    <line x1="120" y1="500" x2="360" y2="500"/>   <!-- b1 A-B -->
+    <line x1="360" y1="500" x2="776" y2="500"/>   <!-- b2 B-C -->
+    <line x1="120" y1="500" x2="360" y2="84"/>    <!-- b3 A-D -->
+    <line x1="360" y1="500" x2="360" y2="84"/>    <!-- b4 B-D -->
+    <line x1="360" y1="84"  x2="776" y2="500"/>   <!-- b5 D-C -->
+  </g>
+
+  <!-- ===== Supports ===== -->
+  <g stroke="#1a1a1a" stroke-width="2" fill="#ffffff">
+    <!-- A: roller support -->
+    <polygon points="120,500 111,513 129,513"/>
+    <circle cx="115" cy="517" r="3"/>
+    <circle cx="125" cy="517" r="3"/>
+    <line x1="105" y1="521" x2="135" y2="521"/>
+    <line x1="109" y1="521" x2="103" y2="528"/>
+    <line x1="117" y1="521" x2="111" y2="528"/>
+    <line x1="125" y1="521" x2="119" y2="528"/>
+    <line x1="133" y1="521" x2="127" y2="528"/>
+    <!-- B: pinned support -->
+    <polygon points="360,500 351,513 369,513"/>
+    <line x1="345" y1="513" x2="375" y2="513"/>
+    <line x1="349" y1="513" x2="343" y2="520"/>
+    <line x1="357" y1="513" x2="351" y2="520"/>
+    <line x1="365" y1="513" x2="359" y2="520"/>
+    <line x1="373" y1="513" x2="367" y2="520"/>
+  </g>
+
+  <!-- ===== Nodes ===== -->
+  <g fill="#1a1a1a">
+    <circle cx="120" cy="500" r="4"/>
+    <circle cx="360" cy="500" r="4"/>
+    <circle cx="776" cy="500" r="4"/>
+    <circle cx="360" cy="84" r="4"/>
+  </g>
+
+  <!-- ===== Node labels ===== -->
+  <g font-size="13" font-weight="600" fill="#6a1b9a">
+    <text x="108" y="494" text-anchor="end">A</text>
+    <text x="348" y="494" text-anchor="end">B</text>
+    <text x="788" y="494" text-anchor="start">C</text>
+    <text x="372" y="78" text-anchor="start">D</text>
+  </g>
+
+  <!-- ===== Bar names ===== -->
+  <g fill="#6a1b9a" font-size="13" font-style="italic" font-weight="600">
+    <text x="240" y="492" text-anchor="middle">b<tspan font-size="9" dy="3">1</tspan></text>
+    <text x="568" y="492" text-anchor="middle">b<tspan font-size="9" dy="3">2</tspan></text>
+    <text x="222" y="288" text-anchor="end">b<tspan font-size="9" dy="3">3</tspan></text>
+    <text x="372" y="300" text-anchor="start">b<tspan font-size="9" dy="3">4</tspan></text>
+    <text x="580" y="284" text-anchor="start">b<tspan font-size="9" dy="3">5</tspan></text>
+  </g>
+
+  <!-- ===== Loads (tip at the point of application, shaft trailing opposite) ===== -->
+  <g stroke="#c0392b" fill="#c0392b" font-size="13" font-weight="700">
+    <!-- D: 6 000 kg downward -->
+    <line x1="360" y1="30" x2="360" y2="75" stroke-width="2.5"/>
+    <polygon points="360,84 354,72 366,72" stroke="none"/>
+    <text x="372" y="52" text-anchor="start" stroke="none">6 000 kg</text>
+    <!-- D: 8 000 kg to the right (tip at D, shaft trailing left) -->
+    <line x1="296" y1="84" x2="349" y2="84" stroke-width="2.5"/>
+    <polygon points="360,84 348,78 348,90" stroke="none"/>
+    <text x="345" y="70" text-anchor="end" stroke="none">8 000 kg</text>
+    <!-- C: 9 000 kg downward -->
+    <line x1="776" y1="450" x2="776" y2="491" stroke-width="2.5"/>
+    <polygon points="776,500 770,488 782,488" stroke="none"/>
+    <text x="788" y="466" text-anchor="start" stroke="none">9 000 kg</text>
+  </g>
+
+  <!-- ===== Support reactions (tip at the node, shaft trailing opposite) ===== -->
+  <g stroke="#1a73e8" fill="#1a73e8" font-size="13" font-weight="700">
+    <!-- A: V_A = 29 444 kg downward (tip at A, shaft trailing upward) -->
+    <line x1="120" y1="440" x2="120" y2="491" stroke-width="2.5"/>
+    <polygon points="120,500 114,488 126,488" stroke="none"/>
+    <text x="108" y="456" text-anchor="end" stroke="none">V<tspan font-size="10" dy="4">A</tspan><tspan dx="4" dy="-4">= 29 444 kg</tspan></text>
+    <!-- B: V_B = 44 444 kg upward, drawn just below the support -->
+    <line x1="360" y1="572" x2="360" y2="536" stroke-width="2.5"/>
+    <polygon points="360,525 354,537 366,537" stroke="none"/>
+    <text x="372" y="556" text-anchor="start" stroke="none">V<tspan font-size="10" dy="4">B</tspan><tspan dx="4" dy="-4">= 44 444 kg</tspan></text>
+    <!-- B: H_B = 8 000 kg to the left (tip at B, shaft trailing right along b2) -->
+    <line x1="420" y1="500" x2="371" y2="500" stroke-width="2.5"/>
+    <polygon points="360,500 372,494 372,506" stroke="none"/>
+    <text x="400" y="520" text-anchor="start" stroke="none">H<tspan font-size="10" dy="4">B</tspan><tspan dx="4" dy="-4">= 8 000 kg</tspan></text>
+  </g>
+
+  <text x="480" y="612" text-anchor="middle" fill="#5f6368" font-size="13">
+    5-bar truss, roller at A and pin at B; σ<tspan font-size="10" dy="4">adm</tspan><tspan dx="3" dy="-4">= 1600 kg/cm²; loads (red), reactions (blue)</tspan>
+  </text>
+</svg>
