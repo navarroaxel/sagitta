@@ -631,11 +631,12 @@ const EN = {
   "mq.title": "Strength of materials — multiple choice (39 Q)",
   "mq.intro":
     "39 multiple-choice questions on the guides: axial load, bending, shear, state of stress, material properties, plane areas, deflection and buckling — graded instantly, with the reason for each answer.",
-  "quiz.more.pt": "Theory form — 25 questions (no answer key)",
+  "quiz.more.pt": "Theory form — 25 questions",
   "pt.title": "Theory form — multiple choice (25 Q)",
   "pt.intro":
-    "The 25 questions of the course's multiple-choice theory form, in Spanish as written. Mark an option to practise: there is no answer key, so nothing is graded.",
-  "pt.marked": "marked",
+    "The 25 questions of the course's multiple-choice theory form, in Spanish as written, with immediate grading and the reason for each answer. The answer key is ours (the form has none): check it against your notes.",
+  "pt.marked": "answered",
+  "pt.correct": "correct",
   "pt.reset": "Reset",
   "claudeQuiz.back": "← Back to /quiz",
   "claudeQuiz.filter.all": "All",
@@ -2999,11 +3000,12 @@ const ES: Record<TranslationKey, string> = {
   "mq.title": "Resistencia de materiales — múltiple choice (39 preguntas)",
   "mq.intro":
     "39 preguntas de opción múltiple sobre las guías: axil, flexión, corte, estado de tensión, propiedades de los materiales, superficies planas, flecha y pandeo, con corrección inmediata y el porqué de cada respuesta.",
-  "quiz.more.pt": "Formulario teórico — 25 preguntas (sin clave)",
+  "quiz.more.pt": "Formulario teórico — 25 preguntas",
   "pt.title": "Formulario teórico — múltiple choice (25 preguntas)",
   "pt.intro":
-    "Las 25 preguntas del formulario teórico de la materia, tal como están escritas. Marcá una opción para practicar: no hay clave de respuestas, así que no se corrige nada.",
-  "pt.marked": "marcadas",
+    "Las 25 preguntas del formulario teórico de la materia, tal como están escritas, con corrección inmediata y el porqué de cada respuesta. La clave es nuestra (el formulario no tiene): contrastala con tus apuntes.",
+  "pt.marked": "respondidas",
+  "pt.correct": "correctas",
   "pt.reset": "Reiniciar",
   "claudeQuiz.back": "← Volver a /quiz",
   "claudeQuiz.filter.all": "Todos",
